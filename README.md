@@ -6,4 +6,10 @@ Vanilla bars:Health, Armor, Food, Saturation, Oxygen, Toughness, Mount health, A
 
 Currently supported mods: random things (lava charm/waders), natural absorption
 
+## Config options
+
+Disable Icons, draw full absorption bar, change armor bar layers, disable toughness bar
+
+Planned config options: disable numbers, change colors of the bars, disable each bar individually
+
 Clientside only.
