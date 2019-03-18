@@ -37,8 +37,7 @@ public class ArmorBarColor
         }
         else
         {
-            System.out.println("FAILED");
-            //Set values to black (default minecraft color)
+            //Set values to white (default minecraft color)
             Red = Blue = Green = 1.0f;
         }
         GlStateManager.color(Red,Green,Blue);

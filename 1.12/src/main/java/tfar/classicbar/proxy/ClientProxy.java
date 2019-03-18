@@ -35,9 +35,10 @@ public class ClientProxy extends CommonProxy
     public void postInit(FMLPostInitializationEvent event)
     {
         super.postInit(event);
-        //Register Renderers for events
+        //Register renderers for events
 
         MinecraftForge.EVENT_BUS.register(new HealthBarRenderer());
+        MinecraftForge.EVENT_BUS.register(new HealthBarMountRenderer());
         MinecraftForge.EVENT_BUS.register(new ArmorBarRenderer());
         if (displayToughnessBar)MinecraftForge.EVENT_BUS.register(new ArmorToughnessBarRenderer());
         MinecraftForge.EVENT_BUS.register(new OxygenBarRenderer());

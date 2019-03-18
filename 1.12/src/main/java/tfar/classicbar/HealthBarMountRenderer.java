@@ -3,6 +3,7 @@ package tfar.classicbar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,18 +22,18 @@ import static tfar.classicbar.ModUtils.*;
     Class handles the drawing of the health bar
  */
 
-public class HealthBarRenderer {
+public class HealthBarMountRenderer {
     private final Minecraft mc = Minecraft.getMinecraft();
 
     private int updateCounter = 0;
-    private double playerHealth = 0;
-    private double lastPlayerHealth = 0;
+    private double mountHealth = 0;
+    private double lasMountHealth = 0;
     private long healthUpdateCounter = 0;
     private long lastSystemTime = 0;
 
     private boolean forceUpdateIcons = false;
 
-    public HealthBarRenderer() {
+    public HealthBarMountRenderer() {
     }
 
     public void forceUpdate() {
@@ -44,7 +45,7 @@ public class HealthBarRenderer {
 
 
         Entity renderViewEnity = this.mc.getRenderViewEntity();
-        if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH
+        if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTHMOUNT
                 || event.isCanceled()
                 || !(renderViewEnity instanceof EntityPlayer)) return;
         int scaledWidth = event.getResolution().getScaledWidth();
@@ -56,29 +57,35 @@ public class HealthBarRenderer {
         updateCounter = mc.ingameGUI.getUpdateCounter();
 
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
-        double health = player.getHealth();
+
+        if (player.getRidingEntity() == null)return;
+
+        EntityLivingBase mount = (EntityLivingBase) player.getRidingEntity();
+        if (mount.isDead)return;
+        double mountHealth = mount.getHealth();
+
+
         boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3L % 2L == 1L;
 
-        if (health < playerHealth && player.hurtResistantTime > 0) {
+        if (mountHealth < this.mountHealth && player.hurtResistantTime > 0) {
             lastSystemTime = Minecraft.getSystemTime();
             healthUpdateCounter = (long) (updateCounter + 20);
-        } else if (health > playerHealth && player.hurtResistantTime > 0) {
+        } else if (mountHealth > this.mountHealth && player.hurtResistantTime > 0) {
             lastSystemTime = Minecraft.getSystemTime();
             healthUpdateCounter = (long) (updateCounter + 10);
         }
-        double absorb = player.getAbsorptionAmount();
-        if (health != playerHealth || forceUpdateIcons) {
+        if (mountHealth != this.mountHealth || forceUpdateIcons) {
             forceUpdateIcons = false;
         }
 
-        playerHealth = health;
-        double j = lastPlayerHealth;
-        IAttributeInstance maxHealthAttribute = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
-        float xStart = scaledWidth / 2f - 91;
+        this.mountHealth = mountHealth;
+        double j = lasMountHealth;
+        IAttributeInstance maxHealthAttribute = mount.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
+        float xStart = scaledWidth / 2f + 9;
         float yStart = scaledHeight - 39;
         double maxHealth = maxHealthAttribute.getAttributeValue();
 
-        mc.profiler.startSection("health");
+        mc.profiler.startSection("mountHealth");
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
         int k5 = 16;
@@ -94,54 +101,30 @@ public class HealthBarRenderer {
         //Pass 1, draw bar portion
 
         //calculate bar color
-        calculateBarColor(health, maxHealth);
-        //draw portion of bar based on health remaining
-        drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
-        //draw health amount
-        int h1 = (int) Math.ceil(health);
+        calculateBarColor(mountHealth, maxHealth);
+        float f = xStart+80-getWidth(mountHealth,maxHealth);
+        //draw portion of bar based on mountHealth remaining
+        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
+        //draw mountHealth amount
+        int h1 = (int) Math.ceil(mountHealth);
         int h2 = (int) Math.ceil(maxHealth);
 
-        //draw absorption bar if it exists
-        if (absorb > 0) {
-            GlStateManager.color(1, 1, 1, 1);
-            if (!fullAbsorptionBar)drawScaledBar(absorb, maxHealth,xStart,yStart - 10);
-            else drawTexturedModalRect(xStart, yStart - 10, 0, i4, 81, 9);
-
-            int a1 = (int) floor(Math.log10(Math.max(1, absorb)));
-            GlStateManager.color(0.831f, 0.686f, 0.215f, 1);
-            drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb, maxHealth), 7);
-            int a2 = displayIcons ? 1 : 0;
-            int a3 = (int)absorb;
-            drawStringOnHUD(a3 + "", xStart - 10 - 6 * a1 - 10 * a2, yStart - 11, 0xD4AF37, 0);
-        }
-
-        int i1 = (int) floor(Math.log10(Math.max(1, h1)));
-        int i2 = (int) floor(Math.log10(Math.max(1, h2)));
         int i3 = displayIcons ? 1 : 0;
 
-        drawStringOnHUD(h1 + "/" + h2, xStart - 23 - 9 * i3 - 6 * (i1 + i2), yStart - 1, textColor(health/maxHealth), 0);
+        drawStringOnHUD(h1 + "/" + h2, xStart + 100 - 9 * i3, yStart - 1, textColor(mountHealth/maxHealth), 0);
 
         //Reset back to normal settings
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);
         GuiIngameForge.left_height += 10;
-        if (absorb > 0) {
-            GuiIngameForge.left_height += 10;
-        }
 
         if (displayIcons) {
-            int i5 = (player.world.getWorldInfo().isHardcoreModeEnabled()) ? 5 : 0;
-            //Draw health icon
+            //Draw mountHealth icon
             //heart background
-            drawTexturedModalRect(xStart - 10, yStart, 16, 9 * i5, 9, 9);
+            drawTexturedModalRect(xStart + 82, yStart, 16, 0, 9, 9);
             //heart
-            drawTexturedModalRect(xStart - 10, yStart, 52, 9 * i5, 9, 9);
-            if (absorb>0){
-                //draw absorption icon
-                drawTexturedModalRect(xStart - 10, yStart - 10, 16, 9 * i5, 9, 9);
-                drawTexturedModalRect(xStart - 10, yStart - 10, 160, 0, 9, 9);
-            }
+            drawTexturedModalRect(xStart + 82, yStart, 88, 9, 9, 9);
 
         }
 

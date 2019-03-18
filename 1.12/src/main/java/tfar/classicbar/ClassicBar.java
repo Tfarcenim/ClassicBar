@@ -14,13 +14,10 @@ public class ClassicBar
 
     public static final String MODID = "classicbar";
     public static final String MODNAME = "Classic Bar";
-    public static final String MODVERSION = "0.0.0";
+    public static final String MODVERSION = "0.0.2";
 
     @SidedProxy(clientSide = "tfar.classicbar.proxy.ClientProxy")
     public static CommonProxy proxy;
-
-    @Mod.Instance
-    public static ClassicBar instance;
 
     public static Logger logger;
 
