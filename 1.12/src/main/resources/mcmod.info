@@ -1,0 +1,15 @@
+[
+{
+  "modid": "colorfulhealthbar",
+  "name": "Colorful Health Bar",
+  "description": "Customizable wrapping health bar",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["LocusWay, Tfarecnim"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": []
+}
+]
