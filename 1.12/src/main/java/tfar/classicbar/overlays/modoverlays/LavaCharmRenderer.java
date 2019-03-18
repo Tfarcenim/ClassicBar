@@ -1,4 +1,4 @@
-package tfar.classicbar;
+package tfar.classicbar.overlays.modoverlays;
 
 import baubles.api.BaublesApi;
 import lumien.randomthings.item.ItemLavaWader;

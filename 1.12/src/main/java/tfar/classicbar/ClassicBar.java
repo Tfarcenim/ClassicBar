@@ -14,7 +14,7 @@ public class ClassicBar
 
     public static final String MODID = "classicbar";
     public static final String MODNAME = "Classic Bar";
-    public static final String MODVERSION = "0.0.2";
+    public static final String MODVERSION = "0.0.3";
 
     @SidedProxy(clientSide = "tfar.classicbar.proxy.ClientProxy")
     public static CommonProxy proxy;
@@ -25,13 +25,11 @@ public class ClassicBar
     public void preInit(FMLPreInitializationEvent event)
     {
         logger = event.getModLog();
-        proxy.preInit(event);
     }
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event)
-    {
-        proxy.init(event);
+    public void init(FMLInitializationEvent event){
+
     }
 
     @Mod.EventHandler

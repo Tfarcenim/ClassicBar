@@ -1,4 +1,4 @@
-package tfar.classicbar;
+package tfar.classicbar.overlays;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,6 +10,7 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import tfar.classicbar.ArmorBarColor;
 
 import static tfar.classicbar.ModConfig.armorColorValues;
 import static tfar.classicbar.ModConfig.displayIcons;

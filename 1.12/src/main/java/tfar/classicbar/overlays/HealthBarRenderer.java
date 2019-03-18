@@ -1,4 +1,4 @@
-package tfar.classicbar;
+package tfar.classicbar.overlays;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

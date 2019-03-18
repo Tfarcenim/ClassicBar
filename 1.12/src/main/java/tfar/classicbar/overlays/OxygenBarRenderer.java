@@ -1,8 +1,9 @@
-package tfar.classicbar;
+package tfar.classicbar.overlays;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -10,37 +11,55 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static tfar.classicbar.ModConfig.displayIcons;
+import static tfar.classicbar.ModConfig.displayToughnessBar;
 import static tfar.classicbar.ModUtils.*;
 
 /*
-    Class handles the drawing of the hunger bar
+    Class handles the drawing of the oxygen bar
  */
 
-public class HungerBarRenderer {
+public class OxygenBarRenderer {
     private final Minecraft mc = Minecraft.getMinecraft();
+    ;
+    private int updateCounter = 0;
+    private double playerAir = 1;
+    private double lastAir = 1;
 
-    public HungerBarRenderer() {
+    private boolean forceUpdateIcons = false;
+
+    public OxygenBarRenderer() {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void renderHungerBar(RenderGameOverlayEvent.Pre event) {
+    public void renderOxygenBar(RenderGameOverlayEvent.Pre event) {
 
 
         Entity renderViewEnity = this.mc.getRenderViewEntity();
-        if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD
+        if (event.getType() != RenderGameOverlayEvent.ElementType.AIR
                 || event.isCanceled()
-                || !(renderViewEnity instanceof EntityPlayer)) return;
+                || !(renderViewEnity instanceof EntityPlayer)) {
+            return;
+        }
         event.setCanceled(true);
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
-        double food = player.getFoodStats().getFoodLevel();
-        double saturation = player.getFoodStats().getSaturationLevel();
+        double air = player.getAir();
+        if (player.getAir()>=300)return;
         int scaledWidth = event.getResolution().getScaledWidth();
         int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes
-        int xStart = scaledWidth / 2 + 9;
-        int yStart = scaledHeight - 39;
 
-        mc.profiler.startSection("hunger");
+        updateCounter = mc.ingameGUI.getUpdateCounter();
+
+        if (air != playerAir || forceUpdateIcons) {
+            forceUpdateIcons = false;
+        }
+
+        playerAir = air;
+        float xStart = scaledWidth / 2f + 9;
+        float yStart = scaledHeight - 49;
+        if(displayToughnessBar && player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue()>0)yStart-=10;
+
+        mc.profiler.startSection("air");
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
 
@@ -49,25 +68,16 @@ public class HungerBarRenderer {
         //Bar background
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
-            //draw portion of bar based on food amount
-            float f = xStart+80-getWidth(food,20);
-            GlStateManager.color(.75f,.3f,0);
-            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(food,20), 7);
+        //draw portion of bar based on air amount
 
-        if (saturation>0) {
+        float f = xStart+80-getWidth(air,300);
+        GlStateManager.color(0,.9f,.9f);
+        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(air,300), 7);
 
-            //draw saturation
+        //draw air amount
+        int h1 = (int) Math.floor(air);
 
-            GlStateManager.color(1,.8f,0);
-            f += getWidth(food,20)-getWidth(saturation,20);
-            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(saturation,20), 7);
-
-        }
-
-        //draw food amount
-        int h1 = (int) Math.floor(food);
-
-        int c = 0x994F00;
+        int c = 0x00dddd;
         int i3 = displayIcons ? 1 : 0;
 
         drawStringOnHUD(h1 + "", xStart + 81 + 10 * i3, yStart - 1, c, 0);
@@ -79,13 +89,8 @@ public class HungerBarRenderer {
         GuiIngameForge.left_height += 10;
 
         if (displayIcons) {
-            int i5 = (player.world.getWorldInfo().isHardcoreModeEnabled()) ? 5 : 0;
-            //Draw food icon
-            //food background
-            drawTexturedModalRect(xStart + 82, yStart, 16, 27, 9, 9);
-            //food
-            drawTexturedModalRect(xStart + 82, yStart, 52, 27, 9, 9);
-
+            //Draw air icon
+            drawTexturedModalRect(xStart + 82, yStart, 16, 18, 9, 9);
         }
 
         GlStateManager.disableBlend();
@@ -94,4 +99,5 @@ public class HungerBarRenderer {
         mc.profiler.endSection();
         event.setCanceled(true);
     }
+
 }
