@@ -19,6 +19,9 @@ public class ModConfig {
     @Config.Name("Draw full absorption Bar")
     public static boolean fullAbsorptionBar = false;
 
+    @Config.Name("Show numbers")
+    public static boolean showNumbers = true;
+
 
 
 }

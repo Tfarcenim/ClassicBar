@@ -114,7 +114,6 @@ public class ArmorBarRenderer {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);
-        GuiIngameForge.left_height += 10;
 
         if(displayIcons)
         //Draw armor icon

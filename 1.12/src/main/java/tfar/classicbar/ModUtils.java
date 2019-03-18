@@ -7,6 +7,8 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
+import static tfar.classicbar.ModConfig.showNumbers;
+
 public class ModUtils {
     public static final Item Lava_Charm = ForgeRegistries.ITEMS.getValue(new ResourceLocation("randomthings:lavacharm"));
 
@@ -26,6 +28,6 @@ public class ModUtils {
 
     public static void drawStringOnHUD(String string, float xOffset, float yOffset, int color, int lineOffset) {
         yOffset += lineOffset * 9;
-        fontRenderer.drawString(string, 2 + xOffset, 2 + yOffset, color, true);
+        if (showNumbers)fontRenderer.drawString(string, 2 + xOffset, 2 + yOffset, color, true);
     }
 }

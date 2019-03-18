@@ -40,7 +40,6 @@ public class LavaCharmRenderer {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void renderLavaBar(RenderGameOverlayEvent.Pre event) {
 
-
         Entity renderViewEnity = this.mc.getRenderViewEntity();
         if (event.isCanceled()
                 || !(renderViewEnity instanceof EntityPlayer)) {
@@ -61,7 +60,6 @@ public class LavaCharmRenderer {
             }
             charge = nbt.getInteger("charge");}
             else {charge = player.getItemStackFromSlot(EntityEquipmentSlot.FEET).getTagCompound().getInteger("charge");}
-
             int scaledWidth = event.getResolution().getScaledWidth();
             int scaledHeight = event.getResolution().getScaledHeight();
             //Push to avoid lasting changes
@@ -85,10 +83,11 @@ public class LavaCharmRenderer {
             //Bind our Custom bar
             mc.getTextureManager().bindTexture(ICON_BAR);
             //Bar background
-            drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
+        GlStateManager.color(1, 1, 1,1);
+        drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
             //Pass 1, draw bar portion
-            GlStateManager.color(1, .5f, 0);
+            GlStateManager.color(1, .5f, 0,1);
             //calculate bar color
             //draw portion of bar based on charge amount
             drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(charge, 200), 7);

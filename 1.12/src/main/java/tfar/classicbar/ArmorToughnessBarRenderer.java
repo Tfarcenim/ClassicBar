@@ -7,6 +7,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static tfar.classicbar.ModConfig.armorColorValues;
@@ -30,7 +31,7 @@ public class ArmorToughnessBarRenderer {
     }
 
     @SubscribeEvent
-    public void renderArmorBar(RenderGameOverlayEvent.Post event) {
+    public void renderArmorBar(RenderGameOverlayEvent.Pre event) {
 
 
         Entity renderViewEnity = this.mc.getRenderViewEntity();
@@ -103,8 +104,10 @@ public class ArmorToughnessBarRenderer {
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);
         GuiIngameForge.left_height += 10;
+        if (Loader.isModLoaded("advancedrocketry"))        GuiIngameForge.left_height += 10;
 
-       // GlStateManager.disableBlend();
+
+        // GlStateManager.disableBlend();
         //Revert our state back
         GlStateManager.popMatrix();
         mc.profiler.endSection();
