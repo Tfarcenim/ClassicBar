@@ -1,8 +1,8 @@
 [
 {
-  "modid": "colorfulhealthbar",
-  "name": "Colorful Health Bar",
-  "description": "Customizable wrapping health bar",
+  "modid": "classicbar",
+  "name": "Classic Bar",
+  "description": "Customizable status bars",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",

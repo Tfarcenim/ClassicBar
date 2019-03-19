@@ -13,8 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static java.lang.Math.floor;
-import static tfar.classicbar.ModConfig.displayIcons;
-import static tfar.classicbar.ModConfig.fullAbsorptionBar;
+import static tfar.classicbar.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
 /*
@@ -43,10 +42,10 @@ public class HealthBarRenderer {
     public void renderHealthBar(RenderGameOverlayEvent.Pre event) {
 
 
-        Entity renderViewEnity = this.mc.getRenderViewEntity();
+        Entity renderViewEntity = this.mc.getRenderViewEntity();
         if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH
                 || event.isCanceled()
-                || !(renderViewEnity instanceof EntityPlayer)) return;
+                || !(renderViewEntity instanceof EntityPlayer)) return;
         int scaledWidth = event.getResolution().getScaledWidth();
         int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes
@@ -118,8 +117,8 @@ public class HealthBarRenderer {
         int i1 = (int) floor(Math.log10(Math.max(1, h1)));
         int i2 = (int) floor(Math.log10(Math.max(1, h2)));
         int i3 = displayIcons ? 1 : 0;
-
-        drawStringOnHUD(h1 + "/" + h2, xStart - 23 - 9 * i3 - 6 * (i1 + i2), yStart - 1, textColor(health/maxHealth), 0);
+        if (showPercent)h1 = (int)(100*health/maxHealth);
+        drawStringOnHUD(h1 +"", xStart - 23 - 9 * i3 - 6 * (i1 + i2), yStart - 1, textColor(health/maxHealth), 0);
 
         //Reset back to normal settings
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

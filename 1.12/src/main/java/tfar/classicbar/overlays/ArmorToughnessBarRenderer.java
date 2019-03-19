@@ -11,8 +11,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tfar.classicbar.ArmorBarColor;
 
-import static tfar.classicbar.ModConfig.armorColorValues;
-import static tfar.classicbar.ModConfig.displayIcons;
+import static tfar.classicbar.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
 /*
@@ -99,13 +98,12 @@ public class ArmorToughnessBarRenderer {
         int i3 = (displayIcons)? 1 : 0;
 
         int c = Integer.valueOf(armorColorValues[0].substring(1, 7),16);
-
+        if (showPercent)i1 = (int)armorToughness*5;
         drawStringOnHUD(i1 + "", xStart + 100 - 10 * i3, yStart - 1, c, 0);
         //Reset back to normal settings
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);
         GuiIngameForge.left_height += 10;
-        if (Loader.isModLoaded("advancedrocketry"))        GuiIngameForge.left_height += 10;
 
 
         // GlStateManager.disableBlend();

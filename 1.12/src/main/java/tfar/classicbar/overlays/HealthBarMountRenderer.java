@@ -14,8 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static java.lang.Math.floor;
-import static tfar.classicbar.ModConfig.displayIcons;
-import static tfar.classicbar.ModConfig.fullAbsorptionBar;
+import static tfar.classicbar.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
 /*
@@ -88,7 +87,6 @@ public class HealthBarMountRenderer {
         mc.profiler.startSection("mountHealth");
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
-        int k5 = 16;
         int i4 = (highlight) ? 18 : 0;
 
 
@@ -110,11 +108,11 @@ public class HealthBarMountRenderer {
         int h2 = (int) Math.ceil(maxHealth);
 
         int i3 = displayIcons ? 1 : 0;
-
-        drawStringOnHUD(h1 + "/" + h2, xStart + 100 - 9 * i3, yStart - 1, textColor(mountHealth/maxHealth), 0);
+        if (showPercent)h1 = (int)(100*mountHealth/maxHealth);
+        drawStringOnHUD(h1+"", xStart + 100 - 9 * i3, yStart - 1, textColor(mountHealth/maxHealth), 0);
 
         //Reset back to normal settings
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1, 1, 1, 1);
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);
         GuiIngameForge.left_height += 10;

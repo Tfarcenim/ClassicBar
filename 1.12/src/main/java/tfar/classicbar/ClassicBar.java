@@ -1,5 +1,6 @@
 package tfar.classicbar;
 
+import net.minecraftforge.fml.common.Loader;
 import tfar.classicbar.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -7,6 +8,11 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
+
+import java.awt.peer.LabelPeer;
+
+import static tfar.classicbar.ModConfig.advancedRocketryWarning;
+import static tfar.classicbar.ModConfig.displayToughnessBar;
 
 @Mod(modid = ClassicBar.MODID, name = ClassicBar.MODNAME, version = ClassicBar.MODVERSION, useMetadata = true, clientSideOnly = true)
 public class ClassicBar
@@ -35,6 +41,10 @@ public class ClassicBar
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
+        if (Loader.isModLoaded("advancedrocketry") && advancedRocketryWarning && displayToughnessBar)
+            logger.warn("Toughness bar may not display correctly, change the placement in advanced rocketry config." +
+                "This is NOT a bug in the mod.");
+
       /*  if (Loader.isModLoaded("mantle")) {
             logger.info("Unregistering Mantle health renderer.");
             Field f = EventBus::class.java.getDeclaredField("listeners");

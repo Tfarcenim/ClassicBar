@@ -12,8 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tfar.classicbar.ArmorBarColor;
 
-import static tfar.classicbar.ModConfig.armorColorValues;
-import static tfar.classicbar.ModConfig.displayIcons;
+import static tfar.classicbar.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
 /*
@@ -35,10 +34,10 @@ public class ArmorBarRenderer {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void renderArmorBar(RenderGameOverlayEvent.Pre event) {
 
-        Entity renderViewEnity = this.mc.getRenderViewEntity();
+        Entity renderViewEntity = this.mc.getRenderViewEntity();
         if (event.getType() != RenderGameOverlayEvent.ElementType.ARMOR
                 || event.isCanceled()
-                || !(renderViewEnity instanceof EntityPlayer)) {
+                || !(renderViewEntity instanceof EntityPlayer)) {
             return;
         }
         event.setCanceled(true);
@@ -108,7 +107,7 @@ public class ArmorBarRenderer {
         int i3 = (displayIcons)? 1 : 0;
 
         int c = Integer.valueOf(armorColorValues[0].substring(1, 7),16);
-
+        if (showPercent)i1 = (int)armor*5;
         drawStringOnHUD(i1 + "", xStart - 10 - 10 * i3 - 6 * i2, yStart - 1, c, 0);
         //Reset back to normal settings
 

@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static tfar.classicbar.ModConfig.displayIcons;
+import static tfar.classicbar.ModConfig.showPercent;
 import static tfar.classicbar.ModUtils.*;
 
 /*
@@ -26,10 +27,10 @@ public class HungerBarRenderer {
     public void renderHungerBar(RenderGameOverlayEvent.Pre event) {
 
 
-        Entity renderViewEnity = this.mc.getRenderViewEntity();
+        Entity renderViewEntity = this.mc.getRenderViewEntity();
         if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD
                 || event.isCanceled()
-                || !(renderViewEnity instanceof EntityPlayer)) return;
+                || !(renderViewEntity instanceof EntityPlayer)) return;
         event.setCanceled(true);
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
         double food = player.getFoodStats().getFoodLevel();
@@ -69,7 +70,7 @@ public class HungerBarRenderer {
 
         int c = 0x994F00;
         int i3 = displayIcons ? 1 : 0;
-
+        if (showPercent)h1 = (int)food*5;
         drawStringOnHUD(h1 + "", xStart + 81 + 10 * i3, yStart - 1, c, 0);
         //Reset back to normal settings
 

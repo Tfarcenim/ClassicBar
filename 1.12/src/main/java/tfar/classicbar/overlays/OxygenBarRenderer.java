@@ -10,8 +10,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static tfar.classicbar.ModConfig.displayIcons;
-import static tfar.classicbar.ModConfig.displayToughnessBar;
+import static tfar.classicbar.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
 /*
@@ -23,7 +22,6 @@ public class OxygenBarRenderer {
     ;
     private int updateCounter = 0;
     private double playerAir = 1;
-    private double lastAir = 1;
 
     private boolean forceUpdateIcons = false;
 
@@ -34,10 +32,10 @@ public class OxygenBarRenderer {
     public void renderOxygenBar(RenderGameOverlayEvent.Pre event) {
 
 
-        Entity renderViewEnity = this.mc.getRenderViewEntity();
+        Entity renderViewEntity = this.mc.getRenderViewEntity();
         if (event.getType() != RenderGameOverlayEvent.ElementType.AIR
                 || event.isCanceled()
-                || !(renderViewEnity instanceof EntityPlayer)) {
+                || !(renderViewEntity instanceof EntityPlayer)) {
             return;
         }
         event.setCanceled(true);
@@ -79,7 +77,7 @@ public class OxygenBarRenderer {
 
         int c = 0x00dddd;
         int i3 = displayIcons ? 1 : 0;
-
+        if (showPercent)h1 = (int)air/3;
         drawStringOnHUD(h1 + "", xStart + 81 + 10 * i3, yStart - 1, c, 0);
         //Reset back to normal settings
 
