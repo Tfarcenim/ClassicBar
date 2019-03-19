@@ -53,31 +53,31 @@ public class HungerBarRenderer {
         //Bar background
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
-            //draw portion of bar based on food amount
-            float f = xStart+80-getWidth(food,20);
+        //draw portion of bar based on food amount
+        float f = xStart + 80 - getWidth(food, 20);
 
-            setColorFromHex(colors.hungerBarColor);
-            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(food,20), 7);
+        setColorFromHex(colors.hungerBarColor);
+        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(food, 20), 7);
 
-        if (saturation>0) {
+        if (saturation > 0) {
 
             //draw saturation
             setColorFromHex(colors.saturationBarColor);
-            f += getWidth(food,20)-getWidth(saturation,20);
-            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(saturation,20), 7);
+            f += getWidth(food, 20) - getWidth(saturation, 20);
+            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(saturation, 20), 7);
 
         }
-        f += getWidth(saturation,20) - getWidth(exhaustion,4f);
+        f += getWidth(saturation, 20) - getWidth(exhaustion, 4f);
         //draw exhaustion
-        GlStateManager.color(1,1,1,1);
-        drawTexturedModalRect(f, yStart, 1, 28, getWidth(exhaustion,4f), 9);
+        GlStateManager.color(1, 1, 1, .25f);
+        drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(exhaustion, 4f), 9);
 
         //draw food amount
         int h1 = (int) Math.floor(food);
 
         int i3 = general.displayIcons ? 1 : 0;
-        if (numbers.showPercent)h1 = (int)food*5;
-        int c = Integer.valueOf(colors.hungerBarColor.substring(1),16);
+        if (numbers.showPercent) h1 = (int) food * 5;
+        int c = Integer.valueOf(colors.hungerBarColor.substring(1), 16);
         drawStringOnHUD(h1 + "", xStart + 9 * i3 + 83, yStart - 1, c, 0);
         //Reset back to normal settings
 

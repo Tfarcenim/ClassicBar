@@ -34,23 +34,30 @@ public class ModUtils {
         return (int) Math.ceil(d3);
     }
 
-public static int getStringLength(String s){
+    public static int getStringLength(String s) {
         return fontRenderer.getStringWidth(s);
-}
+    }
 
     public static void drawStringOnHUD(String string, int xOffset, int yOffset, int color, int lineOffset) {
         yOffset += lineOffset * 9;
-        if (numbers.showNumbers)fontRenderer.drawString(string, 2 + xOffset, 2 + yOffset, color, true);
+        if (numbers.showNumbers) fontRenderer.drawString(string, 2 + xOffset, 2 + yOffset, color, true);
     }
-    public static float getExhaustion(EntityPlayer player)
-    {
-        float e1=0;
-        try{
-        e1 =foodExhaustion.getFloat(player.getFoodStats());}catch (Exception e){e.printStackTrace();
 
+    public static float getExhaustion(EntityPlayer player) {
+        float e1 = 0;
+        try {
+            e1 = foodExhaustion.getFloat(player.getFoodStats());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return e1;
     }
 
-
+    public static void setExhaustion(EntityPlayer player, float exhaustion) {
+        try {
+            foodExhaustion.setFloat(player.getFoodStats(), exhaustion);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -1,6 +1,7 @@
 package tfar.classicbar;
 
 import net.minecraftforge.fml.common.Loader;
+import tfar.classicbar.network.SyncHandler;
 import tfar.classicbar.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -13,7 +14,7 @@ import static tfar.classicbar.config.ModConfig.*;
 
 
 
-@Mod(modid = ClassicBar.MODID, name = ClassicBar.MODNAME, version = ClassicBar.MODVERSION, useMetadata = true)
+@Mod(modid = ClassicBar.MODID, name = ClassicBar.MODNAME, version = ClassicBar.MODVERSION, useMetadata = true, clientSideOnly = true)
 public class ClassicBar
 {
 
@@ -34,7 +35,7 @@ public class ClassicBar
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
-
+        SyncHandler.init();
     }
 
     @Mod.EventHandler
