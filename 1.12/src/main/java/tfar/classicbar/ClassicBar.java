@@ -9,10 +9,11 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
 
-import static tfar.classicbar.ModConfig.advancedRocketryWarning;
-import static tfar.classicbar.ModConfig.displayToughnessBar;
+import static tfar.classicbar.config.ModConfig.*;
 
-@Mod(modid = ClassicBar.MODID, name = ClassicBar.MODNAME, version = ClassicBar.MODVERSION, useMetadata = true, clientSideOnly = true)
+
+
+@Mod(modid = ClassicBar.MODID, name = ClassicBar.MODNAME, version = ClassicBar.MODVERSION, useMetadata = true)
 public class ClassicBar
 {
 
@@ -39,7 +40,7 @@ public class ClassicBar
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        if (Loader.isModLoaded("advancedrocketry") && advancedRocketryWarning && displayToughnessBar)
+        if (Loader.isModLoaded("advancedrocketry") && warnings.advancedRocketryWarning && general.displayToughnessBar)
             logger.warn("Toughness bar may not display correctly, change the placement in advanced rocketry config." +
                 "This is NOT a bug in the mod.");
 

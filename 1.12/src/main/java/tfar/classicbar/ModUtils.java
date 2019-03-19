@@ -3,13 +3,21 @@ package tfar.classicbar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-import static tfar.classicbar.ModConfig.showNumbers;
+import java.lang.reflect.Field;
+
+import static tfar.classicbar.config.ModConfig.numbers;
 
 public class ModUtils {
+    protected static final Field foodExhaustion = ReflectionHelper.findField(FoodStats.class, "foodExhaustionLevel", "field_75126_c", "c");
+
+
     public static final Item Lava_Charm = ForgeRegistries.ITEMS.getValue(new ResourceLocation("randomthings:lavacharm"));
 
     public static final ResourceLocation ICON_VANILLA = Gui.ICONS;
@@ -32,6 +40,17 @@ public static int getStringLength(String s){
 
     public static void drawStringOnHUD(String string, int xOffset, int yOffset, int color, int lineOffset) {
         yOffset += lineOffset * 9;
-        if (showNumbers)fontRenderer.drawString(string, 2 + xOffset, 2 + yOffset, color, true);
+        if (numbers.showNumbers)fontRenderer.drawString(string, 2 + xOffset, 2 + yOffset, color, true);
     }
+    public static float getExhaustion(EntityPlayer player)
+    {
+        float e1=0;
+        try{
+        e1 =foodExhaustion.getFloat(player.getFoodStats());}catch (Exception e){e.printStackTrace();
+
+        }
+        return e1;
+    }
+
+
 }

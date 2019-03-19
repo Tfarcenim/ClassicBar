@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "0.0.3"
+version = "0.0.4"
 group = "com.tfar.classicbar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "classicbar"
 
@@ -69,10 +69,19 @@ processResources {
                 
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
+
+        rename '(.+_at.cfg)', 'META-INF/$1'
     }
         
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+    jar {
+
+        manifest {
+
+            attributes 'FMLAT': 'MODID_at.cfg'
+        }
     }
 }

@@ -12,8 +12,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static java.lang.Math.floor;
-import static tfar.classicbar.ModConfig.*;
+import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
 /*
@@ -103,19 +102,19 @@ public class HealthBarRenderer {
         //draw absorption bar if it exists
         if (absorb > 0) {
             GlStateManager.color(1, 1, 1, 1);
-            if (!fullAbsorptionBar)drawScaledBar(absorb, maxHealth,xStart,yStart - 10);
+            if (!general.fullAbsorptionBar)drawScaledBar(absorb, maxHealth,xStart,yStart - 10);
             else drawTexturedModalRect(xStart, yStart - 10, 0, i4, 81, 9);
 
             int a1 = getStringLength((int)absorb+"");
             GlStateManager.color(0.831f, 0.686f, 0.215f, 1);
             drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb, maxHealth), 7);
-            int a2 = displayIcons ? 1 : 0;
+            int a2 = general.displayIcons ? 1 : 0;
             int a3 = (int)absorb;
             drawStringOnHUD(a3 + "", xStart  - a1 - 9 * a2 - 5, yStart - 11, 0xD4AF37, 0);
         }
         int i1 = getStringLength(h1+"");
-        int i2 = displayIcons ? 1 : 0;
-        if (showPercent)h1 = (int)(100*health/maxHealth);
+        int i2 = general.displayIcons ? 1 : 0;
+        if (numbers.showPercent)h1 = (int)(100*health/maxHealth);
         drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 - 5, yStart - 1, textColor(health/maxHealth), 0);
 
         //Reset back to normal settings
@@ -127,7 +126,7 @@ public class HealthBarRenderer {
             GuiIngameForge.left_height += 10;
         }
 
-        if (displayIcons) {
+        if (general.displayIcons) {
             int i5 = (player.world.getWorldInfo().isHardcoreModeEnabled()) ? 5 : 0;
             //Draw health icon
             //heart background
@@ -139,7 +138,6 @@ public class HealthBarRenderer {
                 drawTexturedModalRect(xStart - 10, yStart - 10, 16, 9 * i5, 9, 9);
                 drawTexturedModalRect(xStart - 10, yStart - 10, 160, 0, 9, 9);
             }
-
         }
 
         //Reset back to normal settings

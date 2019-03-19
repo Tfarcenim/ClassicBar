@@ -16,9 +16,10 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import tfar.classicbar.BarColor;
 
-import static tfar.classicbar.ModConfig.displayIcons;
 import static tfar.classicbar.ModUtils.*;
+import static tfar.classicbar.config.ModConfig.*;
 
 /*
     Class handles the drawing of the lava charm
@@ -88,22 +89,22 @@ public class LavaCharmRenderer {
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
             //Pass 1, draw bar portion
-            GlStateManager.color(1, .5f, 0,1);
+        BarColor.setColorFromHex(colors.lavaBarColor);
             //calculate bar color
             //draw portion of bar based on charge amount
             drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(charge, 200), 7);
-
+        int i2 = charge;
             //draw charge amount
             int i3 = getStringLength(charge+"");
-            int i4 = (displayIcons) ? 1 : 0;
-            int c = 0xFF7700;
-
-            drawStringOnHUD(charge + "", xStart - 9 * i4 - i3 - 5, yStart - 1, c, 0);
+            int i4 = (general.displayIcons) ? 1 : 0;
+        int c = Integer.valueOf(colors.lavaBarColor.substring(1),16);
+        if (numbers.showPercent)i2 /= 3;
+            drawStringOnHUD(i2 + "", xStart - 9 * i4 - i3 - 5, yStart - 1, c, 0);
 
             mc.getTextureManager().bindTexture(ICON_LAVA);
         GlStateManager.color(1, 1, 1, 1);
 
-            if (displayIcons)
+            if (general.displayIcons)
                 //Draw charge icon
                 drawTexturedModalRect(xStart - 10, yStart, 1, 1, 9, 9);
         //Reset back to normal settings

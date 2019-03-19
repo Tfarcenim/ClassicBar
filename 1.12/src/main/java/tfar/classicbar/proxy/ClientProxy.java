@@ -8,7 +8,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import tfar.classicbar.overlays.*;
 import tfar.classicbar.overlays.modoverlays.LavaCharmRenderer;
 
-import static tfar.classicbar.ModConfig.*;
+import static tfar.classicbar.config.ModConfig.*;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class ClientProxy extends CommonProxy
@@ -25,7 +25,7 @@ public class ClientProxy extends CommonProxy
         MinecraftForge.EVENT_BUS.register(new HealthBarRenderer());
         MinecraftForge.EVENT_BUS.register(new HealthBarMountRenderer());
         MinecraftForge.EVENT_BUS.register(new ArmorBarRenderer());
-        if (displayToughnessBar)MinecraftForge.EVENT_BUS.register(new ArmorToughnessBarRenderer());
+        if (general.displayToughnessBar)MinecraftForge.EVENT_BUS.register(new ArmorToughnessBarRenderer());
         MinecraftForge.EVENT_BUS.register(new OxygenBarRenderer());
         MinecraftForge.EVENT_BUS.register(new HungerBarRenderer());
 

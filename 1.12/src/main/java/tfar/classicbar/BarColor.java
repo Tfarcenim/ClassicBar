@@ -8,14 +8,14 @@ import java.util.regex.Pattern;
 /*
     Class representing the color of the armor icon
  */
-public class ArmorBarColor
+public class BarColor
 {
     public static float Red;
     public static float Blue;
     public static float Green;
     public static float Alpha;
 
-    public ArmorBarColor()
+    public BarColor()
     {
         Red = Blue = Green = Alpha = 1.0f;
     }

@@ -13,8 +13,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static java.lang.Math.floor;
-import static tfar.classicbar.ModConfig.*;
+import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
 /*
@@ -107,8 +106,8 @@ public class HealthBarMountRenderer {
         int h1 = (int) Math.ceil(mountHealth);
         int h2 = (int) Math.ceil(maxHealth);
 
-        int i3 = displayIcons ? 1 : 0;
-        if (showPercent)h1 = (int)(100*mountHealth/maxHealth);
+        int i3 = general.displayIcons ? 1 : 0;
+        if (numbers.showPercent)h1 = (int)(100*mountHealth/maxHealth);
         drawStringOnHUD(h1+"", xStart + 100 - 9 * i3, yStart - 1, textColor(mountHealth/maxHealth), 0);
 
         //Reset back to normal settings
@@ -117,7 +116,7 @@ public class HealthBarMountRenderer {
         mc.getTextureManager().bindTexture(ICON_VANILLA);
         GuiIngameForge.left_height += 10;
 
-        if (displayIcons) {
+        if (general.displayIcons) {
             //Draw mountHealth icon
             //heart background
             drawTexturedModalRect(xStart + 82, yStart, 16, 0, 9, 9);

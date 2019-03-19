@@ -4,14 +4,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.FoodStats;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static tfar.classicbar.ModConfig.displayIcons;
-import static tfar.classicbar.ModConfig.showPercent;
+
+import static tfar.classicbar.BarColor.*;
 import static tfar.classicbar.ModUtils.*;
+import static tfar.classicbar.config.ModConfig.*;
 
 /*
     Class handles the drawing of the hunger bar
@@ -27,14 +29,15 @@ public class HungerBarRenderer {
     public void renderHungerBar(RenderGameOverlayEvent.Pre event) {
 
 
-        Entity renderViewEntity = this.mc.getRenderViewEntity();
-        if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD
-                || event.isCanceled()
-                || !(renderViewEntity instanceof EntityPlayer)) return;
+        //Entity renderViewEntity = this.mc.getRenderViewEntity();
+        if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD) return;
         event.setCanceled(true);
-        EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayer player = mc.player;
         double food = player.getFoodStats().getFoodLevel();
         double saturation = player.getFoodStats().getSaturationLevel();
+        float exhaustion = getExhaustion(player);
+        System.out.println(exhaustion);
         int scaledWidth = event.getResolution().getScaledWidth();
         int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes
@@ -52,40 +55,43 @@ public class HungerBarRenderer {
 
             //draw portion of bar based on food amount
             float f = xStart+80-getWidth(food,20);
-            GlStateManager.color(.75f,.3f,0);
+
+            setColorFromHex(colors.hungerBarColor);
             drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(food,20), 7);
 
         if (saturation>0) {
 
             //draw saturation
-
-            GlStateManager.color(1,.8f,0);
+            setColorFromHex(colors.saturationBarColor);
             f += getWidth(food,20)-getWidth(saturation,20);
             drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(saturation,20), 7);
 
         }
+        f += getWidth(saturation,20) - getWidth(exhaustion,4f);
+        //draw exhaustion
+        GlStateManager.color(1,1,1,1);
+        drawTexturedModalRect(f, yStart, 1, 28, getWidth(exhaustion,4f), 9);
 
         //draw food amount
         int h1 = (int) Math.floor(food);
 
-        int c = 0x994F00;
-        int i3 = displayIcons ? 1 : 0;
-        if (showPercent)h1 = (int)food*5;
-        drawStringOnHUD(h1 + "", xStart + 81 + 10 * i3, yStart - 1, c, 0);
+        int i3 = general.displayIcons ? 1 : 0;
+        if (numbers.showPercent)h1 = (int)food*5;
+        int c = Integer.valueOf(colors.hungerBarColor.substring(1),16);
+        drawStringOnHUD(h1 + "", xStart + 9 * i3 + 83, yStart - 1, c, 0);
         //Reset back to normal settings
 
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1, 1, 1, 1);
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);
         GuiIngameForge.left_height += 10;
 
-        if (displayIcons) {
-            int i5 = (player.world.getWorldInfo().isHardcoreModeEnabled()) ? 5 : 0;
+        if (general.displayIcons) {
             //Draw food icon
             //food background
-            drawTexturedModalRect(xStart + 82, yStart, 16, 27, 9, 9);
+            drawTexturedModalRect(xStart + 83, yStart, 16, 27, 9, 9);
             //food
-            drawTexturedModalRect(xStart + 82, yStart, 52, 27, 9, 9);
+            drawTexturedModalRect(xStart + 83, yStart, 52, 27, 9, 9);
 
         }
 
