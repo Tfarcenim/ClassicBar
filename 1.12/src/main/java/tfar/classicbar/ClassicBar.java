@@ -9,8 +9,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
 
-import java.awt.peer.LabelPeer;
-
 import static tfar.classicbar.ModConfig.advancedRocketryWarning;
 import static tfar.classicbar.ModConfig.displayToughnessBar;
 
