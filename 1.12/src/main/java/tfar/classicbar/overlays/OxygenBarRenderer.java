@@ -53,8 +53,8 @@ public class OxygenBarRenderer {
         }
 
         playerAir = air;
-        float xStart = scaledWidth / 2f + 9;
-        float yStart = scaledHeight - 49;
+        int xStart = scaledWidth / 2 + 9;
+        int yStart = scaledHeight - 49;
         if(displayToughnessBar && player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue()>0)yStart-=10;
 
         mc.profiler.startSection("air");
@@ -78,7 +78,7 @@ public class OxygenBarRenderer {
         int c = 0x00dddd;
         int i3 = displayIcons ? 1 : 0;
         if (showPercent)h1 = (int)air/3;
-        drawStringOnHUD(h1 + "", xStart + 81 + 10 * i3, yStart - 1, c, 0);
+        drawStringOnHUD(h1 + "", xStart + 82 + 9 * i3, yStart - 1, c, 0);
         //Reset back to normal settings
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

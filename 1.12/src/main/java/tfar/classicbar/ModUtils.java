@@ -26,8 +26,11 @@ public class ModUtils {
         return (int) Math.ceil(d3);
     }
 
+public static int getStringLength(String s){
+        return fontRenderer.getStringWidth(s);
+}
 
-    public static void drawStringOnHUD(String string, float xOffset, float yOffset, int color, int lineOffset) {
+    public static void drawStringOnHUD(String string, int xOffset, int yOffset, int color, int lineOffset) {
         yOffset += lineOffset * 9;
         if (showNumbers)fontRenderer.drawString(string, 2 + xOffset, 2 + yOffset, color, true);
     }

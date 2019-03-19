@@ -92,18 +92,15 @@ public class LavaCharmRenderer {
             //draw portion of bar based on charge amount
             drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(charge, 200), 7);
 
-
             //draw charge amount
-            int i3 = (int) Math.ceil(charge);
-            int i4 = (int) Math.floor(Math.log10(Math.max(1, i3)));
-            int i5 = (displayIcons) ? 1 : 0;
-
+            int i3 = getStringLength(charge+"");
+            int i4 = (displayIcons) ? 1 : 0;
             int c = 0xFF7700;
 
-            drawStringOnHUD(charge + "", xStart - 10 - 10 * i5 - 6 * i4, yStart - 1, c, 0);
+            drawStringOnHUD(charge + "", xStart - 9 * i4 - i3 - 5, yStart - 1, c, 0);
 
             mc.getTextureManager().bindTexture(ICON_LAVA);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1, 1, 1, 1);
 
             if (displayIcons)
                 //Draw charge icon

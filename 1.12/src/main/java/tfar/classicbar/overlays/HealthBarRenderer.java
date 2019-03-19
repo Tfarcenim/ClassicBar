@@ -73,8 +73,8 @@ public class HealthBarRenderer {
         playerHealth = health;
         double j = lastPlayerHealth;
         IAttributeInstance maxHealthAttribute = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
-        float xStart = scaledWidth / 2f - 91;
-        float yStart = scaledHeight - 39;
+        int xStart = scaledWidth / 2 - 91;
+        int yStart = scaledHeight - 39;
         double maxHealth = maxHealthAttribute.getAttributeValue();
 
         mc.profiler.startSection("health");
@@ -106,19 +106,17 @@ public class HealthBarRenderer {
             if (!fullAbsorptionBar)drawScaledBar(absorb, maxHealth,xStart,yStart - 10);
             else drawTexturedModalRect(xStart, yStart - 10, 0, i4, 81, 9);
 
-            int a1 = (int) floor(Math.log10(Math.max(1, absorb)));
+            int a1 = getStringLength((int)absorb+"");
             GlStateManager.color(0.831f, 0.686f, 0.215f, 1);
             drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb, maxHealth), 7);
             int a2 = displayIcons ? 1 : 0;
             int a3 = (int)absorb;
-            drawStringOnHUD(a3 + "", xStart - 10 - 6 * a1 - 10 * a2, yStart - 11, 0xD4AF37, 0);
+            drawStringOnHUD(a3 + "", xStart  - a1 - 9 * a2 - 5, yStart - 11, 0xD4AF37, 0);
         }
-
-        int i1 = (int) floor(Math.log10(Math.max(1, h1)));
-        int i2 = (int) floor(Math.log10(Math.max(1, h2)));
-        int i3 = displayIcons ? 1 : 0;
+        int i1 = getStringLength(h1+"");
+        int i2 = displayIcons ? 1 : 0;
         if (showPercent)h1 = (int)(100*health/maxHealth);
-        drawStringOnHUD(h1 +"", xStart - 23 - 9 * i3 - 6 * (i1 + i2), yStart - 1, textColor(health/maxHealth), 0);
+        drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 - 5, yStart - 1, textColor(health/maxHealth), 0);
 
         //Reset back to normal settings
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

@@ -59,7 +59,7 @@ public class ArmorToughnessBarRenderer {
 
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
-        int f = xStart+80-getWidth(armorToughness,20);
+        int f;
 
         //Bar background
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
@@ -72,25 +72,35 @@ public class ArmorToughnessBarRenderer {
             //calculate bar color
             ArmorBarColor.setColorFromHex(armorColorValues[0]);
             //draw portion of bar based on armor toughness amount
+            f = xStart+80-getWidth(armorToughness,20);
             drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(armorToughness,20), 7);
 
         }
         else {
 
             //we have wrapped, draw 2 bars
-            int index = (int)armorToughness/20;
+            int index = (int)Math.ceil(armorToughness/20);
             int size = armorColorValues.length;
-
+            int i = index;
             //if we are out of colors wrap the bar
-            if (index>size) index=size;
+            if (index>=size) i=size-1;
+            if (index < size && armorToughness % 20 != 0){
 
-            //draw first bar
-            ArmorBarColor.setColorFromHex(armorColorValues[index-1]);
+            //draw complete first bar
+            ArmorBarColor.setColorFromHex(armorColorValues[i-1]);
             drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
-            //draw partial second bar
-            ArmorBarColor.setColorFromHex(armorColorValues[index]);
-            drawTexturedModalRect(f, yStart+1, 1, 10, getWidth(armorToughness%20,20), 7);
 
+            //draw partial second bar
+                f = xStart+80-getWidth(armorToughness%20,20);
+
+                ArmorBarColor.setColorFromHex(armorColorValues[i]);
+            drawTexturedModalRect(f, yStart+1, 1, 10, getWidth(armorToughness%20,20), 7);}
+        //case 2, bar is a multiple of 20 or it is capped
+            else{
+            //draw complete second bar
+            ArmorBarColor.setColorFromHex(armorColorValues[i]);
+            drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
+        }
         }
 
         //draw armor toughness amount
@@ -99,7 +109,7 @@ public class ArmorToughnessBarRenderer {
 
         int c = Integer.valueOf(armorColorValues[0].substring(1, 7),16);
         if (showPercent)i1 = (int)armorToughness*5;
-        drawStringOnHUD(i1 + "", xStart + 100 - 10 * i3, yStart - 1, c, 0);
+        drawStringOnHUD(i1 + "", xStart + 101 - 9 * i3, yStart - 1, c, 0);
         //Reset back to normal settings
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);

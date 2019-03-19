@@ -30,10 +30,12 @@ public class ModConfig {
     @Config.Name("Percentage based")
     public static boolean showPercent = false;
 
-
     @Config.Name("Show warning")
     @Config.Comment("Warning when advanced rocketry is installed")
     public static boolean advancedRocketryWarning = true;
+
+
+
 
     @Mod.EventBusSubscriber(modid = ClassicBar.MODID)
     public static class ConfigEventHandler {
@@ -42,6 +44,8 @@ public class ModConfig {
             if (event.getModID().equals(ClassicBar.MODID))
 
                 ConfigManager.sync(ClassicBar.MODID, Config.Type.INSTANCE);
+            ClassicBar.proxy.refreshResources();
+
             System.out.println("Syncing Classic Bar Configs");
         }
     }

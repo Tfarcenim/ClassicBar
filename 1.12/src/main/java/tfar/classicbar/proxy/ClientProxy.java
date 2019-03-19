@@ -32,6 +32,8 @@ public class ClientProxy extends CommonProxy
         //mod renderers
         if (Loader.isModLoaded("randomthings"))
             MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
+        if (Loader.isModLoaded("superiorshields")){}
+           // MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
     }
 
 
