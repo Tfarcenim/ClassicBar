@@ -46,6 +46,7 @@ public class LavaCharmRenderer {
             return;
         }
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
+        if (player.capabilities.isCreativeMode)return;
         int i1 = BaublesApi.isBaubleEquipped(player, Lava_Charm);
 
         if (i1 == -1) {
