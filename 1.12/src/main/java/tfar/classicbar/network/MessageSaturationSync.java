@@ -12,6 +12,7 @@ public class MessageSaturationSync implements IMessage, IMessageHandler<MessageS
 {
     float saturationLevel;
 
+    public MessageSaturationSync(){}
 
     public MessageSaturationSync(float saturationLevel)
     {

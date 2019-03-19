@@ -10,6 +10,8 @@ public class MessageExhaustionSync implements IMessage, IMessageHandler<MessageE
 {
     float exhaustionLevel;
 
+    public MessageExhaustionSync(){}
+
     public MessageExhaustionSync(float exhaustionLevel)
     {
         this.exhaustionLevel = exhaustionLevel;
