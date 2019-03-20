@@ -7,6 +7,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tfar.classicbar.HexColor;
@@ -52,6 +53,7 @@ public class ArmorToughnessBarRenderer {
         playerArmorToughness = armorToughness;
         int xStart = scaledWidth / 2 + 9;
         int yStart = scaledHeight - 49;
+        if(Loader.isModLoaded("toughasnails"))yStart-=10;
 
         mc.profiler.startSection("armortoughness");
         GlStateManager.pushMatrix();

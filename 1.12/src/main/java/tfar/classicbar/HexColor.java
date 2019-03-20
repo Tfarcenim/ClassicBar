@@ -38,8 +38,8 @@ public class HexColor
         }
         else
         {
-            //Set values to white (default minecraft color)
-            Red = Blue = Green = 1.0f;
+            //Set values to black (default minecraft color)
+            Red = Blue = Green = 0;
         }
         GlStateManager.color(Red,Green,Blue);
     }

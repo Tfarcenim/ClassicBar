@@ -35,12 +35,7 @@ public class MessageSaturationSync implements IMessage, IMessageHandler<MessageS
     public IMessage onMessage(final MessageSaturationSync message, final MessageContext ctx)
     {
         // defer to the next game loop; we can't guarantee that Minecraft.thePlayer is initialized yet
-        Minecraft.getMinecraft().addScheduledTask(new Runnable() {
-            @Override
-            public void run() {
-                NetworkHelper.getSidedPlayer(ctx).getFoodStats().setFoodSaturationLevel(message.saturationLevel);
-            }
-        });
+        Minecraft.getMinecraft().addScheduledTask(() -> NetworkHelper.getSidedPlayer(ctx).getFoodStats().setFoodSaturationLevel(message.saturationLevel));
         return null;
     }
 }

@@ -31,7 +31,7 @@ public class ArmorBarRenderer {
     public ArmorBarRenderer() {
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
+    @SubscribeEvent//(priority = EventPriority.LOW)
     public void renderArmorBar(RenderGameOverlayEvent.Pre event) {
 
         Entity renderViewEntity = this.mc.getRenderViewEntity();

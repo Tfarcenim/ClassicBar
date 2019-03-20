@@ -33,12 +33,7 @@ public class MessageExhaustionSync implements IMessage, IMessageHandler<MessageE
     public IMessage onMessage(final MessageExhaustionSync message, final MessageContext ctx)
     {
         // defer to the next game loop; we can't guarantee that Minecraft.thePlayer is initialized yet
-        Minecraft.getMinecraft().addScheduledTask(new Runnable() {
-            @Override
-            public void run() {
-                ModUtils.setExhaustion(NetworkHelper.getSidedPlayer(ctx), message.exhaustionLevel);
-            }
-        });
+        Minecraft.getMinecraft().addScheduledTask(() -> ModUtils.setExhaustion(NetworkHelper.getSidedPlayer(ctx), message.exhaustionLevel));
         return null;
     }
 }

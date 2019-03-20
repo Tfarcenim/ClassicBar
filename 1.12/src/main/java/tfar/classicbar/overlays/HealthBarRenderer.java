@@ -38,7 +38,7 @@ public class HealthBarRenderer {
         forceUpdateIcons = true;
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
+    @SubscribeEvent//(priority = EventPriority.LOW)
     public void renderHealthBar(RenderGameOverlayEvent.Pre event) {
 
 
