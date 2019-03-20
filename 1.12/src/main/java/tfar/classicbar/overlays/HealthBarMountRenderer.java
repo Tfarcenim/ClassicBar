@@ -12,7 +12,10 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import tfar.classicbar.ScalingBarHandler;
 
+import static tfar.classicbar.HexColor.setColorFromHex;
+import static tfar.classicbar.ScalingBarHandler.calculateBarHexColor;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
@@ -98,7 +101,7 @@ public class HealthBarMountRenderer {
         //Pass 1, draw bar portion
 
         //calculate bar color
-        calculateBarColor(mountHealth, maxHealth);
+        setColorFromHex(calculateBarHexColor(mountHealth, maxHealth));
         float f = xStart+80-getWidth(mountHealth,maxHealth);
         //draw portion of bar based on mountHealth remaining
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
@@ -139,12 +142,6 @@ public class HealthBarMountRenderer {
         drawTexturedModalRect(x, y, 0, 0, i, 9);
         drawTexturedModalRect(x+i,y+1,0,1,1,7);
 
-    }
-    private void calculateBarColor(double health, double maxHealth) {
-        float f = (float) (health / maxHealth);
-        float g = MathHelper.clamp(4 * f - 1, 0, 1);
-        float r = Math.min(1, 2 * (1 - f));
-        GlStateManager.color(r, g, 0, 1);
     }
     private int textColor(double d1){
         if (d1>=.5){

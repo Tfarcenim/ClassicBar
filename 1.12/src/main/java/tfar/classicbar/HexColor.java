@@ -5,17 +5,19 @@ import net.minecraft.client.renderer.GlStateManager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static tfar.classicbar.ScalingBarHandler.*;
+
 /*
     Class representing the color of the armor icon
  */
-public class BarColor
+public class HexColor
 {
     public static float Red;
     public static float Blue;
     public static float Green;
     public static float Alpha;
 
-    public BarColor()
+    public HexColor()
     {
         Red = Blue = Green = Alpha = 1.0f;
     }
@@ -27,8 +29,7 @@ public class BarColor
     public static void setColorFromHex(String colorHex)
     {
         //Check the color hex is valid
-        Pattern colorPattern = Pattern.compile("^#[0-9A-Fa-f]{6}$");
-        Matcher matcher = colorPattern.matcher(colorHex);
+        Matcher matcher = p.matcher(colorHex);
         if (matcher.matches())
         {
             Red = Integer.valueOf(colorHex.substring(1, 3), 16).floatValue() / 255;

@@ -7,6 +7,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tfar.classicbar.ClassicBar;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Config(modid = ClassicBar.MODID)
 public class ModConfig {
 
@@ -56,6 +59,17 @@ public static class ConfigGeneral{
         public String oxygenBarColor = "#00E6E6";
         @Config.Name("Saturation Bar Color")
         public String saturationBarColor = "#FFCC00";
+        @Config.Name("fractions")
+        public Float[] f = new Float[]{.25f,.5f,1f};
+        @Config.Name("colors")
+        public String[] s = new String[]{"#FF0000","#FFFF00","#00FF00"};
+
+         //   put(.25f, "#FF0000");
+        //    put(.5f, "#FFFF00");
+         //   put(1f,"#00FF00");
+        //}};
+
+
         @Config.Name("Lava Bar Color")
         public String lavaBarColor = "#FF8000";
     }

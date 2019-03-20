@@ -9,7 +9,7 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import tfar.classicbar.BarColor;
+import tfar.classicbar.HexColor;
 
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
@@ -31,7 +31,7 @@ public class ArmorToughnessBarRenderer {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void renderArmorBar(RenderGameOverlayEvent.Pre event) {
+    public void renderArmorBar(RenderGameOverlayEvent.Post event) {
 
 
         Entity renderViewEnity = this.mc.getRenderViewEntity();
@@ -70,7 +70,7 @@ public class ArmorToughnessBarRenderer {
 
         if (armorToughness<=20) {
             //calculate bar color
-            BarColor.setColorFromHex(colors.armorColorValues[0]);
+            HexColor.setColorFromHex(colors.armorColorValues[0]);
             //draw portion of bar based on armor toughness amount
             f = xStart+80-getWidth(armorToughness,20);
             drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(armorToughness,20), 7);
@@ -87,18 +87,18 @@ public class ArmorToughnessBarRenderer {
             if (index < size && armorToughness % 20 != 0){
 
             //draw complete first bar
-            BarColor.setColorFromHex(colors.armorColorValues[i-1]);
+            HexColor.setColorFromHex(colors.armorColorValues[i-1]);
             drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
 
             //draw partial second bar
                 f = xStart+80-getWidth(armorToughness%20,20);
 
-                BarColor.setColorFromHex(colors.armorColorValues[i]);
+                HexColor.setColorFromHex(colors.armorColorValues[i]);
             drawTexturedModalRect(f, yStart+1, 1, 10, getWidth(armorToughness%20,20), 7);}
         //case 2, bar is a multiple of 20 or it is capped
             else{
             //draw complete second bar
-            BarColor.setColorFromHex(colors.armorColorValues[i]);
+            HexColor.setColorFromHex(colors.armorColorValues[i]);
             drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
         }
         }

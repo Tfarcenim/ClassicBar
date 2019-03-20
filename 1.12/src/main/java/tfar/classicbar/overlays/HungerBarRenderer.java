@@ -2,16 +2,14 @@ package tfar.classicbar.overlays;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.FoodStats;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 
-import static tfar.classicbar.BarColor.*;
+import static tfar.classicbar.HexColor.*;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 
@@ -37,7 +35,6 @@ public class HungerBarRenderer {
         double food = player.getFoodStats().getFoodLevel();
         double saturation = player.getFoodStats().getSaturationLevel();
         float exhaustion = getExhaustion(player);
-        System.out.println(exhaustion);
         int scaledWidth = event.getResolution().getScaledWidth();
         int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes

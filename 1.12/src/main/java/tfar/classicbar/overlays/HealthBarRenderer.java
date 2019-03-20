@@ -6,12 +6,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static tfar.classicbar.HexColor.setColorFromHex;
+import static tfar.classicbar.ScalingBarHandler.calculateBarHexColor;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
@@ -92,12 +93,11 @@ public class HealthBarRenderer {
         //Pass 1, draw bar portion
 
         //calculate bar color
-        calculateBarColor(health, maxHealth);
+        setColorFromHex(calculateBarHexColor(health, maxHealth));
         //draw portion of bar based on health remaining
         drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
         //draw health amount
         int h1 = (int) Math.ceil(health);
-        int h2 = (int) Math.ceil(maxHealth);
 
         //draw absorption bar if it exists
         if (absorb > 0) {
@@ -155,12 +155,7 @@ public class HealthBarRenderer {
         drawTexturedModalRect(x+i,y+1,0,1,1,7);
 
     }
-    private void calculateBarColor(double health, double maxHealth) {
-        float f = (float) (health / maxHealth);
-        float g = MathHelper.clamp(4 * f - 1, 0, 1);
-        float r = Math.min(1, 2 * (1 - f));
-        GlStateManager.color(r, g, 0, 1);
-    }
+
     private int textColor(double d1){
         if (d1>=.5){
             int r = (int)Math.floor(0xFF * 2 * (1 - d1));

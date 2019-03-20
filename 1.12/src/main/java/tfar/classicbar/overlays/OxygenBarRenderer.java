@@ -10,7 +10,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static tfar.classicbar.BarColor.setColorFromHex;
+import static tfar.classicbar.HexColor.setColorFromHex;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
