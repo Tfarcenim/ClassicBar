@@ -61,19 +61,19 @@ public class ClassicBar {
                 listeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>)f.get(MinecraftForge.EVENT_BUS);
                 for (Map.Entry<Object, ArrayList<IEventListener>> entry : listeners.entrySet()){
                     //System.out.println(entry);
-                    if (entry == null)continue;
+                    //if (entry == null)continue;
                     String s = entry.getKey().getClass().getCanonicalName();
-                    if (s == null)continue;
+                    //if (s == null)continue;
                     //System.out.println(s);
-                    System.out.println("Key: "+entry.getKey());
-                    System.out.println("Value"+entry.getValue());
+                   // System.out.println("Key: "+entry.getKey());
+                  //  System.out.println("Value"+entry.getValue());
 if (s.equals("slimeknights.mantle.client.ExtraHeartRenderHandler")) {
-    System.out.println("sucess?");
-    MinecraftForge.EVENT_BUS.unregister("slimeknights.mantle.client.ExtraHeartRenderHandler");}}
+    System.out.println("success?");
+    MinecraftForge.EVENT_BUS.unregister(entry.getKey());}}
 
-                System.out.println(handler);
-                if (handler == null) logger.warn("Unable to unregister Mantle health renderer!");
-                else MinecraftForge.EVENT_BUS.unregister(handler);
+                //System.out.println(handler);
+                //if (handler == null) logger.warn("Unable to unregister Mantle health renderer!");
+                // MinecraftForge.EVENT_BUS.unregister(handler);
             } catch (IllegalAccessException | NoSuchFieldException | NullPointerException e) {e.printStackTrace(); }
             proxy.postInit(event);
         }
