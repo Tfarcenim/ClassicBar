@@ -27,7 +27,7 @@ public class ClassicBar {
 
     public static final String MODID = "classicbar";
     public static final String MODNAME = "Classic Bar";
-    public static final String MODVERSION = "0.0.6";
+    public static final String MODVERSION = "0.0.7";
 
     @SidedProxy(clientSide = "tfar.classicbar.proxy.ClientProxy")
     public static CommonProxy proxy;
@@ -53,28 +53,19 @@ public class ClassicBar {
         if (Loader.isModLoaded("mantle")) {
             logger.info("Unregistering Mantle health renderer.");
             ConcurrentHashMap<Object, ArrayList<IEventListener>>listeners;
-
+            boolean b1 = false;
             try {
                 Field f = EventBus.class.getDeclaredField("listeners");
                 f.setAccessible(true);
-                Object handler = null;
                 listeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>)f.get(MinecraftForge.EVENT_BUS);
                 for (Map.Entry<Object, ArrayList<IEventListener>> entry : listeners.entrySet()){
-                    //System.out.println(entry);
-                    //if (entry == null)continue;
                     String s = entry.getKey().getClass().getCanonicalName();
-                    //if (s == null)continue;
-                    System.out.println(entry);
-                   // System.out.println("Key: "+entry.getKey());
-                  //  System.out.println("Value"+entry.getValue());
+                    //System.out.println(entry);
 if ("slimeknights.mantle.client.ExtraHeartRenderHandler".equals(s)) {
-    System.out.println("success?");
-    MinecraftForge.EVENT_BUS.unregister(entry.getKey());}}
-
-                //System.out.println(handler);
-                //if (handler == null) logger.warn("Unable to unregister Mantle health renderer!");
-                // MinecraftForge.EVENT_BUS.unregister(handler);
+    logger.info("success?");
+    MinecraftForge.EVENT_BUS.unregister(entry.getKey());b1 = true;break;}}
             } catch (IllegalAccessException | NoSuchFieldException | NullPointerException e) {e.printStackTrace(); }
+            if (!b1)logger.warn("Unable to unregister mantle healthbar.");
             proxy.postInit(event);
         }
     }
