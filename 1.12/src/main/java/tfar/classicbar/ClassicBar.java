@@ -61,8 +61,11 @@ public class ClassicBar {
                 listeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>)f.get(MinecraftForge.EVENT_BUS);
                 for (Map.Entry<Object, ArrayList<IEventListener>> entry : listeners.entrySet()){
                     //System.out.println(entry);
+                    String s = "";
                     //if (entry == null)continue;
-                    String s = entry.getKey().getClass().getCanonicalName();
+                    if (entry != null)
+                        if(entry.getKey()!= null)
+                    s = entry.getKey().getClass().getCanonicalName();
                     //if (s == null)continue;
                     //System.out.println(s);
                    // System.out.println("Key: "+entry.getKey());
