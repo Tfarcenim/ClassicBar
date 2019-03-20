@@ -9,6 +9,7 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
 import toughasnails.api.TANCapabilities;
 import toughasnails.thirst.ThirstHandler;
 
@@ -18,7 +19,7 @@ import static tfar.classicbar.ModUtils.*;
 import static toughasnails.handler.thirst.ThirstOverlayHandler.OVERLAY;
 
 /*
-    Class handles the drawing of the oxygen bar
+    Class handles the drawing of the thirst bar
  */
 
 public class ThirstBarRenderer {
@@ -41,10 +42,11 @@ public class ThirstBarRenderer {
             return;
         }
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
+        if (player.capabilities.isCreativeMode)return;
         ThirstHandler thirstStats = (ThirstHandler)player.getCapability(TANCapabilities.THIRST, (EnumFacing)null);
 
         double thirst = thirstStats.getThirst();
-        System.out.println(thirst);
+        //System.out.println(thirst);
         int scaledWidth = event.getResolution().getScaledWidth();
         int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes
