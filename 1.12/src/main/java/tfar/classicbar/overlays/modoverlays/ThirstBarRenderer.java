@@ -11,9 +11,11 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import toughasnails.api.TANCapabilities;
+import toughasnails.api.config.GameplayOption;
+import toughasnails.api.config.SyncedConfig;
 import toughasnails.thirst.ThirstHandler;
 
-import static tfar.classicbar.HexColor.setColorFromHex;
+import static tfar.classicbar.ColorUtilities.cU;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 import static toughasnails.handler.thirst.ThirstOverlayHandler.OVERLAY;
@@ -33,18 +35,17 @@ public class ThirstBarRenderer {
     public ThirstBarRenderer() {
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent//(priority = EventPriority.HIGH)
     public void renderThirstBar(RenderGameOverlayEvent.Pre event) {
         Entity renderViewEntity = this.mc.getRenderViewEntity();
-        if (//event.getType() != RenderGameOverlayEvent.ElementType.AIR
+        if (//event.getType() != RenderGameOverlayEvent.ElementType.AIR ||
                 //|| event.isCanceled()
                  !(renderViewEntity instanceof EntityPlayer)) {
             return;
         }
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
-        if (player.capabilities.isCreativeMode)return;
+        if (player.capabilities.isCreativeMode || !SyncedConfig.getBooleanValue(GameplayOption.ENABLE_THIRST))return;
         ThirstHandler thirstStats = (ThirstHandler)player.getCapability(TANCapabilities.THIRST, (EnumFacing)null);
-
         double thirst = thirstStats.getThirst();
         //System.out.println(thirst);
         int scaledWidth = event.getResolution().getScaledWidth();
@@ -73,18 +74,29 @@ public class ThirstBarRenderer {
         //draw portion of bar based on thirst amount
 
         float f = xStart+80-getWidth(thirst,20);
-        setColorFromHex(colors.thirstBarColor);
+        cU.color2gl(cU.hex2Color(colors.thirstBarColor));
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(thirst,20), 7);
+
+        //draw hydration if present
+       /* if (thirstStats.getHydration()>0){
+            f += getWidth(thirst,20)-getWidth(thirstStats.getHydration(),20);
+            setColorFromHex(colors.hydrationBarColor);
+            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(thirstStats.getHydration(),20), 7);
+        }
+
+        //draw thirst exhaustion
+    /*    f = xStart - getWidth(thirstStats.getExhaustion(), 4) + 80;
+        GlStateManager.color(1, 1, 1, .25f);
+        drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(thirstStats.getExhaustion(), 4), 9);*/
+
 
         //draw thirst amount
         int h1 = (int) Math.floor(thirst);
-
         int c = Integer.valueOf(colors.thirstBarColor.substring(1),16);
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)thirst*5;
         drawStringOnHUD(h1 + "", xStart + 83 + 9 * i3, yStart - 1, c, 0);
         //Reset back to normal settings
-
         GlStateManager.color(1, 1, 1, 1);
 
         mc.getTextureManager().bindTexture(OVERLAY);

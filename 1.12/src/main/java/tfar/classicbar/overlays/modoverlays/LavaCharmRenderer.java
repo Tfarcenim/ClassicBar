@@ -16,8 +16,8 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import tfar.classicbar.HexColor;
 
+import static tfar.classicbar.ColorUtilities.cU;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 
@@ -89,7 +89,7 @@ public class LavaCharmRenderer {
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
             //Pass 1, draw bar portion
-        HexColor.setColorFromHex(colors.lavaBarColor);
+        cU.color2gl(cU.hex2Color(colors.lavaBarColor));
             //calculate bar color
             //draw portion of bar based on charge amount
             drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(charge, 200), 7);

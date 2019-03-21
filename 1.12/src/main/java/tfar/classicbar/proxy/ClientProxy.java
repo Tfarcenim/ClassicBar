@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import tfar.classicbar.overlays.*;
 import tfar.classicbar.overlays.modoverlays.LavaCharmRenderer;
+import tfar.classicbar.overlays.modoverlays.SuperiorShieldRenderer;
 import tfar.classicbar.overlays.modoverlays.ThirstBarRenderer;
 
 import static tfar.classicbar.config.ModConfig.ConfigEventHandler;
@@ -32,9 +33,8 @@ public class ClientProxy extends CommonProxy {
         //mod renderers
         if (Loader.isModLoaded("randomthings"))
             MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
-        if (Loader.isModLoaded("superiorshields")) {
-        }
-        // MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
+        //if (Loader.isModLoaded("superiorshields"))
+          //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
         if (Loader.isModLoaded("toughasnails")) {
             MinecraftForge.EVENT_BUS.register(new ThirstBarRenderer());
 

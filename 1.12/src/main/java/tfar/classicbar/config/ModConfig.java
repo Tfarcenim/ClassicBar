@@ -1,5 +1,6 @@
 package tfar.classicbar.config;
 
+import jdk.nashorn.internal.objects.NativeString;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -64,6 +65,8 @@ public static class ConfigGeneral{
         public String lavaBarColor = "#FF8000";
         @Config.Name("Thirst Bar Color")
         public String thirstBarColor = "#1C5EE4";
+        @Config.Name("Hydration Bar Color")
+        public String hydrationBarColor = "#0000EE";
     }
     public static class ConfigWarnings {
         @Config.Name("Show Advanced Rocketry warning")

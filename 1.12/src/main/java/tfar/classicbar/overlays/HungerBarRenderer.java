@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 
-import static tfar.classicbar.HexColor.*;
+import static tfar.classicbar.ColorUtilities.cU;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 
@@ -53,21 +53,21 @@ public class HungerBarRenderer {
         //draw portion of bar based on food amount
         float f = xStart + 80 - getWidth(food, 20);
 
-        setColorFromHex(colors.hungerBarColor);
+        cU.color2gl(cU.hex2Color(colors.hungerBarColor));
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(food, 20), 7);
 
         if (saturation > 0) {
 
             //draw saturation
-            setColorFromHex(colors.saturationBarColor);
+            cU.color2gl(cU.hex2Color(colors.saturationBarColor));
             f += getWidth(food, 20) - getWidth(saturation, 20);
             drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(saturation, 20), 7);
 
         }
-        f += getWidth(saturation, 20) - getWidth(exhaustion, 4f);
+        f = xStart - getWidth(exhaustion, 4) + 81;
         //draw exhaustion
         GlStateManager.color(1, 1, 1, .25f);
-        drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(exhaustion, 4f), 9);
+        drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(exhaustion, 4f) - 1, 9);
 
         //draw food amount
         int h1 = (int) Math.floor(food);
@@ -76,8 +76,9 @@ public class HungerBarRenderer {
         if (numbers.showPercent) h1 = (int) food * 5;
         int c = Integer.valueOf(colors.hungerBarColor.substring(1), 16);
         drawStringOnHUD(h1 + "", xStart + 9 * i3 + 83, yStart - 1, c, 0);
-        //Reset back to normal settings
 
+
+        //Reset back to normal settings
         GlStateManager.color(1, 1, 1, 1);
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);

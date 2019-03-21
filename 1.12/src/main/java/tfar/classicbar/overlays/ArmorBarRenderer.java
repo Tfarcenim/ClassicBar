@@ -7,10 +7,9 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import tfar.classicbar.HexColor;
 
+import static tfar.classicbar.ColorUtilities.cU;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.ModUtils.getStringLength;
@@ -75,7 +74,7 @@ public class ArmorBarRenderer {
         //if armor >20
         if (armor<=20) {
             //calculate bar color
-            HexColor.setColorFromHex(colors.armorColorValues[0]);
+            cU.color2gl(cU.hex2Color(colors.armorColorValues[0]));
             //draw portion of bar based on armor amount
             drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor,20), 7);
 
@@ -93,16 +92,16 @@ public class ArmorBarRenderer {
             //case 1: bar is not capped and is partially filled
             if (index < size && armor % 20 != 0){
                 //draw complete first bar
-                HexColor.setColorFromHex(colors.armorColorValues[i-1]);
+                cU.color2gl(cU.hex2Color(colors.armorColorValues[i-1]));
             drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
 
             //draw partial second bar
-            HexColor.setColorFromHex(colors.armorColorValues[i]);
+                cU.color2gl(cU.hex2Color(colors.armorColorValues[i]));
             drawTexturedModalRect(xStart+1, yStart+1, 1, 10, getWidth(armor%20,20), 7);}
             //case 2, bar is a multiple of 20 or it is capped
             else{
                 //draw complete second bar
-                HexColor.setColorFromHex(colors.armorColorValues[i]);
+                cU.color2gl(cU.hex2Color(colors.armorColorValues[i]));
                 drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
             }
         }

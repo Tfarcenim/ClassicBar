@@ -10,8 +10,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import tfar.classicbar.HexColor;
 
+import static tfar.classicbar.ColorUtilities.cU;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.config.ModConfig.general;
@@ -32,7 +32,7 @@ public class ArmorToughnessBarRenderer {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void renderArmorBar(RenderGameOverlayEvent.Post event) {
+    public void renderArmorToughnessBar(RenderGameOverlayEvent.Post event) {
 
 
         Entity renderViewEnity = this.mc.getRenderViewEntity();
@@ -73,7 +73,7 @@ public class ArmorToughnessBarRenderer {
 
         if (armorToughness<=20) {
             //calculate bar color
-            HexColor.setColorFromHex(colors.armorColorValues[0]);
+            cU.color2gl(cU.hex2Color(colors.armorColorValues[0]));
             //draw portion of bar based on armor toughness amount
             f = xStart+80-getWidth(armorToughness,20);
             drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(armorToughness,20), 7);
@@ -90,18 +90,18 @@ public class ArmorToughnessBarRenderer {
             if (index < size && armorToughness % 20 != 0){
 
             //draw complete first bar
-            HexColor.setColorFromHex(colors.armorColorValues[i-1]);
+                cU.color2gl(cU.hex2Color(colors.armorColorValues[i-1]));
             drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
 
             //draw partial second bar
                 f = xStart+80-getWidth(armorToughness%20,20);
 
-                HexColor.setColorFromHex(colors.armorColorValues[i]);
+                cU.color2gl(cU.hex2Color(colors.armorColorValues[i]));
             drawTexturedModalRect(f, yStart+1, 1, 10, getWidth(armorToughness%20,20), 7);}
         //case 2, bar is a multiple of 20 or it is capped
             else{
             //draw complete second bar
-            HexColor.setColorFromHex(colors.armorColorValues[i]);
+                cU.color2gl(cU.hex2Color(colors.armorColorValues[i]));
             drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
         }
         }

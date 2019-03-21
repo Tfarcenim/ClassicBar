@@ -11,8 +11,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static tfar.classicbar.HexColor.setColorFromHex;
-import static tfar.classicbar.ScalingBarHandler.calculateBarHexColor;
+import static tfar.classicbar.ColorUtilities.cU;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
@@ -40,8 +39,6 @@ public class HealthBarRenderer {
 
     @SubscribeEvent//(priority = EventPriority.LOW)
     public void renderHealthBar(RenderGameOverlayEvent.Pre event) {
-
-
         Entity renderViewEntity = this.mc.getRenderViewEntity();
         if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH
                 || event.isCanceled()
@@ -93,7 +90,7 @@ public class HealthBarRenderer {
         //Pass 1, draw bar portion
 
         //calculate bar color
-        setColorFromHex(calculateBarHexColor(health, maxHealth));
+        cU.color2gl(cU.calculateBarHexColor(health, maxHealth));
         //draw portion of bar based on health remaining
         drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
         //draw health amount

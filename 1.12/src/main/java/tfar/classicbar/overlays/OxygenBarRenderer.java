@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static tfar.classicbar.HexColor.setColorFromHex;
+import static tfar.classicbar.ColorUtilities.cU;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
@@ -73,7 +73,7 @@ public class OxygenBarRenderer {
         //draw portion of bar based on air amount
 
         float f = xStart+80-getWidth(air,300);
-        setColorFromHex(colors.oxygenBarColor);
+        cU.color2gl(cU.hex2Color(colors.oxygenBarColor));
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(air,300), 7);
 
         //draw air amount

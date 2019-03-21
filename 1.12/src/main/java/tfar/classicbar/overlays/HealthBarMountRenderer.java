@@ -7,15 +7,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import tfar.classicbar.ScalingBarHandler;
 
-import static tfar.classicbar.HexColor.setColorFromHex;
-import static tfar.classicbar.ScalingBarHandler.calculateBarHexColor;
+import static tfar.classicbar.ColorUtilities.cU;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
@@ -42,7 +39,7 @@ public class HealthBarMountRenderer {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void renderHealthBar(RenderGameOverlayEvent.Pre event) {
+    public void renderHealthBarMount(RenderGameOverlayEvent.Pre event) {
 
 
         Entity renderViewEnity = this.mc.getRenderViewEntity();
@@ -101,7 +98,7 @@ public class HealthBarMountRenderer {
         //Pass 1, draw bar portion
 
         //calculate bar color
-        setColorFromHex(calculateBarHexColor(mountHealth, maxHealth));
+        cU.color2gl(cU.calculateBarHexColor(mountHealth, maxHealth));
         float f = xStart+80-getWidth(mountHealth,maxHealth);
         //draw portion of bar based on mountHealth remaining
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
