@@ -74,7 +74,7 @@ public class ArmorBarRenderer {
         //if armor >20
         if (armor<=20) {
             //calculate bar color
-            cU.color2gl(cU.hex2Color(colors.armorColorValues[0]));
+            cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[0]));
             //draw portion of bar based on armor amount
             drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor,20), 7);
 
@@ -83,7 +83,7 @@ public class ArmorBarRenderer {
 
             //we have wrapped, draw 2 bars
             int index = (int)Math.ceil(armor/20);
-            int size = colors.armorColorValues.length;
+            int size = colors.advancedColors.armorColorValues.length;
             int i = index;
             //if we are out of colors wrap the bar
             if (index>=size) i=size-1;
@@ -92,16 +92,16 @@ public class ArmorBarRenderer {
             //case 1: bar is not capped and is partially filled
             if (index < size && armor % 20 != 0){
                 //draw complete first bar
-                cU.color2gl(cU.hex2Color(colors.armorColorValues[i-1]));
+                cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[i-1]));
             drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
 
             //draw partial second bar
-                cU.color2gl(cU.hex2Color(colors.armorColorValues[i]));
+                cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[i]));
             drawTexturedModalRect(xStart+1, yStart+1, 1, 10, getWidth(armor%20,20), 7);}
             //case 2, bar is a multiple of 20 or it is capped
             else{
                 //draw complete second bar
-                cU.color2gl(cU.hex2Color(colors.armorColorValues[i]));
+                cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[i]));
                 drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
             }
         }
@@ -110,7 +110,7 @@ public class ArmorBarRenderer {
         int i2 = getStringLength(i1+"");
         int i3 = (general.displayIcons)? 1 : 0;
 
-        int c = Integer.valueOf(colors.armorColorValues[0].substring(1, 7),16);
+        int c = Integer.valueOf(colors.advancedColors.armorColorValues[0].substring(1, 7),16);
         if (numbers.showPercent)i1 = (int)armor*5;
         drawStringOnHUD(i1 + "", xStart - 9 * i3 - i2 - 5, yStart - 1, c, 0);
         //Reset back to normal settings

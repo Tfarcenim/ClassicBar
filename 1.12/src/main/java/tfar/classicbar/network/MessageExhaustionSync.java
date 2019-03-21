@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import tfar.classicbar.ModUtils;
+
 public class MessageExhaustionSync implements IMessage, IMessageHandler<MessageExhaustionSync, IMessage>
 {
     float exhaustionLevel;

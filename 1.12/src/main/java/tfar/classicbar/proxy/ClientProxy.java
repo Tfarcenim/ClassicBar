@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import tfar.classicbar.overlays.*;
 import tfar.classicbar.overlays.modoverlays.LavaCharmRenderer;
-import tfar.classicbar.overlays.modoverlays.SuperiorShieldRenderer;
+//import tfar.classicbar.overlays.modoverlays.SuperiorShieldRenderer;
 import tfar.classicbar.overlays.modoverlays.ThirstBarRenderer;
 
 import static tfar.classicbar.config.ModConfig.ConfigEventHandler;

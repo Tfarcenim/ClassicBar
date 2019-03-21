@@ -98,7 +98,7 @@ public class HealthBarMountRenderer {
         //Pass 1, draw bar portion
 
         //calculate bar color
-        cU.color2gl(cU.calculateBarHexColor(mountHealth, maxHealth));
+        cU.color2Gl(cU.calculateBarHexColor(mountHealth, maxHealth));
         float f = xStart+80-getWidth(mountHealth,maxHealth);
         //draw portion of bar based on mountHealth remaining
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);

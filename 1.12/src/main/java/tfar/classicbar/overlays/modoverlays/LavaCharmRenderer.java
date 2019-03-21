@@ -89,7 +89,7 @@ public class LavaCharmRenderer {
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
             //Pass 1, draw bar portion
-        cU.color2gl(cU.hex2Color(colors.lavaBarColor));
+        cU.color2Gl(cU.hex2Color(colors.lavaBarColor));
             //calculate bar color
             //draw portion of bar based on charge amount
             drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(charge, 200), 7);

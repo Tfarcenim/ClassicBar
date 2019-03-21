@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import toughasnails.api.TANCapabilities;
@@ -74,20 +73,20 @@ public class ThirstBarRenderer {
         //draw portion of bar based on thirst amount
 
         float f = xStart+80-getWidth(thirst,20);
-        cU.color2gl(cU.hex2Color(colors.thirstBarColor));
+        cU.color2Gl(cU.hex2Color(colors.thirstBarColor));
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(thirst,20), 7);
 
         //draw hydration if present
        /* if (thirstStats.getHydration()>0){
-            f += getWidth(thirst,20)-getWidth(thirstStats.getHydration(),20);
+            healthFractions += getWidth(thirst,20)-getWidth(thirstStats.getHydration(),20);
             setColorFromHex(colors.hydrationBarColor);
-            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(thirstStats.getHydration(),20), 7);
+            drawTexturedModalRect(healthFractions, yStart + 1, 1, 10, getWidth(thirstStats.getHydration(),20), 7);
         }
 
         //draw thirst exhaustion
-    /*    f = xStart - getWidth(thirstStats.getExhaustion(), 4) + 80;
+    /*    healthFractions = xStart - getWidth(thirstStats.getExhaustion(), 4) + 80;
         GlStateManager.color(1, 1, 1, .25f);
-        drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(thirstStats.getExhaustion(), 4), 9);*/
+        drawTexturedModalRect(healthFractions, yStart + 1, 1, 28, getWidth(thirstStats.getExhaustion(), 4), 9);*/
 
 
         //draw thirst amount

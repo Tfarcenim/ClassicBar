@@ -17,7 +17,6 @@ import static tfar.classicbar.config.ModConfig.numbers;
 public class ModUtils {
     protected static final Field foodExhaustion = ReflectionHelper.findField(FoodStats.class, "foodExhaustionLevel", "field_75126_c", "c");
 
-
     public static final Item Lava_Charm = ForgeRegistries.ITEMS.getValue(new ResourceLocation("randomthings:lavacharm"));
 
     public static final ResourceLocation ICON_VANILLA = Gui.ICONS;
@@ -44,11 +43,11 @@ public class ModUtils {
     }
 
     public static float getExhaustion(EntityPlayer player) {
-        float e1 = 0;
+        float e1;
         try {
             e1 = foodExhaustion.getFloat(player.getFoodStats());
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return e1;
     }

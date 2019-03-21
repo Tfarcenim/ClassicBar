@@ -3,6 +3,7 @@ package tfar.classicbar.overlays;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -53,22 +54,24 @@ public class HungerBarRenderer {
         //draw portion of bar based on food amount
         float f = xStart + 80 - getWidth(food, 20);
 
-        cU.color2gl(cU.hex2Color(colors.hungerBarColor));
+        cU.color2Gl(cU.hex2Color(colors.hungerBarColor));
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(food, 20), 7);
 
-        if (saturation > 0) {
+        if (saturation > 0 && general.showSaturationBar) {
 
             //draw saturation
-            cU.color2gl(cU.hex2Color(colors.saturationBarColor));
+            cU.color2Gl(cU.hex2Color(colors.saturationBarColor));
             f += getWidth(food, 20) - getWidth(saturation, 20);
             drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(saturation, 20), 7);
 
         }
-        f = xStart - getWidth(exhaustion, 4) + 81;
-        //draw exhaustion
-        GlStateManager.color(1, 1, 1, .25f);
-        drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(exhaustion, 4f) - 1, 9);
-
+        if (general.showExhaustionOverlay) {
+            exhaustion = Math.min(exhaustion,4);
+            f = xStart - getWidth(exhaustion, 4) + 81;
+            //draw exhaustion
+            GlStateManager.color(1, 1, 1, .25f);
+            drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(exhaustion, 4f) - 1, 9);
+        }
         //draw food amount
         int h1 = (int) Math.floor(food);
 

@@ -8,7 +8,6 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static tfar.classicbar.ColorUtilities.cU;
@@ -90,7 +89,7 @@ public class HealthBarRenderer {
         //Pass 1, draw bar portion
 
         //calculate bar color
-        cU.color2gl(cU.calculateBarHexColor(health, maxHealth));
+        cU.color2Gl(cU.calculateBarHexColor(health, maxHealth));
         //draw portion of bar based on health remaining
         drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
         //draw health amount
