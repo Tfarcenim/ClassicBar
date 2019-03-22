@@ -26,7 +26,7 @@ public class ClassicBar {
 
     public static final String MODID = "classicbar";
     public static final String MODNAME = "Classic Bar";
-    public static final String MODVERSION = "0.0.8";
+    public static final String MODVERSION = "0.0.9";
 
     @SidedProxy(clientSide = "tfar.classicbar.proxy.ClientProxy")
     public static CommonProxy proxy;
@@ -58,7 +58,7 @@ public class ClassicBar {
                 listeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>) f.get(MinecraftForge.EVENT_BUS);
                 for (Map.Entry<Object, ArrayList<IEventListener>> entry : listeners.entrySet()) {
                     String s = entry.getKey().getClass().getCanonicalName();
-                    System.out.println(s);
+                    //System.out.println(s);
                     //System.out.println(entry);
                     if ("slimeknights.mantle.client.ExtraHeartRenderHandler".equals(s)) {
                         logger.info("Unregistered Mantle bar");

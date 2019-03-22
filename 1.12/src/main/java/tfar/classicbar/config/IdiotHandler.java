@@ -7,16 +7,15 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.util.regex.Matcher;
 
-import static tfar.classicbar.ClassicBar.logger;
 import static tfar.classicbar.ColorUtilities.p1;
 import static tfar.classicbar.config.ModConfig.*;
 
 public class IdiotHandler {
+    public static IdiotHandler idiots = new IdiotHandler();
 
 
     public IdiotHandler() {
     }
-
     public void idiotsTryingToParseBadHexColorsDOTJpeg() {
         colors.hungerBarColor = isSomeoneAttemptingToAddABadHexCodeToTheConfigQuestionMark(colors.hungerBarColor);
         colors.lavaBarColor = isSomeoneAttemptingToAddABadHexCodeToTheConfigQuestionMark(colors.lavaBarColor);
@@ -29,9 +28,8 @@ public class IdiotHandler {
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer p = mc.player;
         Matcher m = p1.matcher(s);
-        if (!m.matches()) return s;
-        logger.error("USER PUT IN A BAD HEX CODE");
-        p.sendMessage(new TextComponentString(TextFormatting.RED + "USER PUT IN A BAD HEX CODE"));
+        if (m.matches()) return s;
+        if (p != null)p.sendMessage(new TextComponentString(TextFormatting.RED + "USER PUT IN A BAD HEX CODE"));
         return "#000000";
     }
 

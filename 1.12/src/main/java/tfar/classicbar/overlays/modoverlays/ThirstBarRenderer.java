@@ -38,12 +38,11 @@ public class ThirstBarRenderer {
     public void renderThirstBar(RenderGameOverlayEvent.Pre event) {
         Entity renderViewEntity = this.mc.getRenderViewEntity();
         if (//event.getType() != RenderGameOverlayEvent.ElementType.AIR ||
-                //|| event.isCanceled()
-                 !(renderViewEntity instanceof EntityPlayer)) {
-            return;
-        }
+                event.isCanceled() ||
+             !SyncedConfig.getBooleanValue(GameplayOption.ENABLE_THIRST) ||
+                 !(renderViewEntity instanceof EntityPlayer)) return;
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
-        if (player.capabilities.isCreativeMode || !SyncedConfig.getBooleanValue(GameplayOption.ENABLE_THIRST))return;
+        if (player.capabilities.isCreativeMode)return;
         ThirstHandler thirstStats = (ThirstHandler)player.getCapability(TANCapabilities.THIRST, (EnumFacing)null);
         double thirst = thirstStats.getThirst();
         //System.out.println(thirst);

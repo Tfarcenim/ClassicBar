@@ -5,9 +5,11 @@ import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import tfar.classicbar.ClassicBar;
 
-import static tfar.classicbar.ClassicBar.*;
+import static lumien.randomthings.asm.ClassTransformer.logger;
+import static tfar.classicbar.config.IdiotHandler.idiots;
 
 @Config(modid = ClassicBar.MODID)
 public class ModConfig {
@@ -85,20 +87,21 @@ public class ModConfig {
         @Config.Comment("Warning when advanced rocketry is installed")
         public boolean advancedRocketryWarning = true;
     }
-
     @Mod.EventBusSubscriber(modid = ClassicBar.MODID)
     public static class ConfigEventHandler {
 
-        IdiotHandler idiots = new IdiotHandler();
-
         @SubscribeEvent
-        public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
+        public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
             if (event.getModID().equals(ClassicBar.MODID)) {
                 ConfigManager.sync(ClassicBar.MODID, Config.Type.INSTANCE);
                 idiots.idiotsTryingToParseBadHexColorsDOTJpeg();
                 idiots.emptyArrayFixer();
-                System.out.println("Syncing Classic Bar Configs");
+                logger.info("Syncing Classic Bar Configs");
             }
+        }
+        @SubscribeEvent
+        public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
+            idiots.idiotsTryingToParseBadHexColorsDOTJpeg();
         }
     }
 }

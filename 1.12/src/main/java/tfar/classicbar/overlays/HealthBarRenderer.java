@@ -98,8 +98,9 @@ public class HealthBarRenderer {
         //draw absorption bar if it exists
         if (absorb > 0) {
             GlStateManager.color(1, 1, 1, 1);
+
             if (!general.fullAbsorptionBar)drawScaledBar(absorb, maxHealth,xStart,yStart - 10);
-            else drawTexturedModalRect(xStart, yStart - 10, 0, i4, 81, 9);
+            else drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9);
 
             int a1 = getStringLength((int)absorb+"");
             GlStateManager.color(0.831f, 0.686f, 0.215f, 1);
@@ -149,7 +150,6 @@ public class HealthBarRenderer {
         int i = getWidth(absorb,maxHealth)+1;
         drawTexturedModalRect(x, y, 0, 0, i, 9);
         drawTexturedModalRect(x+i,y+1,0,1,1,7);
-
     }
 
     private int textColor(double d1){

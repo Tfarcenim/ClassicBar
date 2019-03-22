@@ -38,8 +38,9 @@ public class ModUtils {
     }
 
     public static void drawStringOnHUD(String string, int xOffset, int yOffset, int color, int lineOffset) {
+        if (!numbers.showNumbers)return;
         yOffset += lineOffset * 9;
-        if (numbers.showNumbers) fontRenderer.drawString(string, 2 + xOffset, 2 + yOffset, color, true);
+        fontRenderer.drawString(string, 2 + xOffset, 2 + yOffset, color, true);
     }
 
     public static float getExhaustion(EntityPlayer player) {
