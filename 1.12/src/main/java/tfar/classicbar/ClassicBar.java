@@ -18,17 +18,15 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static tfar.classicbar.config.ModConfig.*;
-
 
 @Mod(modid = ClassicBar.MODID, name = ClassicBar.MODNAME, version = ClassicBar.MODVERSION, useMetadata = true, clientSideOnly = true)
 public class ClassicBar {
 
     public static final String MODID = "classicbar";
     public static final String MODNAME = "Classic Bar";
-    public static final String MODVERSION = "0.0.9";
+    public static final String MODVERSION = "@VERSION@";
 
-    @SidedProxy(clientSide = "tfar.classicbar.proxy.ClientProxy")
+    @SidedProxy(clientSide = "tfar.classicbar.proxy.ClientProxy",serverSide = "tfar.classicbar.proxy.CommonProxy")
     public static CommonProxy proxy;
 
     public static Logger logger;
@@ -45,10 +43,7 @@ public class ClassicBar {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        if (Loader.isModLoaded("advancedrocketry") && warnings.advancedRocketryWarning && general.displayToughnessBar)
-            logger.warn("Toughness bar may not display correctly, change the placement in advanced rocketry config." +
-                    "This is NOT a bug in the mod.");
-
+        proxy.postInit(event);
         if (Loader.isModLoaded("mantle") || (Loader.isModLoaded("toughasnails"))) {
             logger.info("Unregistering problematic overlays.");
             ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners;
@@ -73,7 +68,6 @@ public class ClassicBar {
                 e.printStackTrace();
             }
 
-            proxy.postInit(event);
         }
     }
 }

@@ -5,15 +5,24 @@ import net.minecraft.client.renderer.GlStateManager;
 import java.util.regex.Pattern;
 
 public class ColorUtilities {
-    public static ColorUtilities cU = new ColorUtilities();
+    public static final ColorUtilities cU = new ColorUtilities();
     public static final Pattern p1 = Pattern.compile("^#[0-9A-Fa-f]{6}$");
-
 
     public void color2Gl(Color c) {
         float r = c.r / 255f;
         float g = c.g / 255f;
         float b = c.b / 255f;
         GlStateManager.color(r, g, b);
+    }
+    public int colorToText(Color c){
+        return (c.r << 16)+(c.g << 8) + c.b;
+    }
+
+    public void color2Gla(Color c,float a) {
+        float r = c.r / 255f;
+        float g = c.g / 255f;
+        float b = c.b / 255f;
+        GlStateManager.color(r, g, b, a);
     }
 
     public Color hex2Color(String s) {
@@ -31,7 +40,7 @@ public class ColorUtilities {
         return new Color(r, g, b);
     }
 
-    public Color calculateBarHexColor(double d1, double d2) {
+    public Color calculateScaledColor(double d1, double d2) {
         double d3 = (d1 / d2);
         if (colors.advancedColors.healthFractions.length != colors.advancedColors.hexColors.length) return new Color(0,0,0);
         int i1 = colors.advancedColors.healthFractions.length - 1;
@@ -40,6 +49,7 @@ public class ColorUtilities {
             if (d3 < colors.advancedColors.healthFractions[i2]) break;
             i3++;
         }
+
         //return first color in the list if health is too low
         if (d3 <= colors.advancedColors.healthFractions[0])
             return cU.hex2Color(colors.advancedColors.hexColors[0]);

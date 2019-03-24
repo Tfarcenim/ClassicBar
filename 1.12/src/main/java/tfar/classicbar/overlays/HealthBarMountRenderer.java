@@ -98,7 +98,7 @@ public class HealthBarMountRenderer {
         //Pass 1, draw bar portion
 
         //calculate bar color
-        cU.color2Gl(cU.calculateBarHexColor(mountHealth, maxHealth));
+        cU.color2Gl(cU.calculateScaledColor(mountHealth, maxHealth));
         float f = xStart+80-getWidth(mountHealth,maxHealth);
         //draw portion of bar based on mountHealth remaining
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
@@ -108,7 +108,7 @@ public class HealthBarMountRenderer {
 
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)(100*mountHealth/maxHealth);
-        drawStringOnHUD(h1+"", xStart + 100 - 9 * i3, yStart - 1, textColor(mountHealth/maxHealth), 0);
+        drawStringOnHUD(h1+"", xStart + 100 - 9 * i3, yStart - 1, cU.colorToText(cU.calculateScaledColor(mountHealth,maxHealth)),0);
 
         //Reset back to normal settings
         GlStateManager.color(1, 1, 1, 1);
@@ -134,22 +134,4 @@ public class HealthBarMountRenderer {
         event.setCanceled(true);
     }
 
-    private void drawScaledBar(double absorb, double maxHealth, float x, float y) {
-        int i = getWidth(absorb,maxHealth)+1;
-        drawTexturedModalRect(x, y, 0, 0, i, 9);
-        drawTexturedModalRect(x+i,y+1,0,1,1,7);
-
-    }
-    private int textColor(double d1){
-        if (d1>=.5){
-            int r = (int)Math.floor(0xFF * 2 * (1 - d1));
-            r *= 0x10000;
-            return r+0x00FF00;
-        }
-        if (d1>=.25) {
-            int g = (int)Math.floor(4 * 0xFF * (d1 - 1));
-            g *= 0x100;
-            return g+0xFF0000;}
-        return 0xFF0000;
-    }
 }

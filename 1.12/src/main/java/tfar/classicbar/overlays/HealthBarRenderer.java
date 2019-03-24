@@ -89,7 +89,7 @@ public class HealthBarRenderer {
         //Pass 1, draw bar portion
 
         //calculate bar color
-        cU.color2Gl(cU.calculateBarHexColor(health, maxHealth));
+        cU.color2Gl(cU.calculateScaledColor(health, maxHealth));
         //draw portion of bar based on health remaining
         drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
         //draw health amount
@@ -99,7 +99,7 @@ public class HealthBarRenderer {
         if (absorb > 0) {
             GlStateManager.color(1, 1, 1, 1);
 
-            if (!general.fullAbsorptionBar)drawScaledBar(absorb, maxHealth,xStart,yStart - 10);
+            if (!general.overlays.fullAbsorptionBar)drawScaledBar(absorb, maxHealth,xStart,yStart - 10);
             else drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9);
 
             int a1 = getStringLength((int)absorb+"");
@@ -112,7 +112,7 @@ public class HealthBarRenderer {
         int i1 = getStringLength(h1+"");
         int i2 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)(100*health/maxHealth);
-        drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 - 5, yStart - 1, textColor(health/maxHealth), 0);
+        drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 - 5, yStart - 1, cU.colorToText(cU.calculateScaledColor(health,maxHealth)), 0);
 
         //Reset back to normal settings
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -136,7 +136,6 @@ public class HealthBarRenderer {
                 drawTexturedModalRect(xStart - 10, yStart - 10, 160, 0, 9, 9);
             }
         }
-
         //Reset back to normal settings
 
         GlStateManager.disableBlend();
@@ -147,21 +146,8 @@ public class HealthBarRenderer {
     }
 
     private void drawScaledBar(double absorb, double maxHealth, float x, float y) {
-        int i = getWidth(absorb,maxHealth)+1;
-        drawTexturedModalRect(x, y, 0, 0, i, 9);
+        int i = getWidth(absorb,maxHealth);
+        drawTexturedModalRect(x+1, y, 0, 0, i, 9);
         drawTexturedModalRect(x+i,y+1,0,1,1,7);
-    }
-
-    private int textColor(double d1){
-        if (d1>=.5){
-            int r = (int)Math.floor(0xFF * 2 * (1 - d1));
-            r *= 0x10000;
-            return r+0x00FF00;
-        }
-        if (d1>=.25) {
-            int g = (int)Math.floor(4 * 0xFF * (d1 - 1));
-            g *= 0x100;
-            return g+0xFF0000;}
-        return 0xFF0000;
     }
 }

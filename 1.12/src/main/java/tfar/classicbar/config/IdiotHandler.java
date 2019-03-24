@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.Loader;
 
 import java.util.regex.Matcher;
 
@@ -17,11 +18,10 @@ public class IdiotHandler {
     public IdiotHandler() {
     }
     public void idiotsTryingToParseBadHexColorsDOTJpeg() {
+        //TODO add idiot proofing for mods
         colors.hungerBarColor = isSomeoneAttemptingToAddABadHexCodeToTheConfigQuestionMark(colors.hungerBarColor);
-        colors.lavaBarColor = isSomeoneAttemptingToAddABadHexCodeToTheConfigQuestionMark(colors.lavaBarColor);
         colors.oxygenBarColor = isSomeoneAttemptingToAddABadHexCodeToTheConfigQuestionMark(colors.oxygenBarColor);
         colors.saturationBarColor = isSomeoneAttemptingToAddABadHexCodeToTheConfigQuestionMark(colors.saturationBarColor);
-        colors.thirstBarColor = isSomeoneAttemptingToAddABadHexCodeToTheConfigQuestionMark(colors.thirstBarColor);
     }
 
     public String isSomeoneAttemptingToAddABadHexCodeToTheConfigQuestionMark(String s) {

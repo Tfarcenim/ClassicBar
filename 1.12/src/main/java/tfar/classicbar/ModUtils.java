@@ -29,7 +29,7 @@ public class ModUtils {
     }
 
     public static int getWidth(double d1, double d2) {
-        double d3 = 79 * d1 / d2;
+        double d3 = Math.max(79 * d1 / d2,0);
         return (int) Math.ceil(d3);
     }
 

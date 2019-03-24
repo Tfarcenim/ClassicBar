@@ -1,8 +1,12 @@
 package tfar.classicbar.config;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -27,23 +31,42 @@ public class ModConfig {
     public static ConfigWarnings warnings = new ConfigWarnings();
 
     public static class ConfigGeneral {
-
+        @Config.Name("Bar Overlays")
+        @Config.Comment("Tweak the bars themselves")
+        public BarOverlays overlays = new BarOverlays();
         @Config.Name("Show Icons")
         @Config.Comment("Whether to show icons next to the bars")
         public boolean displayIcons = true;
 
-        @Config.Name("Display Armor Toughness Bar")
-        @Config.Comment("REQUIRES A RESTART TO APPLY!")
-        public boolean displayToughnessBar = true;
+        public class BarOverlays {
 
-        @Config.Name("Draw full absorption Bar")
-        public boolean fullAbsorptionBar = false;
+            @Config.Name("Hunger Bar Overlays")
+            public HungerBarConfig hunger = new HungerBarConfig();
 
-        @Config.Name("Show Saturation Bar")
-        public boolean showSaturationBar = true;
+            @Config.Name("Display Armor Toughness Bar")
+            @Config.RequiresMcRestart
+            @Config.Comment("REQUIRES A RESTART TO APPLY!")
+            public boolean displayToughnessBar = true;
 
-        @Config.Name("Show Exhaustion Overlay")
-        public boolean showExhaustionOverlay = true;
+            @Config.Name("Draw full absorption Bar")
+            public boolean fullAbsorptionBar = false;
+
+            public class HungerBarConfig {
+
+                @Config.Name("Show Saturation Bar")
+                public boolean showSaturationBar = true;
+
+                @Config.Name("Show Held Food Overlay")
+                public boolean showHeldFoodOverlay = true;
+
+                @Config.Name("Show Exhaustion Overlay")
+                public boolean showExhaustionOverlay = true;
+
+                @Config.Name("Transistion speed of bar")
+                @Config.RangeDouble(min = 0.001, max = .2)
+                public float transitionSpeed = .02f;
+            }
+        }
 
     }
 
@@ -66,10 +89,6 @@ public class ModConfig {
         public String oxygenBarColor = "#00E6E6";
         @Config.Name("Saturation Bar Color")
         public String saturationBarColor = "#FFCC00";
-        @Config.Name("Lava Bar Color")
-        public String lavaBarColor = "#FF8000";
-        @Config.Name("Thirst Bar Color")
-        public String thirstBarColor = "#1C5EE4";
 
         public class AdvancedColors {
             @Config.Comment("Colors must be specified in #RRGGBB format")
@@ -86,7 +105,12 @@ public class ModConfig {
         @Config.Name("Show Advanced Rocketry warning")
         @Config.Comment("Warning when advanced rocketry is installed")
         public boolean advancedRocketryWarning = true;
+
+        @Config.Name("Show Rustic warning")
+        @Config.Comment("Warning when Rustic is installed")
+        public boolean rusticWarning = true;
     }
+
     @Mod.EventBusSubscriber(modid = ClassicBar.MODID)
     public static class ConfigEventHandler {
 
@@ -99,9 +123,20 @@ public class ModConfig {
                 logger.info("Syncing Classic Bar Configs");
             }
         }
+
         @SubscribeEvent
         public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
             idiots.idiotsTryingToParseBadHexColorsDOTJpeg();
+            EntityPlayer p = e.player;
+            if (Loader.isModLoaded("advancedrocketry") && warnings.advancedRocketryWarning && general.overlays.displayToughnessBar) {
+
+                p.sendMessage(new TextComponentString(TextFormatting.RED + "Toughness bar may not display correctly, change the placement in advanced rocketry config." +
+                        " This is NOT a bug."));
+            }
+            if (Loader.isModLoaded("rustic") && warnings.rusticWarning) {
+                p.sendMessage(new TextComponentString(TextFormatting.RED + "Armor bar may not display correctly, disable Rustic's extra armor overlay amd restart the game." +
+                        " This is NOT a bug."));
+            }
         }
     }
 }

@@ -3,7 +3,9 @@ package tfar.classicbar.overlays;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -20,6 +22,9 @@ import static tfar.classicbar.config.ModConfig.*;
 
 public class HungerBarRenderer {
     private final Minecraft mc = Minecraft.getMinecraft();
+
+    private float alpha = 0;
+    private boolean increase = true;
 
     public HungerBarRenderer() {
     }
@@ -57,7 +62,7 @@ public class HungerBarRenderer {
         cU.color2Gl(cU.hex2Color(colors.hungerBarColor));
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(food, 20), 7);
 
-        if (saturation > 0 && general.showSaturationBar) {
+        if (saturation > 0 && general.overlays.hunger.showSaturationBar) {
 
             //draw saturation
             cU.color2Gl(cU.hex2Color(colors.saturationBarColor));
@@ -65,21 +70,51 @@ public class HungerBarRenderer {
             drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(saturation, 20), 7);
 
         }
-        if (general.showExhaustionOverlay) {
+        //render held food overlay
+
+        if (general.overlays.hunger.showHeldFoodOverlay && player.getHeldItemMainhand().getItem() instanceof ItemFood ){
+            ItemStack stack = player.getHeldItemMainhand();
+            if (increase)alpha+=general.overlays.hunger.transitionSpeed;
+            else alpha-=general.overlays.hunger.transitionSpeed;
+            if (alpha>=1)increase = false;
+            else if (alpha<=0) increase = true;
+            ItemFood foodItem = ((ItemFood) stack.getItem());
+            double hungerOverlay = foodItem.getHealAmount(stack);
+            double saturationMultiplier = foodItem.getSaturationModifier(stack);
+            double actualSaturation = 2*hungerOverlay*saturationMultiplier;
+
+            //Draw Potential hunger
+            double hungerWidth = Math.min(20-food,hungerOverlay);
+            f = xStart - getWidth(hungerWidth+food,20) + 80;
+            cU.color2Gla(cU.hex2Color(colors.hungerBarColor),alpha);
+            drawTexturedModalRect(f, yStart+1, 1, 10, getWidth(hungerWidth,20), 7);
+
+            //Draw Potential saturation
+            if (general.overlays.hunger.showSaturationBar){
+                double saturationWidth = Math.min(actualSaturation,20-saturation);
+                saturationWidth = Math.min(saturationWidth,food+hungerWidth);
+                saturationWidth = Math.min(saturationWidth,hungerOverlay+food);
+                f = xStart - getWidth(saturationWidth+saturation,20) + 80;
+                cU.color2Gla(cU.hex2Color(colors.saturationBarColor),alpha);
+                drawTexturedModalRect(f, yStart+1, 1, 10, getWidth(saturationWidth,20), 7);
+            }
+        }
+
+        if (general.overlays.hunger.showExhaustionOverlay) {
             exhaustion = Math.min(exhaustion,4);
-            f = xStart - getWidth(exhaustion, 4) + 81;
+            f = xStart - getWidth(exhaustion, 4) + 80;
             //draw exhaustion
             GlStateManager.color(1, 1, 1, .25f);
-            drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(exhaustion, 4f) - 1, 9);
+            drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(exhaustion, 4f), 9);
         }
+
         //draw food amount
         int h1 = (int) Math.floor(food);
 
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent) h1 = (int) food * 5;
-        int c = Integer.valueOf(colors.hungerBarColor.substring(1), 16);
-        drawStringOnHUD(h1 + "", xStart + 9 * i3 + 83, yStart - 1, c, 0);
-
+        int c = Integer.decode(colors.hungerBarColor);
+        drawStringOnHUD(h1 + "", xStart + 9 * i3 + 82, yStart - 1, c, 0);
 
         //Reset back to normal settings
         GlStateManager.color(1, 1, 1, 1);
@@ -93,9 +128,7 @@ public class HungerBarRenderer {
             drawTexturedModalRect(xStart + 83, yStart, 16, 27, 9, 9);
             //food
             drawTexturedModalRect(xStart + 83, yStart, 52, 27, 9, 9);
-
         }
-
         GlStateManager.disableBlend();
         //Revert our state back
         GlStateManager.popMatrix();

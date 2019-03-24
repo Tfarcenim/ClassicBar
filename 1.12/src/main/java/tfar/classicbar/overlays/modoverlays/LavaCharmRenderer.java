@@ -14,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -24,16 +25,19 @@ import static tfar.classicbar.config.ModConfig.*;
 /*
     Class handles the drawing of the lava charm
  */
-
+//TODO Fix edge case of having random things but no baubles installed
 public class LavaCharmRenderer {
     private final Minecraft mc = Minecraft.getMinecraft();
 
-    private int updateCounter = 0;
-    private double playerLava = 1;
+    @Config.Name("Random Things Options")
+    public static ConfigRandomThings configRandomThings = new ConfigRandomThings();
+
+    public static class ConfigRandomThings {
+        @Config.Name("Lava Bar Color")
+        public String lavaBarColor = "#FF8000";
+    }
 
     private static final ResourceLocation ICON_LAVA = new ResourceLocation("randomthings", "textures/gui/lavacharmbar.png");
-
-    private boolean forceUpdateIcons = false;
 
     public LavaCharmRenderer() {
     }
@@ -66,14 +70,8 @@ public class LavaCharmRenderer {
             int scaledHeight = event.getResolution().getScaledHeight();
             //Push to avoid lasting changes
 
-            updateCounter = mc.ingameGUI.getUpdateCounter();
             int absorb = MathHelper.ceil(player.getAbsorptionAmount());
 
-            if (charge != playerLava || forceUpdateIcons) {
-                forceUpdateIcons = false;
-            }
-
-            playerLava = charge;
             int xStart = scaledWidth / 2 - 91;
             int yStart = scaledHeight - 49;
             if (absorb > 0) yStart -= 10;
@@ -89,16 +87,16 @@ public class LavaCharmRenderer {
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
             //Pass 1, draw bar portion
-        cU.color2Gl(cU.hex2Color(colors.lavaBarColor));
+        cU.color2Gl(cU.hex2Color(configRandomThings.lavaBarColor));
             //calculate bar color
             //draw portion of bar based on charge amount
             drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(charge, 200), 7);
         int i2 = charge;
             //draw charge amount
-            int i3 = getStringLength(charge+"");
-            int i4 = (general.displayIcons) ? 1 : 0;
-        int c = Integer.valueOf(colors.lavaBarColor.substring(1),16);
         if (numbers.showPercent)i2 /= 3;
+        int i3 = getStringLength(i2+"");
+            int i4 = (general.displayIcons) ? 1 : 0;
+        int c = Integer.decode(configRandomThings.lavaBarColor);
             drawStringOnHUD(i2 + "", xStart - 9 * i4 - i3 - 5, yStart - 1, c, 0);
 
             mc.getTextureManager().bindTexture(ICON_LAVA);
@@ -117,4 +115,5 @@ public class LavaCharmRenderer {
             //GlStateManager.popMatrix();
             mc.profiler.endSection();
         }
+
     }

@@ -22,11 +22,6 @@ import static tfar.classicbar.config.ModConfig.general;
 
 public class ArmorToughnessBarRenderer {
     private final Minecraft mc = Minecraft.getMinecraft();
-    ;
-    private int updateCounter = 0;
-    private double playerArmorToughness = 1;
-
-    private boolean forceUpdateIcons = false;
 
     public ArmorToughnessBarRenderer() {
     }
@@ -34,24 +29,16 @@ public class ArmorToughnessBarRenderer {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void renderArmorToughnessBar(RenderGameOverlayEvent.Post event) {
 
-
         Entity renderViewEnity = this.mc.getRenderViewEntity();
-        if (!(renderViewEnity instanceof EntityPlayer  ||event.isCanceled())) return;
+        if (!(renderViewEnity instanceof EntityPlayer || event.getType() != RenderGameOverlayEvent.ElementType.FOOD ||event.isCanceled())) return;
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
         if (player.capabilities.isCreativeMode)return;
         double armorToughness = player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue();
-        if (armorToughness<=0)return;
+        if (armorToughness < 1)return;
         int scaledWidth = event.getResolution().getScaledWidth();
         int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes
 
-        updateCounter = mc.ingameGUI.getUpdateCounter();
-
-        if (armorToughness != playerArmorToughness || forceUpdateIcons) {
-            forceUpdateIcons = false;
-        }
-
-        playerArmorToughness = armorToughness;
         int xStart = scaledWidth / 2 + 9;
         int yStart = scaledHeight - 49;
         if(Loader.isModLoaded("toughasnails"))yStart-=10;
@@ -107,12 +94,12 @@ public class ArmorToughnessBarRenderer {
         }
 
         //draw armor toughness amount
-        int i1 = (int) Math.ceil(armorToughness);
+        int i1 = (int) Math.floor(armorToughness);
         int i3 = (general.displayIcons)? 1 : 0;
 
-        int c = Integer.valueOf(colors.advancedColors.armorColorValues[0].substring(1, 7),16);
+        int c = Integer.decode(colors.advancedColors.armorColorValues[0]);
         if (numbers.showPercent)i1 = (int)armorToughness*5;
-        drawStringOnHUD(i1 + "", xStart + 101 - 9 * i3, yStart - 1, c, 0);
+        drawStringOnHUD(i1 + "", xStart + 101 + 9 * i3, yStart - 1, c, 0);
         //Reset back to normal settings
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);

@@ -57,9 +57,8 @@ public class OxygenBarRenderer {
         playerAir = air;
         int xStart = scaledWidth / 2 + 9;
         int yStart = scaledHeight - 49;
-        if(general.displayToughnessBar && player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue()>0)yStart-=10;
+        if(general.overlays.displayToughnessBar && player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue()>0)yStart-=10;
         if(Loader.isModLoaded("toughasnails"))yStart-=10;
-
 
         mc.profiler.startSection("air");
         GlStateManager.pushMatrix();
@@ -79,7 +78,7 @@ public class OxygenBarRenderer {
         //draw air amount
         int h1 = (int) Math.floor(air);
 
-        int c = Integer.valueOf(colors.oxygenBarColor.substring(1),16);
+        int c = Integer.decode(colors.oxygenBarColor);
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)air/3;
         drawStringOnHUD(h1 + "", xStart + 82 + 9 * i3, yStart - 1, c, 0);

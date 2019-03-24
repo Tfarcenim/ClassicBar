@@ -20,12 +20,6 @@ import static tfar.classicbar.ModUtils.getStringLength;
 
 public class ArmorBarRenderer {
     private final Minecraft mc = Minecraft.getMinecraft();
-    ;
-    private int updateCounter = 0;
-    private double playerArmor = 1;
-    private double lastArmor = 1;
-
-    private boolean forceUpdateIcons = false;
 
     public ArmorBarRenderer() {
     }
@@ -42,20 +36,13 @@ public class ArmorBarRenderer {
         event.setCanceled(true);
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
         double armor = player.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue();
-        if (armor<=0)return;
+        if (armor < 1)return;
         int scaledWidth = event.getResolution().getScaledWidth();
         int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes
 
-        updateCounter = mc.ingameGUI.getUpdateCounter();
         int absorb = MathHelper.ceil(player.getAbsorptionAmount());
 
-        if (armor != playerArmor || forceUpdateIcons) {
-            forceUpdateIcons = false;
-        }
-
-        playerArmor = armor;
-        double j = lastArmor;
         int xStart = scaledWidth / 2 - 91;
         int yStart = scaledHeight - 49;
         if (absorb>0)yStart-=10;
@@ -77,10 +64,7 @@ public class ArmorBarRenderer {
             cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[0]));
             //draw portion of bar based on armor amount
             drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor,20), 7);
-
-        }
-        else {
-
+        }else {
             //we have wrapped, draw 2 bars
             int index = (int)Math.ceil(armor/20);
             int size = colors.advancedColors.armorColorValues.length;
@@ -110,7 +94,7 @@ public class ArmorBarRenderer {
         int i2 = getStringLength(i1+"");
         int i3 = (general.displayIcons)? 1 : 0;
 
-        int c = Integer.valueOf(colors.advancedColors.armorColorValues[0].substring(1, 7),16);
+        int c = Integer.decode(colors.advancedColors.armorColorValues[0]);
         if (numbers.showPercent)i1 = (int)armor*5;
         drawStringOnHUD(i1 + "", xStart - 9 * i3 - i2 - 5, yStart - 1, c, 0);
         //Reset back to normal settings

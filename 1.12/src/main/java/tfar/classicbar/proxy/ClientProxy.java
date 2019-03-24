@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import tfar.classicbar.ClassicBar;
 import tfar.classicbar.overlays.*;
 import tfar.classicbar.overlays.modoverlays.LavaCharmRenderer;
 //import tfar.classicbar.overlays.modoverlays.SuperiorShieldRenderer;
@@ -18,15 +19,14 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void postInit(FMLPostInitializationEvent event) {
         super.postInit(event);
-        ConfigEventHandler configEventHandler = new ConfigEventHandler();
-        MinecraftForge.EVENT_BUS.register(configEventHandler);
+        MinecraftForge.EVENT_BUS.register(new ConfigEventHandler());
 
         //Register renderers for events
-
+        ClassicBar.logger.info("Registering Vanilla Overlays");
         MinecraftForge.EVENT_BUS.register(new HealthBarRenderer());
         MinecraftForge.EVENT_BUS.register(new HealthBarMountRenderer());
         MinecraftForge.EVENT_BUS.register(new ArmorBarRenderer());
-        if (general.displayToughnessBar) MinecraftForge.EVENT_BUS.register(new ArmorToughnessBarRenderer());
+        if (general.overlays.displayToughnessBar) MinecraftForge.EVENT_BUS.register(new ArmorToughnessBarRenderer());
         MinecraftForge.EVENT_BUS.register(new OxygenBarRenderer());
         MinecraftForge.EVENT_BUS.register(new HungerBarRenderer());
 
@@ -37,7 +37,7 @@ public class ClientProxy extends CommonProxy {
           //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
         if (Loader.isModLoaded("toughasnails")) {
             MinecraftForge.EVENT_BUS.register(new ThirstBarRenderer());
-
+            //MinecraftForge.EVENT_BUS.register(new TemperatureBarRenderer());
         }
     }
 }
