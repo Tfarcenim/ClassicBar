@@ -15,6 +15,10 @@ import java.lang.reflect.Field;
 import static tfar.classicbar.config.ModConfig.numbers;
 
 public class ModUtils {
+    public static final int rightTextOffset = 82;
+
+    public static final int leftTextOffset = -5;
+
     protected static final Field foodExhaustion = ReflectionHelper.findField(FoodStats.class, "foodExhaustionLevel", "field_75126_c", "c");
 
     public static final Item Lava_Charm = ForgeRegistries.ITEMS.getValue(new ResourceLocation("randomthings:lavacharm"));

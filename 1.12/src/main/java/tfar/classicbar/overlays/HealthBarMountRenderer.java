@@ -104,11 +104,10 @@ public class HealthBarMountRenderer {
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
         //draw mountHealth amount
         int h1 = (int) Math.ceil(mountHealth);
-        int h2 = (int) Math.ceil(maxHealth);
 
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)(100*mountHealth/maxHealth);
-        drawStringOnHUD(h1+"", xStart + 100 - 9 * i3, yStart - 1, cU.colorToText(cU.calculateScaledColor(mountHealth,maxHealth)),0);
+        drawStringOnHUD(h1+"", xStart + 9 * i3 + rightTextOffset, yStart - 1, cU.colorToText(cU.calculateScaledColor(mountHealth,maxHealth)),0);
 
         //Reset back to normal settings
         GlStateManager.color(1, 1, 1, 1);

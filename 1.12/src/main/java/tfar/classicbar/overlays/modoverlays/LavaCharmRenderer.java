@@ -97,7 +97,7 @@ public class LavaCharmRenderer {
         int i3 = getStringLength(i2+"");
             int i4 = (general.displayIcons) ? 1 : 0;
         int c = Integer.decode(configRandomThings.lavaBarColor);
-            drawStringOnHUD(i2 + "", xStart - 9 * i4 - i3 - 5, yStart - 1, c, 0);
+            drawStringOnHUD(i2 + "", xStart - 9 * i4 - i3 + leftTextOffset, yStart - 1, c, 0);
 
             mc.getTextureManager().bindTexture(ICON_LAVA);
         GlStateManager.color(1, 1, 1, 1);

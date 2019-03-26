@@ -26,7 +26,7 @@ public class ClassicBar {
     public static final String MODNAME = "Classic Bar";
     public static final String MODVERSION = "@VERSION@";
 
-    @SidedProxy(clientSide = "tfar.classicbar.proxy.ClientProxy",serverSide = "tfar.classicbar.proxy.CommonProxy")
+    @SidedProxy(clientSide = "tfar.classicbar.proxy.ClientProxy")
     public static CommonProxy proxy;
 
     public static Logger logger;

@@ -39,7 +39,7 @@ public class ThirstBarRenderer {
     }
 
     @SubscribeEvent//(priority = EventPriority.HIGH)
-    public void renderThirstBar(RenderGameOverlayEvent.Pre event) {
+    public void renderThirstBar(RenderGameOverlayEvent.Post event) {
         Entity renderViewEntity = this.mc.getRenderViewEntity();
         if (//event.getType() != RenderGameOverlayEvent.ElementType.AIR ||
                 event.isCanceled() ||
@@ -47,7 +47,7 @@ public class ThirstBarRenderer {
                  !(renderViewEntity instanceof EntityPlayer)) return;
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
         if (player.capabilities.isCreativeMode)return;
-        ThirstHandler thirstStats = (ThirstHandler)player.getCapability(TANCapabilities.THIRST, (EnumFacing)null);
+        ThirstHandler thirstStats = (ThirstHandler)player.getCapability(TANCapabilities.THIRST, null);
         double thirst = thirstStats.getThirst();
         //System.out.println(thirst);
         int scaledWidth = event.getResolution().getScaledWidth();
@@ -89,7 +89,7 @@ public class ThirstBarRenderer {
         int c = Integer.decode(configToughAsNails.thirstBarColor);
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)thirst*5;
-        drawStringOnHUD(h1 + "", xStart + 83 + 9 * i3, yStart - 1, c, 0);
+        drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c, 0);
         //Reset back to normal settings
         GlStateManager.color(1, 1, 1, 1);
 

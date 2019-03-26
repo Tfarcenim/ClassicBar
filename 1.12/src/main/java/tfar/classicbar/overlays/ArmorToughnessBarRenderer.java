@@ -99,7 +99,7 @@ public class ArmorToughnessBarRenderer {
 
         int c = Integer.decode(colors.advancedColors.armorColorValues[0]);
         if (numbers.showPercent)i1 = (int)armorToughness*5;
-        drawStringOnHUD(i1 + "", xStart + 101 + 9 * i3, yStart - 1, c, 0);
+        drawStringOnHUD(i1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c, 0);
         //Reset back to normal settings
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);

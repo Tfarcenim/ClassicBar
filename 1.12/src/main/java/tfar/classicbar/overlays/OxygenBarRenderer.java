@@ -81,7 +81,7 @@ public class OxygenBarRenderer {
         int c = Integer.decode(colors.oxygenBarColor);
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)air/3;
-        drawStringOnHUD(h1 + "", xStart + 82 + 9 * i3, yStart - 1, c, 0);
+        drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c, 0);
         //Reset back to normal settings
 
         GlStateManager.color(1, 1, 1, 1);

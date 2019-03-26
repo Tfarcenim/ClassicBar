@@ -112,7 +112,7 @@ public class HealthBarRenderer {
         int i1 = getStringLength(h1+"");
         int i2 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)(100*health/maxHealth);
-        drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 - 5, yStart - 1, cU.colorToText(cU.calculateScaledColor(health,maxHealth)), 0);
+        drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, cU.colorToText(cU.calculateScaledColor(health,maxHealth)), 0);
 
         //Reset back to normal settings
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
