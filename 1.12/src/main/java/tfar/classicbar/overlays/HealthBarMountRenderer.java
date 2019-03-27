@@ -41,7 +41,6 @@ public class HealthBarMountRenderer {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void renderHealthBarMount(RenderGameOverlayEvent.Pre event) {
 
-
         Entity renderViewEnity = this.mc.getRenderViewEntity();
         if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTHMOUNT
                 || event.isCanceled()
@@ -50,18 +49,18 @@ public class HealthBarMountRenderer {
         int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes
         ;
-        event.setCanceled(true);
 
         updateCounter = mc.ingameGUI.getUpdateCounter();
 
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
 
         if (player.getRidingEntity() == null)return;
+        if (!(player.getRidingEntity() instanceof EntityLivingBase))return;
 
         EntityLivingBase mount = (EntityLivingBase) player.getRidingEntity();
         if (mount.isDead)return;
+        event.setCanceled(true);
         double mountHealth = mount.getHealth();
-
 
         boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3L % 2L == 1L;
 

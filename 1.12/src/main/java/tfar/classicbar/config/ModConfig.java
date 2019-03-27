@@ -89,6 +89,8 @@ public class ModConfig {
         public String oxygenBarColor = "#00E6E6";
         @Config.Name("Saturation Bar Color")
         public String saturationBarColor = "#FFCC00";
+        @Config.Name("Absorption Bar Color")
+        public String absorptionBarColor = "#D4AF37";
 
         public class AdvancedColors {
             @Config.Comment("Colors must be specified in #RRGGBB format")

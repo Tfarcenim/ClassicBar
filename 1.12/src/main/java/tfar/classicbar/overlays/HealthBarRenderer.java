@@ -32,10 +32,6 @@ public class HealthBarRenderer {
     public HealthBarRenderer() {
     }
 
-    public void forceUpdate() {
-        forceUpdateIcons = true;
-    }
-
     @SubscribeEvent//(priority = EventPriority.LOW)
     public void renderHealthBar(RenderGameOverlayEvent.Pre event) {
         Entity renderViewEntity = this.mc.getRenderViewEntity();
@@ -103,11 +99,12 @@ public class HealthBarRenderer {
             else drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9);
 
             int a1 = getStringLength((int)absorb+"");
-            GlStateManager.color(0.831f, 0.686f, 0.215f, 1);
+            cU.color2Gl(cU.hex2Color(colors.absorptionBarColor));
             drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb, maxHealth), 7);
             int a2 = general.displayIcons ? 1 : 0;
             int a3 = (int)absorb;
-            drawStringOnHUD(a3 + "", xStart  - a1 - 9 * a2 - 5, yStart - 11, 0xD4AF37, 0);
+            int c = cU.colorToText(cU.hex2Color(colors.absorptionBarColor));
+            drawStringOnHUD(a3 + "", xStart  - a1 - 9 * a2 - 5, yStart - 11, c, 0);
         }
         int i1 = getStringLength(h1+"");
         int i2 = general.displayIcons ? 1 : 0;
@@ -147,7 +144,7 @@ public class HealthBarRenderer {
 
     private void drawScaledBar(double absorb, double maxHealth, float x, float y) {
         int i = getWidth(absorb,maxHealth);
-        drawTexturedModalRect(x+1, y, 0, 0, i, 9);
-        drawTexturedModalRect(x+i,y+1,0,1,1,7);
+        drawTexturedModalRect(x, y, 0, 0, i+1, 9);
+        drawTexturedModalRect(x+i+1,y+1,0,1,1,7);
     }
 }
