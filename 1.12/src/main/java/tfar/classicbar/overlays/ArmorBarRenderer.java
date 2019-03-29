@@ -42,8 +42,8 @@ public class ArmorBarRenderer {
         //Push to avoid lasting changes
 
         int absorb = MathHelper.ceil(player.getAbsorptionAmount());
-
-        int xStart = scaledWidth / 2 - 91;
+      if (general.overlays.swap)absorb=0;
+      int xStart = scaledWidth / 2 - 91;
         int yStart = scaledHeight - 49;
         if (absorb>0)yStart-=10;
 
@@ -96,7 +96,7 @@ public class ArmorBarRenderer {
 
         int c = Integer.decode(colors.advancedColors.armorColorValues[0]);
         if (numbers.showPercent)i1 = (int)armor*5;
-        drawStringOnHUD(i1 + "", xStart - 9 * i3 - i2 + leftTextOffset, yStart - 1, c, 0);
+        drawStringOnHUD(i1 + "", xStart - 9 * i3 - i2 + leftTextOffset                                                                    , yStart - 1, c, 0);
         //Reset back to normal settings
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

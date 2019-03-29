@@ -22,7 +22,7 @@ import static toughasnails.handler.thirst.ThirstOverlayHandler.OVERLAY;
 public class TemperatureBarRenderer {
 
 /*
-    Class handles the drawing of the thirst bar
+    Class handles the drawing of the temp bar
  */
 
 //TODO Fix this crap
@@ -39,7 +39,7 @@ public class TemperatureBarRenderer {
 
             if (true)return;
 
-            Entity renderViewEntity = this.mc.getRenderViewEntity();
+            Entity renderViewEntity = mc.getRenderViewEntity();
             if (//event.getType() != RenderGameOverlayEvent.ElementType.AIR ||
                     event.isCanceled() ||
                             !(renderViewEntity instanceof EntityPlayer)) return;

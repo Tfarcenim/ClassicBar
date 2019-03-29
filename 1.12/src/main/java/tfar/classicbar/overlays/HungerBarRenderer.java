@@ -3,6 +3,7 @@ package tfar.classicbar.overlays;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
@@ -21,7 +22,6 @@ import static tfar.classicbar.config.ModConfig.*;
  */
 
 public class HungerBarRenderer {
-    private final Minecraft mc = Minecraft.getMinecraft();
 
     private float alpha = 0;
     private boolean increase = true;
@@ -136,8 +136,11 @@ public class HungerBarRenderer {
             //Draw hunger icon
             //hunger background
             drawTexturedModalRect(xStart + 82, yStart, 16, 27, 9, 9);
+            int k5 = 52;
+            if (player.isPotionActive(MobEffects.HUNGER)) k5 += 36;
+
             //hunger
-            drawTexturedModalRect(xStart + 82, yStart, 52, 27, 9, 9);
+            drawTexturedModalRect(xStart + 82, yStart, k5, 27, 9, 9);
         }
         GlStateManager.disableBlend();
         //Revert our state back

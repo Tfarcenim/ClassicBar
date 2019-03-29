@@ -27,12 +27,13 @@ public class ArmorToughnessBarRenderer {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void renderArmorToughnessBar(RenderGameOverlayEvent.Post event) {
+    public void renderArmorToughnessBar(RenderGameOverlayEvent.Pre event) {
 
-        Entity renderViewEnity = this.mc.getRenderViewEntity();
-        if (!(renderViewEnity instanceof EntityPlayer) || event.getType() != RenderGameOverlayEvent.ElementType.FOOD || event.isCanceled()) return;
+        Entity renderViewEnity = mc.getRenderViewEntity();
+        if (!(renderViewEnity instanceof EntityPlayer) ||
+                event.getType() != RenderGameOverlayEvent.ElementType.FOOD ||
+                event.isCanceled()) return;
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
-        if (player.capabilities.isCreativeMode)return;
         double armorToughness = player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue();
         if (armorToughness < 1)return;
         int scaledWidth = event.getResolution().getScaledWidth();

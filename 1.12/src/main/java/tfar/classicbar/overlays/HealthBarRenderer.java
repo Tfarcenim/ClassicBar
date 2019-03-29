@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,7 +24,6 @@ public class HealthBarRenderer {
 
     private int updateCounter = 0;
     private double playerHealth = 0;
-    private double lastPlayerHealth = 0;
     private long healthUpdateCounter = 0;
     private long lastSystemTime = 0;
 
@@ -63,7 +63,6 @@ public class HealthBarRenderer {
         }
 
         playerHealth = health;
-        double j = lastPlayerHealth;
         IAttributeInstance maxHealthAttribute = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
         int xStart = scaledWidth / 2 - 91;
         int yStart = scaledHeight - 39;
@@ -73,6 +72,10 @@ public class HealthBarRenderer {
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
         int k5 = 16;
+
+        if (player.isPotionActive(MobEffects.POISON)) k5 += 36;
+        else if (player.isPotionActive(MobEffects.WITHER)) k5 += 72;
+
         int i4 = (highlight) ? 18 : 0;
 
         //Bind our Custom bar
@@ -84,7 +87,8 @@ public class HealthBarRenderer {
         //Pass 1, draw bar portion
 
         //calculate bar color
-        cU.color2Gl(cU.calculateScaledColor(health, maxHealth));
+        if (k5!=88)cU.color2Gl(cU.calculateScaledColor(health, maxHealth));
+        else cU.color2Gl(cU.color2BW(cU.calculateScaledColor(health, maxHealth)));
         //draw portion of bar based on health remaining
         drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
         //draw health amount
@@ -92,6 +96,7 @@ public class HealthBarRenderer {
 
         //draw absorption bar if it exists
         if (absorb > 0) {
+            if (general.overlays.swap)yStart-=10;
             GlStateManager.color(1, 1, 1, 1);
 
             if (!general.overlays.fullAbsorptionBar)drawScaledBar(absorb, maxHealth,xStart,yStart - 10);
@@ -104,12 +109,13 @@ public class HealthBarRenderer {
             int a3 = (int)absorb;
             int c = cU.colorToText(cU.hex2Color(colors.absorptionBarColor));
             drawStringOnHUD(a3 + "", xStart  - a1 - 9 * a2 - 5, yStart - 11, c, 0);
+            if (general.overlays.swap)yStart+=10;
         }
         int i1 = getStringLength(h1+"");
         int i2 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)(100*health/maxHealth);
-        drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, cU.colorToText(cU.calculateScaledColor(health,maxHealth)), 0);
-
+        if (k5!=88)drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, cU.colorToText(cU.calculateScaledColor(health,maxHealth)), 0);
+        else drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, cU.colorToText(cU.color2BW(cU.calculateScaledColor(health,maxHealth))), 0);
         //Reset back to normal settings
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -125,9 +131,10 @@ public class HealthBarRenderer {
             //heart background
             drawTexturedModalRect(xStart - 10, yStart, 16, 9 * i5, 9, 9);
             //heart
-            drawTexturedModalRect(xStart - 10, yStart, 52, 9 * i5, 9, 9);
+            drawTexturedModalRect(xStart - 10, yStart, 36+k5, 9 * i5, 9, 9);
             if (absorb>0){
-                //draw absorption icon
+              if (general.overlays.swap)yStart-=10;
+              //draw absorption icon
                 drawTexturedModalRect(xStart - 10, yStart - 10, 16, 9 * i5, 9, 9);
                 drawTexturedModalRect(xStart - 10, yStart - 10, 160, 0, 9, 9);
             }

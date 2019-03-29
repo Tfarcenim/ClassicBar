@@ -40,6 +40,11 @@ public class ColorUtilities {
         return new Color(r, g, b);
     }
 
+    public Color color2BW(Color c){
+        int i = (c.r+c.g+c.b)/3;
+        return new Color(i,i,i);
+    }
+
     public Color calculateScaledColor(double d1, double d2) {
         double d3 = (d1 / d2);
         if (colors.advancedColors.healthFractions.length != colors.advancedColors.hexColors.length) return new Color(0,0,0);
