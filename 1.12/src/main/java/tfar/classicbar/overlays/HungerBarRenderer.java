@@ -72,7 +72,8 @@ public class HungerBarRenderer {
         }
         //render held hunger overlay
 
-        if (general.overlays.hunger.showHeldFoodOverlay && player.getHeldItemMainhand().getItem() instanceof ItemFood ){
+        if (general.overlays.hunger.showHeldFoodOverlay &&
+                player.getHeldItemMainhand().getItem() instanceof ItemFood ){
             ItemStack stack = player.getHeldItemMainhand();
             if (increase)alpha+=general.overlays.hunger.transitionSpeed;
             else alpha-=general.overlays.hunger.transitionSpeed;
@@ -82,6 +83,7 @@ public class HungerBarRenderer {
             double hungerOverlay = foodItem.getHealAmount(stack);
             double saturationMultiplier = foodItem.getSaturationModifier(stack);
             double potentialSat = 2*hungerOverlay*saturationMultiplier;
+
 
             //Draw Potential hunger
             double hungerWidth = Math.min(20-hunger,hungerOverlay);

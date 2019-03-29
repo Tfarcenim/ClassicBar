@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "0.1.2"
+version = "0.1.3"
 group = "com.tfar.classicbar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "classicbar"
 
@@ -32,7 +32,9 @@ minecraft {
     mappings = "stable_39"
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
+repositories {
 
+    }
 dependencies {
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
@@ -48,11 +50,11 @@ dependencies {
 
     // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
     // except that these dependencies get remapped to your current MCP mappings
-    deobfProvided 'randomthings:RandomThings:MC1.12.2:4.2.6'
+    deobfProvided "randomthings:RandomThings:MC${mc_version}:4.2.6"
     //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
     deobfProvided "azanor:Baubles:${baubles_version}"
 
-    deobfProvided "toughasnails:ToughAsNails:1.12.2:3.1.0.139-universal"
+    deobfProvided "toughasnails:ToughAsNails:${mc_version}:3.1.0.139-universal"
     
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html

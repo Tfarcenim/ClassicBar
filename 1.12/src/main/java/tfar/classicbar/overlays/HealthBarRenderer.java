@@ -75,7 +75,6 @@ public class HealthBarRenderer {
         int k5 = 16;
         int i4 = (highlight) ? 18 : 0;
 
-
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
         //Bar background

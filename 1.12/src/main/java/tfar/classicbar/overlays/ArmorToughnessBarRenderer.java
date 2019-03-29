@@ -30,7 +30,7 @@ public class ArmorToughnessBarRenderer {
     public void renderArmorToughnessBar(RenderGameOverlayEvent.Post event) {
 
         Entity renderViewEnity = this.mc.getRenderViewEntity();
-        if (!(renderViewEnity instanceof EntityPlayer || event.getType() != RenderGameOverlayEvent.ElementType.FOOD ||event.isCanceled())) return;
+        if (!(renderViewEnity instanceof EntityPlayer) || event.getType() != RenderGameOverlayEvent.ElementType.FOOD || event.isCanceled()) return;
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
         if (player.capabilities.isCreativeMode)return;
         double armorToughness = player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue();
