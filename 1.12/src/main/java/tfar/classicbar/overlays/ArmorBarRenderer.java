@@ -5,8 +5,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static tfar.classicbar.ColorUtilities.cU;
@@ -35,7 +37,7 @@ public class ArmorBarRenderer {
         }
         event.setCanceled(true);
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
-        double armor = player.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue();
+        double armor = calculateArmorValue();
         if (armor < 1)return;
         int scaledWidth = event.getResolution().getScaledWidth();
         int scaledHeight = event.getResolution().getScaledHeight();
@@ -114,4 +116,18 @@ public class ArmorBarRenderer {
         mc.profiler.endSection();
         event.setCanceled(true);
     }
+  private int calculateArmorValue()
+  {
+    int currentArmorValue = mc.player.getTotalArmorValue();
+
+    for (ItemStack itemStack : mc.player.getArmorInventoryList())
+    {
+      if (itemStack.getItem() instanceof ISpecialArmor)
+      {
+        ISpecialArmor specialArmor = (ISpecialArmor) itemStack.getItem();
+        currentArmorValue += specialArmor.getArmorDisplay(mc.player, itemStack, 0);
+      }
+    }
+    return currentArmorValue;
+  }
 }

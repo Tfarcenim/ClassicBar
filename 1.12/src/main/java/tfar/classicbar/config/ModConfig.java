@@ -51,7 +51,7 @@ public class ModConfig {
             @Config.Name("Draw full absorption Bar")
             public boolean fullAbsorptionBar = false;
 
-            @Config.Name("Swap absorption & hunger?")
+            @Config.Name("Swap absorption & armor?")
             public boolean swap = false;
 
             public class HungerBarConfig {
