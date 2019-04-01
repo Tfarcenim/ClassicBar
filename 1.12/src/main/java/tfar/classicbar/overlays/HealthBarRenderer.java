@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static tfar.classicbar.ColorUtilities.cU;
@@ -32,7 +33,7 @@ public class HealthBarRenderer {
     public HealthBarRenderer() {
     }
 
-    @SubscribeEvent//(priority = EventPriority.LOW)
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void renderHealthBar(RenderGameOverlayEvent.Pre event) {
         Entity renderViewEntity = this.mc.getRenderViewEntity();
         if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH
@@ -96,20 +97,39 @@ public class HealthBarRenderer {
 
         //draw absorption bar if it exists
         if (absorb > 0) {
-            if (general.overlays.swap)yStart-=10;
+            if (general.overlays.swap) yStart -= 10;
             GlStateManager.color(1, 1, 1, 1);
-
-            if (!general.overlays.fullAbsorptionBar)drawScaledBar(absorb, maxHealth,xStart,yStart - 10);
-            else drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9);
-
-            int a1 = getStringLength((int)absorb+"");
-            cU.color2Gl(cU.hex2Color(colors.absorptionBarColor));
-            drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb, maxHealth), 7);
+            if (absorb <= maxHealth) {
+                if (!general.overlays.fullAbsorptionBar) drawScaledBar(absorb, maxHealth, xStart, yStart - 10);
+                else drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9);
+                cU.color2Gl(cU.hex2Color(colors.advancedColors.absorptionColorValues[0]));
+                drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb, maxHealth), 7);
+            }
+            else{
+                //draw background bar
+                drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9);
+                //we have wrapped, draw 2 bars
+                int index = (int)Math.floor(absorb/maxHealth);
+                //don't crash from arrayindexoutofbounds
+                if (index >= colors.advancedColors.absorptionColorValues.length - 1)
+                    index = colors.advancedColors.absorptionColorValues.length - 1;
+                //draw first full bar
+                cU.color2Gl(cU.hex2Color(colors.advancedColors.absorptionColorValues[index-1]));
+                drawTexturedModalRect(xStart+1,yStart - 9,1,10,79,7);
+                //is it on the edge or capped already?
+                if(absorb%maxHealth !=0 && index < colors.advancedColors.absorptionColorValues.length - 1) {
+                    //draw second partial bar
+                    cU.color2Gl(cU.hex2Color(colors.advancedColors.absorptionColorValues[index]));
+                    drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb % maxHealth, maxHealth), 7);
+                }
+            }
+            // handle the text
+            int a1 = getStringLength((int) absorb + "");
             int a2 = general.displayIcons ? 1 : 0;
-            int a3 = (int)absorb;
-            int c = cU.colorToText(cU.hex2Color(colors.absorptionBarColor));
-            drawStringOnHUD(a3 + "", xStart  - a1 - 9 * a2 - 5, yStart - 11, c, 0);
-            if (general.overlays.swap)yStart+=10;
+            int a3 = (int) absorb;
+            int c = cU.colorToText(cU.hex2Color(colors.advancedColors.absorptionColorValues[0]));
+            drawStringOnHUD(a3 + "", xStart - a1 - 9 * a2 - 5, yStart - 11, c, 0);
+            if (general.overlays.swap) yStart += 10;
         }
         int i1 = getStringLength(h1+"");
         int i2 = general.displayIcons ? 1 : 0;

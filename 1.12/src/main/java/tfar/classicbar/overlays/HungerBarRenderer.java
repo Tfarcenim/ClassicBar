@@ -2,6 +2,7 @@ package tfar.classicbar.overlays;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
@@ -25,19 +26,17 @@ public class HungerBarRenderer {
 
     private float alpha = 0;
     private boolean increase = true;
+    private final Minecraft mc = Minecraft.getMinecraft();
 
     public HungerBarRenderer() {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void renderHungerBar(RenderGameOverlayEvent.Pre event) {
-
-
-        //Entity renderViewEntity = this.mc.getRenderViewEntity();
-        if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD) return;
+        Entity renderViewEntity = mc.getRenderViewEntity();
+        if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD || !(renderViewEntity instanceof EntityPlayer)) return;
         event.setCanceled(true);
-        Minecraft mc = Minecraft.getMinecraft();
-        EntityPlayer player = mc.player;
+        EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
         double hunger = player.getFoodStats().getFoodLevel();
         double currentSat = player.getFoodStats().getSaturationLevel();
         float exhaustion = getExhaustion(player);
@@ -54,6 +53,7 @@ public class HungerBarRenderer {
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
         //Bar background
+        GlStateManager.color(1,1,1,1);
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
         //draw portion of bar based on hunger amount

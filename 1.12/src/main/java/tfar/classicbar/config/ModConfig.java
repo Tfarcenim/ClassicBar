@@ -92,13 +92,14 @@ public class ModConfig {
         public String oxygenBarColor = "#00E6E6";
         @Config.Name("Saturation Bar Color")
         public String saturationBarColor = "#FFCC00";
-        @Config.Name("Absorption Bar Color")
-        public String absorptionBarColor = "#D4AF37";
+
 
         public class AdvancedColors {
             @Config.Comment("Colors must be specified in #RRGGBB format")
             @Config.Name("Armor color values")
             public String[] armorColorValues = new String[]{"#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"};
+            @Config.Name("Absorption Bar Color")
+            public String[] absorptionColorValues = new String[]{"#D4AF37","#C2C73B","#8DC337","#36BA77","#4A5BC4","#D89AE2","#DF9DC7","#DFA99D","#D4DF9D","#3E84C6","#B8C1E8","#DFDFDF"};
             @Config.Name("Health fractions")
             public Float[] healthFractions = new Float[]{.25f, .5f, .75f};
             @Config.Name("Colors")
