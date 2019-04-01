@@ -5,7 +5,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.GuiIngameForge;
@@ -103,7 +102,7 @@ public class HungerBarRenderer {
                     double diff = (potentialSat + currentSat) - (hunger+hungerWidth);
                     saturationWidth = potentialSat - diff;
                 }
-                //offset used to decide where to place the par
+                //offset used to decide where to place the bar
                 f = xStart - getWidth(saturationWidth+currentSat,20) + 80;
                 cU.color2Gla(cU.hex2Color(colors.saturationBarColor),alpha);
                 drawTexturedModalRect(f, yStart+1, 1, 10, getWidth(saturationWidth,20), 7);
