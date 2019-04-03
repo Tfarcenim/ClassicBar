@@ -3,7 +3,6 @@ package tfar.classicbar.overlays;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -56,18 +55,20 @@ public class ArmorBarRenderer {
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
         //Bar background
-        drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
         //Pass 1, draw bar portion
 
         //if armor >20
         if (armor<=20) {
-            //calculate bar color
+          if (!general.overlays.fullToughnessBar) drawScaledBar(armor, 20, xStart, yStart, true);
+          else drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9,general.style,true,true);
+          //calculate bar color
             cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[0]));
             //draw portion of bar based on armor amount
-            drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor,20), 7);
+            drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor,20), 7,general.style,true,true);
         }else {
-            //we have wrapped, draw 2 bars
+          drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9,general.style,false,true);
+          //we have wrapped, draw 2 bars
             int index = (int)Math.ceil(armor/20);
             int size = colors.advancedColors.armorColorValues.length;
             int i = index;
@@ -79,16 +80,16 @@ public class ArmorBarRenderer {
             if (index < size && armor % 20 != 0){
                 //draw complete first bar
                 cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[i-1]));
-            drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
+            drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7,general.style,true,true);
 
             //draw partial second bar
                 cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[i]));
-            drawTexturedModalRect(xStart+1, yStart+1, 1, 10, getWidth(armor%20,20), 7);}
+            drawTexturedModalRect(xStart+1, yStart+1, 1, 10, getWidth(armor%20,20), 7,general.style,true,true);}
             //case 2, bar is a multiple of 20 or it is capped
             else{
                 //draw complete second bar
                 cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[i]));
-                drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
+                drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7,general.style,true,true);
             }
         }
         //draw armor amount
@@ -98,16 +99,16 @@ public class ArmorBarRenderer {
 
         int c = Integer.decode(colors.advancedColors.armorColorValues[0]);
         if (numbers.showPercent)i1 = (int)armor*5;
-        drawStringOnHUD(i1 + "", xStart - 9 * i3 - i2 + leftTextOffset                                                                    , yStart - 1, c, 0);
+        drawStringOnHUD(i1 + "", xStart - 9 * i3 - i2 + leftTextOffset, yStart - 1, c);
         //Reset back to normal settings
 
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GlStateManager.color(1, 1, 1, 1);
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);
 
         if(general.displayIcons)
         //Draw armor icon
-        drawTexturedModalRect(xStart - 10, yStart, 43, 9, 9, 9);
+        drawTexturedModalRect(xStart - 10, yStart, 43, 9, 9, 9,0,false,false);
 
         //armor icon
         GlStateManager.disableBlend();

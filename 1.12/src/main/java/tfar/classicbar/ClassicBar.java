@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static java.util.Arrays.stream;
+
 
 @Mod(modid = ClassicBar.MODID, name = ClassicBar.MODNAME, version = ClassicBar.MODVERSION, useMetadata = true, clientSideOnly = true)
 public class ClassicBar {
@@ -25,6 +27,9 @@ public class ClassicBar {
     public static final String MODID = "classicbar";
     public static final String MODNAME = "Classic Bar";
     public static final String MODVERSION = "@VERSION@";
+    public static final String[] problemMods = new String[]{"mantle","toughasnails"};
+    boolean areProblemModsPresent;
+
 
     @SidedProxy(clientSide = "tfar.classicbar.proxy.ClientProxy")
     public static CommonProxy proxy;
@@ -44,7 +49,8 @@ public class ClassicBar {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
-        if (Loader.isModLoaded("mantle") || (Loader.isModLoaded("toughasnails"))) {
+        areProblemModsPresent = stream(problemMods).anyMatch(Loader::isModLoaded);
+        if (areProblemModsPresent) {
             logger.info("Unregistering problematic overlays.");
             ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners;
             try {
@@ -53,7 +59,7 @@ public class ClassicBar {
                 listeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>) f.get(MinecraftForge.EVENT_BUS);
                 for (Map.Entry<Object, ArrayList<IEventListener>> entry : listeners.entrySet()) {
                     String s = entry.getKey().getClass().getCanonicalName();
-                    //System.out.println(s);
+                    System.out.println(s);
                     //System.out.println(entry);
                     if ("slimeknights.mantle.client.ExtraHeartRenderHandler".equals(s)) {
                         logger.info("Unregistered Mantle bar");

@@ -12,6 +12,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.lang.reflect.Field;
 
+import static tfar.classicbar.config.ModConfig.general;
 import static tfar.classicbar.config.ModConfig.numbers;
 
 public class ModUtils {
@@ -28,12 +29,34 @@ public class ModUtils {
     public static final Minecraft mc = Minecraft.getMinecraft();
     private static final FontRenderer fontRenderer = mc.fontRenderer;
 
-    public static void drawTexturedModalRect(float x, float y, int textureX, int textureY, int width, int height) {
+    public static void drawTexturedModalRect(float x, float y, int textureX, int textureY, int width, int height,
+                                             int style, boolean isBar, boolean left) {
+        textureY += style*36;
+        if (isBar && !left)
+        switch (style){
+            case 1:{x -= 1;
+            break;}
+            default:
+        }
         Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(x, y, textureX, textureY, width, height);
     }
 
+    public static void drawPotential(float x, float y, int textureX, int textureY, int width, int height,
+                                             int style) {
+        textureY += style*36;
+            switch (style){
+                case 1:{x -= 1;
+                    break;}
+                default:
+            }
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(x, y, textureX, textureY, width, height);
+    }
+
+
     public static int getWidth(double d1, double d2) {
-        double d3 = Math.max(79 * d1 / d2,0);
+        int w = 79;
+        if (general.style == 1)w-=1;
+        double d3 = Math.max(w * d1 / d2,0);
         return (int) Math.ceil(d3);
     }
 
@@ -41,9 +64,34 @@ public class ModUtils {
         return fontRenderer.getStringWidth(s);
     }
 
-    public static void drawStringOnHUD(String string, int xOffset, int yOffset, int color, int lineOffset) {
+    public static void drawScaledBar(double absorb, double maxHealth, float x, float y, boolean left) {
+        int i = getWidth(absorb,maxHealth);
+        switch (general.style){
+            case 0: if (left) {
+
+                drawScaledLeft(x, y, 0, 0, i + 1, 9);
+                drawScaledLeft(x + i + 1, y + 1, 0, 1, 1, 7);
+            }else{
+                drawScaledLeft(x + 1, y, 0, 0, i + 1, 9);
+                drawScaledLeft(x + i + 2, y + 1, 0, 1, 1, 7);}
+                break;
+            case 1: {
+                i++;
+                drawTexturedModalRect(x, y, 0, 36, i+1, 9,0,true,left);
+                drawTexturedModalRect(x+i,y+1,1, 37,1,7,0,true,left);
+                drawTexturedModalRect(x+i+1,y+1,0, 37,1,7,0,true,left);
+                break;
+            }
+
+        }
+
+    }
+    public static void drawScaledLeft(float x, float y, int textureX, int textureY, int width, int height) {
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(x, y, textureX, textureY, width, height);
+    }
+
+    public static void drawStringOnHUD(String string, int xOffset, int yOffset, int color) {
         if (!numbers.showNumbers)return;
-        yOffset += lineOffset * 9;
         fontRenderer.drawString(string, 2 + xOffset, 2 + yOffset, color, true);
     }
 

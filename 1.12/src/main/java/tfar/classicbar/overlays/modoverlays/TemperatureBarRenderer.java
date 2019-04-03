@@ -45,7 +45,7 @@ public class TemperatureBarRenderer {
                             !(renderViewEntity instanceof EntityPlayer)) return;
             EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
             if (player.capabilities.isCreativeMode) return;
-            ThirstHandler thirstStats = (ThirstHandler) player.getCapability(TANCapabilities.THIRST, (EnumFacing) null);
+            ThirstHandler thirstStats = (ThirstHandler) player.getCapability(TANCapabilities.THIRST, null);
             double thirst = thirstStats.getThirst();
             //System.out.println(thirst);
             int scaledWidth = event.getResolution().getScaledWidth();
@@ -62,13 +62,13 @@ public class TemperatureBarRenderer {
             //Bind our Custom bar
             mc.getTextureManager().bindTexture(ICON_BAR);
             //Bar background
-            drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
+       //     drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9,general.style);
 
             //draw portion of bar based on thirst amount
 
             float f = xStart + 80 - getWidth(thirst, 20);
           //  cU.color2Gl(cU.hex2Color(colors.thirstBarColor));
-            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(thirst, 20), 7);
+       //     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(thirst, 20), 7,general.style);
 
             //draw hydration if present
        /* if (thirstStats.getHydration()>0){
@@ -96,7 +96,7 @@ public class TemperatureBarRenderer {
 
             if (general.displayIcons) {
                 //Draw thirst icon
-                drawTexturedModalRect(xStart + 83, yStart, 1, 25, 7, 9);
+             //   drawTexturedModalRect(xStart + 83, yStart, 1, 25, 7, 9,general.style);
             }
             mc.getTextureManager().bindTexture(ICON_VANILLA);
 

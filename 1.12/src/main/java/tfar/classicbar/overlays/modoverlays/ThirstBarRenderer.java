@@ -64,13 +64,13 @@ public class ThirstBarRenderer {
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
         //Bar background
-        drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
+        drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9,general.style,false,false);
 
         //draw portion of bar based on thirst amount
 
         float f = xStart+80-getWidth(thirst,20);
         cU.color2Gl(cU.hex2Color(configToughAsNails.thirstBarColor));
-        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(thirst,20), 7);
+        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(thirst,20), 7,general.style, true,false);
 
         //draw hydration if present
        /* if (thirstStats.getHydration()>0){
@@ -89,7 +89,7 @@ public class ThirstBarRenderer {
         int c = Integer.decode(configToughAsNails.thirstBarColor);
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)thirst*5;
-        drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c, 0);
+        drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
         //Reset back to normal settings
         GlStateManager.color(1, 1, 1, 1);
 
@@ -98,7 +98,7 @@ public class ThirstBarRenderer {
 
         if (general.displayIcons) {
             //Draw thirst icon
-            drawTexturedModalRect(xStart + 83, yStart, 1, 25, 7, 9);
+            drawTexturedModalRect(xStart + 83, yStart, 1, 25, 7, 9,0,false,false);
         }
         mc.getTextureManager().bindTexture(ICON_VANILLA);
 

@@ -52,22 +52,24 @@ public class ArmorToughnessBarRenderer {
         int f;
 
         //Bar background
-        drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
         if(general.displayIcons)
             //Draw armor toughness icon
-            drawTexturedModalRect(xStart + 82, yStart, 83, 0, 9, 9);
+            drawTexturedModalRect(xStart + 82, yStart, 83, 0, 9, 9,0,true,false);
         //draw bar portion
 
         if (armorToughness<=20) {
+            f = xStart+80-getWidth(armorToughness,20);
+            if (!general.overlays.fullToughnessBar) drawScaledBar(armorToughness, 20, f-2, yStart, false);
+            else drawTexturedModalRect(f, yStart, 0, 0, 81, 9,general.style,false,false);
+
             //calculate bar color
             cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[0]));
             //draw portion of bar based on armor toughness amount
-            f = xStart+80-getWidth(armorToughness,20);
-            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(armorToughness,20), 7);
+            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(armorToughness,20), 7,general.style,true,false);
 
         }
         else {
-
+            drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9,general.style,false,false);
             //we have wrapped, draw 2 bars
             int index = (int)Math.ceil(armorToughness/20);
             int size = colors.advancedColors.armorColorValues.length;
@@ -78,18 +80,18 @@ public class ArmorToughnessBarRenderer {
 
             //draw complete first bar
                 cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[i-1]));
-            drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
+            drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7,general.style,true,false);
 
             //draw partial second bar
                 f = xStart+80-getWidth(armorToughness%20,20);
 
                 cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[i]));
-            drawTexturedModalRect(f, yStart+1, 1, 10, getWidth(armorToughness%20,20), 7);}
+            drawTexturedModalRect(f, yStart+1, 1, 10, getWidth(armorToughness%20,20), 7,general.style,true,false);}
         //case 2, bar is a multiple of 20 or it is capped
             else{
             //draw complete second bar
                 cU.color2Gl(cU.hex2Color(colors.advancedColors.armorColorValues[i]));
-            drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7);
+            drawTexturedModalRect(xStart+1, yStart+1, 1, 10, 79, 7,general.style,true,true);
         }
         }
 
@@ -99,7 +101,7 @@ public class ArmorToughnessBarRenderer {
 
         int c = Integer.decode(colors.advancedColors.armorColorValues[0]);
         if (numbers.showPercent)i1 = (int)armorToughness*5;
-        drawStringOnHUD(i1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c, 0);
+        drawStringOnHUD(i1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
         //Reset back to normal settings
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);

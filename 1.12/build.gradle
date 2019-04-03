@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "0.1.7"
+version = "0.1.8"
 group = "com.tfar.classicbar" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "classicbar"
 
@@ -53,7 +53,7 @@ dependencies {
     deobfProvided "randomthings:RandomThings:MC${mc_version}:4.2.6"
     //deobfProvided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
     deobfProvided "azanor:Baubles:${baubles_version}"
-
+    //deobfCompile "betterdiving:BetterDiving:${mc_version}-1.3.42"
     deobfProvided "toughasnails:ToughAsNails:${mc_version}:3.1.0.139-universal"
     
     // for more info...

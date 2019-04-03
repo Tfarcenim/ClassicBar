@@ -21,11 +21,6 @@ import static tfar.classicbar.ModUtils.*;
 
 public class OxygenBarRenderer {
     private final Minecraft mc = Minecraft.getMinecraft();
-    ;
-    private int updateCounter = 0;
-    private double playerAir = 1;
-
-    private boolean forceUpdateIcons = false;
 
     public OxygenBarRenderer() {
     }
@@ -43,18 +38,11 @@ public class OxygenBarRenderer {
         event.setCanceled(true);
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
         double air = player.getAir();
-        if (player.getAir()>=300)return;
+        if (air>=300)return;
         int scaledWidth = event.getResolution().getScaledWidth();
         int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes
 
-        updateCounter = mc.ingameGUI.getUpdateCounter();
-
-        if (air != playerAir || forceUpdateIcons) {
-            forceUpdateIcons = false;
-        }
-
-        playerAir = air;
         int xStart = scaledWidth / 2 + 9;
         int yStart = scaledHeight - 49;
         if(general.overlays.displayToughnessBar && player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue()>0)yStart-=10;
@@ -67,13 +55,13 @@ public class OxygenBarRenderer {
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
         //Bar background
-        drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
+        drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9,general.style,false,false);
 
         //draw portion of bar based on air amount
 
         float f = xStart+80-getWidth(air,300);
         cU.color2Gl(cU.hex2Color(colors.oxygenBarColor));
-    drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(air,300), 7);
+    drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(air,300), 7,general.style,true,false);
 
         //draw air amount
         int h1 = (int) Math.floor(air);
@@ -81,7 +69,7 @@ public class OxygenBarRenderer {
         int c = Integer.decode(colors.oxygenBarColor);
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)air/3;
-        drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c, 0);
+        drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
         //Reset back to normal settings
 
         GlStateManager.color(1, 1, 1, 1);
@@ -91,7 +79,7 @@ public class OxygenBarRenderer {
 
         if (general.displayIcons) {
             //Draw air icon
-            drawTexturedModalRect(xStart + 82, yStart, 16, 18, 9, 9);
+            drawTexturedModalRect(xStart + 82, yStart, 16, 18, 9, 9,0,false,false);
         }
 
         GlStateManager.disableBlend();

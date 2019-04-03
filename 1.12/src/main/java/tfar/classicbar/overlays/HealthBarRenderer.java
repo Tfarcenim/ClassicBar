@@ -82,7 +82,7 @@ public class HealthBarRenderer {
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
         //Bar background
-        drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9);
+        drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9,general.style,true,true);
 
         //is the bar changing
         //Pass 1, draw bar portion
@@ -91,8 +91,7 @@ public class HealthBarRenderer {
         if (k5!=88)cU.color2Gl(cU.calculateScaledColor(health, maxHealth));
         else cU.color2Gl(cU.color2BW(cU.calculateScaledColor(health, maxHealth)));
         //draw portion of bar based on health remaining
-        drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
-        //draw health amount
+        drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7,general.style,true,true);
         int h1 = (int) Math.ceil(health);
 
         //draw absorption bar if it exists
@@ -100,14 +99,14 @@ public class HealthBarRenderer {
             if (general.overlays.swap) yStart -= 10;
             GlStateManager.color(1, 1, 1, 1);
             if (absorb <= maxHealth) {
-                if (!general.overlays.fullAbsorptionBar) drawScaledBar(absorb, maxHealth, xStart, yStart - 10);
-                else drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9);
+                if (!general.overlays.fullAbsorptionBar) drawScaledBar(absorb, maxHealth, xStart, yStart - 10, true);
+                else drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9,general.style,true,true);
                 cU.color2Gl(cU.hex2Color(colors.advancedColors.absorptionColorValues[0]));
-                drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb, maxHealth), 7);
+                drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb, maxHealth), 7,general.style,true,true);
             }
             else{
                 //draw background bar
-                drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9);
+                drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9,general.style,true,true);
                 //we have wrapped, draw 2 bars
                 int index = (int)Math.floor(absorb/maxHealth);
                 //don't crash from arrayindexoutofbounds
@@ -115,12 +114,12 @@ public class HealthBarRenderer {
                     index = colors.advancedColors.absorptionColorValues.length - 1;
                 //draw first full bar
                 cU.color2Gl(cU.hex2Color(colors.advancedColors.absorptionColorValues[index-1]));
-                drawTexturedModalRect(xStart+1,yStart - 9,1,10,79,7);
+                drawTexturedModalRect(xStart+1,yStart - 9,1,10,79,7,general.style,true,true);
                 //is it on the edge or capped already?
                 if(absorb%maxHealth !=0 && index < colors.advancedColors.absorptionColorValues.length - 1) {
                     //draw second partial bar
                     cU.color2Gl(cU.hex2Color(colors.advancedColors.absorptionColorValues[index]));
-                    drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb % maxHealth, maxHealth), 7);
+                    drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb % maxHealth, maxHealth), 7,general.style,true,true);
                 }
             }
             // handle the text
@@ -128,14 +127,14 @@ public class HealthBarRenderer {
             int a2 = general.displayIcons ? 1 : 0;
             int a3 = (int) absorb;
             int c = cU.colorToText(cU.hex2Color(colors.advancedColors.absorptionColorValues[0]));
-            drawStringOnHUD(a3 + "", xStart - a1 - 9 * a2 - 5, yStart - 11, c, 0);
+            drawStringOnHUD(a3 + "", xStart - a1 - 9 * a2 - 5, yStart - 11, c);
             if (general.overlays.swap) yStart += 10;
         }
         int i1 = getStringLength(h1+"");
         int i2 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)(100*health/maxHealth);
-        if (k5!=88)drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, cU.colorToText(cU.calculateScaledColor(health,maxHealth)), 0);
-        else drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, cU.colorToText(cU.color2BW(cU.calculateScaledColor(health,maxHealth))), 0);
+        if (k5!=88)drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, cU.colorToText(cU.calculateScaledColor(health,maxHealth)));
+        else drawStringOnHUD(h1 +"", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, cU.colorToText(cU.color2BW(cU.calculateScaledColor(health,maxHealth))));
         //Reset back to normal settings
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -149,14 +148,14 @@ public class HealthBarRenderer {
             int i5 = (player.world.getWorldInfo().isHardcoreModeEnabled()) ? 5 : 0;
             //Draw health icon
             //heart background
-            drawTexturedModalRect(xStart - 10, yStart, 16, 9 * i5, 9, 9);
+            drawTexturedModalRect(xStart - 10, yStart, 16, 9 * i5, 9, 9,0,true,true);
             //heart
-            drawTexturedModalRect(xStart - 10, yStart, 36+k5, 9 * i5, 9, 9);
+            drawTexturedModalRect(xStart - 10, yStart, 36+k5, 9 * i5, 9, 9,0,true,true);
             if (absorb>0){
               if (general.overlays.swap)yStart-=10;
               //draw absorption icon
-                drawTexturedModalRect(xStart - 10, yStart - 10, 16, 9 * i5, 9, 9);
-                drawTexturedModalRect(xStart - 10, yStart - 10, 160, 0, 9, 9);
+                drawTexturedModalRect(xStart - 10, yStart - 10, 16, 9 * i5, 9, 9,0,true,true);
+                drawTexturedModalRect(xStart - 10, yStart - 10, 160, 0, 9, 9,0,true,true);
             }
         }
         //Reset back to normal settings
@@ -168,9 +167,5 @@ public class HealthBarRenderer {
         event.setCanceled(true);
     }
 
-    private void drawScaledBar(double absorb, double maxHealth, float x, float y) {
-        int i = getWidth(absorb,maxHealth);
-        drawTexturedModalRect(x, y, 0, 0, i+1, 9);
-        drawTexturedModalRect(x+i+1,y+1,0,1,1,7);
-    }
+
 }

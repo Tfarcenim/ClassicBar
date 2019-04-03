@@ -37,7 +37,9 @@ public class ModConfig {
         @Config.Name("Show Icons")
         @Config.Comment("Whether to show icons next to the bars")
         public boolean displayIcons = true;
-
+        @Config.Name("Texture Style")
+        @Config.Comment("Texture Style of bars: 0 for default, 1 for new")
+        public int style = 1;
         public class BarOverlays {
 
             @Config.Name("Hunger Bar Overlays")
@@ -50,6 +52,12 @@ public class ModConfig {
 
             @Config.Name("Draw full absorption Bar")
             public boolean fullAbsorptionBar = false;
+
+            @Config.Name("Draw full armor Bar")
+            public boolean fullArmorBar = false;
+
+            @Config.Name("Draw full toughness Bar")
+            public boolean fullToughnessBar = false;
 
             @Config.Name("Swap absorption & armor?")
             public boolean swap = false;

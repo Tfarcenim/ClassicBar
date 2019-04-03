@@ -87,7 +87,7 @@ public class HealthBarMountRenderer {
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
         //Bar background
-        drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9);
+        drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9,general.style,true,false);
 
         //is the bar changing
         //Pass 1, draw bar portion
@@ -96,13 +96,13 @@ public class HealthBarMountRenderer {
         cU.color2Gl(cU.calculateScaledColor(mountHealth, maxHealth));
         float f = xStart+80-getWidth(mountHealth,maxHealth);
         //draw portion of bar based on mountHealth remaining
-        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
+        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7,general.style,true,false);
         //draw mountHealth amount
         int h1 = (int) Math.ceil(mountHealth);
 
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)(100*mountHealth/maxHealth);
-        drawStringOnHUD(h1+"", xStart + 9 * i3 + rightTextOffset, yStart - 1, cU.colorToText(cU.calculateScaledColor(mountHealth,maxHealth)),0);
+        drawStringOnHUD(h1+"", xStart + 9 * i3 + rightTextOffset, yStart - 1, cU.colorToText(cU.calculateScaledColor(mountHealth,maxHealth)));
 
         //Reset back to normal settings
         GlStateManager.color(1, 1, 1, 1);
@@ -113,9 +113,9 @@ public class HealthBarMountRenderer {
         if (general.displayIcons) {
             //Draw mountHealth icon
             //heart background
-            drawTexturedModalRect(xStart + 82, yStart, 16, 0, 9, 9);
+            drawTexturedModalRect(xStart + 82, yStart, 16, 0, 9, 9,0,true,false);
             //heart
-            drawTexturedModalRect(xStart + 82, yStart, 88, 9, 9, 9);
+            drawTexturedModalRect(xStart + 82, yStart, 88, 9, 9, 9,0,true,false);
 
         }
 

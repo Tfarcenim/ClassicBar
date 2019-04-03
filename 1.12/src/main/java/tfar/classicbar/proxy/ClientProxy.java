@@ -27,7 +27,6 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new HealthBarMountRenderer());
         MinecraftForge.EVENT_BUS.register(new ArmorBarRenderer());
         if (general.overlays.displayToughnessBar) MinecraftForge.EVENT_BUS.register(new ArmorToughnessBarRenderer());
-        MinecraftForge.EVENT_BUS.register(new OxygenBarRenderer());
         MinecraftForge.EVENT_BUS.register(new HungerBarRenderer());
 
         //mod renderers
@@ -38,6 +37,9 @@ public class ClientProxy extends CommonProxy {
         if (Loader.isModLoaded("toughasnails")) {
             MinecraftForge.EVENT_BUS.register(new ThirstBarRenderer());
             //MinecraftForge.EVENT_BUS.register(new TemperatureBarRenderer());
+            if (Loader.isModLoaded("better_diving")){MinecraftForge.EVENT_BUS.register(new OxygenBarRenderer());}
+//MinecraftForge.EVENT_BUS.register(new BetterDivingRenderer());
+            else MinecraftForge.EVENT_BUS.register(new OxygenBarRenderer());
         }
     }
 }
