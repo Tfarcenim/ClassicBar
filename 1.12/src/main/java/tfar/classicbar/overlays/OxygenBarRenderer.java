@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static tfar.classicbar.ClassicBar.logger;
 import static tfar.classicbar.ColorUtilities.cU;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
@@ -25,16 +26,13 @@ public class OxygenBarRenderer {
     public OxygenBarRenderer() {
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void renderOxygenBar(RenderGameOverlayEvent.Pre event) {
 
-
-        Entity renderViewEntity = this.mc.getRenderViewEntity();
+        Entity renderViewEntity = mc.getRenderViewEntity();
         if (event.getType() != RenderGameOverlayEvent.ElementType.AIR
-                || event.isCanceled()
-                || !(renderViewEntity instanceof EntityPlayer)) {
-            return;
-        }
+                //|| event.isCanceled()
+                || !(renderViewEntity instanceof EntityPlayer)) return;
         event.setCanceled(true);
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
         double air = player.getAir();
