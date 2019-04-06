@@ -33,7 +33,8 @@ public class HungerBarRenderer {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void renderHungerBar(RenderGameOverlayEvent.Pre event) {
         Entity renderViewEntity = mc.getRenderViewEntity();
-        if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD || !(renderViewEntity instanceof EntityPlayer)) return;
+        if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD || !(renderViewEntity instanceof EntityPlayer)
+        ||event.isCanceled()) return;
         event.setCanceled(true);
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
         double hunger = player.getFoodStats().getFoodLevel();
@@ -42,7 +43,7 @@ public class HungerBarRenderer {
         int scaledWidth = event.getResolution().getScaledWidth();
         int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes
-        int xStart = scaledWidth / 2 + 9;
+        int xStart = scaledWidth / 2 + 10;
         int yStart = scaledHeight - 39;
 
         mc.profiler.startSection("hunger");

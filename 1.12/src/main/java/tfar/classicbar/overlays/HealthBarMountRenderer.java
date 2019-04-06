@@ -74,7 +74,7 @@ public class HealthBarMountRenderer {
         this.mountHealth = mountHealth;
         double j = lasMountHealth;
         IAttributeInstance maxHealthAttribute = mount.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
-        int xStart = scaledWidth / 2 + 9;
+        int xStart = scaledWidth / 2 + 10;
         int yStart = scaledHeight - 39;
         double maxHealth = maxHealthAttribute.getAttributeValue();
 
@@ -87,7 +87,7 @@ public class HealthBarMountRenderer {
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
         //Bar background
-        drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9,general.style,true,false);
+        drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9,general.style,false,false);
 
         //is the bar changing
         //Pass 1, draw bar portion

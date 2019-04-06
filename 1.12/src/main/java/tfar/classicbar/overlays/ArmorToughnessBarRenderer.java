@@ -39,7 +39,7 @@ public class ArmorToughnessBarRenderer {
         int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes
 
-        int xStart = scaledWidth / 2 + 9;
+        int xStart = scaledWidth / 2 + 10;
         int yStart = scaledHeight - 49;
         if(Loader.isModLoaded("toughasnails"))yStart-=10;
 

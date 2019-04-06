@@ -31,7 +31,7 @@ public class OxygenBarRenderer {
 
         Entity renderViewEntity = mc.getRenderViewEntity();
         if (event.getType() != RenderGameOverlayEvent.ElementType.AIR
-                //|| event.isCanceled()
+                || event.isCanceled()
                 || !(renderViewEntity instanceof EntityPlayer)) return;
         event.setCanceled(true);
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
@@ -41,7 +41,7 @@ public class OxygenBarRenderer {
         int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes
 
-        int xStart = scaledWidth / 2 + 9;
+        int xStart = scaledWidth / 2 + 10;
         int yStart = scaledHeight - 49;
         if(general.overlays.displayToughnessBar && player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue()>0)yStart-=10;
         if(Loader.isModLoaded("toughasnails"))yStart-=10;
