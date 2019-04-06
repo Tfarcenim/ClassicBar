@@ -35,8 +35,9 @@ public class HungerBarRenderer {
         Entity renderViewEntity = mc.getRenderViewEntity();
         if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD || !(renderViewEntity instanceof EntityPlayer)
         ||event.isCanceled()) return;
-        event.setCanceled(true);
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
+        event.setCanceled(true);
+        if (player.getRidingEntity() != null)return;
         double hunger = player.getFoodStats().getFoodLevel();
         double currentSat = player.getFoodStats().getSaturationLevel();
         float exhaustion = getExhaustion(player);
