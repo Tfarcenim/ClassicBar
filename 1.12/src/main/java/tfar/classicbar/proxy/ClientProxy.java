@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.overlays.*;
+import tfar.classicbar.overlays.modoverlays.LavaCharmNoBaublesRenderer;
 import tfar.classicbar.overlays.modoverlays.LavaCharmRenderer;
 //import tfar.classicbar.overlays.modoverlays.SuperiorShieldRenderer;
 import tfar.classicbar.overlays.modoverlays.ThirstBarRenderer;
@@ -30,8 +31,11 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new HungerBarRenderer());
 
         //mod renderers
-        if (Loader.isModLoaded("randomthings"))
+        if (Loader.isModLoaded("randomthings")) {
+            if (Loader.isModLoaded("baubles"))
             MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
+            else MinecraftForge.EVENT_BUS.register(new LavaCharmNoBaublesRenderer());
+        }
         //if (Loader.isModLoaded("superiorshields"))
           //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
         if (Loader.isModLoaded("toughasnails"))

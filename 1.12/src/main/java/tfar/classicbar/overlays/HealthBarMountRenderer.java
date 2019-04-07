@@ -72,7 +72,6 @@ public class HealthBarMountRenderer {
         }
 
         this.mountHealth = mountHealth;
-        double j = lasMountHealth;
         IAttributeInstance maxHealthAttribute = mount.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
         int xStart = scaledWidth / 2 + 10;
         int yStart = scaledHeight - 39;

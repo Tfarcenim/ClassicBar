@@ -1,6 +1,6 @@
 package tfar.classicbar.overlays.modoverlays;
 
-import baubles.api.BaublesApi;
+import lumien.randomthings.item.ItemLavaCharm;
 import lumien.randomthings.item.ItemLavaWader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -19,14 +20,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static tfar.classicbar.ColorUtilities.cU;
 import static tfar.classicbar.ModUtils.*;
-import static tfar.classicbar.config.ModConfig.*;
-import static tfar.classicbar.overlays.modoverlays.LavaCharmNoBaublesRenderer.ICON_LAVA;
+import static tfar.classicbar.config.ModConfig.general;
+import static tfar.classicbar.config.ModConfig.numbers;
 
 /*
     Class handles the drawing of the lava charm
  */
-//TODO Fix edge case of having random things but no baubles installed
-public class LavaCharmRenderer {
+public class LavaCharmNoBaublesRenderer {
     private final Minecraft mc = Minecraft.getMinecraft();
 
     @Config.Name("Random Things Options")
@@ -37,7 +37,9 @@ public class LavaCharmRenderer {
         public String lavaBarColor = "#FF8000";
     }
 
-    public LavaCharmRenderer() {
+    public static final ResourceLocation ICON_LAVA = new ResourceLocation("randomthings", "textures/gui/lavacharmbar.png");
+
+    public LavaCharmNoBaublesRenderer() {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
@@ -45,25 +47,20 @@ public class LavaCharmRenderer {
 
         Entity renderViewEnity = this.mc.getRenderViewEntity();
         if (event.isCanceled()
-                || !(renderViewEnity instanceof EntityPlayer)) {
-            return;
-        }
+                || !(renderViewEnity instanceof EntityPlayer)) return;
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
         if (player.capabilities.isCreativeMode)return;
-        int i1 = BaublesApi.isBaubleEquipped(player, Lava_Charm);
 
-        if (i1 == -1) {
-            if (!(player.getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem() instanceof ItemLavaWader))return;}
-            //System.out.println(i1);
+        ItemStack stack = getLavaCharm(player);
+        if (stack == null)return;
+
         int charge;
-        if (i1 != -1) {ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
             NBTTagCompound nbt = stack.getTagCompound();
             if (nbt == null) {
                 System.out.println("error");
                 return;
             }
-            charge = nbt.getInteger("charge");}
-            else {charge = player.getItemStackFromSlot(EntityEquipmentSlot.FEET).getTagCompound().getInteger("charge");}
+            charge = nbt.getInteger("charge");
             int scaledWidth = event.getResolution().getScaledWidth();
             int scaledHeight = event.getResolution().getScaledHeight();
             //Push to avoid lasting changes
@@ -114,4 +111,17 @@ public class LavaCharmRenderer {
             mc.profiler.endSection();
         }
 
+    private ItemStack getLavaCharm(EntityPlayer player) {
+        ItemStack stack1 = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+        if (isWader(stack1))return stack1;
+        ItemStack stack2 = player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
+        if (isCharm(stack2))return stack2;
+        return null;
     }
+    private boolean isCharm(ItemStack stack){
+        return (stack.getItem() instanceof ItemLavaCharm);
+    }
+    private boolean isWader(ItemStack stack){
+        return (stack.getItem() instanceof ItemLavaWader);
+    }
+}

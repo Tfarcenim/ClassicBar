@@ -40,7 +40,7 @@ public class ArmorBarRenderer {
         double armor = calculateArmorValue();
         if (armor < 1)return;
         boolean warning = false;
-        for (ItemStack stack : player.getEquipmentAndArmor()){
+        for (ItemStack stack : player.inventory.armorInventory){
           int max = stack.getMaxDamage();
           int current = stack.getItemDamage();
           int percentage = 100;
@@ -55,7 +55,7 @@ public class ArmorBarRenderer {
         else alpha-=.05;
         if (alpha<0)increase=true;
         else if(alpha>1)increase=false;
-      }
+      }else alpha=1;
         int absorb = MathHelper.ceil(player.getAbsorptionAmount());
       if (general.overlays.swap)absorb=0;
       int xStart = scaledWidth / 2 - 91;

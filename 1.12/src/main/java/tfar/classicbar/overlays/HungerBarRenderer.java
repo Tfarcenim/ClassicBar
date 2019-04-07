@@ -87,10 +87,13 @@ public class HungerBarRenderer {
 
 
             //Draw Potential hunger
-            double hungerWidth = Math.min(20-hunger,hungerOverlay);
-            f = xStart - getWidth(hungerWidth+hunger,20) + 80;
+                double hungerWidth = Math.min(20-hunger,hungerOverlay);
+                //don't render the bar at all if hunger is full
+            if (hunger <20) {
+                f = xStart - getWidth(hungerWidth+hunger,20) + 80;
             cU.color2Gla(cU.hex2Color(colors.hungerBarColor),alpha);
-            drawPotential(f, yStart+1, 1, 10, getWidth(hungerWidth,20), 7,general.style);
+                drawPotential(f, yStart + 1, 1, 10, getWidth(hungerWidth, 20)+1, 7, general.style);
+            }
 
             //Draw Potential saturation
             if (general.overlays.hunger.showSaturationBar){
@@ -107,7 +110,7 @@ public class HungerBarRenderer {
                 //offset used to decide where to place the bar
                 f = xStart - getWidth(saturationWidth+currentSat,20) + 80;
                 cU.color2Gla(cU.hex2Color(colors.saturationBarColor),alpha);
-                drawPotential(f, yStart+1, 1, 10, getWidth(saturationWidth,20), 7,general.style);
+                drawPotential(f, yStart+1, 1, 10, getWidth(saturationWidth,20)+1, 7,general.style);
             }
         }
 
