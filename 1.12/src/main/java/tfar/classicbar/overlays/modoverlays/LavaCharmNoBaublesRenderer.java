@@ -54,13 +54,12 @@ public class LavaCharmNoBaublesRenderer {
         ItemStack stack = getLavaCharm(player);
         if (stack == null)return;
 
-        int charge;
-            NBTTagCompound nbt = stack.getTagCompound();
+        NBTTagCompound nbt = stack.getTagCompound();
             if (nbt == null) {
                 System.out.println("error");
                 return;
             }
-            charge = nbt.getInteger("charge");
+        int charge = nbt.getInteger("charge");
             int scaledWidth = event.getResolution().getScaledWidth();
             int scaledHeight = event.getResolution().getScaledHeight();
             //Push to avoid lasting changes
@@ -111,17 +110,17 @@ public class LavaCharmNoBaublesRenderer {
             mc.profiler.endSection();
         }
 
-    private ItemStack getLavaCharm(EntityPlayer player) {
+    public static ItemStack getLavaCharm(EntityPlayer player) {
         ItemStack stack1 = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
         if (isWader(stack1))return stack1;
-        ItemStack stack2 = player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
-        if (isCharm(stack2))return stack2;
+        for (ItemStack stack : player.inventory.mainInventory)
+            if (isCharm(stack)) return stack;
         return null;
     }
-    private boolean isCharm(ItemStack stack){
-        return (stack.getItem() instanceof ItemLavaCharm);
+    private static boolean isCharm(ItemStack stack){
+        return stack.getItem() instanceof ItemLavaCharm;
     }
-    private boolean isWader(ItemStack stack){
-        return (stack.getItem() instanceof ItemLavaWader);
+    private static boolean isWader(ItemStack stack){
+        return stack.getItem() instanceof ItemLavaWader;
     }
 }

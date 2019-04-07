@@ -22,8 +22,6 @@ public class ModUtils {
 
     protected static final Field foodExhaustion = ReflectionHelper.findField(FoodStats.class, "foodExhaustionLevel", "field_75126_c", "c");
 
-    public static final Item Lava_Charm = ForgeRegistries.ITEMS.getValue(new ResourceLocation("randomthings:lavacharm"));
-
     public static final ResourceLocation ICON_VANILLA = Gui.ICONS;
     public static final ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
     public static final Minecraft mc = Minecraft.getMinecraft();
