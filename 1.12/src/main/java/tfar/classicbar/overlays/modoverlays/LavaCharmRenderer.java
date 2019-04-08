@@ -16,20 +16,18 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import static tfar.classicbar.ColorUtilities.cU;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.overlays.modoverlays.LavaCharmNoBaublesRenderer.ICON_LAVA;
+import static tfar.classicbar.overlays.modoverlays.LavaCharmNoBaublesRenderer.Lava_Charm;
 
 /*
     Class handles the drawing of the lava charm
  */
-//TODO Fix edge case of having random things but no baubles installed
 public class LavaCharmRenderer {
   private final Minecraft mc = Minecraft.getMinecraft();
-  public static final Item Lava_Charm = ForgeRegistries.ITEMS.getValue(new ResourceLocation("randomthings:lavacharm"));
 
 
   @Config.Name("Random Things Options")
