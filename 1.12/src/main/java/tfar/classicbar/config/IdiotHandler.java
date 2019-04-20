@@ -46,7 +46,7 @@ public class IdiotHandler {
                 return;
             } else {
                 p.sendMessage(new TextComponentString(TextFormatting.RED + "USER PUT IN AN EMPTY ARRAY FOR HEALTH COLOR SCALING"));
-                colors.advancedColors.healthFractions = new Float[]{.25f, .5f, 1f};
+                colors.advancedColors.healthFractions = new Float[]{.25f, .5f, .75f};
                 colors.advancedColors.hexColors = new String[]{"#FF0000", "#FFFF00", "#00FF00"};
                 return;
             }

@@ -72,7 +72,7 @@ public class LavaCharmNoBaublesRenderer {
             int xStart = scaledWidth / 2 - 91;
             int yStart = scaledHeight - 49;
             if (absorb > 0) yStart -= 10;
-            if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue() > 0) yStart -= 10;
+            if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue() >= 1) yStart -= 10;
             mc.profiler.startSection("charge");
             //GlStateManager.pushMatrix();
             GlStateManager.enableBlend();

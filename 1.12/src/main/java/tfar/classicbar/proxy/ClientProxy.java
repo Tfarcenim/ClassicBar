@@ -7,11 +7,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.overlays.*;
-import tfar.classicbar.overlays.modoverlays.LavaCharmNoBaublesRenderer;
-import tfar.classicbar.overlays.modoverlays.LavaCharmRenderer;
+import tfar.classicbar.overlays.modoverlays.*;
 //import tfar.classicbar.overlays.modoverlays.SuperiorShieldRenderer;
-import tfar.classicbar.overlays.modoverlays.ThirstBarRenderer;
-
 import static tfar.classicbar.config.ModConfig.ConfigEventHandler;
 import static tfar.classicbar.config.ModConfig.general;
 
@@ -43,6 +40,7 @@ public class ClientProxy extends CommonProxy {
             //MinecraftForge.EVENT_BUS.register(new TemperatureBarRenderer());
 //MinecraftForge.EVENT_BUS.register(new BetterDivingRenderer());
             MinecraftForge.EVENT_BUS.register(new OxygenBarRenderer());
+            if (Loader.isModLoaded("botania"))MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
 
     }
 }

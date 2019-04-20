@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -72,7 +71,7 @@ public class LavaCharmRenderer {
     int xStart = scaledWidth / 2 - 91;
     int yStart = scaledHeight - 49;
     if (absorb > 0) yStart -= 10;
-    if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue() > 0) yStart -= 10;
+    if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue() >= 1) yStart -= 10;
     mc.profiler.startSection("charge");
     //GlStateManager.pushMatrix();
     GlStateManager.enableBlend();

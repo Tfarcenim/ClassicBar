@@ -59,8 +59,9 @@ public class ClassicBar {
                 listeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>) f.get(MinecraftForge.EVENT_BUS);
                 for (Map.Entry<Object, ArrayList<IEventListener>> entry : listeners.entrySet()) {
                     String s = entry.getKey().getClass().getCanonicalName();
-                    System.out.println(s);
+                    //System.out.println(s);
                     //System.out.println(entry);
+
                     if ("slimeknights.mantle.client.ExtraHeartRenderHandler".equals(s)) {
                         logger.info("Unregistered Mantle bar");
                         MinecraftForge.EVENT_BUS.unregister(entry.getKey());
