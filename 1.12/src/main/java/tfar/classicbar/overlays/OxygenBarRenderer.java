@@ -43,7 +43,7 @@ public class OxygenBarRenderer {
 
         int xStart = scaledWidth / 2 + 10;
         int yStart = scaledHeight - 49;
-        if(general.overlays.displayToughnessBar && player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue()>0)yStart-=10;
+        if(general.overlays.displayToughnessBar && player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue() >= 1)yStart-=10;
         if(Loader.isModLoaded("toughasnails"))yStart-=10;
 
         mc.profiler.startSection("air");

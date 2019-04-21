@@ -62,7 +62,9 @@ public class TiaraBarRenderer {
       System.out.println("error");
       return;
     }
+    //System.out.println(nbt);
     int timeLeft = nbt.getInteger("timeLeft");
+    int dashCooldown = nbt.getInteger("dashCooldown");
     int scaledWidth = event.getResolution().getScaledWidth();
     int scaledHeight = event.getResolution().getScaledHeight();
     //Push to avoid lasting changes
@@ -70,8 +72,8 @@ public class TiaraBarRenderer {
     int xStart = scaledWidth / 2 + 10;
     int yStart = scaledHeight - 49;
     if (Loader.isModLoaded("toughasnails")) yStart -= 10;
+    if (player.getAir() < 300) yStart -= 10;
     if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue()>=1)yStart -=10;
-    if (player.getAir()<300)yStart -=10;
     mc.profiler.startSection("flight");
     //GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
@@ -80,8 +82,13 @@ public class TiaraBarRenderer {
     mc.getTextureManager().bindTexture(ICON_BAR);
     //Bar background
     GlStateManager.color(1, 1, 1, 1);
+    //draw main background
     drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9, general.style, false, false);
-
+    //draw dash background
+    if (dashCooldown > 0){
+      int i4 = xStart-getWidth(dashCooldown,80)+81;
+      drawTexturedModalRect(i4, yStart, 81-getWidth(dashCooldown,80), 18, getWidth(dashCooldown,80), 9, general.style, false, false);
+    }
     //Pass 1, draw bar portion
     cU.color2Gl(cU.hex2Color(configBotania.flightBarColor));
     //calculate bar color
@@ -97,10 +104,9 @@ public class TiaraBarRenderer {
 
     mc.getTextureManager().bindTexture(ICON_BOTANIA);
     GlStateManager.color(1, 1, 1, 1);
-
     if (general.displayIcons)
-      //Draw timeLeft icon
-      drawTexturedModalRect(xStart + 82, yStart, 0, 0, 9, 9, 0, false, false);
+      //Draw flight icon
+      drawTexturedModalRect(xStart + 81, yStart, Math.max(stack.getItemDamage()*9-9,0), 0, 9, 9, 0, false, false);
     //Reset back to normal settings
 
     mc.getTextureManager().bindTexture(ICON_VANILLA);
