@@ -11,8 +11,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static tfar.classicbar.ClassicBar.logger;
-import static tfar.classicbar.ColorUtilities.cU;
+import static tfar.classicbar.ColorUtilities.hex2Color;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
@@ -35,7 +34,7 @@ public class OxygenBarRenderer {
                 || !(renderViewEntity instanceof EntityPlayer)) return;
         event.setCanceled(true);
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
-        double air = player.getAir();
+        int air = player.getAir();
         if (air>=300)return;
         int scaledWidth = event.getResolution().getScaledWidth();
         int scaledHeight = event.getResolution().getScaledHeight();
@@ -58,15 +57,15 @@ public class OxygenBarRenderer {
         //draw portion of bar based on air amount
 
         float f = xStart+80-getWidth(air,300);
-        cU.color2Gl(cU.hex2Color(colors.oxygenBarColor));
+        hex2Color(colors.oxygenBarColor).color2Gl();
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(air,300), 7,general.style,true,false);
 
         //draw air amount
-        int h1 = (int) Math.floor(air);
+        int h1 = (int)Math.floor(air/20);
 
         int c = Integer.decode(colors.oxygenBarColor);
         int i3 = general.displayIcons ? 1 : 0;
-        if (numbers.showPercent)h1 = (int)air/3;
+        if (numbers.showPercent)h1 = air/3;
         drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
         //Reset back to normal settings
 

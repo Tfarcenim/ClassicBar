@@ -15,29 +15,19 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import static tfar.classicbar.ColorUtilities.cU;
+import static tfar.classicbar.ColorUtilities.hex2Color;
 import static tfar.classicbar.ModUtils.*;
-import static tfar.classicbar.config.ModConfig.general;
-import static tfar.classicbar.config.ModConfig.numbers;
+import static tfar.classicbar.config.ModConfig.*;
 
 /*
     Class handles the drawing of the lava charm
  */
 public class LavaCharmNoBaublesRenderer {
     private final Minecraft mc = Minecraft.getMinecraft();
-
-    @Config.Name("Random Things Options")
-    public static ConfigRandomThings configRandomThings = new ConfigRandomThings();
-
-    public static class ConfigRandomThings {
-        @Config.Name("Lava Bar Color")
-        public String lavaBarColor = "#FF8000";
-    }
 
     public static final Item Lava_Charm = ForgeRegistries.ITEMS.getValue(new ResourceLocation("randomthings:lavacharm"));
     public static final ResourceLocation ICON_LAVA = new ResourceLocation("randomthings", "textures/gui/lavacharmbar.png");
@@ -48,7 +38,7 @@ public class LavaCharmNoBaublesRenderer {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void renderLavaBar(RenderGameOverlayEvent.Pre event) {
 
-        Entity renderViewEnity = this.mc.getRenderViewEntity();
+        Entity renderViewEnity = mc.getRenderViewEntity();
         if (event.isCanceled()
                 || !(renderViewEnity instanceof EntityPlayer)) return;
         EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
@@ -84,16 +74,16 @@ public class LavaCharmNoBaublesRenderer {
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9,general.style,false,true);
 
             //Pass 1, draw bar portion
-        cU.color2Gl(cU.hex2Color(configRandomThings.lavaBarColor));
+        hex2Color(mods.lavaBarColor).color2Gl();
             //calculate bar color
             //draw portion of bar based on charge amount
             drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(charge, 200), 7,general.style,true,true);
-        int i2 = charge;
+        int i2 = charge/20;
             //draw charge amount
         if (numbers.showPercent)i2 /= 3;
         int i3 = getStringLength(i2+"");
             int i4 = (general.displayIcons) ? 1 : 0;
-        int c = Integer.decode(configRandomThings.lavaBarColor);
+        int c = Integer.decode(mods.lavaBarColor);
             drawStringOnHUD(i2 + "", xStart - 9 * i4 - i3 + leftTextOffset, yStart - 1, c);
 
             mc.getTextureManager().bindTexture(ICON_LAVA);

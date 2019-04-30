@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static tfar.classicbar.ColorUtilities.cU;
+import static tfar.classicbar.ColorUtilities.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 
@@ -33,7 +33,8 @@ public class BetterDivingRenderer {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void renderBetterDivingBar(RenderGameOverlayEvent.Pre event) {
-      if (true)throw new NullPointerException("This mod is incompatible!");
+
+      if (true)return;
       Entity renderViewEntity = this.mc.getRenderViewEntity();
       if (event.getType() != RenderGameOverlayEvent.ElementType.AIR
               || event.isCanceled()
@@ -66,7 +67,7 @@ public class BetterDivingRenderer {
       //draw portion of bar based on air amount
 
       float f = xStart+80-getWidth(air,300);
-      cU.color2Gl(cU.hex2Color(colors.oxygenBarColor));
+      hex2Color(colors.oxygenBarColor).color2Gl();
  //     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(air,maxAir), 7,general.style);
 
       //draw air amount

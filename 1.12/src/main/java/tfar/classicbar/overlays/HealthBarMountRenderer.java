@@ -12,7 +12,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static tfar.classicbar.ColorUtilities.cU;
+import static tfar.classicbar.ColorUtilities.calculateScaledColor;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
@@ -92,7 +92,7 @@ public class HealthBarMountRenderer {
         //Pass 1, draw bar portion
 
         //calculate bar color
-        cU.color2Gl(cU.calculateScaledColor(mountHealth, maxHealth));
+        calculateScaledColor(mountHealth, maxHealth).color2Gl();
         float f = xStart+80-getWidth(mountHealth,maxHealth);
         //draw portion of bar based on mountHealth remaining
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7,general.style,true,false);
@@ -101,7 +101,7 @@ public class HealthBarMountRenderer {
 
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)(100*mountHealth/maxHealth);
-        drawStringOnHUD(h1+"", xStart + 9 * i3 + rightTextOffset, yStart - 1, cU.colorToText(cU.calculateScaledColor(mountHealth,maxHealth)));
+        drawStringOnHUD(h1+"", xStart + 9 * i3 + rightTextOffset, yStart - 1, calculateScaledColor(mountHealth,maxHealth).colorToText());
 
         //Reset back to normal settings
         GlStateManager.color(1, 1, 1, 1);

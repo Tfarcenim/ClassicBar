@@ -4,11 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Field;
 
@@ -20,16 +18,17 @@ public class ModUtils {
 
     public static final int leftTextOffset = -5;
 
-    protected static final Field foodExhaustion = ReflectionHelper.findField(FoodStats.class, "foodExhaustionLevel", "field_75126_c", "c");
+    protected static final Field foodExhaustion = ObfuscationReflectionHelper.findField(FoodStats.class,"field_75126_c");
 
     public static final ResourceLocation ICON_VANILLA = Gui.ICONS;
     public static final ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
     public static final Minecraft mc = Minecraft.getMinecraft();
     private static final FontRenderer fontRenderer = mc.fontRenderer;
+    public static final int INDEX = 44;
 
     public static void drawTexturedModalRect(float x, float y, int textureX, int textureY, int width, int height,
                                              int style, boolean isBar, boolean left) {
-        textureY += style*36;
+        textureY += style*INDEX;
         if (isBar && !left)
         switch (style){
             case 1:{x -= 1;
@@ -41,7 +40,7 @@ public class ModUtils {
 
     public static void drawPotential(float x, float y, int textureX, int textureY, int width, int height,
                                              int style) {
-        textureY += style*36;
+        textureY += style*INDEX;
             switch (style){
                 case 1:{x -= 1;
                     break;}
@@ -75,9 +74,9 @@ public class ModUtils {
                 break;
             case 1: {
                 i++;
-                drawTexturedModalRect(x, y, 0, 36, i+1, 9,0,true,left);
-                drawTexturedModalRect(x+i,y+1,1, 37,1,7,0,true,left);
-                drawTexturedModalRect(x+i+1,y+1,0, 37,1,7,0,true,left);
+                drawTexturedModalRect(x, y, 0, INDEX, i+1, 9,0,true,left);
+                drawTexturedModalRect(x+i,y+1,1, INDEX + 1,1,7,0,true,left);
+                drawTexturedModalRect(x+i+1,y+1,0, INDEX + 1,1,7,0,true,left);
                 break;
             }
 

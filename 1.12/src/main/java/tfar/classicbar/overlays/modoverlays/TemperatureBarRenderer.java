@@ -5,18 +5,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import toughasnails.api.TANCapabilities;
-import toughasnails.api.config.GameplayOption;
-import toughasnails.api.config.SyncedConfig;
 import toughasnails.thirst.ThirstHandler;
 
-import static tfar.classicbar.ColorUtilities.cU;
 import static tfar.classicbar.ModUtils.*;
-import static tfar.classicbar.config.ModConfig.*;
+import static tfar.classicbar.config.ModConfig.general;
+import static tfar.classicbar.config.ModConfig.numbers;
 import static toughasnails.handler.thirst.ThirstOverlayHandler.OVERLAY;
 
 public class TemperatureBarRenderer {

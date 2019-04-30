@@ -14,6 +14,7 @@ import static tfar.classicbar.config.ModConfig.*;
 public class IdiotHandler {
     public static IdiotHandler idiots = new IdiotHandler();
 
+    public static TextFormatting color = TextFormatting.RED;
 
     public IdiotHandler() {
     }
@@ -29,7 +30,7 @@ public class IdiotHandler {
         EntityPlayer p = mc.player;
         Matcher m = p1.matcher(s);
         if (m.matches()) return s;
-        if (p != null)p.sendMessage(new TextComponentString(TextFormatting.RED + "USER PUT IN A BAD HEX CODE"));
+        if (p != null)p.sendMessage(new TextComponentString(color + "USER PUT IN A BAD HEX CODE"));
         return "#000000";
     }
 
@@ -37,7 +38,7 @@ public class IdiotHandler {
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer p = mc.player;
         if (colors.advancedColors.healthFractions.length == 0) {
-            p.sendMessage(new TextComponentString(TextFormatting.RED + "USER PUT IN AN EMPTY ARRAY FOR HEALTH SCALING"));
+            p.sendMessage(new TextComponentString(color + "USER PUT IN AN EMPTY ARRAY FOR HEALTH SCALING"));
             if (colors.advancedColors.hexColors.length > 0) {
                 colors.advancedColors.healthFractions = new Float[colors.advancedColors.hexColors.length];
                 for (double i1 = 0; i1 < colors.advancedColors.hexColors.length; i1++) {
@@ -45,14 +46,14 @@ public class IdiotHandler {
                 }
                 return;
             } else {
-                p.sendMessage(new TextComponentString(TextFormatting.RED + "USER PUT IN AN EMPTY ARRAY FOR HEALTH COLOR SCALING"));
+                p.sendMessage(new TextComponentString(color + "USER PUT IN AN EMPTY ARRAY FOR HEALTH COLOR SCALING"));
                 colors.advancedColors.healthFractions = new Float[]{.25f, .5f, .75f};
                 colors.advancedColors.hexColors = new String[]{"#FF0000", "#FFFF00", "#00FF00"};
                 return;
             }
         }
         if (colors.advancedColors.hexColors.length == 0) {
-            p.sendMessage(new TextComponentString(TextFormatting.RED + "USER PUT IN AN EMPTY ARRAY FOR HEALTH COLOR SCALING"));
+            p.sendMessage(new TextComponentString(color + "USER PUT IN AN EMPTY ARRAY FOR HEALTH COLOR SCALING"));
             colors.advancedColors.hexColors = new String[colors.advancedColors.hexColors.length];
             for (double i1 = 0; i1 < colors.advancedColors.healthFractions.length; i1++)
                 colors.advancedColors.hexColors[(int) i1] = "#000000";

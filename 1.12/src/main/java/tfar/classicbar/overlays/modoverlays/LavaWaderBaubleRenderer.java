@@ -6,13 +6,16 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import static tfar.classicbar.ColorUtilities.hex2Color;
 import static tfar.classicbar.ModUtils.*;
@@ -22,10 +25,11 @@ import static tfar.classicbar.overlays.modoverlays.LavaCharmNoBaublesRenderer.La
 
 /*
     Class handles the drawing of the lava charm*/
-public class LavaCharmRenderer {
+public class LavaWaderBaubleRenderer {
   private final Minecraft mc = Minecraft.getMinecraft();
+  public static final Item LavaWaderBauble = ForgeRegistries.ITEMS.getValue(new ResourceLocation("lavawaderbauble:lavawaderbauble"));
 
-  public LavaCharmRenderer() {
+  public LavaWaderBaubleRenderer() {
   }
 
   @SubscribeEvent(priority = EventPriority.LOW)
@@ -38,12 +42,9 @@ public class LavaCharmRenderer {
     }
     EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
     if (player.capabilities.isCreativeMode) return;
-    int i1 = BaublesApi.isBaubleEquipped(player, Lava_Charm);
-    ItemStack stack;
-    if (i1 == -1) {
-      stack = LavaCharmNoBaublesRenderer.getLavaCharm(player);
-      if (stack == null) return;
-    } else stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
+    int i1 = BaublesApi.isBaubleEquipped(player, LavaWaderBauble);
+    if (i1 == -1) return;
+    ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
     NBTTagCompound nbt = stack.getTagCompound();
     if (nbt == null) {
       System.out.println("error");

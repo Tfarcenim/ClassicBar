@@ -12,13 +12,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import static tfar.classicbar.ColorUtilities.cU;
+import static tfar.classicbar.ColorUtilities.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 /*
@@ -26,15 +25,6 @@ import static tfar.classicbar.config.ModConfig.*;
  */
 public class TiaraBarRenderer {
   private final Minecraft mc = Minecraft.getMinecraft();
-
-
-  @Config.Name("Botania Options")
-  public static ConfigBotania configBotania = new ConfigBotania();
-
-  public static class ConfigBotania {
-    @Config.Name("Flight Bar Color")
-    public String flightBarColor = "#FFFFFF";
-  }
 
   private static final Item tiara = ForgeRegistries.ITEMS.getValue(new ResourceLocation("botania:flighttiara"));
   private static final ResourceLocation ICON_BOTANIA = new ResourceLocation("botania", "textures/gui/hudicons.png");
@@ -46,7 +36,7 @@ public class TiaraBarRenderer {
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public void renderTiaraBar(RenderGameOverlayEvent.Pre event) {
 
-    Entity renderViewEnity = this.mc.getRenderViewEntity();
+    Entity renderViewEnity = mc.getRenderViewEntity();
     if (//event.isCanceled() ||
           //  event.getType() != RenderGameOverlayEvent.ElementType.HEALTH ||
             !(renderViewEnity instanceof EntityPlayer))
@@ -73,7 +63,7 @@ public class TiaraBarRenderer {
     int yStart = scaledHeight - 49;
     if (Loader.isModLoaded("toughasnails")) yStart -= 10;
     if (player.getAir() < 300) yStart -= 10;
-    if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue()>=1)yStart -=10;
+    if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue()>=1 && general.overlays.displayToughnessBar)yStart -=10;
     mc.profiler.startSection("flight");
     //GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
@@ -90,16 +80,16 @@ public class TiaraBarRenderer {
       drawTexturedModalRect(i4, yStart, 81-getWidth(dashCooldown,80), 18, getWidth(dashCooldown,80), 9, general.style, false, false);
     }
     //Pass 1, draw bar portion
-    cU.color2Gl(cU.hex2Color(configBotania.flightBarColor));
+    hex2Color(mods.flightBarColor).color2Gl();
     //calculate bar color
     //draw portion of bar based on timeLeft amount
     float f = xStart+80-getWidth(timeLeft,1200);
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(timeLeft, 1200), 7, general.style, true, false);
-    int i2 = timeLeft;
+    int i2 = timeLeft/20;
     //draw timeLeft amount
-    if (numbers.showPercent) i2 /= 3;
+    if (numbers.showPercent) i2 = timeLeft / 12;
     int i3 = (general.displayIcons) ? 1 : 0;
-    int c = Integer.decode(configBotania.flightBarColor);
+    int c = Integer.decode(mods.flightBarColor);
     drawStringOnHUD(i2 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
 
     mc.getTextureManager().bindTexture(ICON_BOTANIA);

@@ -18,17 +18,20 @@ import static tfar.classicbar.config.IdiotHandler.idiots;
 @Config(modid = ClassicBar.MODID)
 public class ModConfig {
 
-    @Config.Comment({"General Options"})
+    @Config.Comment("General Options")
     public static ConfigGeneral general = new ConfigGeneral();
 
-    @Config.Comment({"Color Options"})
+    @Config.Comment("Color Options")
     public static ConfigColors colors = new ConfigColors();
 
-    @Config.Comment({"Number Options"})
+    @Config.Comment("Number Options")
     public static ConfigNumbers numbers = new ConfigNumbers();
 
-    @Config.Comment({"Warnings"})
+    @Config.Comment("Warnings")
     public static ConfigWarnings warnings = new ConfigWarnings();
+
+    @Config.Comment("Mod Options")
+    public static ConfigMods mods = new ConfigMods();
 
     public static class ConfigGeneral {
         @Config.Name("Bar Overlays")
@@ -58,6 +61,12 @@ public class ModConfig {
 
             @Config.Name("Draw full toughness Bar")
             public boolean fullToughnessBar = false;
+
+            @Config.Name("Display low armor warning")
+            public boolean lowArmorWarning = false;
+
+            @Config.Name("Display low health warning")
+            public boolean lowHealthWarning = true;
 
             @Config.Name("Swap absorption & armor?")
             public boolean swap = false;
@@ -108,10 +117,27 @@ public class ModConfig {
             public String[] armorColorValues = new String[]{"#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"};
             @Config.Name("Absorption Bar Color")
             public String[] absorptionColorValues = new String[]{"#D4AF37","#C2C73B","#8DC337","#36BA77","#4A5BC4","#D89AE2","#DF9DC7","#DFA99D","#D4DF9D","#3E84C6","#B8C1E8","#DFDFDF"};
+
+            @Config.Name("Absorption Poison Bar Color")
+            public String[] absorptionPoisonColorValues = new String[]{"#D4AF37","#C2C73B","#8DC337","#36BA77","#4A5BC4","#D89AE2","#DF9DC7","#DFA99D","#D4DF9D","#3E84C6","#B8C1E8","#DFDFDF"};
+
+            @Config.Name("Absorption Wither Bar Color")
+            public String[] absorptionWitherColorValues = new String[]{"#D4AF37","#C2C73B","#8DC337","#36BA77","#4A5BC4","#D89AE2","#DF9DC7","#DFA99D","#D4DF9D","#3E84C6","#B8C1E8","#DFDFDF"};
+
             @Config.Name("Health fractions")
             public Float[] healthFractions = new Float[]{.25f, .5f, .75f};
             @Config.Name("Colors")
             public String[] hexColors = new String[]{"#FF0000", "#FFFF00", "#00FF00"};
+
+            @Config.Name("Poisoned fractions")
+            public Float[] poisonedFractions = new Float[]{.25f, .5f, .75f};
+            @Config.Name("Poisoned Colors")
+            public String[] poisonedColors = new String[]{"#00FF00", "#55FF55", "#00FF00"};
+
+            @Config.Name("Withered fractions")
+            public Float[] witheredFractions = new Float[]{.25f, .5f, .75f};
+            @Config.Name("Withered Colors")
+            public String[] witheredColors = new String[]{"#555555", "#AAAAAA", "#555555"};
         }
     }
 
@@ -152,5 +178,17 @@ public class ModConfig {
                         " This is NOT a bug."));
             }
         }
+    }
+
+    public static class ConfigMods {
+        @Config.Name("Lava Bar Color")
+        public String lavaBarColor = "#FF8000";
+
+        @Config.Name("Thirst Bar Color")
+        public String thirstBarColor = "#1C5EE4";
+
+        @Config.Name("Flight Bar Color")
+        public String flightBarColor = "#FFFFFF";
+
     }
 }

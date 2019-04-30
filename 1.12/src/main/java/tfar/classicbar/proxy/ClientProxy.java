@@ -33,7 +33,11 @@ public class ClientProxy extends CommonProxy {
             MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
             else MinecraftForge.EVENT_BUS.register(new LavaCharmNoBaublesRenderer());
         }
-        //if (Loader.isModLoaded("superiorshields"))
+        if (Loader.isModLoaded("lavawaderbauble")) {
+            MinecraftForge.EVENT_BUS.register(new LavaWaderBaubleRenderer());
+        }
+
+            //if (Loader.isModLoaded("superiorshields"))
           //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
         if (Loader.isModLoaded("toughasnails"))
             MinecraftForge.EVENT_BUS.register(new ThirstBarRenderer());

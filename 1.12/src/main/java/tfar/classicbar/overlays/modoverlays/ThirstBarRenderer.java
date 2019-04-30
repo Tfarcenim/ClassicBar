@@ -4,20 +4,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.common.config.Config;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import toughasnails.api.TANCapabilities;
 import toughasnails.api.config.GameplayOption;
 import toughasnails.api.config.SyncedConfig;
 import toughasnails.thirst.ThirstHandler;
 
-import static tfar.classicbar.ColorUtilities.cU;
+import static tfar.classicbar.ColorUtilities.hex2Color;
 import static tfar.classicbar.ModUtils.*;
-import static tfar.classicbar.config.ModConfig.general;
-import static tfar.classicbar.config.ModConfig.numbers;
+import static tfar.classicbar.config.ModConfig.*;
 import static toughasnails.handler.thirst.ThirstOverlayHandler.OVERLAY;
 
 /*
@@ -27,20 +24,12 @@ import static toughasnails.handler.thirst.ThirstOverlayHandler.OVERLAY;
 public class ThirstBarRenderer {
     private final Minecraft mc = Minecraft.getMinecraft();
 
-    @Config.Name("Tough as Nails Options")
-    public static ConfigToughAsNails configToughAsNails = new ConfigToughAsNails();
-
-    public static class ConfigToughAsNails {
-        @Config.Name("Thirst Bar Color")
-        public String thirstBarColor = "#1C5EE4";
-    }
-
     public ThirstBarRenderer() {
     }
 
     @SubscribeEvent//(priority = EventPriority.HIGH)
     public void renderThirstBar(RenderGameOverlayEvent.Post event) {
-        Entity renderViewEntity = this.mc.getRenderViewEntity();
+        Entity renderViewEntity = mc.getRenderViewEntity();
         if (//event.getType() != RenderGameOverlayEvent.ElementType.AIR ||
                 event.isCanceled() ||
              !SyncedConfig.getBooleanValue(GameplayOption.ENABLE_THIRST) ||
@@ -69,7 +58,7 @@ public class ThirstBarRenderer {
         //draw portion of bar based on thirst amount
 
         float f = xStart+80-getWidth(thirst,20);
-        cU.color2Gl(cU.hex2Color(configToughAsNails.thirstBarColor));
+        hex2Color(mods.thirstBarColor).color2Gl();
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(thirst,20), 7,general.style, true,false);
 
         //draw hydration if present
@@ -86,7 +75,7 @@ public class ThirstBarRenderer {
 
         //draw thirst amount
         int h1 = (int) Math.floor(thirst);
-        int c = Integer.decode(configToughAsNails.thirstBarColor);
+        int c = Integer.decode(mods.thirstBarColor);
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent)h1 = (int)thirst*5;
         drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);

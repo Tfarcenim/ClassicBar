@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 
-import static tfar.classicbar.ColorUtilities.cU;
+import static tfar.classicbar.ColorUtilities.*;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 
@@ -60,13 +60,13 @@ public class HungerBarRenderer {
         //draw portion of bar based on hunger amount
         float f = xStart + 80 - getWidth(hunger, 20);
 
-        cU.color2Gl(cU.hex2Color(colors.hungerBarColor));
+        hex2Color(colors.hungerBarColor).color2Gl();
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(hunger, 20), 7,general.style,true,false);
 
         if (currentSat > 0 && general.overlays.hunger.showSaturationBar) {
 
             //draw saturation
-            cU.color2Gl(cU.hex2Color(colors.saturationBarColor));
+            hex2Color(colors.saturationBarColor).color2Gl();
             f += getWidth(hunger, 20) - getWidth(currentSat, 20);
             drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(currentSat, 20), 7,general.style,true,false);
 
@@ -91,7 +91,7 @@ public class HungerBarRenderer {
                 //don't render the bar at all if hunger is full
             if (hunger <20) {
                 f = xStart - getWidth(hungerWidth+hunger,20) + 80;
-            cU.color2Gla(cU.hex2Color(colors.hungerBarColor),alpha);
+            hex2Color(colors.hungerBarColor).color2Gla(alpha);
                 drawPotential(f, yStart + 1, 1, 10, getWidth(hungerWidth, 20)+1, 7, general.style);
             }
 
@@ -109,7 +109,7 @@ public class HungerBarRenderer {
                 }
                 //offset used to decide where to place the bar
                 f = xStart - getWidth(saturationWidth+currentSat,20) + 80;
-                cU.color2Gla(cU.hex2Color(colors.saturationBarColor),alpha);
+                hex2Color(colors.saturationBarColor).color2Gla(alpha);
                 drawPotential(f, yStart+1, 1, 10, getWidth(saturationWidth,20)+1, 7,general.style);
             }
         }
