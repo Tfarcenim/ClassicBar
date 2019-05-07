@@ -29,6 +29,7 @@ public class ClassicBar {
     public static final String MODVERSION = "@VERSION@";
     public static final String[] problemMods = new String[]{"mantle","toughasnails"};
     boolean areProblemModsPresent;
+    public static final boolean TOUGHASNAILS = Loader.isModLoaded("toughasnails");
 
 
     @SidedProxy(clientSide = "tfar.classicbar.proxy.ClientProxy")
@@ -71,7 +72,7 @@ public class ClassicBar {
                         MinecraftForge.EVENT_BUS.unregister(entry.getKey());
                     }
                 }
-            } catch (IllegalAccessException | NoSuchFieldException | NullPointerException e) {
+            } catch (IllegalAccessException | NoSuchFieldException e) {
                 e.printStackTrace();
             }
 

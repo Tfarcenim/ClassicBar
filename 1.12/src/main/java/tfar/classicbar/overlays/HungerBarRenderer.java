@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 
-import static tfar.classicbar.ColorUtilities.*;
+import static tfar.classicbar.ColorUtils.*;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 
@@ -24,6 +24,7 @@ import static tfar.classicbar.config.ModConfig.*;
 public class HungerBarRenderer {
 
     private float alpha = 0;
+    private float alpha2;
     private boolean increase = true;
     private final Minecraft mc = Minecraft.getMinecraft();
 
@@ -35,7 +36,7 @@ public class HungerBarRenderer {
         Entity renderViewEntity = mc.getRenderViewEntity();
         if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD || !(renderViewEntity instanceof EntityPlayer)
         ||event.isCanceled()) return;
-        EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
+        EntityPlayer player = (EntityPlayer) renderViewEntity;
         event.setCanceled(true);
         if (player.getRidingEntity() != null)return;
         double hunger = player.getFoodStats().getFoodLevel();
@@ -50,7 +51,11 @@ public class HungerBarRenderer {
         mc.profiler.startSection("hunger");
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
-
+        alpha2 = 1;
+        if (hunger / 20 < .2 && general.overlays.lowHungerWarning) {
+            alpha2 = (int) (Minecraft.getSystemTime() / 250) % 2;
+        }
+        //calcu
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
         //Bar background
@@ -60,13 +65,16 @@ public class HungerBarRenderer {
         //draw portion of bar based on hunger amount
         float f = xStart + 80 - getWidth(hunger, 20);
 
-        hex2Color(colors.hungerBarColor).color2Gl();
+        boolean flag = player.isPotionActive(MobEffects.HUNGER);
+
+        hex2Color((flag) ? "#12410B":colors.hungerBarColor).color2Gla(alpha2);
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(hunger, 20), 7,general.style,true,false);
+
 
         if (currentSat > 0 && general.overlays.hunger.showSaturationBar) {
 
             //draw saturation
-            hex2Color(colors.saturationBarColor).color2Gl();
+            hex2Color(colors.saturationBarColor).color2Gla(alpha2);
             f += getWidth(hunger, 20) - getWidth(currentSat, 20);
             drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(currentSat, 20), 7,general.style,true,false);
 
@@ -90,9 +98,9 @@ public class HungerBarRenderer {
                 double hungerWidth = Math.min(20-hunger,hungerOverlay);
                 //don't render the bar at all if hunger is full
             if (hunger <20) {
-                f = xStart - getWidth(hungerWidth+hunger,20) + 80;
-            hex2Color(colors.hungerBarColor).color2Gla(alpha);
-                drawPotential(f, yStart + 1, 1, 10, getWidth(hungerWidth, 20)+1, 7, general.style);
+                f = xStart - getWidth(hungerWidth+hunger,20) + 81;
+            hex2Color((flag) ? "#12410B":colors.hungerBarColor).color2Gla(alpha);
+                drawPotential(f, yStart + 1, 1, 10, getWidth(hungerWidth, 20), 7, general.style);
             }
 
             //Draw Potential saturation
@@ -127,7 +135,7 @@ public class HungerBarRenderer {
 
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent) h1 = (int) hunger * 5;
-        int c = Integer.decode(colors.hungerBarColor);
+        int c = Integer.decode((flag) ? "#12410B":colors.hungerBarColor);
         drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
 
         //Reset back to normal settings
@@ -137,11 +145,13 @@ public class HungerBarRenderer {
         GuiIngameForge.left_height += 10;
 
         if (general.displayIcons) {
+
+            int k5 = 52;
+            int k6 = 16;
+            if (flag) {k5 += 36;k6 = k5 + 45;}
             //Draw hunger icon
             //hunger background
-            drawTexturedModalRect(xStart + 82, yStart, 16, 27, 9, 9,0,false,false);
-            int k5 = 52;
-            if (player.isPotionActive(MobEffects.HUNGER)) k5 += 36;
+            drawTexturedModalRect(xStart + 82, yStart, k6, 27, 9, 9,0,false,false);
 
             //hunger
             drawTexturedModalRect(xStart + 82, yStart, k5, 27, 9, 9,0,false,false);

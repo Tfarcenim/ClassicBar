@@ -17,11 +17,10 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-import static tfar.classicbar.ColorUtilities.hex2Color;
+import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.overlays.modoverlays.LavaCharmNoBaublesRenderer.ICON_LAVA;
-import static tfar.classicbar.overlays.modoverlays.LavaCharmNoBaublesRenderer.Lava_Charm;
 
 /*
     Class handles the drawing of the lava charm*/

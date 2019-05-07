@@ -4,11 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.Loader;
 
 import java.util.regex.Matcher;
 
-import static tfar.classicbar.ColorUtilities.p1;
+import static tfar.classicbar.ColorUtils.p1;
 import static tfar.classicbar.config.ModConfig.*;
 
 public class IdiotHandler {

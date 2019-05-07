@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static tfar.classicbar.ColorUtilities.hex2Color;
+import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 

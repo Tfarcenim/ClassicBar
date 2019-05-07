@@ -44,6 +44,8 @@ public class TemperatureBarRenderer {
             if (player.capabilities.isCreativeMode) return;
             ThirstHandler thirstStats = (ThirstHandler) player.getCapability(TANCapabilities.THIRST, null);
             double thirst = thirstStats.getThirst();
+            double hydration = thirstStats.getHydration();
+            System.out.println(hydration);
             //System.out.println(thirst);
             int scaledWidth = event.getResolution().getScaledWidth();
             int scaledHeight = event.getResolution().getScaledHeight();

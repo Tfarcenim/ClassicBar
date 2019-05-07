@@ -12,7 +12,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static tfar.classicbar.ColorUtilities.*;
+import static tfar.classicbar.ColorUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.ModUtils.*;
 
@@ -27,9 +27,8 @@ public class HealthBarRenderer {
   private double playerHealth = 0;
   private long healthUpdateCounter = 0;
   private double lastPlayerHealth = 0;
-  private long lastSystemTime = 0;
   private double displayHealth = 0;
-  private int alpha = 1;
+  private int alpha;
 
   private boolean forceUpdateIcons = false;
 
@@ -56,11 +55,9 @@ public class HealthBarRenderer {
 
     //player is damaged and resistant
     if (health < playerHealth && player.hurtResistantTime > 0) {
-      lastSystemTime = Minecraft.getSystemTime();
       healthUpdateCounter = (long) (updateCounter + 20);
       lastPlayerHealth = playerHealth;
     } else if (health > playerHealth && player.hurtResistantTime > 0) {
-      lastSystemTime = Minecraft.getSystemTime();
       healthUpdateCounter = (long) (updateCounter + 10);
       /* lastPlayerHealth = playerHealth;*/
     }
@@ -81,8 +78,8 @@ public class HealthBarRenderer {
     GlStateManager.enableBlend();
     int k5 = 16;
 
-    if (player.isPotionActive(MobEffects.POISON)) k5 += 36;
-    else if (player.isPotionActive(MobEffects.WITHER)) k5 += 72;
+    if (player.isPotionActive(MobEffects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.isPotionActive(MobEffects.WITHER)) k5 += 72;//evaluates to 88
 
     int i4 = (highlight) ? 18 : 0;
 
@@ -108,7 +105,7 @@ public class HealthBarRenderer {
         break;
       }
       case 88: {
-        calculatePoisonedScaledColor(health, maxHealth).color2Gla(alpha);
+        calculateWitheredScaledColor(health, maxHealth).color2Gla(alpha);
         break;
       }
     }

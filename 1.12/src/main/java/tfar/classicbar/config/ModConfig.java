@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import tfar.classicbar.ClassicBar;
 
-import static lumien.randomthings.asm.ClassTransformer.logger;
 import static tfar.classicbar.config.IdiotHandler.idiots;
 
 @Config(modid = ClassicBar.MODID)
@@ -68,6 +67,9 @@ public class ModConfig {
             @Config.Name("Display low health warning")
             public boolean lowHealthWarning = true;
 
+            @Config.Name("Display low hunger warning")
+            public boolean lowHungerWarning = true;
+
             @Config.Name("Swap absorption & armor?")
             public boolean swap = false;
 
@@ -115,6 +117,8 @@ public class ModConfig {
             @Config.Comment("Colors must be specified in #RRGGBB format")
             @Config.Name("Armor color values")
             public String[] armorColorValues = new String[]{"#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"};
+            @Config.Name("Armor Toughness Bar Color")
+            public String[] armorToughnessColorValues = new String[]{"#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"};
             @Config.Name("Absorption Bar Color")
             public String[] absorptionColorValues = new String[]{"#D4AF37","#C2C73B","#8DC337","#36BA77","#4A5BC4","#D89AE2","#DF9DC7","#DFA99D","#D4DF9D","#3E84C6","#B8C1E8","#DFDFDF"};
 
@@ -160,7 +164,7 @@ public class ModConfig {
                 ConfigManager.sync(ClassicBar.MODID, Config.Type.INSTANCE);
                 idiots.idiotsTryingToParseBadHexColorsDOTJpeg();
                 idiots.emptyArrayFixer();
-                logger.info("Syncing Classic Bar Configs");
+                ClassicBar.logger.info("Syncing Classic Bar Configs");
             }
         }
 
@@ -190,5 +194,15 @@ public class ModConfig {
         @Config.Name("Flight Bar Color")
         public String flightBarColor = "#FFFFFF";
 
+        @Config.Name("Hydration Bar Color")
+        public String hydrationBarColor = "#00A3E2";
+
+        @Config.Name("Dehydration Bar Color")
+        @Config.Comment("This is the overlay for thirst when underneath the effect")
+        public String deHydrationBarColor = "#5A891C";
+
+        @Config.Name("Dehydration Secondary Bar Color")
+        @Config.Comment("This is the overlay for hydration when underneath the effect")
+        public String deHydrationSecondaryBarColor = "#85CF25";
     }
 }
