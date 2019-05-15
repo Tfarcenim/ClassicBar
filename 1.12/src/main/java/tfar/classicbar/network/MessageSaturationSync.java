@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageSaturationSync implements IMessage, IMessageHandler<MessageSaturationSync, IMessage>
 {
-    float saturationLevel;
+    private float saturationLevel;
 
     public MessageSaturationSync(){}
 

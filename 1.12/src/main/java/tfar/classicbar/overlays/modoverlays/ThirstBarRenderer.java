@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import tfar.classicbar.Color;
 import toughasnails.api.TANCapabilities;
 import toughasnails.api.TANPotions;
 import toughasnails.api.config.GameplayOption;
@@ -64,19 +65,19 @@ public class ThirstBarRenderer {
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
         //Bar background
-        drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9,general.style,false,false);
+        drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
         //draw portion of bar based on thirst amount
 
-        float f = xStart+80-getWidth(thirst,20);
+        float f = xStart+79-getWidth(thirst,20);
         hex2Color((dehydration) ? mods.deHydrationBarColor : mods.thirstBarColor).color2Gl();
-        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(thirst,20), 7,general.style, true,false);
+        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(thirst,20), 7);
 
         //draw hydration if present
         if (hydration>0){
-            f = xStart + 80 - getWidth(hydration, 20);
+            f = xStart + 79 - getWidth(hydration, 20);
             hex2Color((dehydration) ? mods.deHydrationSecondaryBarColor : mods.hydrationBarColor).color2Gl();
-            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(hydration,20), 7,1,true,false);
+            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(hydration,20), 7);
         }
 
         //draw thirst exhaustion
@@ -89,7 +90,7 @@ public class ThirstBarRenderer {
             f = xStart - getWidth(thirstExhaustion, 4) + 80;
             //draw exhaustion
             GlStateManager.color(1, 1, 1, .25f);
-            drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(thirstExhaustion, 4), 9,general.style,false,false);
+            drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(thirstExhaustion, 4), 9);
         }
 
         //draw thirst amount
@@ -98,7 +99,7 @@ public class ThirstBarRenderer {
         if (numbers.showPercent)h1 = (int)thirst*5;
         drawStringOnHUD(h1 + "", xStart + 9 * ((general.displayIcons) ? 1 : 0) + rightTextOffset, yStart - 1, c);
         //Reset back to normal settings
-        GlStateManager.color(1, 1, 1, 1);
+        Color.reset();
 
         mc.getTextureManager().bindTexture(OVERLAY);
         GuiIngameForge.left_height += 10;
@@ -106,8 +107,8 @@ public class ThirstBarRenderer {
         if (general.displayIcons) {
             //Draw thirst icon
 
-            drawTexturedModalRect(xStart + 82, yStart, backgroundOffset, 16, 9,9,0,false,false);
-                drawTexturedModalRect(xStart + 82, yStart, (iconIndex + 4) * 9, 16, 9, 9,0,false,false);
+            drawTexturedModalRect(xStart + 82, yStart, backgroundOffset, 16, 9,9);
+                drawTexturedModalRect(xStart + 82, yStart, (iconIndex + 4) * 9, 16, 9, 9);
         }
         mc.getTextureManager().bindTexture(ICON_VANILLA);
 

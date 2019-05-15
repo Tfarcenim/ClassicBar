@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import tfar.classicbar.ClassicBar;
+import tfar.classicbar.ModUtils;
 
 import static tfar.classicbar.config.IdiotHandler.idiots;
 
@@ -84,6 +85,7 @@ public class ModConfig {
                 @Config.Name("Show Exhaustion Overlay")
                 public boolean showExhaustionOverlay = true;
 
+
                 @Config.Name("Transistion speed of bar")
                 @Config.RangeDouble(min = 0.001, max = .2)
                 public float transitionSpeed = .02f;
@@ -107,10 +109,14 @@ public class ModConfig {
         public AdvancedColors advancedColors = new AdvancedColors();
         @Config.Name("Hunger Bar Color")
         public String hungerBarColor = "#B34D00";
+        @Config.Name("Hunger Debuff Color")
+        public String hungerBarDebuffColor = "#249016";
         @Config.Name("Oxygen Bar Color")
         public String oxygenBarColor = "#00E6E6";
         @Config.Name("Saturation Bar Color")
         public String saturationBarColor = "#FFCC00";
+        @Config.Name("Saturation Debuff Color")
+        public String saturationBarDebuffColor = "#87BC00";
 
 
         public class AdvancedColors {
@@ -162,6 +168,7 @@ public class ModConfig {
         public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
             if (event.getModID().equals(ClassicBar.MODID)) {
                 ConfigManager.sync(ClassicBar.MODID, Config.Type.INSTANCE);
+                ModUtils.ICON_BAR = ModUtils.getTexture(general.style);
                 idiots.idiotsTryingToParseBadHexColorsDOTJpeg();
                 idiots.emptyArrayFixer();
                 ClassicBar.logger.info("Syncing Classic Bar Configs");
@@ -170,6 +177,7 @@ public class ModConfig {
 
         @SubscribeEvent
         public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
+            ModUtils.ICON_BAR = ModUtils.getTexture(general.style);
             idiots.idiotsTryingToParseBadHexColorsDOTJpeg();
             EntityPlayer p = e.player;
             if (Loader.isModLoaded("advancedrocketry") && warnings.advancedRocketryWarning && general.overlays.displayToughnessBar) {

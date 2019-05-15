@@ -9,7 +9,7 @@ import tfar.classicbar.ModUtils;
 
 public class MessageExhaustionSync implements IMessage, IMessageHandler<MessageExhaustionSync, IMessage>
 {
-    float exhaustionLevel;
+    private float exhaustionLevel;
 
     public MessageExhaustionSync(){}
 

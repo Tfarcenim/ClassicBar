@@ -11,6 +11,7 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import tfar.classicbar.Color;
 
 import static tfar.classicbar.ColorUtils.calculateScaledColor;
 import static tfar.classicbar.config.ModConfig.*;
@@ -86,7 +87,7 @@ public class HealthBarMountRenderer {
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
         //Bar background
-        drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9,general.style,false,false);
+        drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9);
 
         //is the bar changing
         //Pass 1, draw bar portion
@@ -95,7 +96,7 @@ public class HealthBarMountRenderer {
         calculateScaledColor(mountHealth, maxHealth).color2Gl();
         float f = xStart+80-getWidth(mountHealth,maxHealth);
         //draw portion of bar based on mountHealth remaining
-        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7,general.style,true,false);
+        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
         //draw mountHealth amount
         int h1 = (int) Math.ceil(mountHealth);
 
@@ -104,7 +105,7 @@ public class HealthBarMountRenderer {
         drawStringOnHUD(h1+"", xStart + 9 * i3 + rightTextOffset, yStart - 1, calculateScaledColor(mountHealth,maxHealth).colorToText());
 
         //Reset back to normal settings
-        GlStateManager.color(1, 1, 1, 1);
+        Color.reset();
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);
         GuiIngameForge.left_height += 10;
@@ -112,9 +113,9 @@ public class HealthBarMountRenderer {
         if (general.displayIcons) {
             //Draw mountHealth icon
             //heart background
-            drawTexturedModalRect(xStart + 82, yStart, 16, 0, 9, 9,0,true,false);
+            drawTexturedModalRect(xStart + 82, yStart, 16, 0, 9, 9);
             //heart
-            drawTexturedModalRect(xStart + 82, yStart, 88, 9, 9, 9,0,true,false);
+            drawTexturedModalRect(xStart + 82, yStart, 88, 9, 9, 9);
 
         }
 

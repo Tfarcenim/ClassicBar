@@ -10,7 +10,7 @@ import toughasnails.thirst.ThirstHandler;
 
 public class MessageHydrationSync implements IMessage, IMessageHandler<MessageHydrationSync, IMessage>
 {
-    float hydrationLevel;
+    private float hydrationLevel;
 
     public MessageHydrationSync(){}
 

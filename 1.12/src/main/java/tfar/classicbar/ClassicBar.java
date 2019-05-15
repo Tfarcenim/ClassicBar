@@ -28,7 +28,6 @@ public class ClassicBar {
     public static final String MODNAME = "Classic Bar";
     public static final String MODVERSION = "@VERSION@";
     public static final String[] problemMods = new String[]{"mantle","toughasnails"};
-    boolean areProblemModsPresent;
     public static final boolean TOUGHASNAILS = Loader.isModLoaded("toughasnails");
 
 
@@ -50,7 +49,7 @@ public class ClassicBar {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
-        areProblemModsPresent = stream(problemMods).anyMatch(Loader::isModLoaded);
+        boolean areProblemModsPresent = stream(problemMods).anyMatch(Loader::isModLoaded);
         if (areProblemModsPresent) {
             logger.info("Unregistering problematic overlays.");
             ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners;

@@ -11,6 +11,7 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import tfar.classicbar.Color;
 
 import static tfar.classicbar.ColorUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
@@ -86,7 +87,7 @@ public class HealthBarRenderer {
     //Bind our Custom bar
     mc.getTextureManager().bindTexture(ICON_BAR);
     //Bar background
-    drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9, general.style, true, true);
+    drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9);
 
     //is the bar changing
     //Pass 1, draw bar portion
@@ -111,7 +112,7 @@ public class HealthBarRenderer {
     }
 
     //draw portion of bar based on health remaining
-    drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7, general.style, true, true);
+    drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
 
     //interpolate the bar
     if (displayHealth != health) {
@@ -121,7 +122,7 @@ public class HealthBarRenderer {
       if (displayHealth > health) {
         f = xStart + getWidth(health, maxHealth);
         //draw interpolation
-        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(displayHealth - health, maxHealth), 7, general.style, true, true);
+        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(displayHealth - health, maxHealth), 7);
         //Health is increasing, idk what to do here
       } else {/*
                 f = xStart + getWidth(health, maxHealth);
@@ -133,17 +134,17 @@ public class HealthBarRenderer {
     if (k5 == 52) {
       //draw poison overlay
       GlStateManager.color(0, .5f, 0, .5f);
-      drawTexturedModalRect(xStart + 1, yStart + 1, 1, 36, getWidth(health, maxHealth), 7, general.style, true, true);
+      drawTexturedModalRect(xStart + 1, yStart + 1, 1, 36, getWidth(health, maxHealth), 7);
     }
     int index = (int) Math.floor(absorb / maxHealth);
     //draw absorption bar if it exists
     if (absorb > 0) {
       if (general.overlays.swap) yStart -= 10;
-      GlStateManager.color(1, 1, 1, 1);
+      Color.reset();
       //no wrapping
       if (absorb <= maxHealth) {
-        if (!general.overlays.fullAbsorptionBar) drawScaledBar(absorb, maxHealth, xStart, yStart - 10, true);
-        else drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9, general.style, true, true);
+        if (!general.overlays.fullAbsorptionBar) drawScaledBar(absorb, maxHealth, xStart, yStart - 9,true);
+        else drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9);
 
         switch (k5){
           case 16:{hex2Color(colors.advancedColors.absorptionColorValues[0]).color2Gl();break;
@@ -156,10 +157,10 @@ public class HealthBarRenderer {
 
 
 
-        drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb, maxHealth), 7, general.style, true, true);
+        drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb, maxHealth), 7);
       } else {
         //draw background bar
-        drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9, general.style, true, true);
+        drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9);
         //we have wrapped, draw 2 bars
         //don't crash from arrayindexoutofbounds
         if (index >= colors.advancedColors.absorptionColorValues.length - 1)
@@ -170,7 +171,7 @@ public class HealthBarRenderer {
           case 52:{hex2Color(colors.advancedColors.absorptionPoisonColorValues[index - 1]).color2Gl();break;}
           case 88:{hex2Color(colors.advancedColors.absorptionWitherColorValues[index - 1]).color2Gl();break;}
         }
-        drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, 79, 7, general.style, true, true);
+        drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, 79, 7);
         //is it on the edge or capped already?
         if (absorb % maxHealth != 0 && index < colors.advancedColors.absorptionColorValues.length - 1) {
           //draw second partial bar
@@ -179,7 +180,7 @@ public class HealthBarRenderer {
             case 52:{hex2Color(colors.advancedColors.absorptionPoisonColorValues[index]).color2Gl();break;}
             case 88:{hex2Color(colors.advancedColors.absorptionWitherColorValues[index]).color2Gl();break;}
           }
-          drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb % maxHealth, maxHealth), 7, general.style, true, true);
+          drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb % maxHealth, maxHealth), 7);
         }
       }
       // handle the text
@@ -217,7 +218,7 @@ public class HealthBarRenderer {
       }
     }
     //Reset back to normal settings
-    GlStateManager.color(1, 1, 1, 1);
+    Color.reset();
 
     mc.getTextureManager().bindTexture(ICON_VANILLA);
     GuiIngameForge.left_height += 10;
@@ -229,14 +230,14 @@ public class HealthBarRenderer {
       int i5 = (player.world.getWorldInfo().isHardcoreModeEnabled()) ? 5 : 0;
       //Draw health icon
       //heart background
-      drawTexturedModalRect(xStart - 10, yStart, 16, 9 * i5, 9, 9, 0, true, true);
+      drawTexturedModalRect(xStart - 10, yStart, 16, 9 * i5, 9, 9);
       //heart
-      drawTexturedModalRect(xStart - 10, yStart, 36 + k5, 9 * i5, 9, 9, 0, true, true);
+      drawTexturedModalRect(xStart - 10, yStart, 36 + k5, 9 * i5, 9, 9);
       if (absorb > 0) {
         if (general.overlays.swap) yStart -= 10;
         //draw absorption icon
-        drawTexturedModalRect(xStart - 10, yStart - 10, 16, 9 * i5, 9, 9, 0, true, true);
-        drawTexturedModalRect(xStart - 10, yStart - 10, 160, 0, 9, 9, 0, true, true);
+        drawTexturedModalRect(xStart - 10, yStart - 10, 16, 9 * i5, 9, 9);
+        drawTexturedModalRect(xStart - 10, yStart - 10, 160, 0, 9, 9);
       }
     }
     //Reset back to normal settings

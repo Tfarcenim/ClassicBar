@@ -34,5 +34,7 @@ public final class Color {
         float b = this.b / 255f;
         GlStateManager.color(r, g, b, a);
     }
-
+    public static void reset(){
+        GlStateManager.color(1,1,1,1);
+    }
 }

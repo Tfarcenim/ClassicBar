@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import tfar.classicbar.Color;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
@@ -73,18 +74,18 @@ public class TiaraBarRenderer {
     //Bar background
     GlStateManager.color(1, 1, 1, 1);
     //draw main background
-    drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9, general.style, false, false);
+    drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
     //draw dash background
     if (dashCooldown > 0){
       int i4 = xStart-getWidth(dashCooldown,80)+81;
-      drawTexturedModalRect(i4, yStart, 81-getWidth(dashCooldown,80), 18, getWidth(dashCooldown,80), 9, general.style, false, false);
+      drawTexturedModalRect(i4, yStart, 81-getWidth(dashCooldown,80), 18, getWidth(dashCooldown,80), 9);
     }
     //Pass 1, draw bar portion
     hex2Color(mods.flightBarColor).color2Gl();
     //calculate bar color
     //draw portion of bar based on timeLeft amount
     float f = xStart+80-getWidth(timeLeft,1200);
-    drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(timeLeft, 1200), 7, general.style, true, false);
+    drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(timeLeft, 1200), 7);
     int i2 = timeLeft/20;
     //draw timeLeft amount
     if (numbers.showPercent) i2 = timeLeft / 12;
@@ -93,10 +94,10 @@ public class TiaraBarRenderer {
     drawStringOnHUD(i2 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
 
     mc.getTextureManager().bindTexture(ICON_BOTANIA);
-    GlStateManager.color(1, 1, 1, 1);
+    Color.reset();
     if (general.displayIcons)
       //Draw flight icon
-      drawTexturedModalRect(xStart + 81, yStart, Math.max(stack.getItemDamage()*9-9,0), 0, 9, 9, 0, false, false);
+      drawTexturedModalRect(xStart + 81, yStart, Math.max(stack.getItemDamage()*9-9,0), 0, 9, 9);
     //Reset back to normal settings
 
     mc.getTextureManager().bindTexture(ICON_VANILLA);
