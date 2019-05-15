@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import tfar.classicbar.config.ModConfig;
 
 import java.lang.reflect.Field;
 
@@ -20,7 +21,7 @@ public class ModUtils {
   private static final Field foodExhaustion = ObfuscationReflectionHelper.findField(FoodStats.class, "field_75126_c");
 
   public static final ResourceLocation ICON_VANILLA = Gui.ICONS;
-  public static ResourceLocation ICON_BAR;
+  public static ResourceLocation ICON_BAR = getTexture(ModConfig.general.style);
   public static final Minecraft mc = Minecraft.getMinecraft();
   private static final FontRenderer fontRenderer = mc.fontRenderer;
 
@@ -36,12 +37,6 @@ public class ModUtils {
     int w = 78;
     double d3 = Math.max(w * d1 / d2, 0);
     return (int) Math.ceil(d3);
-  }
-
-  public static int getWidthfloor(double d1, double d2) {
-    int w = 78;
-    double d3 = Math.max(w * d1 / d2, 0);
-    return (int) Math.floor(d3);
   }
 
   public static int getStringLength(String s) {
