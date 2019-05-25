@@ -91,22 +91,20 @@ public class HealthBarRenderer {
 
     //is the bar changing
     //Pass 1, draw bar portion
-    alpha = 1;
-    if (health / maxHealth < .2 && general.overlays.lowHealthWarning) {
-      alpha = (int) (Minecraft.getSystemTime() / 250) % 2;
-    }
+    alpha = health / maxHealth < general.overlays.lowHealthThreshold && general.overlays.lowHealthWarning ?
+      (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
     //calculate bar color
     switch (k5) {
       case 16: {
-        calculateScaledColor(health, maxHealth).color2Gla(alpha);
+        calculateScaledColor(health, maxHealth,colors.advancedColors.normalColors,colors.advancedColors.normalFractions).color2Gla(alpha);
         break;
       }
       case 52: {
-        calculatePoisonedScaledColor(health, maxHealth).color2Gla(alpha);
+        calculateScaledColor(health, maxHealth,colors.advancedColors.poisonedColors,colors.advancedColors.poisonedFractions).color2Gla(alpha);
         break;
       }
       case 88: {
-        calculateWitheredScaledColor(health, maxHealth).color2Gla(alpha);
+        calculateScaledColor(health, maxHealth,colors.advancedColors.witheredColors,colors.advancedColors.witheredFractions).color2Gla(alpha);
         break;
       }
     }
@@ -116,11 +114,10 @@ public class HealthBarRenderer {
 
     //interpolate the bar
     if (displayHealth != health) {
-      int f;
       //reset to white
       GlStateManager.color(1, 1, 1, alpha);
       if (displayHealth > health) {
-        f = xStart + getWidth(health, maxHealth);
+        int f = xStart + getWidth(health, maxHealth);
         //draw interpolation
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(displayHealth - health, maxHealth), 7);
         //Health is increasing, idk what to do here
@@ -198,22 +195,22 @@ public class HealthBarRenderer {
       drawStringOnHUD(a3 + "", xStart - a1 - 9 * a2 - 5, yStart - 11, c);
       if (general.overlays.swap) yStart += 10;
     }
-    int h1 = (int) Math.ceil(health);
-    int i1 = getStringLength(h1 + "");
+    int h1 = (int) Math.round(health);
     int i2 = general.displayIcons ? 1 : 0;
     if (numbers.showPercent) h1 = (int) (100 * health / maxHealth);
+    int i1 = getStringLength(h1 + "");
 
     switch (k5) {
       case 16: {
-        drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth).colorToText());
+        drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth,colors.advancedColors.normalColors,colors.advancedColors.normalFractions).colorToText());
         break;
       }
       case 52: {
-        drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculatePoisonedScaledColor(health, maxHealth).colorToText());
+        drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth,colors.advancedColors.poisonedColors,colors.advancedColors.poisonedFractions).colorToText());
         break;
       }
       case 88: {
-        drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateWitheredScaledColor(health, maxHealth).colorToText());
+        drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth,colors.advancedColors.witheredColors,colors.advancedColors.witheredFractions).colorToText());
         break;
       }
     }

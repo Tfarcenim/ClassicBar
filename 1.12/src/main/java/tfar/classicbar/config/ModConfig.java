@@ -68,6 +68,10 @@ public class ModConfig {
             @Config.Name("Display low health warning")
             public boolean lowHealthWarning = true;
 
+            @Config.Name("Low health warning threshold")
+            @Config.RangeDouble(min = 0, max = 1)
+            public double lowHealthThreshold = .2;
+
             @Config.Name("Display low hunger warning")
             public boolean lowHungerWarning = true;
 
@@ -85,7 +89,6 @@ public class ModConfig {
                 @Config.Name("Show Exhaustion Overlay")
                 public boolean showExhaustionOverlay = true;
 
-
                 @Config.Name("Transistion speed of bar")
                 @Config.RangeDouble(min = 0.001, max = .2)
                 public float transitionSpeed = .02f;
@@ -102,6 +105,11 @@ public class ModConfig {
 
         @Config.Name("Show Numbers")
         public boolean showNumbers = true;
+
+        @Config.Name("Numbers scale")
+        @Config.Comment("unused")
+        @Config.RangeDouble(min = 0, max = 1)
+        public double numberScale = .75;
     }
 
     public static class ConfigColors {
@@ -135,17 +143,17 @@ public class ModConfig {
             public String[] absorptionWitherColorValues = new String[]{"#D4AF37","#C2C73B","#8DC337","#36BA77","#4A5BC4","#D89AE2","#DF9DC7","#DFA99D","#D4DF9D","#3E84C6","#B8C1E8","#DFDFDF"};
 
             @Config.Name("Health fractions")
-            public Float[] healthFractions = new Float[]{.25f, .5f, .75f};
+            public double[] normalFractions = new double[]{.25, .5, .75};
             @Config.Name("Colors")
-            public String[] hexColors = new String[]{"#FF0000", "#FFFF00", "#00FF00"};
+            public String[] normalColors = new String[]{"#FF0000", "#FFFF00", "#00FF00"};
 
             @Config.Name("Poisoned fractions")
-            public Float[] poisonedFractions = new Float[]{.25f, .5f, .75f};
+            public double[] poisonedFractions = new double[]{.25, .5, .75};
             @Config.Name("Poisoned Colors")
             public String[] poisonedColors = new String[]{"#00FF00", "#55FF55", "#00FF00"};
 
             @Config.Name("Withered fractions")
-            public Float[] witheredFractions = new Float[]{.25f, .5f, .75f};
+            public double[] witheredFractions = new double[]{.25, .5, .75};
             @Config.Name("Withered Colors")
             public String[] witheredColors = new String[]{"#555555", "#AAAAAA", "#555555"};
         }
@@ -177,7 +185,6 @@ public class ModConfig {
 
         @SubscribeEvent
         public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
-            ModUtils.ICON_BAR = ModUtils.getTexture(general.style);
             idiots.idiotsTryingToParseBadHexColorsDOTJpeg();
             EntityPlayer p = e.player;
             if (Loader.isModLoaded("advancedrocketry") && warnings.advancedRocketryWarning && general.overlays.displayToughnessBar) {

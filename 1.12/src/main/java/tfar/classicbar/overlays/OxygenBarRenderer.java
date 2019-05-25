@@ -58,7 +58,7 @@ public class OxygenBarRenderer {
 
     //draw portion of bar based on air amount
 
-    float f = xStart + 80 - getWidth(air, 300);
+    float f = xStart + 79 - getWidth(air, 300);
     hex2Color(colors.oxygenBarColor).color2Gl();
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(air, 300), 7);
 

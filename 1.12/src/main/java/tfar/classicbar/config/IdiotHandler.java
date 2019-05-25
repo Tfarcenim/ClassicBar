@@ -36,26 +36,26 @@ public class IdiotHandler {
     public void emptyArrayFixer() {
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer p = mc.player;
-        if (colors.advancedColors.healthFractions.length == 0) {
+        if (colors.advancedColors.normalFractions.length == 0) {
             p.sendMessage(new TextComponentString(color + "USER PUT IN AN EMPTY ARRAY FOR HEALTH SCALING"));
-            if (colors.advancedColors.hexColors.length > 0) {
-                colors.advancedColors.healthFractions = new Float[colors.advancedColors.hexColors.length];
-                for (double i1 = 0; i1 < colors.advancedColors.hexColors.length; i1++) {
-                    colors.advancedColors.healthFractions[(int) i1] = (float) (i1 / colors.advancedColors.hexColors.length);
+            if (colors.advancedColors.normalColors.length > 0) {
+                colors.advancedColors.normalFractions = new double[colors.advancedColors.normalColors.length];
+                for (double i1 = 0; i1 < colors.advancedColors.normalColors.length; i1++) {
+                    colors.advancedColors.normalFractions[(int) i1] = (float) (i1 / colors.advancedColors.normalColors.length);
                 }
                 return;
             } else {
                 p.sendMessage(new TextComponentString(color + "USER PUT IN AN EMPTY ARRAY FOR HEALTH COLOR SCALING"));
-                colors.advancedColors.healthFractions = new Float[]{.25f, .5f, .75f};
-                colors.advancedColors.hexColors = new String[]{"#FF0000", "#FFFF00", "#00FF00"};
+                colors.advancedColors.normalFractions = new double[]{.25, .5, .75};
+                colors.advancedColors.normalColors = new String[]{"#FF0000", "#FFFF00", "#00FF00"};
                 return;
             }
         }
-        if (colors.advancedColors.hexColors.length == 0) {
+        if (colors.advancedColors.normalColors.length == 0) {
             p.sendMessage(new TextComponentString(color + "USER PUT IN AN EMPTY ARRAY FOR HEALTH COLOR SCALING"));
-            colors.advancedColors.hexColors = new String[colors.advancedColors.hexColors.length];
-            for (double i1 = 0; i1 < colors.advancedColors.healthFractions.length; i1++)
-                colors.advancedColors.hexColors[(int) i1] = "#000000";
+            colors.advancedColors.normalColors = new String[colors.advancedColors.normalColors.length];
+            for (double i1 = 0; i1 < colors.advancedColors.normalFractions.length; i1++)
+                colors.advancedColors.normalColors[(int) i1] = "#000000";
         }
     }
 }

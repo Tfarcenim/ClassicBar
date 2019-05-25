@@ -21,6 +21,7 @@ import tfar.classicbar.Color;
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
+
 /*
     Class handles the drawing of the tiara
  */
@@ -39,7 +40,7 @@ public class TiaraBarRenderer {
 
     Entity renderViewEnity = mc.getRenderViewEntity();
     if (//event.isCanceled() ||
-          //  event.getType() != RenderGameOverlayEvent.ElementType.HEALTH ||
+      //  event.getType() != RenderGameOverlayEvent.ElementType.HEALTH ||
             !(renderViewEnity instanceof EntityPlayer))
       return;
 
@@ -64,7 +65,8 @@ public class TiaraBarRenderer {
     int yStart = scaledHeight - 49;
     if (Loader.isModLoaded("toughasnails")) yStart -= 10;
     if (player.getAir() < 300) yStart -= 10;
-    if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue()>=1 && general.overlays.displayToughnessBar)yStart -=10;
+    if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue() >= 1 && general.overlays.displayToughnessBar)
+      yStart -= 10;
     mc.profiler.startSection("flight");
     //GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
@@ -76,17 +78,17 @@ public class TiaraBarRenderer {
     //draw main background
     drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
     //draw dash background
-    if (dashCooldown > 0){
-      int i4 = xStart-getWidth(dashCooldown,80)+81;
-      drawTexturedModalRect(i4, yStart, 81-getWidth(dashCooldown,80), 18, getWidth(dashCooldown,80), 9);
+    if (dashCooldown > 0) {
+      int i4 = xStart - getWidth(dashCooldown, 80) + 81;
+      drawTexturedModalRect(i4, yStart, 81 - getWidth(dashCooldown, 80), 18, getWidth(dashCooldown, 80), 9);
     }
     //Pass 1, draw bar portion
     hex2Color(mods.flightBarColor).color2Gl();
     //calculate bar color
     //draw portion of bar based on timeLeft amount
-    float f = xStart+80-getWidth(timeLeft,1200);
+    float f = xStart + 79 - getWidth(timeLeft, 1200);
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(timeLeft, 1200), 7);
-    int i2 = timeLeft/20;
+    int i2 = timeLeft / 20;
     //draw timeLeft amount
     if (numbers.showPercent) i2 = timeLeft / 12;
     int i3 = (general.displayIcons) ? 1 : 0;
@@ -97,7 +99,7 @@ public class TiaraBarRenderer {
     Color.reset();
     if (general.displayIcons)
       //Draw flight icon
-      drawTexturedModalRect(xStart + 81, yStart, Math.max(stack.getItemDamage()*9-9,0), 0, 9, 9);
+      drawTexturedModalRect(xStart + 81, yStart, Math.max(stack.getItemDamage() * 9 - 9, 0), 0, 9, 9);
     //Reset back to normal settings
 
     mc.getTextureManager().bindTexture(ICON_VANILLA);

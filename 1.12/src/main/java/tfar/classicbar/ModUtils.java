@@ -47,18 +47,29 @@ public class ModUtils {
     int i = getWidth(absorb, maxHealth);
 
     if (left) {
-      drawTexturedModalRect(x, y - 1, 0, 0, i+1, 9);
-      drawTexturedModalRect(x + i+1, y - 1, 79, 0, 2, 9);
-      //          drawTexturedModalRect(x+i+1,y,1, 1,1,7);
+      drawTexturedModalRect(x, y - 1, 0, 0, i + 1, 9);
+      drawTexturedModalRect(x + i + 1, y - 1, 79, 0, 2, 9);
     } else {
-      drawTexturedModalRect(x + 2, y, 80 - i, 0, i+1, 9);
+      drawTexturedModalRect(x + 2, y, 80 - i, 0, i + 1, 9);
       drawTexturedModalRect(x, y, 0, 0, 2, 9);
     }
   }
 
   public static void drawStringOnHUD(String string, int xOffset, int yOffset, int color) {
     if (!numbers.showNumbers) return;
-    fontRenderer.drawString(string, 2 + xOffset, 2 + yOffset, color, true);
+   /* double scale = numbers.numberScale;
+    GlStateManager.pushMatrix();
+    GlStateManager.scale(scale, scale, 1);
+    xOffset /= scale;
+    yOffset /= scale;
+    int l = fontRenderer.getStringWidth(string);
+    xOffset += (left) ? .4*l * (1 - scale) / scale : 0;
+    GlStateManager.translate(16 * (1 - scale) / scale, 14 * (1 - scale) / scale, 0);*/
+
+   xOffset+=2;
+   yOffset+=2;
+
+    fontRenderer.drawString(string, xOffset, yOffset, color, true);
   }
 
   public static float getExhaustion(EntityPlayer player) {

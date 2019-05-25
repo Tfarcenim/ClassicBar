@@ -81,9 +81,9 @@ public class ThirstBarRenderer {
         }
 
         //draw thirst exhaustion
-    /*    healthFractions = xStart - getWidth(thirstStats.getExhaustion(), 4) + 80;
+    /*    normalFractions = xStart - getWidth(thirstStats.getExhaustion(), 4) + 80;
         GlStateManager.color(1, 1, 1, .25f);
-        drawTexturedModalRect(healthFractions, yStart + 1, 1, 28, getWidth(thirstStats.getExhaustion(), 4), 9);*/
+        drawTexturedModalRect(normalFractions, yStart + 1, 1, 28, getWidth(thirstStats.getExhaustion(), 4), 9);*/
 
         if (true/*general.overlays.hunger.showExhaustionOverlay*/) {
             thirstExhaustion = Math.min(thirstExhaustion,4);
