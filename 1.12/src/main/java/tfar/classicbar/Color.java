@@ -35,6 +35,6 @@ public final class Color {
         GlStateManager.color(r, g, b, a);
     }
     public static void reset(){
-        GlStateManager.color(1,1,1,1);
+        GlStateManager.color(1,1,1);
     }
 }

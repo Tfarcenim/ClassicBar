@@ -9,16 +9,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import tfar.classicbar.config.ModConfig;
 
-import java.lang.reflect.Field;
-
 import static tfar.classicbar.config.ModConfig.numbers;
 
 public class ModUtils {
   public static final int rightTextOffset = 82;
 
   public static final int leftTextOffset = -5;
-
-  private static final Field foodExhaustion = ObfuscationReflectionHelper.findField(FoodStats.class, "field_75126_c");
 
   public static final ResourceLocation ICON_VANILLA = Gui.ICONS;
   public static ResourceLocation ICON_BAR = getTexture(ModConfig.general.style);
@@ -66,27 +62,17 @@ public class ModUtils {
     xOffset += (left) ? .4*l * (1 - scale) / scale : 0;
     GlStateManager.translate(16 * (1 - scale) / scale, 14 * (1 - scale) / scale, 0);*/
 
-   xOffset+=2;
-   yOffset+=2;
+    xOffset += 2;
+    yOffset += 2;
 
     fontRenderer.drawString(string, xOffset, yOffset, color, true);
   }
 
   public static float getExhaustion(EntityPlayer player) {
-    float e1;
-    try {
-      e1 = foodExhaustion.getFloat(player.getFoodStats());
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-    return e1;
+    return ObfuscationReflectionHelper.getPrivateValue(FoodStats.class, player.getFoodStats(), "field_75126_c");
   }
 
   public static void setExhaustion(EntityPlayer player, float exhaustion) {
-    try {
-      foodExhaustion.setFloat(player.getFoodStats(), exhaustion);
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
-    }
+    ObfuscationReflectionHelper.setPrivateValue(FoodStats.class, player.getFoodStats(), exhaustion, "field_75126_c");
   }
 }

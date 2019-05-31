@@ -25,7 +25,7 @@ import static tfar.classicbar.config.ModConfig.*;
 public class HungerBarRenderer {
 
     private float alpha = 0;
-    private float alpha2 = 1;
+    private float alpha2;
     private boolean increase = true;
     private final Minecraft mc = Minecraft.getMinecraft();
 
@@ -52,10 +52,8 @@ public class HungerBarRenderer {
         mc.profiler.startSection("hunger");
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
-        if (hunger / 20 < .2 && general.overlays.lowHungerWarning) {
-            alpha2 = (int) (Minecraft.getSystemTime() / 250) % 2;
-        }
-        //calcu
+        alpha2 = hunger / 20 < .2 && general.overlays.lowHungerWarning ? (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
+
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
         //Bar background

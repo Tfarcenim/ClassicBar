@@ -52,7 +52,7 @@ public class HealthBarRenderer {
 
     EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
     double health = player.getHealth();
-    boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3L % 2L == 1L;
+    boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
 
     //player is damaged and resistant
     if (health < playerHealth && player.hurtResistantTime > 0) {
@@ -92,22 +92,10 @@ public class HealthBarRenderer {
     //is the bar changing
     //Pass 1, draw bar portion
     alpha = health / maxHealth < general.overlays.lowHealthThreshold && general.overlays.lowHealthWarning ?
-      (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
+            (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
     //calculate bar color
-    switch (k5) {
-      case 16: {
-        calculateScaledColor(health, maxHealth,colors.advancedColors.normalColors,colors.advancedColors.normalFractions).color2Gla(alpha);
-        break;
-      }
-      case 52: {
-        calculateScaledColor(health, maxHealth,colors.advancedColors.poisonedColors,colors.advancedColors.poisonedFractions).color2Gla(alpha);
-        break;
-      }
-      case 88: {
-        calculateScaledColor(health, maxHealth,colors.advancedColors.witheredColors,colors.advancedColors.witheredFractions).color2Gla(alpha);
-        break;
-      }
-    }
+
+    calculateScaledColor(health, maxHealth, k5).color2Gla(alpha);
 
     //draw portion of bar based on health remaining
     drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
@@ -140,19 +128,23 @@ public class HealthBarRenderer {
       Color.reset();
       //no wrapping
       if (absorb <= maxHealth) {
-        if (!general.overlays.fullAbsorptionBar) drawScaledBar(absorb, maxHealth, xStart, yStart - 9,true);
+        if (!general.overlays.fullAbsorptionBar) drawScaledBar(absorb, maxHealth, xStart, yStart - 9, true);
         else drawTexturedModalRect(xStart, yStart - 10, 0, 0, 81, 9);
 
-        switch (k5){
-          case 16:{hex2Color(colors.advancedColors.absorptionColorValues[0]).color2Gl();break;
+        switch (k5) {
+          case 16: {
+            hex2Color(colors.advancedColors.absorptionColorValues[0]).color2Gl();
+            break;
           }
-          case 52:{hex2Color(colors.advancedColors.absorptionPoisonColorValues[0]).color2Gl();break;
+          case 52: {
+            hex2Color(colors.advancedColors.absorptionPoisonColorValues[0]).color2Gl();
+            break;
           }
-          case 88:{hex2Color(colors.advancedColors.absorptionWitherColorValues[0]).color2Gl();break;
+          case 88: {
+            hex2Color(colors.advancedColors.absorptionWitherColorValues[0]).color2Gl();
+            break;
           }
         }
-
-
 
         drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb, maxHealth), 7);
       } else {
@@ -163,19 +155,37 @@ public class HealthBarRenderer {
         if (index >= colors.advancedColors.absorptionColorValues.length - 1)
           index = colors.advancedColors.absorptionColorValues.length - 1;
         //draw first full bar
-        switch (k5){
-          case 16:{hex2Color(colors.advancedColors.absorptionColorValues[index - 1]).color2Gl();break;}
-          case 52:{hex2Color(colors.advancedColors.absorptionPoisonColorValues[index - 1]).color2Gl();break;}
-          case 88:{hex2Color(colors.advancedColors.absorptionWitherColorValues[index - 1]).color2Gl();break;}
+        switch (k5) {
+          case 16: {
+            hex2Color(colors.advancedColors.absorptionColorValues[index - 1]).color2Gl();
+            break;
+          }
+          case 52: {
+            hex2Color(colors.advancedColors.absorptionPoisonColorValues[index - 1]).color2Gl();
+            break;
+          }
+          case 88: {
+            hex2Color(colors.advancedColors.absorptionWitherColorValues[index - 1]).color2Gl();
+            break;
+          }
         }
         drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, 79, 7);
         //is it on the edge or capped already?
         if (absorb % maxHealth != 0 && index < colors.advancedColors.absorptionColorValues.length - 1) {
           //draw second partial bar
-          switch (k5){
-            case 16:{hex2Color(colors.advancedColors.absorptionColorValues[index]).color2Gl();break;}
-            case 52:{hex2Color(colors.advancedColors.absorptionPoisonColorValues[index]).color2Gl();break;}
-            case 88:{hex2Color(colors.advancedColors.absorptionWitherColorValues[index]).color2Gl();break;}
+          switch (k5) {
+            case 16: {
+              hex2Color(colors.advancedColors.absorptionColorValues[index]).color2Gl();
+              break;
+            }
+            case 52: {
+              hex2Color(colors.advancedColors.absorptionPoisonColorValues[index]).color2Gl();
+              break;
+            }
+            case 88: {
+              hex2Color(colors.advancedColors.absorptionWitherColorValues[index]).color2Gl();
+              break;
+            }
           }
           drawTexturedModalRect(xStart + 1, yStart - 9, 1, 10, getWidth(absorb % maxHealth, maxHealth), 7);
         }
@@ -186,10 +196,19 @@ public class HealthBarRenderer {
       int a3 = (int) absorb;
       int c = 0;
 
-      switch (k5){
-        case 16:{c=hex2Color(colors.advancedColors.absorptionColorValues[index]).colorToText();break;}
-        case 52:{c=hex2Color(colors.advancedColors.absorptionPoisonColorValues[index]).colorToText();break;}
-        case 88:{c=hex2Color(colors.advancedColors.absorptionWitherColorValues[index]).colorToText();break;}
+      switch (k5) {
+        case 16: {
+          c = hex2Color(colors.advancedColors.absorptionColorValues[index]).colorToText();
+          break;
+        }
+        case 52: {
+          c = hex2Color(colors.advancedColors.absorptionPoisonColorValues[index]).colorToText();
+          break;
+        }
+        case 88: {
+          c = hex2Color(colors.advancedColors.absorptionWitherColorValues[index]).colorToText();
+          break;
+        }
       }
 
       drawStringOnHUD(a3 + "", xStart - a1 - 9 * a2 - 5, yStart - 11, c);
@@ -200,20 +219,8 @@ public class HealthBarRenderer {
     if (numbers.showPercent) h1 = (int) (100 * health / maxHealth);
     int i1 = getStringLength(h1 + "");
 
-    switch (k5) {
-      case 16: {
-        drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth,colors.advancedColors.normalColors,colors.advancedColors.normalFractions).colorToText());
-        break;
-      }
-      case 52: {
-        drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth,colors.advancedColors.poisonedColors,colors.advancedColors.poisonedFractions).colorToText());
-        break;
-      }
-      case 88: {
-        drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth,colors.advancedColors.witheredColors,colors.advancedColors.witheredFractions).colorToText());
-        break;
-      }
-    }
+    drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth, k5).colorToText());
+
     //Reset back to normal settings
     Color.reset();
 

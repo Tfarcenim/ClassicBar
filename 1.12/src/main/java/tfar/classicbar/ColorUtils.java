@@ -2,6 +2,8 @@ package tfar.classicbar;
 
 import java.util.regex.Pattern;
 
+import static tfar.classicbar.config.ModConfig.colors;
+
 public class ColorUtils {
     public static final Pattern p1 = Pattern.compile("^#[0-9A-Fa-f]{6}$");
 
@@ -13,8 +15,22 @@ public class ColorUtils {
         return new Color(r, g, b);
     }
 
-    public static Color calculateScaledColor(double d1, double d2, String[] colorCodes, double[] colorFractions) {
+    public static Color calculateScaledColor(double d1, double d2, int effect) {
         double d3 = (d1 / d2);
+
+        String[] colorCodes;
+        double[] colorFractions;
+
+        switch (effect){
+            case 16: colorCodes = colors.advancedColors.normalColors;
+            colorFractions = colors.advancedColors.normalFractions; break;
+            case 52: colorCodes = colors.advancedColors.poisonedColors;
+                colorFractions = colors.advancedColors.poisonedFractions; break;
+            case 88: colorCodes = colors.advancedColors.witheredColors;
+                colorFractions = colors.advancedColors.witheredFractions; break;
+            default: return Color.BLACK;
+        }
+
         if (colorCodes.length != colorFractions.length) return Color.BLACK;
         int i1 = colorFractions.length - 1;
         int i3 = 0;

@@ -92,7 +92,7 @@ public class HealthBarMountRenderer {
     //Pass 1, draw bar portion
 
     //calculate bar color
-    calculateScaledColor(mountHealth, maxHealth,colors.advancedColors.normalColors,colors.advancedColors.normalFractions).color2Gl();
+    calculateScaledColor(mountHealth, maxHealth, 16).color2Gl();
     float f = xStart + 79 - getWidth(mountHealth, maxHealth);
     //draw portion of bar based on mountHealth remaining
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
@@ -101,7 +101,7 @@ public class HealthBarMountRenderer {
 
     int i3 = general.displayIcons ? 1 : 0;
     if (numbers.showPercent) h1 = (int) (100 * mountHealth / maxHealth);
-    drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, calculateScaledColor(mountHealth, maxHealth,colors.advancedColors.normalColors,colors.advancedColors.normalFractions).colorToText());
+    drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, calculateScaledColor(mountHealth, maxHealth, 16).colorToText());
 
     //Reset back to normal settings
     Color.reset();
