@@ -50,7 +50,7 @@ public class HealthBarRenderer {
 
     updateCounter = mc.ingameGUI.getUpdateCounter();
 
-    EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
+    EntityPlayer player = (EntityPlayer) renderViewEntity;
     double health = player.getHealth();
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
 
@@ -96,7 +96,6 @@ public class HealthBarRenderer {
     //calculate bar color
 
     calculateScaledColor(health, maxHealth, k5).color2Gla(alpha);
-
     //draw portion of bar based on health remaining
     drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
 
@@ -112,7 +111,6 @@ public class HealthBarRenderer {
       } else {/*
                 f = xStart + getWidth(health, maxHealth);
                 drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(health - displayHealth, maxHealth), 7, general.style, true, true);*/
-
       }
     }
 

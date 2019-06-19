@@ -34,7 +34,7 @@ public class OxygenBarRenderer {
             || event.isCanceled()
             || !(renderViewEntity instanceof EntityPlayer)) return;
     event.setCanceled(true);
-    EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
+    EntityPlayer player = (EntityPlayer) renderViewEntity;
     int air = player.getAir();
     if (air >= 300) return;
     int scaledWidth = event.getResolution().getScaledWidth();

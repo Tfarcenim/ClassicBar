@@ -2,7 +2,7 @@ package tfar.classicbar;
 
 import net.minecraft.client.renderer.GlStateManager;
 
-public final class Color {
+public class Color {
     public final int r, g, b;
     public static final Color BLACK = new Color(0,0,0);
 

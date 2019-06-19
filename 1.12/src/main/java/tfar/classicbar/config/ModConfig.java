@@ -78,6 +78,9 @@ public class ModConfig {
             @Config.Name("Swap absorption & armor?")
             public boolean swap = false;
 
+            @Config.Name("Low hunger warning threshold")
+            public double lowHungerThreshold = .3;
+
             public class HungerBarConfig {
 
                 @Config.Name("Show Saturation Bar")

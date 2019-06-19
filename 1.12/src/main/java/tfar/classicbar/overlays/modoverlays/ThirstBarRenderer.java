@@ -36,7 +36,7 @@ public class ThirstBarRenderer {
                 event.isCanceled() ||
              !SyncedConfig.getBooleanValue(GameplayOption.ENABLE_THIRST) ||
                  !(renderViewEntity instanceof EntityPlayer)) return;
-        EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
+        EntityPlayer player = (EntityPlayer) renderViewEntity;
         if (player.capabilities.isCreativeMode)return;
         ThirstHandler thirstStats = (ThirstHandler)player.getCapability(TANCapabilities.THIRST, null);
         double thirst = thirstStats.getThirst();

@@ -42,11 +42,11 @@ public class LavaCharmNoBaublesRenderer {
         Entity renderViewEnity = mc.getRenderViewEntity();
         if (event.isCanceled()
                 || !(renderViewEnity instanceof EntityPlayer)) return;
-        EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
+        EntityPlayer player = (EntityPlayer) renderViewEnity;
         if (player.capabilities.isCreativeMode)return;
 
         ItemStack stack = getLavaCharm(player);
-        if (stack == null)return;
+        if (stack.isEmpty())return;
 
         NBTTagCompound nbt = stack.getTagCompound();
             if (nbt == null) {
@@ -109,7 +109,7 @@ public class LavaCharmNoBaublesRenderer {
         if (isWader(stack1))return stack1;
         for (ItemStack stack : player.inventory.mainInventory)
             if (isCharm(stack)) return stack;
-        return null;
+        return ItemStack.EMPTY;
     }
     private static boolean isCharm(ItemStack stack){
         return stack.getItem() instanceof ItemLavaCharm;

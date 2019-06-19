@@ -52,7 +52,7 @@ public class HungerBarRenderer {
         mc.profiler.startSection("hunger");
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
-        alpha2 = hunger / 20 < .2 && general.overlays.lowHungerWarning ? (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
+        alpha2 = hunger / 20 < general.overlays.lowHungerThreshold && general.overlays.lowHungerWarning ? (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
 
         //Bind our Custom bar
         mc.getTextureManager().bindTexture(ICON_BAR);
@@ -65,17 +65,16 @@ public class HungerBarRenderer {
 
         boolean flag = player.isPotionActive(MobEffects.HUNGER);
 
-        hex2Color((flag) ?  colors.hungerBarDebuffColor :colors.hungerBarColor).color2Gla(alpha2);
+        hex2Color(flag ?  colors.hungerBarDebuffColor :colors.hungerBarColor).color2Gla(alpha2);
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(hunger, 20), 7);
 
 
         if (currentSat > 0 && general.overlays.hunger.showSaturationBar) {
 
             //draw saturation
-            hex2Color((flag) ? colors.saturationBarDebuffColor : colors.saturationBarColor).color2Gla(alpha2);
+            hex2Color(flag ? colors.saturationBarDebuffColor : colors.saturationBarColor).color2Gla(alpha2);
             f += getWidth(hunger, 20) - getWidth(currentSat, 20);
             drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(currentSat, 20), 7);
-
         }
         //render held hunger overlay
 
@@ -97,7 +96,7 @@ public class HungerBarRenderer {
                 //don't render the bar at all if hunger is full
             if (hunger <20) {
                 f = xStart - getWidth(hungerWidth+hunger,20) + 78;
-            hex2Color((flag) ?  colors.hungerBarDebuffColor :colors.hungerBarColor).color2Gla(alpha);
+            hex2Color(flag ?  colors.hungerBarDebuffColor :colors.hungerBarColor).color2Gla(alpha);
                 drawTexturedModalRect(f + 1, yStart + 1, 1, 10, getWidth(hunger+hungerOverlay, 20), 7);
             }
 
@@ -115,7 +114,7 @@ public class HungerBarRenderer {
                 }
                 //offset used to decide where to place the bar
                 f = xStart - getWidth(saturationWidth+currentSat,20) + 78;
-                hex2Color((flag) ? colors.saturationBarDebuffColor : colors.saturationBarColor).color2Gla(alpha);
+                hex2Color(flag ? colors.saturationBarDebuffColor : colors.saturationBarColor).color2Gla(alpha);
                 if (true)//currentSat > 0)
                 drawTexturedModalRect(f + 1, yStart+1, 1, 10, getWidth(saturationWidth+currentSat,20), 7);
                 else ;//drawTexturedModalRect(f, yStart+1, 1, 10, getWidthfloor(saturationWidth,20), 7);
@@ -136,7 +135,7 @@ public class HungerBarRenderer {
 
         int i3 = general.displayIcons ? 1 : 0;
         if (numbers.showPercent) h1 = (int) hunger * 5;
-        int c = Integer.decode((flag) ? colors.hungerBarDebuffColor :colors.hungerBarColor);
+        int c = Integer.decode(flag ? colors.hungerBarDebuffColor :colors.hungerBarColor);
         drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
 
         //Reset back to normal settings

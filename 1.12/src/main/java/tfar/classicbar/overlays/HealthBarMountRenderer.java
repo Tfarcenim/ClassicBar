@@ -26,7 +26,6 @@ public class HealthBarMountRenderer {
 
   private int updateCounter = 0;
   private double mountHealth = 0;
-  private double lasMountHealth = 0;
   private long healthUpdateCounter = 0;
   private long lastSystemTime = 0;
 
@@ -47,10 +46,7 @@ public class HealthBarMountRenderer {
     //Push to avoid lasting changes
 
     updateCounter = mc.ingameGUI.getUpdateCounter();
-
-    EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
-
-    if (player.getRidingEntity() == null) return;
+    EntityPlayer player = (EntityPlayer) renderViewEnity;
     if (!(player.getRidingEntity() instanceof EntityLivingBase)) return;
 
     EntityLivingBase mount = (EntityLivingBase) player.getRidingEntity();

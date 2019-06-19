@@ -41,7 +41,7 @@ public class ArmorBarRenderer {
       return;
     }
     event.setCanceled(true);
-    EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
+    EntityPlayer player = (EntityPlayer) renderViewEntity;
     double armor = calculateArmorValue();
     if (armor < 1) return;
     boolean warning = false;
