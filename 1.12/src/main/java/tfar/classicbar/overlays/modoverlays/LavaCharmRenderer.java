@@ -1,30 +1,38 @@
 package tfar.classicbar.overlays.modoverlays;
 
-import baubles.api.BaublesApi;
+import lumien.randomthings.item.ItemLavaCharm;
+import lumien.randomthings.item.ItemLavaWader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import tfar.classicbar.ClassicBar;
 import tfar.classicbar.Color;
+import tfar.classicbar.compat.BaublesHelper;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
-import static tfar.classicbar.overlays.modoverlays.LavaCharmNoBaublesRenderer.ICON_LAVA;
-import static tfar.classicbar.overlays.modoverlays.LavaCharmNoBaublesRenderer.Lava_Charm;
 
 /*
     Class handles the drawing of the lava charm*/
 public class LavaCharmRenderer {
   private final Minecraft mc = Minecraft.getMinecraft();
+
+  public static final Item Lava_Charm = ForgeRegistries.ITEMS.getValue(new ResourceLocation("randomthings:lavacharm"));
+  public static final ResourceLocation ICON_LAVA = new ResourceLocation("randomthings", "textures/gui/lavacharmbar.png");
 
   public LavaCharmRenderer() {
   }
@@ -34,20 +42,16 @@ public class LavaCharmRenderer {
 
     Entity renderViewEnity = mc.getRenderViewEntity();
     if (event.isCanceled()
-            || !(renderViewEnity instanceof EntityPlayer)) {
-      return;
-    }
+            || !(renderViewEnity instanceof EntityPlayer)) return;
     EntityPlayer player = (EntityPlayer) renderViewEnity;
     if (player.capabilities.isCreativeMode) return;
-    int i1 = BaublesApi.isBaubleEquipped(player, Lava_Charm);
-    ItemStack stack;
-    if (i1 == -1) {
-      stack = LavaCharmNoBaublesRenderer.getLavaCharm(player);
-      if (stack == null) return;
-    } else stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
+    ItemStack stack = ItemStack.EMPTY;
+    if (ClassicBar.BAUBLES)stack = BaublesHelper.getLavaWader(player);
+    if (stack.isEmpty())stack = getLavaCharm(player);
+    if (stack.isEmpty()) return;
     NBTTagCompound nbt = stack.getTagCompound();
     if (nbt == null) {
-      System.out.println("error");
+      //System.out.println("error");
       return;
     }
     int charge = nbt.getInteger("charge");
@@ -69,7 +73,7 @@ public class LavaCharmRenderer {
     mc.getTextureManager().bindTexture(ICON_BAR);
     //Bar background
     Color.reset();
-    drawTexturedModalRect(xStart, yStart, 1, 1, 81, 9);
+    drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
     //Pass 1, draw bar portion
     hex2Color(mods.lavaBarColor).color2Gl();
@@ -100,5 +104,17 @@ public class LavaCharmRenderer {
     //GlStateManager.popMatrix();
     mc.profiler.endSection();
   }
-
+  public static ItemStack getLavaCharm(EntityPlayer player) {
+    ItemStack stack1 = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
+    if (isWader(stack1))return stack1;
+    for (ItemStack stack : player.inventory.mainInventory)
+      if (isCharm(stack)) return stack;
+    return ItemStack.EMPTY;
+  }
+  private static boolean isCharm(ItemStack stack){
+    return stack.getItem() instanceof ItemLavaCharm;
+  }
+  private static boolean isWader(ItemStack stack){
+    return stack.getItem() instanceof ItemLavaWader;
+  }
 }

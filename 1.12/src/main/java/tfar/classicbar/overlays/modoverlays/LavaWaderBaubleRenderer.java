@@ -21,7 +21,7 @@ import tfar.classicbar.Color;
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
-import static tfar.classicbar.overlays.modoverlays.LavaCharmNoBaublesRenderer.ICON_LAVA;
+import static tfar.classicbar.overlays.modoverlays.LavaCharmRenderer.ICON_LAVA;
 
 /*
     Class handles the drawing of the lava charm*/

@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.ModUtils;
+import tfar.classicbar.compat.ToughAsNailsHelper;
 
 import java.util.HashMap;
 import java.util.Map;

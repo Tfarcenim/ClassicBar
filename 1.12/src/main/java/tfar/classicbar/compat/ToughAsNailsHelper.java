@@ -1,4 +1,4 @@
-package tfar.classicbar.network;
+package tfar.classicbar.compat;
 
 import net.minecraft.entity.player.EntityPlayer;
 import toughasnails.api.TANCapabilities;

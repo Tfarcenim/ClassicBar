@@ -91,7 +91,7 @@ public class HealthBarRenderer {
 
     //is the bar changing
     //Pass 1, draw bar portion
-    alpha = health / maxHealth < general.overlays.lowHealthThreshold && general.overlays.lowHealthWarning ?
+    alpha = health / maxHealth <= general.overlays.lowHealthThreshold && general.overlays.lowHealthWarning ?
             (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
     //calculate bar color
 

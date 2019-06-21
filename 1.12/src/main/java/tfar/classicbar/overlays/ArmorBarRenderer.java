@@ -53,7 +53,7 @@ public class ArmorBarRenderer {
       int current = stack.getItemDamage();
       int percentage = 100;
       if (max != 0) percentage = 100 * (max - current) / (max);
-      if (percentage < 7) {
+      if (percentage < 90) {
         if (!(stack.getItem() instanceof ItemArmor)) continue;
         warning = true;
         warningAmount += ((ItemArmor) stack.getItem()).getArmorMaterial().getDamageReductionAmount(slot);
@@ -87,13 +87,12 @@ public class ArmorBarRenderer {
       else drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
       //calculate bar color
       hex2Color(colors.advancedColors.armorColorValues[0]).color2Gl();
-      //draw portion of bar based on armor amount
+      //draw portion of bar based on armor
       drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor, 20), 7);
 
       //draw damaged bar
       hex2Color(colors.advancedColors.armorColorValues[0]).color2Gla(alpha);
-      int f = xStart + getWidth(armor, 20);
-      drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(warningAmount, 20) + 1, 7);
+      drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor + warningAmount, 20), 7);
     } else {
       drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
       //we have wrapped, draw 2 bars

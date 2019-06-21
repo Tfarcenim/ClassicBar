@@ -31,7 +31,10 @@ public class ClassicBar {
   public static final String MODNAME = "Classic Bar";
   public static final String MODVERSION = "@VERSION@";
   public static final String[] problemMods = new String[]{"mantle", "toughasnails"};
+
   public static final boolean TOUGHASNAILS = Loader.isModLoaded("toughasnails");
+  public static final boolean IBLIS = Loader.isModLoaded("iblis");
+  public static final boolean BAUBLES = Loader.isModLoaded("baubles");
 
   public static Logger logger;
 
@@ -58,11 +61,8 @@ public class ClassicBar {
     MinecraftForge.EVENT_BUS.register(new HungerBarRenderer());
 
     //mod renderers
-    if (Loader.isModLoaded("randomthings")) {
-      if (Loader.isModLoaded("baubles"))
-        MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
-      else MinecraftForge.EVENT_BUS.register(new LavaCharmNoBaublesRenderer());
-    }
+    ClassicBar.logger.info("Registering Mod Overlays");
+    if (Loader.isModLoaded("randomthings")) MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
     if (Loader.isModLoaded("lavawaderbauble")) {
       MinecraftForge.EVENT_BUS.register(new LavaWaderBaubleRenderer());
     }
