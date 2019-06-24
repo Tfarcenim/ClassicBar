@@ -91,7 +91,7 @@ public class HealthBarRenderer {
 
     //is the bar changing
     //Pass 1, draw bar portion
-    alpha = health / maxHealth <= general.overlays.lowHealthThreshold && general.overlays.lowHealthWarning ?
+    alpha = health <= 0 ? 1 :health / maxHealth <= general.overlays.lowHealthThreshold && general.overlays.lowHealthWarning ?
             (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
     //calculate bar color
 
@@ -104,9 +104,8 @@ public class HealthBarRenderer {
       //reset to white
       GlStateManager.color(1, 1, 1, alpha);
       if (displayHealth > health) {
-        int f = xStart + getWidth(health, maxHealth);
         //draw interpolation
-        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(displayHealth - health, maxHealth), 7);
+        drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(displayHealth, maxHealth), 7);
         //Health is increasing, idk what to do here
       } else {/*
                 f = xStart + getWidth(health, maxHealth);
@@ -119,9 +118,9 @@ public class HealthBarRenderer {
       GlStateManager.color(0, .5f, 0, .5f);
       drawTexturedModalRect(xStart + 1, yStart + 1, 1, 36, getWidth(health, maxHealth), 7);
     }
-    int index = (int) Math.floor(absorb / maxHealth);
     //draw absorption bar if it exists
     if (absorb > 0) {
+      int index = (int) Math.ceil(absorb / maxHealth) - 1;
       if (general.overlays.swap) yStart -= 10;
       Color.reset();
       //no wrapping
@@ -155,15 +154,15 @@ public class HealthBarRenderer {
         //draw first full bar
         switch (k5) {
           case 16: {
-            hex2Color(colors.advancedColors.absorptionColorValues[index - 1]).color2Gl();
+            hex2Color(colors.advancedColors.absorptionColorValues[index]).color2Gl();
             break;
           }
           case 52: {
-            hex2Color(colors.advancedColors.absorptionPoisonColorValues[index - 1]).color2Gl();
+            hex2Color(colors.advancedColors.absorptionPoisonColorValues[index]).color2Gl();
             break;
           }
           case 88: {
-            hex2Color(colors.advancedColors.absorptionWitherColorValues[index - 1]).color2Gl();
+            hex2Color(colors.advancedColors.absorptionWitherColorValues[index]).color2Gl();
             break;
           }
         }

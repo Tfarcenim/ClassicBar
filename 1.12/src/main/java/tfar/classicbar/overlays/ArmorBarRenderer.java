@@ -77,6 +77,7 @@ public class ArmorBarRenderer {
     //Bar background
 
     //Pass 1, draw bar portion
+    //how many layers are there? remember to start at 0
     int index = (int) Math.min(Math.ceil(armor / 20) - 1, colors.advancedColors.armorColorValues.length - 1);
 
     armor -= warningAmount;
@@ -94,20 +95,19 @@ public class ArmorBarRenderer {
       hex2Color(colors.advancedColors.armorColorValues[0]).color2Gla(alpha);
       drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor + warningAmount, 20), 7);
     } else {
-      drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
       //we have wrapped, draw 2 bars
-      int size = colors.advancedColors.armorColorValues.length;
-      //if we are out of colors wrap the bar
+      //bar background
+      drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
       //draw first bar
       //case 1: bar is not capped and is partially filled
-      if (index < (size - 1) && armor % 20 != 0) {
+      if (warningAmount != 0 || index < colors.advancedColors.armorColorValues.length && (armor + warningAmount) % 20 != 0) {
         //draw complete first bar
-        hex2Color(colors.advancedColors.armorColorValues[index - 1]).color2Gla(alpha);
+        hex2Color(colors.advancedColors.armorColorValues[index - 1]).color2Gl();
         drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, 79, 7);
 
         //draw partial second bar
-        hex2Color(colors.advancedColors.armorColorValues[index]).color2Gla(alpha);
+        hex2Color(colors.advancedColors.armorColorValues[index]).color2Gl();
         drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor % 20, 20), 7);
       }
       //case 2, bar is a multiple of 20 or it is capped
@@ -116,13 +116,22 @@ public class ArmorBarRenderer {
         hex2Color(colors.advancedColors.armorColorValues[index]).color2Gl();
         drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, 79, 7);
       }
+      // now handle the low armor warning
+      if (warningAmount > 0) {
+        //armor and armor warning on same index
+        if ((int) Math.ceil((warningAmount + armor)/20) == (int) Math.ceil(armor/20)) {
+          //draw one bar
+          hex2Color(colors.advancedColors.armorColorValues[index]).color2Gla(alpha);
+          drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor + warningAmount - index * 20, 20), 7);
+        }
+      }
     }
     //draw armor amount
     int i1 = (int) Math.floor(armor + warningAmount);
     int i3 = (general.displayIcons) ? 1 : 0;
     int c = Integer.decode(colors.advancedColors.armorColorValues[index]);
     if (numbers.showPercent) i1 = (int) (armor + warningAmount) * 5;
-    int i2 = getStringLength(i1+"");
+    int i2 = getStringLength(i1 + "");
     drawStringOnHUD(i1 + "", xStart - 9 * i3 - i2 + leftTextOffset, yStart - 1, c);
     //Reset back to normal settings
 
