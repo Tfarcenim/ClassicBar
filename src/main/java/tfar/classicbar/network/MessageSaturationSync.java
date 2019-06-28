@@ -1,13 +1,11 @@
 package tfar.classicbar.network;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class MessageSaturationSync implements IMessage, IMessageHandler<MessageSaturationSync, IMessage>
-{
+import java.util.function.Supplier;
+
+public class MessageSaturationSync {
     private float saturationLevel;
 
     public MessageSaturationSync(){}
@@ -17,23 +15,18 @@ public class MessageSaturationSync implements IMessage, IMessageHandler<MessageS
         this.saturationLevel = saturationLevel;
     }
 
-    @Override
-    public void toBytes(ByteBuf buf)
+    public MessageSaturationSync(PacketBuffer buf)
+    {
+        this.saturationLevel = buf.readFloat();
+    }
+
+    public void encode(PacketBuffer buf)
     {
         buf.writeFloat(saturationLevel);
     }
 
-    @Override
-    public void fromBytes(ByteBuf buf)
-    {
-        saturationLevel = buf.readFloat();
-    }
-
-    @Override
-    public IMessage onMessage(final MessageSaturationSync message, final MessageContext ctx)
-    {
-        // defer to the next game loop; we can't guarantee that Minecraft.thePlayer is initialized yet
-        Minecraft.getMinecraft().addScheduledTask(() -> NetworkHelper.getSidedPlayer(ctx).getFoodStats().setFoodSaturationLevel(message.saturationLevel));
-        return null;
+    public void handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> NetworkHelper.getSidedPlayer(ctx.get()).getFoodStats().setFoodSaturationLevel(saturationLevel));
+        ctx.get().setPacketHandled(true);
     }
 }

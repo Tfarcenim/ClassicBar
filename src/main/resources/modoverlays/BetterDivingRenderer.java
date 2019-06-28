@@ -3,16 +3,16 @@ package tfar.classicbar.overlays.modoverlays;
 //import meldexun.betterDiving.capability.DivingAttributes;
 //import meldexun.betterDiving.capability.DivingAttributesProvider;
 //import meldexun.betterDiving.capability.IDivingAttributes;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.client.ForgeIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
@@ -38,12 +38,12 @@ public class BetterDivingRenderer {
       Entity renderViewEntity = this.mc.getRenderViewEntity();
       if (event.getType() != RenderGameOverlayEvent.ElementType.AIR
               || event.isCanceled()
-              || !(renderViewEntity instanceof EntityPlayer)) {
+              || !(renderViewEntity instanceof PlayerEntity)) {
         return;
       }
       double air = 0;
       event.setCanceled(true);
-      EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
+      PlayerEntity player = (PlayerEntity) mc.getRenderViewEntity();
 
       //double air = divingAttributes.getCapability(DivingAttributesProvider.DIVING,null);
       double maxAir = 3;
@@ -82,7 +82,7 @@ public class BetterDivingRenderer {
       GlStateManager.color(1, 1, 1, 1);
 
       mc.getTextureManager().bindTexture(ICON_VANILLA);
-      GuiIngameForge.left_height += 10;
+      ForgeIngameGui.left_height += 10;
 
       if (general.displayIcons) {
         //Draw air icon

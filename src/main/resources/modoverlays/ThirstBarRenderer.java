@@ -1,12 +1,12 @@
 package tfar.classicbar.overlays.modoverlays;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.client.ForgeIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import tfar.classicbar.Color;
 import toughasnails.api.TANCapabilities;
 import toughasnails.api.TANPotions;
@@ -35,8 +35,8 @@ public class ThirstBarRenderer {
         if (//event.getType() != RenderGameOverlayEvent.ElementType.AIR ||
                 event.isCanceled() ||
              !SyncedConfig.getBooleanValue(GameplayOption.ENABLE_THIRST) ||
-                 !(renderViewEntity instanceof EntityPlayer)) return;
-        EntityPlayer player = (EntityPlayer) renderViewEntity;
+                 !(renderViewEntity instanceof PlayerEntity)) return;
+        PlayerEntity player = (PlayerEntity) renderViewEntity;
         if (player.capabilities.isCreativeMode)return;
         ThirstHandler thirstStats = (ThirstHandler)player.getCapability(TANCapabilities.THIRST, null);
         double thirst = thirstStats.getThirst();
@@ -102,7 +102,7 @@ public class ThirstBarRenderer {
         Color.reset();
 
         mc.getTextureManager().bindTexture(OVERLAY);
-        GuiIngameForge.left_height += 10;
+        ForgeIngameGui.left_height += 10;
 
         if (general.displayIcons) {
             //Draw thirst icon

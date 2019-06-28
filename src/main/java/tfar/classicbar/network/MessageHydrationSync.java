@@ -1,8 +1,8 @@
-package tfar.classicbar.network;
+/*package tfar.classicbar.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -36,9 +36,10 @@ public class MessageHydrationSync implements IMessage, IMessageHandler<MessageHy
     public IMessage onMessage(final MessageHydrationSync message, final MessageContext ctx)
     {
         // defer to the next game loop; we can't guarantee that Minecraft.thePlayer is initialized yet
-        EntityPlayer player = NetworkHelper.getSidedPlayer(ctx);
+        PlayerEntity player = NetworkHelper.getSidedPlayer(ctx);
         ThirstHandler thirstHandler = ToughAsNailsHelper.getHandler(player);
         Minecraft.getMinecraft().addScheduledTask(() -> thirstHandler.setHydration(message.hydrationLevel));
         return null;
     }
 }
+*/

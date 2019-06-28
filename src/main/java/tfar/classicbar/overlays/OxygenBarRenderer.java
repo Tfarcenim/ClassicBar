@@ -1,15 +1,15 @@
 package tfar.classicbar.overlays;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.client.ForgeIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import tfar.classicbar.Color;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
@@ -21,7 +21,7 @@ import static tfar.classicbar.ModUtils.*;
  */
 
 public class OxygenBarRenderer {
-  private final Minecraft mc = Minecraft.getMinecraft();
+  private final Minecraft mc = Minecraft.getInstance();
 
   public OxygenBarRenderer() {
   }
@@ -32,22 +32,22 @@ public class OxygenBarRenderer {
     Entity renderViewEntity = mc.getRenderViewEntity();
     if (event.getType() != RenderGameOverlayEvent.ElementType.AIR
             || event.isCanceled()
-            || !(renderViewEntity instanceof EntityPlayer)) return;
+            || !(renderViewEntity instanceof PlayerEntity)) return;
     event.setCanceled(true);
-    EntityPlayer player = (EntityPlayer) renderViewEntity;
+    PlayerEntity player = (PlayerEntity) renderViewEntity;
     int air = player.getAir();
     if (air >= 300) return;
-    int scaledWidth = event.getResolution().getScaledWidth();
-    int scaledHeight = event.getResolution().getScaledHeight();
+    int scaledWidth = mc.mainWindow.getScaledWidth();
+    int scaledHeight = mc.mainWindow.getScaledHeight();
     //Push to avoid lasting changes
 
     int xStart = scaledWidth / 2 + 10;
     int yStart = scaledHeight - 49;
-    if (general.overlays.displayToughnessBar && player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue() >= 1)
+    if (general.overlays.displayToughnessBar && player.getAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getValue() >= 1)
       yStart -= 10;
-    if (Loader.isModLoaded("toughasnails")) yStart -= 10;
+    if (ModList.get().isLoaded("toughasnails")) yStart -= 10;
 
-    mc.profiler.startSection("air");
+    mc.getProfiler().startSection("air");
     GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
 
@@ -58,7 +58,7 @@ public class OxygenBarRenderer {
 
     //draw portion of bar based on air amount
 
-    float f = xStart + 79 - getWidth(air, 300);
+    int f = xStart + 79 - getWidth(air, 300);
     hex2Color(colors.oxygenBarColor).color2Gl();
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(air, 300), 7);
 
@@ -72,7 +72,7 @@ public class OxygenBarRenderer {
     //Reset back to normal settings
     Color.reset();
     mc.getTextureManager().bindTexture(ICON_VANILLA);
-    GuiIngameForge.left_height += 10;
+    ForgeIngameGui.left_height += 10;
     if (general.displayIcons) {
       //Draw air icon
       drawTexturedModalRect(xStart + 82, yStart, 16, 18, 9, 9);
@@ -80,7 +80,7 @@ public class OxygenBarRenderer {
     GlStateManager.disableBlend();
     //Revert our state back
     GlStateManager.popMatrix();
-    mc.profiler.endSection();
+    mc.getProfiler().endSection();
     event.setCanceled(true);
   }
 

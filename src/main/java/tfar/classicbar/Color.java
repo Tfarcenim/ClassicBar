@@ -1,6 +1,6 @@
 package tfar.classicbar;
 
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 
 public class Color {
     public final int r, g, b;
@@ -16,7 +16,7 @@ public class Color {
         float r = this.r / 255f;
         float g = this.g / 255f;
         float b = this.b / 255f;
-        GlStateManager.color(r, g, b);
+        GlStateManager.color3f(r, g, b);
     }
     public Color colorBlend(Color c2, double d) {
         int r = (int) Math.floor(this.r * (1 - d) + c2.r * d);
@@ -32,9 +32,9 @@ public class Color {
         float r = this.r / 255f;
         float g = this.g / 255f;
         float b = this.b / 255f;
-        GlStateManager.color(r, g, b, a);
+        GlStateManager.color4f(r, g, b, a);
     }
     public static void reset(){
-        GlStateManager.color(1,1,1);
+        GlStateManager.color4f(1,1,1,1);
     }
 }

@@ -1,19 +1,17 @@
 package tfar.classicbar.overlays;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemFood;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Food;
+import net.minecraft.potion.Effects;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraftforge.client.ForgeIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import tfar.classicbar.ClassicBar;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import tfar.classicbar.Color;
-import tfar.classicbar.compat.IblisHelper;
 
 
 import static tfar.classicbar.ColorUtils.*;
@@ -28,7 +26,7 @@ public class HungerBarRenderer {
 
   private float alpha = 0;
   private boolean increase = true;
-  private final Minecraft mc = Minecraft.getMinecraft();
+  private final Minecraft mc = Minecraft.getInstance();
 
   public HungerBarRenderer() {
   }
@@ -36,25 +34,27 @@ public class HungerBarRenderer {
   @SubscribeEvent(priority = EventPriority.LOW)
   public void renderHungerBar(RenderGameOverlayEvent.Pre event) {
     Entity renderViewEntity = mc.getRenderViewEntity();
-    if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD || !(renderViewEntity instanceof EntityPlayer)
+    if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD || !(renderViewEntity instanceof PlayerEntity)
             ||event.isCanceled()) return;
-    EntityPlayer player = (EntityPlayer) renderViewEntity;
+    PlayerEntity player = (PlayerEntity) renderViewEntity;
     event.setCanceled(true);
     if (player.getRidingEntity() != null)return;
     double hunger = player.getFoodStats().getFoodLevel();
-    double maxHunger = ClassicBar.IBLIS ? IblisHelper.getMaxHunger(player) : 20;
+    //double maxHunger = ClassicBar.IBLIS ? IblisHelper.getMaxHunger(player) : 20;
+    double maxHunger = 20;
     double currentSat = player.getFoodStats().getSaturationLevel();
     float exhaustion = getExhaustion(player);
-    int scaledWidth = event.getResolution().getScaledWidth();
-    int scaledHeight = event.getResolution().getScaledHeight();
+    System.out.println(exhaustion);
+    int scaledWidth = mc.mainWindow.getScaledWidth();
+    int scaledHeight = mc.mainWindow.getScaledHeight();
     //Push to avoid lasting changes
     int xStart = scaledWidth / 2 + 10;
     int yStart = scaledHeight - 39;
 
-    mc.profiler.startSection("hunger");
+    mc.getProfiler().startSection("hunger");
     GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
-    float alpha2 = hunger / maxHunger <= general.overlays.lowHungerThreshold && general.overlays.lowHungerWarning ? (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
+    float alpha2 = hunger / maxHunger <= general.overlays.lowHungerThreshold && general.overlays.lowHungerWarning ? (int) (System.currentTimeMillis() / 250) % 2 : 1;
 
     //Bind our Custom bar
     mc.getTextureManager().bindTexture(ICON_BAR);
@@ -63,9 +63,9 @@ public class HungerBarRenderer {
     drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
     //draw portion of bar based on hunger amount
-    float f = xStart + 79 - getWidth(hunger, maxHunger);
+    int f = xStart + 79 - getWidth(hunger, maxHunger);
 
-    boolean flag = player.isPotionActive(MobEffects.HUNGER);
+    boolean flag = player.isPotionActive(Effects.HUNGER);
 
     hex2Color(flag ?  colors.hungerBarDebuffColor :colors.hungerBarColor).color2Gla(alpha2);
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(hunger, maxHunger), 7);
@@ -81,15 +81,15 @@ public class HungerBarRenderer {
     //render held hunger overlay
 
     if (general.overlays.hunger.showHeldFoodOverlay &&
-            player.getHeldItemMainhand().getItem() instanceof ItemFood ){
+            player.getHeldItemMainhand().getItem().isFood() ){
       ItemStack stack = player.getHeldItemMainhand();
       if (increase)alpha+=general.overlays.hunger.transitionSpeed;
       else alpha-=general.overlays.hunger.transitionSpeed;
       if (alpha>=1)increase = false;
       else if (alpha<=0) increase = true;
-      ItemFood foodItem = ((ItemFood) stack.getItem());
-      double hungerOverlay = foodItem.getHealAmount(stack);
-      double saturationMultiplier = foodItem.getSaturationModifier(stack);
+      Food food = stack.getItem().getFood();
+      double hungerOverlay = food.getHealing();
+      double saturationMultiplier = food.getSaturation();
       double potentialSat = 2*hungerOverlay*saturationMultiplier;
 
 
@@ -128,7 +128,7 @@ public class HungerBarRenderer {
       exhaustion = Math.min(exhaustion,4);
       f = xStart - getWidth(exhaustion, 4) + 80;
       //draw exhaustion
-      GlStateManager.color(1, 1, 1, .25f);
+      GlStateManager.color4f(1, 1, 1, .25f);
       drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(exhaustion, 4f), 9);
     }
 
@@ -144,7 +144,7 @@ public class HungerBarRenderer {
     Color.reset();
 
     mc.getTextureManager().bindTexture(ICON_VANILLA);
-    GuiIngameForge.left_height += 10;
+    ForgeIngameGui.left_height += 10;
 
     if (general.displayIcons) {
 
@@ -161,7 +161,7 @@ public class HungerBarRenderer {
     GlStateManager.disableBlend();
     //Revert our state back
     GlStateManager.popMatrix();
-    mc.profiler.endSection();
+    mc.getProfiler().endSection();
     event.setCanceled(true);
   }
 }

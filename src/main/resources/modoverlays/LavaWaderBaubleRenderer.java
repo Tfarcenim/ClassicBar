@@ -1,20 +1,20 @@
 package tfar.classicbar.overlays.modoverlays;
 
 import baubles.api.BaublesApi;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraftforge.client.ForgeIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import tfar.classicbar.Color;
 
@@ -37,15 +37,15 @@ public class LavaWaderBaubleRenderer {
 
     Entity renderViewEnity = mc.getRenderViewEntity();
     if (event.isCanceled()
-            || !(renderViewEnity instanceof EntityPlayer)) {
+            || !(renderViewEnity instanceof PlayerEntity)) {
       return;
     }
-    EntityPlayer player = (EntityPlayer) renderViewEnity;
+    PlayerEntity player = (PlayerEntity) renderViewEnity;
     if (player.capabilities.isCreativeMode) return;
     int i1 = BaublesApi.isBaubleEquipped(player, LavaWaderBauble);
     if (i1 == -1) return;
     ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
-    NBTTagCompound nbt = stack.getTagCompound();
+    CompoundNBT nbt = stack.getTagCompound();
     if (nbt == null) {
       System.out.println("error");
       return;
@@ -94,7 +94,7 @@ public class LavaWaderBaubleRenderer {
 
     mc.getTextureManager().bindTexture(ICON_VANILLA);
 
-    GuiIngameForge.left_height += 10;
+    ForgeIngameGui.left_height += 10;
     //GlStateManager.disableBlend();
     //Revert our state back
     //GlStateManager.popMatrix();

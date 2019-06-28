@@ -1,16 +1,16 @@
 package tfar.classicbar.overlays;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.client.ForgeIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import tfar.classicbar.Color;
 
 import static tfar.classicbar.ColorUtils.calculateScaledColor;
@@ -22,7 +22,7 @@ import static tfar.classicbar.ModUtils.*;
  */
 
 public class HealthBarMountRenderer {
-  private final Minecraft mc = Minecraft.getMinecraft();
+  private final Minecraft mc = Minecraft.getInstance();
 
   private int updateCounter = 0;
   private double mountHealth = 0;
@@ -40,27 +40,27 @@ public class HealthBarMountRenderer {
     Entity renderViewEnity = this.mc.getRenderViewEntity();
     if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTHMOUNT
             || event.isCanceled()
-            || !(renderViewEnity instanceof EntityPlayer)) return;
-    int scaledWidth = event.getResolution().getScaledWidth();
-    int scaledHeight = event.getResolution().getScaledHeight();
+            || !(renderViewEnity instanceof PlayerEntity)) return;
+    int scaledWidth = mc.mainWindow.getScaledWidth();
+    int scaledHeight = mc.mainWindow.getScaledHeight();
     //Push to avoid lasting changes
 
-    updateCounter = mc.ingameGUI.getUpdateCounter();
-    EntityPlayer player = (EntityPlayer) renderViewEnity;
-    if (!(player.getRidingEntity() instanceof EntityLivingBase)) return;
+    updateCounter = mc.ingameGUI.getTicks();
+    PlayerEntity player = (PlayerEntity) renderViewEnity;
+    if (!(player.getRidingEntity() instanceof LivingEntity)) return;
 
-    EntityLivingBase mount = (EntityLivingBase) player.getRidingEntity();
-    if (mount.isDead) return;
+    LivingEntity mount = (LivingEntity) player.getRidingEntity();
+    if (!mount.isAlive()) return;
     event.setCanceled(true);
     double mountHealth = mount.getHealth();
 
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3L % 2L == 1L;
 
     if (mountHealth < this.mountHealth && player.hurtResistantTime > 0) {
-      lastSystemTime = Minecraft.getSystemTime();
+      lastSystemTime =System.currentTimeMillis();
       healthUpdateCounter = (long) (updateCounter + 20);
     } else if (mountHealth > this.mountHealth && player.hurtResistantTime > 0) {
-      lastSystemTime = Minecraft.getSystemTime();
+      lastSystemTime = System.currentTimeMillis();
       healthUpdateCounter = (long) (updateCounter + 10);
     }
     if (mountHealth != this.mountHealth || forceUpdateIcons) {
@@ -68,12 +68,12 @@ public class HealthBarMountRenderer {
     }
 
     this.mountHealth = mountHealth;
-    IAttributeInstance maxHealthAttribute = mount.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
+    IAttributeInstance maxHealthAttribute = mount.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
     int xStart = scaledWidth / 2 + 10;
     int yStart = scaledHeight - 39;
-    double maxHealth = maxHealthAttribute.getAttributeValue();
+    double maxHealth = maxHealthAttribute.getValue();
 
-    mc.profiler.startSection("mountHealth");
+    mc.getProfiler().startSection("mountHealth");
     GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
     int i4 = (highlight) ? 18 : 0;
@@ -89,7 +89,7 @@ public class HealthBarMountRenderer {
 
     //calculate bar color
     calculateScaledColor(mountHealth, maxHealth, 16).color2Gl();
-    float f = xStart + 79 - getWidth(mountHealth, maxHealth);
+    int f = xStart + 79 - getWidth(mountHealth, maxHealth);
     //draw portion of bar based on mountHealth remaining
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
     //draw mountHealth amount
@@ -103,7 +103,7 @@ public class HealthBarMountRenderer {
     Color.reset();
 
     mc.getTextureManager().bindTexture(ICON_VANILLA);
-    GuiIngameForge.left_height += 10;
+    ForgeIngameGui.left_height += 10;
 
     if (general.displayIcons) {
       //Draw mountHealth icon
@@ -119,7 +119,7 @@ public class HealthBarMountRenderer {
     GlStateManager.disableBlend();
     //Revert our state back
     GlStateManager.popMatrix();
-    mc.profiler.endSection();
+    mc.getProfiler().endSection();
     event.setCanceled(true);
   }
 

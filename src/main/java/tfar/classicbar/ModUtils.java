@@ -2,8 +2,8 @@ package tfar.classicbar;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -16,17 +16,17 @@ public class ModUtils {
 
   public static final int leftTextOffset = -5;
 
-  public static final ResourceLocation ICON_VANILLA = Gui.ICONS;
+  public static final ResourceLocation ICON_VANILLA = AbstractGui.GUI_ICONS_LOCATION;
   public static ResourceLocation ICON_BAR = getTexture(ModConfig.general.style);
-  public static final Minecraft mc = Minecraft.getMinecraft();
+  public static final Minecraft mc = Minecraft.getInstance();
   private static final FontRenderer fontRenderer = mc.fontRenderer;
 
   public static ResourceLocation getTexture(int i) {
     return new ResourceLocation(ClassicBar.MODID, "textures/gui/health" + i + ".png");
   }
 
-  public static void drawTexturedModalRect(float x, float y, int textureX, int textureY, int width, int height) {
-    Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(x, y, textureX, textureY, width, height);
+  public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
+    mc.ingameGUI.blit(x, y, textureX, textureY, width, height);
   }
 
   public static int getWidth(double d1, double d2) {
@@ -39,7 +39,7 @@ public class ModUtils {
     return fontRenderer.getStringWidth(s);
   }
 
-  public static void drawScaledBar(double absorb, double maxHealth, float x, float y, boolean left) {
+  public static void drawScaledBar(double absorb, double maxHealth, int x, int y, boolean left) {
     int i = getWidth(absorb, maxHealth);
 
     if (left) {
@@ -65,14 +65,14 @@ public class ModUtils {
     xOffset += 2;
     yOffset += 2;
 
-    fontRenderer.drawString(string, xOffset, yOffset, color, true);
+    fontRenderer.drawStringWithShadow(string, xOffset, yOffset, color);
   }
 
-  public static float getExhaustion(EntityPlayer player) {
+  public static float getExhaustion(PlayerEntity player) {
     return ObfuscationReflectionHelper.getPrivateValue(FoodStats.class, player.getFoodStats(), "field_75126_c");
   }
 
-  public static void setExhaustion(EntityPlayer player, float exhaustion) {
+  public static void setExhaustion(PlayerEntity player, float exhaustion) {
     ObfuscationReflectionHelper.setPrivateValue(FoodStats.class, player.getFoodStats(), exhaustion, "field_75126_c");
   }
 }

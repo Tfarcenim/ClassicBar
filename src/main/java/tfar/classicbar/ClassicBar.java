@@ -1,104 +1,98 @@
 package tfar.classicbar;
 
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
-import net.minecraftforge.fml.common.eventhandler.IEventListener;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.eventbus.EventBus;
+import net.minecraftforge.eventbus.api.IEventListener;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import org.apache.logging.log4j.LogManager;
 import tfar.classicbar.config.ModConfig;
+import tfar.classicbar.network.Message;
 import tfar.classicbar.network.SyncHandler;
 import tfar.classicbar.overlays.*;
-import tfar.classicbar.overlays.modoverlays.*;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Arrays.stream;
 import static tfar.classicbar.config.ModConfig.general;
 
-@Mod.EventBusSubscriber(Side.CLIENT)
-@Mod(modid = ClassicBar.MODID, name = ClassicBar.MODNAME, version = ClassicBar.MODVERSION, useMetadata = true, clientSideOnly = true)
+@Mod(value = ClassicBar.MODID)
 public class ClassicBar {
 
   public static final String MODID = "classicbar";
-  public static final String MODNAME = "Classic Bar";
-  public static final String MODVERSION = "@VERSION@";
   public static final String[] problemMods = new String[]{"mantle", "toughasnails"};
 
-  public static final boolean TOUGHASNAILS = Loader.isModLoaded("toughasnails");
-  public static final boolean IBLIS = Loader.isModLoaded("iblis");
-  public static final boolean BAUBLES = Loader.isModLoaded("baubles");
+//  public static final boolean TOUGHASNAILS = ModList.get().isLoaded("toughasnails");
+ // public static final boolean IBLIS = ModList.get().isLoaded("iblis");
+  public static boolean BAUBLES;
 
-  public static Logger logger;
+  public static Logger logger = LogManager.getLogger();
 
-  @Mod.EventHandler
-  public void preInit(FMLPreInitializationEvent event) {
-    logger = event.getModLog();
-  }
+  @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+  public static class Setup {
 
-  @Mod.EventHandler
-  public void init(FMLInitializationEvent event) {
-    SyncHandler.init();
-  }
+    @SubscribeEvent
+    public static void postInit(FMLCommonSetupEvent event) {
+      BAUBLES = ModList.get().isLoaded("baubles");
+      Message.registerMessages(MODID);
 
-  @Mod.EventHandler
-  public void postInit(FMLPostInitializationEvent event) {
+      MinecraftForge.EVENT_BUS.register(new SyncHandler());
+      MinecraftForge.EVENT_BUS.register(new ModConfig.ConfigEventHandler());
+      //Register renderers for events
+      ClassicBar.logger.info("Registering Vanilla Overlays");
+      MinecraftForge.EVENT_BUS.register(new HealthBarRenderer());
+      MinecraftForge.EVENT_BUS.register(new HealthBarMountRenderer());
+      MinecraftForge.EVENT_BUS.register(new ArmorBarRenderer());
+      if (general.overlays.displayToughnessBar) MinecraftForge.EVENT_BUS.register(new ArmorToughnessBarRenderer());
+      MinecraftForge.EVENT_BUS.register(new HungerBarRenderer());
 
-    MinecraftForge.EVENT_BUS.register(new ModConfig.ConfigEventHandler());
-    //Register renderers for events
-    ClassicBar.logger.info("Registering Vanilla Overlays");
-    MinecraftForge.EVENT_BUS.register(new HealthBarRenderer());
-    MinecraftForge.EVENT_BUS.register(new HealthBarMountRenderer());
-    MinecraftForge.EVENT_BUS.register(new ArmorBarRenderer());
-    if (general.overlays.displayToughnessBar) MinecraftForge.EVENT_BUS.register(new ArmorToughnessBarRenderer());
-    MinecraftForge.EVENT_BUS.register(new HungerBarRenderer());
+      //mod renderers
+      ClassicBar.logger.info("Registering Mod Overlays");
+      // if (ModList.get().isLoaded("randomthings")) MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
+      if (ModList.get().isLoaded("lavawaderbauble")) {
+        //  MinecraftForge.EVENT_BUS.register(new LavaWaderBaubleRenderer());
+      }
 
-    //mod renderers
-    ClassicBar.logger.info("Registering Mod Overlays");
-    if (Loader.isModLoaded("randomthings")) MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
-    if (Loader.isModLoaded("lavawaderbauble")) {
-      MinecraftForge.EVENT_BUS.register(new LavaWaderBaubleRenderer());
-    }
+      //if (ModList.get().isLoaded("superiorshields"))
+      //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
+      if (ModList.get().isLoaded("toughasnails"))
+        //     MinecraftForge.EVENT_BUS.register(new ThirstBarRenderer());
+        //MinecraftForge.EVENT_BUS.register(new BetterDivingRenderer());
+        MinecraftForge.EVENT_BUS.register(new OxygenBarRenderer());
+      //  if (ModList.get().isLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
 
-    //if (Loader.isModLoaded("superiorshields"))
-    //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
-    if (Loader.isModLoaded("toughasnails"))
-      MinecraftForge.EVENT_BUS.register(new ThirstBarRenderer());
-  //MinecraftForge.EVENT_BUS.register(new BetterDivingRenderer());
-    MinecraftForge.EVENT_BUS.register(new OxygenBarRenderer());
-    if (Loader.isModLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
+      boolean areProblemModsPresent = stream(problemMods).anyMatch(ModList.get()::isLoaded);
+      if (areProblemModsPresent) {
+        logger.info("Unregistering problematic overlays.");
+        ConcurrentHashMap<Object, List<IEventListener>> listeners;
+        try {
+          Field f = EventBus.class.getDeclaredField("listeners");
+          f.setAccessible(true);
+          listeners = (ConcurrentHashMap<Object, List<IEventListener>>) f.get(MinecraftForge.EVENT_BUS);
+          for (Map.Entry<Object, List<IEventListener>> entry : listeners.entrySet()) {
+            String s = entry.getKey().getClass().getCanonicalName();
+            //System.out.println(s);
+            //System.out.println(entry);
 
-    boolean areProblemModsPresent = stream(problemMods).anyMatch(Loader::isModLoaded);
-    if (areProblemModsPresent) {
-      logger.info("Unregistering problematic overlays.");
-      ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners;
-      try {
-        Field f = EventBus.class.getDeclaredField("listeners");
-        f.setAccessible(true);
-        listeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>) f.get(MinecraftForge.EVENT_BUS);
-        for (Map.Entry<Object, ArrayList<IEventListener>> entry : listeners.entrySet()) {
-          String s = entry.getKey().getClass().getCanonicalName();
-          //System.out.println(s);
-          //System.out.println(entry);
-
-          if ("slimeknights.mantle.client.ExtraHeartRenderHandler".equals(s)) {
-            logger.info("Unregistered Mantle bar");
-            MinecraftForge.EVENT_BUS.unregister(entry.getKey());
+            if ("slimeknights.mantle.client.ExtraHeartRenderHandler".equals(s)) {
+              logger.info("Unregistered Mantle bar");
+              MinecraftForge.EVENT_BUS.unregister(entry.getKey());
+            }
+            if ("toughasnails.handler.thirst.ThirstOverlayHandler".equals(s)) {
+              logger.info("Unregistered Thirst bar");
+              MinecraftForge.EVENT_BUS.unregister(entry.getKey());
+            }
           }
-          if ("toughasnails.handler.thirst.ThirstOverlayHandler".equals(s)) {
-            logger.info("Unregistered Thirst bar");
-            MinecraftForge.EVENT_BUS.unregister(entry.getKey());
-          }
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+          e.printStackTrace();
         }
-      } catch (IllegalAccessException | NoSuchFieldException e) {
-        e.printStackTrace();
       }
     }
   }

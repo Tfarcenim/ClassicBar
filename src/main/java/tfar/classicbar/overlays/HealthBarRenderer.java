@@ -1,16 +1,16 @@
 package tfar.classicbar.overlays;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.Effects;
+import net.minecraftforge.client.ForgeIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import tfar.classicbar.Color;
 
 import static tfar.classicbar.ColorUtils.*;
@@ -22,7 +22,7 @@ import static tfar.classicbar.ModUtils.*;
  */
 
 public class HealthBarRenderer {
-  private final Minecraft mc = Minecraft.getMinecraft();
+  private final Minecraft mc = Minecraft.getInstance();
 
   private int updateCounter = 0;
   private double playerHealth = 0;
@@ -41,16 +41,16 @@ public class HealthBarRenderer {
     Entity renderViewEntity = mc.getRenderViewEntity();
     if (event.getType() != RenderGameOverlayEvent.ElementType.HEALTH
             || event.isCanceled()
-            || !(renderViewEntity instanceof EntityPlayer)) return;
-    int scaledWidth = event.getResolution().getScaledWidth();
-    int scaledHeight = event.getResolution().getScaledHeight();
+            || !(renderViewEntity instanceof PlayerEntity)) return;
+    int scaledWidth = mc.mainWindow.getScaledWidth();
+    int scaledHeight = mc.mainWindow.getScaledHeight();
     //Push to avoid lasting changes
     ;
     event.setCanceled(true);
 
-    updateCounter = mc.ingameGUI.getUpdateCounter();
+    updateCounter = mc.ingameGUI.getTicks();
 
-    EntityPlayer player = (EntityPlayer) renderViewEntity;
+    PlayerEntity player = (PlayerEntity) renderViewEntity;
     double health = player.getHealth();
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
 
@@ -69,18 +69,18 @@ public class HealthBarRenderer {
     playerHealth = health;
     displayHealth = health + (lastPlayerHealth - health) * ((double) player.hurtResistantTime / player.maxHurtResistantTime);
 
-    IAttributeInstance maxHealthAttribute = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
+    IAttributeInstance maxHealthAttribute = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
     int xStart = scaledWidth / 2 - 91;
     int yStart = scaledHeight - 39;
-    double maxHealth = maxHealthAttribute.getAttributeValue();
+    double maxHealth = maxHealthAttribute.getValue();
 
-    mc.profiler.startSection("health");
+    mc.getProfiler().startSection("health");
     GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
     int k5 = 16;
 
-    if (player.isPotionActive(MobEffects.POISON)) k5 += 36;//evaluates to 52
-    else if (player.isPotionActive(MobEffects.WITHER)) k5 += 72;//evaluates to 88
+    if (player.isPotionActive(Effects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.isPotionActive(Effects.WITHER)) k5 += 72;//evaluates to 88
 
     int i4 = (highlight) ? 18 : 0;
 
@@ -92,12 +92,12 @@ public class HealthBarRenderer {
     //is the bar changing
     //Pass 1, draw bar portion
     alpha = health <= 0 ? 1 :health / maxHealth <= general.overlays.lowHealthThreshold && general.overlays.lowHealthWarning ?
-            (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
+            (int) (System.currentTimeMillis() / 250) % 2 : 1;
 
     //interpolate the bar
     if (displayHealth != health) {
       //reset to white
-      GlStateManager.color(1, 1, 1, alpha);
+      GlStateManager.color4f(1, 1, 1, alpha);
       if (displayHealth > health) {
         //draw interpolation
         drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(displayHealth, maxHealth), 7);
@@ -118,7 +118,7 @@ public class HealthBarRenderer {
 
     if (k5 == 52) {
       //draw poison overlay
-      GlStateManager.color(0, .5f, 0, .5f);
+      GlStateManager.color4f(0, .5f, 0, .5f);
       drawTexturedModalRect(xStart + 1, yStart + 1, 1, 36, getWidth(health, maxHealth), 7);
     }
     //draw absorption bar if it exists
@@ -225,13 +225,13 @@ public class HealthBarRenderer {
     Color.reset();
 
     mc.getTextureManager().bindTexture(ICON_VANILLA);
-    GuiIngameForge.left_height += 10;
+    ForgeIngameGui.left_height += 10;
     if (absorb > 0) {
-      GuiIngameForge.left_height += 10;
+      ForgeIngameGui.left_height += 10;
     }
 
     if (general.displayIcons) {
-      int i5 = (player.world.getWorldInfo().isHardcoreModeEnabled()) ? 5 : 0;
+      int i5 = (player.world.getWorldInfo().isHardcore()) ? 5 : 0;
       //Draw health icon
       //heart background
       drawTexturedModalRect(xStart - 10, yStart, 16, 9 * i5, 9, 9);
@@ -249,7 +249,7 @@ public class HealthBarRenderer {
     GlStateManager.disableBlend();
     //Revert our state back
     GlStateManager.popMatrix();
-    mc.profiler.endSection();
+    mc.getProfiler().endSection();
     event.setCanceled(true);
   }
 }

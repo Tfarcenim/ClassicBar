@@ -1,17 +1,18 @@
 package tfar.classicbar.overlays;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.common.ISpecialArmor;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import tfar.classicbar.Color;
+
+import java.util.Date;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.config.ModConfig.*;
@@ -23,10 +24,10 @@ import static tfar.classicbar.ModUtils.getStringLength;
  */
 
 public class ArmorBarRenderer {
-  private final Minecraft mc = Minecraft.getMinecraft();
+  private final Minecraft mc = Minecraft.getInstance();
   private float alpha = 1;
-  private static EntityEquipmentSlot[] list = new EntityEquipmentSlot[]{EntityEquipmentSlot.HEAD,
-          EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
+  private static EquipmentSlotType[] list = new EquipmentSlotType[]{EquipmentSlotType.HEAD,
+          EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET};
 
   public ArmorBarRenderer() {
   }
@@ -37,38 +38,38 @@ public class ArmorBarRenderer {
     Entity renderViewEntity = mc.getRenderViewEntity();
     if (event.getType() != RenderGameOverlayEvent.ElementType.ARMOR
             || event.isCanceled()
-            || !(renderViewEntity instanceof EntityPlayer)) {
+            || !(renderViewEntity instanceof PlayerEntity)) {
       return;
     }
     event.setCanceled(true);
-    EntityPlayer player = (EntityPlayer) renderViewEntity;
+    PlayerEntity player = (PlayerEntity) renderViewEntity;
     double armor = calculateArmorValue();
     if (armor < 1) return;
     boolean warning = false;
     int warningAmount = 0;
-    for (EntityEquipmentSlot slot : list) {
+    for (EquipmentSlotType slot : list) {
       if (!general.overlays.lowArmorWarning) break;
       ItemStack stack = player.getItemStackFromSlot(slot);
       int max = stack.getMaxDamage();
-      int current = stack.getItemDamage();
+      int current = stack.getDamage();
       int percentage = 100;
       if (max != 0) percentage = 100 * (max - current) / (max);
       if (percentage < 5) {
-        if (!(stack.getItem() instanceof ItemArmor)) continue;
+        if (!(stack.getItem() instanceof ArmorItem)) continue;
         warning = true;
-        warningAmount += ((ItemArmor) stack.getItem()).getArmorMaterial().getDamageReductionAmount(slot);
+        warningAmount += ((ArmorItem) stack.getItem()).getArmorMaterial().getDamageReductionAmount(slot);
       }
     }
-    int scaledWidth = event.getResolution().getScaledWidth();
-    int scaledHeight = event.getResolution().getScaledHeight();
+    int scaledWidth = mc.mainWindow.getScaledWidth();
+    int scaledHeight = mc.mainWindow.getScaledHeight();
     //Push to avoid lasting changes
-    if (warning && general.overlays.lowArmorWarning) alpha = (int) (Minecraft.getSystemTime() / 250) % 2;
+    if (warning && general.overlays.lowArmorWarning) alpha = (int) (System.currentTimeMillis() / 250) % 2;
     int absorb = MathHelper.ceil(player.getAbsorptionAmount());
     if (general.overlays.swap) absorb = 0;
     int xStart = scaledWidth / 2 - 91;
     int yStart = scaledHeight - 49;
     if (absorb > 0) yStart -= 10;
-    mc.profiler.startSection("armor");
+    mc.getProfiler().startSection("armor");
     GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
 
@@ -147,19 +148,19 @@ public class ArmorBarRenderer {
     GlStateManager.disableBlend();
     //Revert our state back
     GlStateManager.popMatrix();
-    mc.profiler.endSection();
+    mc.getProfiler().endSection();
     event.setCanceled(true);
   }
 
   private int calculateArmorValue() {
     int currentArmorValue = mc.player.getTotalArmorValue();
 
-    for (ItemStack itemStack : mc.player.getArmorInventoryList()) {
+   /* for (ItemStack itemStack : mc.player.getArmorInventoryList()) {
       if (itemStack.getItem() instanceof ISpecialArmor) {
         ISpecialArmor specialArmor = (ISpecialArmor) itemStack.getItem();
         currentArmorValue += specialArmor.getArmorDisplay(mc.player, itemStack, 0);
       }
     }
-    return currentArmorValue;
+    */return currentArmorValue;
   }
 }
