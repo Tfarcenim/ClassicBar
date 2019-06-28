@@ -44,7 +44,6 @@ public class HungerBarRenderer {
     double maxHunger = 20;
     double currentSat = player.getFoodStats().getSaturationLevel();
     float exhaustion = getExhaustion(player);
-    System.out.println(exhaustion);
     int scaledWidth = mc.mainWindow.getScaledWidth();
     int scaledHeight = mc.mainWindow.getScaledHeight();
     //Push to avoid lasting changes
