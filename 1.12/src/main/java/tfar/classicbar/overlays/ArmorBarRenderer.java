@@ -53,7 +53,7 @@ public class ArmorBarRenderer {
       int current = stack.getItemDamage();
       int percentage = 100;
       if (max != 0) percentage = 100 * (max - current) / (max);
-      if (percentage < 90) {
+      if (percentage < 5) {
         if (!(stack.getItem() instanceof ItemArmor)) continue;
         warning = true;
         warningAmount += ((ItemArmor) stack.getItem()).getArmorMaterial().getDamageReductionAmount(slot);

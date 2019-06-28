@@ -93,11 +93,6 @@ public class HealthBarRenderer {
     //Pass 1, draw bar portion
     alpha = health <= 0 ? 1 :health / maxHealth <= general.overlays.lowHealthThreshold && general.overlays.lowHealthWarning ?
             (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
-    //calculate bar color
-
-    calculateScaledColor(health, maxHealth, k5).color2Gla(alpha);
-    //draw portion of bar based on health remaining
-    drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
 
     //interpolate the bar
     if (displayHealth != health) {
@@ -112,6 +107,14 @@ public class HealthBarRenderer {
                 drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(health - displayHealth, maxHealth), 7, general.style, true, true);*/
       }
     }
+
+    //calculate bar color
+
+    calculateScaledColor(health, maxHealth, k5).color2Gla(alpha);
+    //draw portion of bar based on health remaining
+    drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
+
+
 
     if (k5 == 52) {
       //draw poison overlay
