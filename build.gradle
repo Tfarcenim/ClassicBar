@@ -21,7 +21,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2814"
+    version = "1.12.2-14.23.5.2838"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -89,12 +89,5 @@ processResources {
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
-    }
-    jar {
-
-        manifest {
-
-            attributes 'FMLAT': 'MODID_at.cfg'
-        }
     }
 }
