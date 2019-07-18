@@ -9,7 +9,6 @@ import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.Color;
@@ -33,7 +32,7 @@ public class HungerBarRenderer {
   public HungerBarRenderer() {
   }
 
-  @SubscribeEvent(priority = EventPriority.LOW)
+  @SubscribeEvent
   public void renderHungerBar(RenderGameOverlayEvent.Pre event) {
     Entity renderViewEntity = mc.getRenderViewEntity();
     if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD || !(renderViewEntity instanceof EntityPlayer)
@@ -138,7 +137,7 @@ public class HungerBarRenderer {
     int i3 = general.displayIcons ? 1 : 0;
     if (numbers.showPercent) h1 = (int) hunger * 5;
     int c = Integer.decode(flag ? colors.hungerBarDebuffColor :colors.hungerBarColor);
-    drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
+    if (numbers.showHungerNumbers)drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
 
     //Reset back to normal settings
     Color.reset();

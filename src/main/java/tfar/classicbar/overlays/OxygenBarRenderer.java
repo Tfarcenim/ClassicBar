@@ -68,7 +68,8 @@ public class OxygenBarRenderer {
     int c = Integer.decode(colors.oxygenBarColor);
     int i3 = general.displayIcons ? 1 : 0;
     if (numbers.showPercent) h1 = air / 3;
-    drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
+    if (numbers.showOxygenNumbers)
+      drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
     //Reset back to normal settings
     Color.reset();
     mc.getTextureManager().bindTexture(ICON_VANILLA);

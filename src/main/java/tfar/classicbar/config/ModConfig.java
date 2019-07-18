@@ -101,13 +101,40 @@ public class ModConfig {
     }
 
     public static class ConfigNumbers {
+
+        private static final String s = "Show Numbers For ";
+
         @Config.Name("Percentage based")
         public boolean showPercent = false;
 
         @Config.Comment("Numbers info")
 
-        @Config.Name("Show Numbers")
-        public boolean showNumbers = true;
+        @Config.Name(s+"Health")
+        public boolean showHealthNumbers = true;
+
+        @Config.Name(s+"Lava")
+        public boolean showLavaNumbers = true;
+
+        @Config.Name(s+"Hunger")
+        public boolean showHungerNumbers = true;
+
+        @Config.Name(s+"Thirst")
+        public boolean showThirstNumbers = true;
+
+        @Config.Name(s+"Tiara")
+        public boolean showTiaraNumbers = true;
+
+        @Config.Name(s+"Armor Toughness")
+        public boolean showArmorToughnessNumbers = true;
+
+        @Config.Name(s+"Armor")
+        public boolean showArmorNumbers = true;
+
+        @Config.Name(s+"Mount Health")
+        public boolean showMountHealthNumbers;
+
+        @Config.Name(s+"Oxygen Bar")
+        public boolean showOxygenNumbers;
 
         @Config.Name("Numbers scale")
         @Config.Comment("unused")

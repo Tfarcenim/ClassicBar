@@ -97,7 +97,7 @@ public class HealthBarMountRenderer {
 
     int i3 = general.displayIcons ? 1 : 0;
     if (numbers.showPercent) h1 = (int) (100 * mountHealth / maxHealth);
-    drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, calculateScaledColor(mountHealth, maxHealth, 16).colorToText());
+    if (numbers.showMountHealthNumbers)drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, calculateScaledColor(mountHealth, maxHealth, 16).colorToText());
 
     //Reset back to normal settings
     Color.reset();

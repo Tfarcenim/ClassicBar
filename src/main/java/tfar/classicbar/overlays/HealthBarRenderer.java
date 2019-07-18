@@ -219,7 +219,7 @@ public class HealthBarRenderer {
     if (numbers.showPercent) h1 = (int) (100 * health / maxHealth);
     int i1 = getStringLength(h1 + "");
 
-    drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth, k5).colorToText());
+    if (numbers.showHealthNumbers)drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth, k5).colorToText());
 
     //Reset back to normal settings
     Color.reset();

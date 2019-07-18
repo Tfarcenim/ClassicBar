@@ -8,4 +8,7 @@ public class IblisHelper {
   public static double getMaxHunger(EntityPlayer player){
     return MathHelper.floor(PlayerCharacteristics.GLUTTONY.getCurrentValue(player));
   }
+  public static double getCurrentHunger(EntityPlayer player){
+    return player.getFoodStats().getFoodLevel();
+  }
 }

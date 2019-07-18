@@ -132,7 +132,7 @@ public class ArmorBarRenderer {
     int c = Integer.decode(colors.advancedColors.armorColorValues[index]);
     if (numbers.showPercent) i1 = (int) (armor + warningAmount) * 5;
     int i2 = getStringLength(i1 + "");
-    drawStringOnHUD(i1 + "", xStart - 9 * i3 - i2 + leftTextOffset, yStart - 1, c);
+    if (numbers.showArmorNumbers)drawStringOnHUD(i1 + "", xStart - 9 * i3 - i2 + leftTextOffset, yStart - 1, c);
     //Reset back to normal settings
 
     Color.reset();

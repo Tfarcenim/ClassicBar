@@ -52,7 +52,6 @@ public class ModUtils {
   }
 
   public static void drawStringOnHUD(String string, int xOffset, int yOffset, int color) {
-    if (!numbers.showNumbers) return;
    /* double scale = numbers.numberScale;
     GlStateManager.pushMatrix();
     GlStateManager.scale(scale, scale, 1);

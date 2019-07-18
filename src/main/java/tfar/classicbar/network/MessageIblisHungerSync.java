@@ -7,34 +7,34 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import tfar.classicbar.ClassicBar;
 
-public class MessageSaturationSync implements IMessage, IMessageHandler<MessageSaturationSync, IMessage>
+public class MessageIblisHungerSync implements IMessage, IMessageHandler<MessageIblisHungerSync, IMessage>
 {
-    private float saturationLevel;
+    private int hungerLevel;
 
-    public MessageSaturationSync(){}
+    public MessageIblisHungerSync(){}
 
-    public MessageSaturationSync(float saturationLevel)
+    public MessageIblisHungerSync(int hungerLevel)
     {
-        this.saturationLevel = saturationLevel;
+        this.hungerLevel = hungerLevel;
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeFloat(saturationLevel);
+        buf.writeInt(hungerLevel);
     }
 
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        saturationLevel = buf.readFloat();
+        hungerLevel = buf.readInt();
     }
 
     @Override
-    public IMessage onMessage(final MessageSaturationSync message, final MessageContext ctx)
+    public IMessage onMessage(final MessageIblisHungerSync message, final MessageContext ctx)
     {
         // defer to the next game loop; we can't guarantee that Minecraft.thePlayer is initialized yet
-        Minecraft.getMinecraft().addScheduledTask(() -> NetworkHelper.getSidedPlayer(ctx).getFoodStats().setFoodSaturationLevel(message.saturationLevel));
+        Minecraft.getMinecraft().addScheduledTask(() -> NetworkHelper.getSidedPlayer(ctx).getFoodStats().setFoodLevel(message.hungerLevel));
         return null;
     }
 }

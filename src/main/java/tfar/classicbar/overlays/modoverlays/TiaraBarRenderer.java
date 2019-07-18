@@ -93,7 +93,7 @@ public class TiaraBarRenderer {
     if (numbers.showPercent) i2 = timeLeft / 12;
     int i3 = (general.displayIcons) ? 1 : 0;
     int c = Integer.decode(mods.flightBarColor);
-    drawStringOnHUD(i2 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
+    if (numbers.showTiaraNumbers)drawStringOnHUD(i2 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
 
     mc.getTextureManager().bindTexture(ICON_BOTANIA);
     Color.reset();

@@ -86,7 +86,7 @@ public class LavaCharmRenderer {
     int i3 = getStringLength(i2 + "");
     int i4 = (general.displayIcons) ? 1 : 0;
     int c = Integer.decode(mods.lavaBarColor);
-    drawStringOnHUD(i2 + "", xStart - 9 * i4 - i3 + leftTextOffset, yStart - 1, c);
+    if (numbers.showLavaNumbers)drawStringOnHUD(i2 + "", xStart - 9 * i4 - i3 + leftTextOffset, yStart - 1, c);
 
     mc.getTextureManager().bindTexture(ICON_LAVA);
     Color.reset();
@@ -106,10 +106,7 @@ public class LavaCharmRenderer {
   }
   public static ItemStack getLavaCharm(EntityPlayer player) {
     ItemStack stack1 = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
-    if (isWader(stack1))return stack1;
-    for (ItemStack stack : player.inventory.mainInventory)
-      if (isCharm(stack)) return stack;
-    return ItemStack.EMPTY;
+    return isWader(stack1) ? stack1 : player.inventory.mainInventory.stream().filter(LavaCharmRenderer::isCharm).findFirst().orElse(ItemStack.EMPTY);
   }
   private static boolean isCharm(ItemStack stack){
     return stack.getItem() instanceof ItemLavaCharm;

@@ -97,7 +97,7 @@ public class ThirstBarRenderer {
         int h1 = (int) Math.floor(thirst);
         int c = Integer.decode((dehydration) ? mods.deHydrationBarColor : mods.thirstBarColor);
         if (numbers.showPercent)h1 = (int)thirst*5;
-        drawStringOnHUD(h1 + "", xStart + 9 * ((general.displayIcons) ? 1 : 0) + rightTextOffset, yStart - 1, c);
+        if (numbers.showThirstNumbers)drawStringOnHUD(h1 + "", xStart + 9 * ((general.displayIcons) ? 1 : 0) + rightTextOffset, yStart - 1, c);
         //Reset back to normal settings
         Color.reset();
 
