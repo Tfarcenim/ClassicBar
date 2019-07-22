@@ -26,7 +26,7 @@ public class ArmorToughnessBarRenderer {
   public ArmorToughnessBarRenderer() {
   }
 
-  @SubscribeEvent(priority = EventPriority.LOW)
+  @SubscribeEvent
   public void renderArmorToughnessBar(RenderGameOverlayEvent.Pre event) {
 
     Entity renderViewEnity = mc.getRenderViewEntity();

@@ -7,9 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tfar.classicbar.config.ModConfig;
-
-import static tfar.classicbar.config.ModConfig.numbers;
 
 public class ModUtils {
   public static final int rightTextOffset = 82;
@@ -17,13 +14,9 @@ public class ModUtils {
   public static final int leftTextOffset = -5;
 
   public static final ResourceLocation ICON_VANILLA = Gui.ICONS;
-  public static ResourceLocation ICON_BAR = getTexture(ModConfig.general.style);
+  public static ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
   public static final Minecraft mc = Minecraft.getMinecraft();
   private static final FontRenderer fontRenderer = mc.fontRenderer;
-
-  public static ResourceLocation getTexture(int i) {
-    return new ResourceLocation(ClassicBar.MODID, "textures/gui/health" + i + ".png");
-  }
 
   public static void drawTexturedModalRect(float x, float y, int textureX, int textureY, int width, int height) {
     Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(x, y, textureX, textureY, width, height);

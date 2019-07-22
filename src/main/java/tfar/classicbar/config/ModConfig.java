@@ -40,9 +40,6 @@ public class ModConfig {
         @Config.Name("Show Icons")
         @Config.Comment("Whether to show icons next to the bars")
         public boolean displayIcons = true;
-        @Config.Name("Texture Style")
-        @Config.Comment("Texture Style of bars: 0 for default, 1 for new")
-        public int style = 1;
         public class BarOverlays {
 
             @Config.Name("Hunger Bar Overlays")
@@ -206,7 +203,6 @@ public class ModConfig {
         public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
             if (event.getModID().equals(ClassicBar.MODID)) {
                 ConfigManager.sync(ClassicBar.MODID, Config.Type.INSTANCE);
-                ModUtils.ICON_BAR = ModUtils.getTexture(general.style);
                 idiots.idiotsTryingToParseBadHexColorsDOTJpeg();
                 idiots.emptyArrayFixer();
                 ClassicBar.logger.info("Syncing Classic Bar Configs");
