@@ -148,7 +148,6 @@ public class ArmorBarRenderer {
     //Revert our state back
     GlStateManager.popMatrix();
     mc.profiler.endSection();
-    event.setCanceled(true);
   }
 
   private int calculateArmorValue() {

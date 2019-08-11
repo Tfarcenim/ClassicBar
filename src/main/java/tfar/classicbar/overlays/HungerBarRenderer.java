@@ -161,6 +161,5 @@ public class HungerBarRenderer {
     //Revert our state back
     GlStateManager.popMatrix();
     mc.profiler.endSection();
-    event.setCanceled(true);
   }
 }

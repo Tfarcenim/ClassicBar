@@ -20,10 +20,10 @@ import static tfar.classicbar.ModUtils.*;
     Class handles the drawing of the oxygen bar
  */
 
-public class OxygenBarRenderer {
+public class AirBarRenderer {
   private final Minecraft mc = Minecraft.getMinecraft();
 
-  public OxygenBarRenderer() {
+  public AirBarRenderer() {
   }
 
   @SubscribeEvent(priority = EventPriority.LOW)
@@ -82,7 +82,5 @@ public class OxygenBarRenderer {
     //Revert our state back
     GlStateManager.popMatrix();
     mc.profiler.endSection();
-    event.setCanceled(true);
   }
-
 }

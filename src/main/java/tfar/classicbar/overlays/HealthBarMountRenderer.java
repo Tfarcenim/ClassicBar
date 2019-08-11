@@ -120,7 +120,5 @@ public class HealthBarMountRenderer {
     //Revert our state back
     GlStateManager.popMatrix();
     mc.profiler.endSection();
-    event.setCanceled(true);
   }
-
 }

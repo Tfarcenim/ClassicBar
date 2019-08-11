@@ -28,6 +28,7 @@ import static tfar.classicbar.config.ModConfig.general;
 public class ClassicBar {
 
   public static final String MODID = "classicbar";
+
   public static final String MODNAME = "Classic Bar";
   public static final String MODVERSION = "@VERSION@";
   public static final String[] problemMods = new String[]{"mantle", "toughasnails"};
@@ -59,6 +60,7 @@ public class ClassicBar {
     MinecraftForge.EVENT_BUS.register(new ArmorBarRenderer());
     if (general.overlays.displayToughnessBar) MinecraftForge.EVENT_BUS.register(new ArmorToughnessBarRenderer());
     MinecraftForge.EVENT_BUS.register(new HungerBarRenderer());
+    MinecraftForge.EVENT_BUS.register(new AirBarRenderer());
 
     //mod renderers
     ClassicBar.logger.info("Registering Mod Overlays");
@@ -71,8 +73,6 @@ public class ClassicBar {
     //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
     if (Loader.isModLoaded("toughasnails"))
       MinecraftForge.EVENT_BUS.register(new ThirstBarRenderer());
-  //MinecraftForge.EVENT_BUS.register(new BetterDivingRenderer());
-    MinecraftForge.EVENT_BUS.register(new OxygenBarRenderer());
     if (Loader.isModLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
 
     boolean areProblemModsPresent = stream(problemMods).anyMatch(Loader::isModLoaded);
