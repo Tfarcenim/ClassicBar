@@ -8,7 +8,7 @@ modLoader="javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
 loaderVersion="[25,)" #mandatory (24 is current forge version)
 # A URL to refer people to when problems occur with this mod
-issueTrackerURL="http://my.issue.tracker/" #optional
+issueTrackerURL="https://github.com/Tfarcenim/ClassicBar/issues" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
@@ -16,13 +16,13 @@ modId="classicbar" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 version="${file.jarVersion}" #mandatory
  # A display name for the mod
-displayName="Mob Catcher" #mandatory
+displayName="Classic Bar" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="http://myurl.me/" #optional
+#updateJSONURL="http://myurl.me/" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="http://example.com/" #optional
+#displayURL="http://example.com/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="examplemod.png" #optional
+#logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
 credits="no" #optional
 # A text field displayed in the mod UI
@@ -30,6 +30,12 @@ authors="Tfarecnim" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 
-Adds devices for moving around mobs
+Status icons are bars now
 
 '''
+[[dependencies.classicbar]]
+    modId="forge"
+    mandatory=true
+    versionRange="[28.0.45,)"
+    ordering="NONE"
+    side="BOTH"

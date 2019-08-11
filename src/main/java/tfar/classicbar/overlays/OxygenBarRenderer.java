@@ -81,7 +81,6 @@ public class OxygenBarRenderer {
     //Revert our state back
     GlStateManager.popMatrix();
     mc.getProfiler().endSection();
-    event.setCanceled(true);
   }
 
 }

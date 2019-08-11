@@ -52,6 +52,7 @@ public class ClassicBar {
       MinecraftForge.EVENT_BUS.register(new ArmorBarRenderer());
       if (general.overlays.displayToughnessBar) MinecraftForge.EVENT_BUS.register(new ArmorToughnessBarRenderer());
       MinecraftForge.EVENT_BUS.register(new HungerBarRenderer());
+      MinecraftForge.EVENT_BUS.register(new OxygenBarRenderer());
 
       //mod renderers
       ClassicBar.logger.info("Registering Mod Overlays");
@@ -62,10 +63,9 @@ public class ClassicBar {
 
       //if (ModList.get().isLoaded("superiorshields"))
       //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
-      if (ModList.get().isLoaded("toughasnails"))
+      //if (ModList.get().isLoaded("toughasnails"))
         //     MinecraftForge.EVENT_BUS.register(new ThirstBarRenderer());
         //MinecraftForge.EVENT_BUS.register(new BetterDivingRenderer());
-        MinecraftForge.EVENT_BUS.register(new OxygenBarRenderer());
       //  if (ModList.get().isLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
 
       boolean areProblemModsPresent = stream(problemMods).anyMatch(ModList.get()::isLoaded);

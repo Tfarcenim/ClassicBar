@@ -3,11 +3,11 @@ package tfar.classicbar.config;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.ModUtils;
 
@@ -177,7 +177,6 @@ public class ModConfig {
         public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
             if (event.getModID().equals(ClassicBar.MODID)) {
     //          ConfigManager.sync(ClassicBar.MODID, Config.Type.INSTANCE);
-                ModUtils.ICON_BAR = ModUtils.getTexture(general.style);
                 idiots.idiotsTryingToParseBadHexColorsDOTJpeg();
                 idiots.emptyArrayFixer();
                 ClassicBar.logger.info("Syncing Classic Bar Configs");

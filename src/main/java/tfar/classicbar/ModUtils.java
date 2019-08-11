@@ -17,13 +17,9 @@ public class ModUtils {
   public static final int leftTextOffset = -5;
 
   public static final ResourceLocation ICON_VANILLA = AbstractGui.GUI_ICONS_LOCATION;
-  public static ResourceLocation ICON_BAR = getTexture(ModConfig.general.style);
+  public static ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
   public static final Minecraft mc = Minecraft.getInstance();
   private static final FontRenderer fontRenderer = mc.fontRenderer;
-
-  public static ResourceLocation getTexture(int i) {
-    return new ResourceLocation(ClassicBar.MODID, "textures/gui/health" + i + ".png");
-  }
 
   public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
     mc.ingameGUI.blit(x, y, textureX, textureY, width, height);
