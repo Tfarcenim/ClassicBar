@@ -36,6 +36,8 @@ public class ClassicBar {
   public static final boolean TOUGHASNAILS = Loader.isModLoaded("toughasnails");
   public static final boolean IBLIS = Loader.isModLoaded("iblis");
   public static final boolean BAUBLES = Loader.isModLoaded("baubles");
+  public static final boolean RANDOMTWEAKS = Loader.isModLoaded("randomtweaks");
+
 
   public static Logger logger;
 

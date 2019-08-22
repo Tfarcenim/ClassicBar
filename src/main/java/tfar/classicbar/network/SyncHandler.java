@@ -27,8 +27,8 @@ public class SyncHandler {
       CHANNEL.registerMessage(MessageThirstExhaustionSync.class, MessageThirstExhaustionSync.class, 4, Side.CLIENT);
     }
 
-    if (ClassicBar.IBLIS)
-      CHANNEL.registerMessage(MessageIblisHungerSync.class, MessageIblisHungerSync.class, 5, Side.CLIENT);
+    if (ClassicBar.IBLIS || ClassicBar.RANDOMTWEAKS)
+      CHANNEL.registerMessage(MessageHungerSync.class, MessageHungerSync.class, 5, Side.CLIENT);
 
     MinecraftForge.EVENT_BUS.register(new SyncHandler());
   }
@@ -81,9 +81,9 @@ public class SyncHandler {
         lastThirstExhaustionLevels.put(player.getUniqueID(), ToughAsNailsHelper.getHandler(player).getExhaustion());
       }
     }
-    if (ClassicBar.IBLIS) {
+    if (ClassicBar.IBLIS || ClassicBar.RANDOMTWEAKS) {
       if (lastHungerLevel == null || lastHungerLevel != player.getFoodStats().getFoodLevel() || player.getFoodStats().getFoodLevel() > 20) {
-        CHANNEL.sendTo(new MessageIblisHungerSync(player.getFoodStats().getFoodLevel()), player);
+        CHANNEL.sendTo(new MessageHungerSync(player.getFoodStats().getFoodLevel()), player);
         lastHungerLevels.put(player.getUniqueID(), player.getFoodStats().getFoodLevel());
       }
     }
@@ -100,7 +100,7 @@ public class SyncHandler {
       lastHydrationLevels.remove(event.player.getUniqueID());
       lastThirstExhaustionLevels.remove(event.player.getUniqueID());
     }
-    if (ClassicBar.IBLIS)
+    if (ClassicBar.IBLIS || ClassicBar.RANDOMTWEAKS)
       lastHungerLevels.remove(event.player.getUniqueID());
   }
 }

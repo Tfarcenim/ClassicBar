@@ -5,15 +5,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import tfar.classicbar.ClassicBar;
 
-public class MessageIblisHungerSync implements IMessage, IMessageHandler<MessageIblisHungerSync, IMessage>
+public class MessageHungerSync implements IMessage, IMessageHandler<MessageHungerSync, IMessage>
 {
     private int hungerLevel;
 
-    public MessageIblisHungerSync(){}
+    public MessageHungerSync(){}
 
-    public MessageIblisHungerSync(int hungerLevel)
+    public MessageHungerSync(int hungerLevel)
     {
         this.hungerLevel = hungerLevel;
     }
@@ -31,7 +30,7 @@ public class MessageIblisHungerSync implements IMessage, IMessageHandler<Message
     }
 
     @Override
-    public IMessage onMessage(final MessageIblisHungerSync message, final MessageContext ctx)
+    public IMessage onMessage(final MessageHungerSync message, final MessageContext ctx)
     {
         // defer to the next game loop; we can't guarantee that Minecraft.thePlayer is initialized yet
         Minecraft.getMinecraft().addScheduledTask(() -> NetworkHelper.getSidedPlayer(ctx).getFoodStats().setFoodLevel(message.hungerLevel));

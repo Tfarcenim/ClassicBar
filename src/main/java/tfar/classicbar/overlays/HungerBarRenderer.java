@@ -12,7 +12,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.Color;
-import tfar.classicbar.compat.IblisHelper;
+import tfar.classicbar.compat.HungerHelper;
 
 
 import static tfar.classicbar.ColorUtils.*;
@@ -41,7 +41,7 @@ public class HungerBarRenderer {
     event.setCanceled(true);
     if (player.getRidingEntity() != null)return;
     double hunger = player.getFoodStats().getFoodLevel();
-    double maxHunger = ClassicBar.IBLIS ? IblisHelper.getMaxHunger(player) : 20;
+    double maxHunger = HungerHelper.getMaxHunger(player);
     double currentSat = player.getFoodStats().getSaturationLevel();
     float exhaustion = getExhaustion(player);
     int scaledWidth = event.getResolution().getScaledWidth();
