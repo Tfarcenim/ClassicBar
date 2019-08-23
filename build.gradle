@@ -55,7 +55,7 @@ dependencies {
     // the 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
     //provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
 
-    deobfCompile "iblis:iblis:0.5.17"
+    //deobfCompile "iblis:iblis:0.5.17"
     // the deobf configurations:  'deobfCompile' and 'deobfProvided' are the same as the normal compile and provided,
     // except that these dependencies get remapped to your current MCP mappings
    // deobfProvided "randomthings:RandomThings:MC${mc_version}:4.2.7"
