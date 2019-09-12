@@ -46,8 +46,6 @@ public class ModConfig {
             public HungerBarConfig hunger = new HungerBarConfig();
 
             @Config.Name("Display Armor Toughness Bar")
-            @Config.RequiresMcRestart
-            @Config.Comment("REQUIRES A RESTART TO APPLY!")
             public boolean displayToughnessBar = true;
 
             @Config.Name("Draw full absorption Bar")

@@ -38,6 +38,7 @@ public class ClassicBar {
   public static final boolean BAUBLES = Loader.isModLoaded("baubles");
   public static final boolean RANDOMTWEAKS = Loader.isModLoaded("randomtweaks");
   public static final boolean PITWEAKS = Loader.isModLoaded("pitweaks");
+  public static final boolean BETWEENLANDS = Loader.isModLoaded("thebetweenlands");
 
   public static final boolean HUNGERCHANGED = IBLIS || RANDOMTWEAKS || PITWEAKS;
 
@@ -59,13 +60,8 @@ public class ClassicBar {
 
     MinecraftForge.EVENT_BUS.register(new ModConfig.ConfigEventHandler());
     //Register renderers for events
-    ClassicBar.logger.info("Registering Vanilla Overlays");
-    MinecraftForge.EVENT_BUS.register(new HealthBarRenderer());
-    MinecraftForge.EVENT_BUS.register(new HealthBarMountRenderer());
-    MinecraftForge.EVENT_BUS.register(new ArmorBarRenderer());
-    if (general.overlays.displayToughnessBar) MinecraftForge.EVENT_BUS.register(new ArmorToughnessBarRenderer());
-    MinecraftForge.EVENT_BUS.register(new HungerBarRenderer());
-    MinecraftForge.EVENT_BUS.register(new AirBarRenderer());
+    ClassicBar.logger.info("Registering Vanilla Overlay");
+    MinecraftForge.EVENT_BUS.register(new OverlaySuperclass());
 
     //mod renderers
     ClassicBar.logger.info("Registering Mod Overlays");
@@ -73,10 +69,10 @@ public class ClassicBar {
     if (Loader.isModLoaded("lavawaderbauble")) {
       MinecraftForge.EVENT_BUS.register(new LavaWaderBaubleRenderer());
     }
-
+    if (BETWEENLANDS) MinecraftForge.EVENT_BUS.register(new DecayRenderer());
     //if (Loader.isModLoaded("superiorshields"))
     //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
-    if (Loader.isModLoaded("toughasnails"))
+    if (TOUGHASNAILS)
       MinecraftForge.EVENT_BUS.register(new ThirstBarRenderer());
     if (Loader.isModLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
 

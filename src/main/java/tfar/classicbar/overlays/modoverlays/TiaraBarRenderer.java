@@ -28,7 +28,7 @@ import static tfar.classicbar.config.ModConfig.*;
 public class TiaraBarRenderer {
   private final Minecraft mc = Minecraft.getMinecraft();
 
-  private static final Item tiara = ForgeRegistries.ITEMS.getValue(new ResourceLocation("botania:flighttiara"));
+  static final Item tiara = ForgeRegistries.ITEMS.getValue(new ResourceLocation("botania:flighttiara"));
   private static final ResourceLocation ICON_BOTANIA = new ResourceLocation("botania", "textures/gui/hudicons.png");
 
 
