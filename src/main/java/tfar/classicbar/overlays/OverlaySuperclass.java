@@ -18,6 +18,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.ISpecialArmor;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import tfar.classicbar.ClassicBar;
 import tfar.classicbar.Color;
 import tfar.classicbar.compat.HungerHelper;
 
@@ -569,7 +570,7 @@ public class OverlaySuperclass {
             //Push to avoid lasting changes
             int xStart1 = scaledWidth / 2 + 10;
             int yStart1 = scaledHeight - 49;
-            if (Loader.isModLoaded("toughasnails")) yStart1 -= 10;
+            if (ClassicBar.TOUGHASNAILS) yStart1 -= 10;
 
             mc.profiler.startSection("armortoughness");
             GlStateManager.pushMatrix();
@@ -652,7 +653,7 @@ public class OverlaySuperclass {
         int yStart = scaledHeight - 49;
         if (general.overlays.displayToughnessBar && player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue() >= 1)
           yStart -= 10;
-        if (Loader.isModLoaded("toughasnails")) yStart -= 10;
+        if (ClassicBar.TOUGHASNAILS) yStart -= 10;
 
         mc.profiler.startSection("air");
         GlStateManager.pushMatrix();

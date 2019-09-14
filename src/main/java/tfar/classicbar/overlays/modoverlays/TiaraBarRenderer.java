@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import tfar.classicbar.ClassicBar;
 import tfar.classicbar.Color;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
@@ -63,7 +64,7 @@ public class TiaraBarRenderer {
 
     int xStart = scaledWidth / 2 + 10;
     int yStart = scaledHeight - 49;
-    if (Loader.isModLoaded("toughasnails")) yStart -= 10;
+    if (ClassicBar.TOUGHASNAILS) yStart -= 10;
     if (player.getAir() < 300) yStart -= 10;
     if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue() >= 1 && general.overlays.displayToughnessBar)
       yStart -= 10;

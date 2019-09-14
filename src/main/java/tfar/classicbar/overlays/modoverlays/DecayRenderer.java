@@ -15,6 +15,7 @@ import tfar.classicbar.ClassicBar;
 import tfar.classicbar.Color;
 import tfar.classicbar.compat.Decay;
 import thebetweenlands.api.capability.IDecayCapability;
+import thebetweenlands.common.config.BetweenlandsConfig;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
@@ -33,15 +34,15 @@ public class DecayRenderer {
     }
 
     @SubscribeEvent//(priority = EventPriority.HIGH)
-    public void renderThirstBar(RenderGameOverlayEvent.Post event) {
+    public void renderDecayBar(RenderGameOverlayEvent.Post event) {
         Entity renderViewEntity = mc.getRenderViewEntity();
         if (//event.getType() != RenderGameOverlayEvent.ElementType.AIR ||
                 event.isCanceled() ||
                  !(renderViewEntity instanceof EntityPlayer)) return;
         EntityPlayer player = (EntityPlayer) renderViewEntity;
-        if (player.capabilities.isCreativeMode)return;
+        if (player.capabilities.isCreativeMode || BetweenlandsConfig.WORLD_AND_DIMENSION.dimensionId != player.dimension)return;
         IDecayCapability decayCap = Decay.getDecayHandler(player);
-        double decay = decayCap.getDecayStats().getDecayLevel();
+        double decay = 20 - decayCap.getDecayStats().getDecayLevel();
       //  System.out.println(thirstExhaustion);
         int scaledWidth = event.getResolution().getScaledWidth();
         int scaledHeight = event.getResolution().getScaledHeight();

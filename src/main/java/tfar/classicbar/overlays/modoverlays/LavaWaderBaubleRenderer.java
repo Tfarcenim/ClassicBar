@@ -47,7 +47,7 @@ public class LavaWaderBaubleRenderer {
     ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
     NBTTagCompound nbt = stack.getTagCompound();
     if (nbt == null) {
-      System.out.println("error");
+      //System.out.println("error");
       return;
     }
     int charge = nbt.getInteger("charge");
