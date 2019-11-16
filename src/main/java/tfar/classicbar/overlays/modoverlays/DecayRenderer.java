@@ -36,7 +36,7 @@ public class DecayRenderer {
     @SubscribeEvent//(priority = EventPriority.HIGH)
     public void renderDecayBar(RenderGameOverlayEvent.Post event) {
         Entity renderViewEntity = mc.getRenderViewEntity();
-        if (//event.getType() != RenderGameOverlayEvent.ElementType.AIR ||
+        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL ||
                 event.isCanceled() ||
                  !(renderViewEntity instanceof EntityPlayer)) return;
         EntityPlayer player = (EntityPlayer) renderViewEntity;
@@ -49,13 +49,9 @@ public class DecayRenderer {
         //Push to avoid lasting changes
 
         int xStart = scaledWidth / 2 + 10;
-        int yStart = scaledHeight - 49;
-
+        int yStart = scaledHeight - GuiIngameForge.right_height;
+        GuiIngameForge.right_height +=10;
         mc.profiler.startSection("decay");
-        if (ClassicBar.TOUGHASNAILS)yStart -= 10;
-        if (player.getAir() < 300)yStart -= 10;
-        if (Loader.isModLoaded("botania")&& BaublesApi.isBaubleEquipped(player, tiara) != -1)yStart -= 10;
-        if (general.overlays.displayToughnessBar && player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue()>= 1)yStart -= 10;
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
 

@@ -12,13 +12,10 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.ISpecialArmor;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import tfar.classicbar.ClassicBar;
 import tfar.classicbar.Color;
 import tfar.classicbar.compat.HungerHelper;
 
@@ -57,126 +54,8 @@ public class OverlaySuperclass {
     int scaledWidth = event.getResolution().getScaledWidth();
     int scaledHeight = event.getResolution().getScaledHeight();
     switch (event.getType()) {
-      case FOOD: {
-        if (player.getRidingEntity() == null) {
-          event.setCanceled(true);
-          double hunger = player.getFoodStats().getFoodLevel();
-          double maxHunger = HungerHelper.getMaxHunger(player);
-          double currentSat = player.getFoodStats().getSaturationLevel();
-          float exhaustion = getExhaustion(player);
-          //Push to avoid lasting changes
-          int xStart = scaledWidth / 2 + 10;
-          int yStart = scaledHeight - 39;
 
-          mc.profiler.startSection("hunger");
-          GlStateManager.pushMatrix();
-          GlStateManager.enableBlend();
-          float alpha2 = hunger / maxHunger <= general.overlays.lowHungerThreshold && general.overlays.lowHungerWarning ? (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
-
-          //Bind our Custom bar
-          mc.getTextureManager().bindTexture(ICON_BAR);
-          //Bar background
-          Color.reset();
-          drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
-          //draw portion of bar based on hunger amount
-          float f = xStart + 79 - getWidth(hunger, maxHunger);
-          boolean flag = player.isPotionActive(MobEffects.HUNGER);
-          hex2Color(flag ? colors.hungerBarDebuffColor : colors.hungerBarColor).color2Gla(alpha2);
-          drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(hunger, maxHunger), 7);
-          if (currentSat > 0 && general.overlays.hunger.showSaturationBar) {
-            //draw saturation
-            hex2Color(flag ? colors.saturationBarDebuffColor : colors.saturationBarColor).color2Gla(alpha2);
-            f += getWidth(hunger, maxHunger) - getWidth(currentSat, maxHunger);
-            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(currentSat, maxHunger), 7);
-          }
-          //render held hunger overlay
-          if (general.overlays.hunger.showHeldFoodOverlay &&
-                  player.getHeldItemMainhand().getItem() instanceof ItemFood) {
-            ItemStack stack = player.getHeldItemMainhand();
-            if (foodIncrease) foodAlpha += general.overlays.hunger.transitionSpeed;
-            else foodAlpha -= general.overlays.hunger.transitionSpeed;
-            if (foodAlpha >= 1) foodIncrease = false;
-            else if (foodAlpha <= 0) foodIncrease = true;
-            ItemFood foodItem = ((ItemFood) stack.getItem());
-            double hungerOverlay = foodItem.getHealAmount(stack);
-            double saturationMultiplier = foodItem.getSaturationModifier(stack);
-            double potentialSat = 2 * hungerOverlay * saturationMultiplier;
-
-            //Draw Potential hunger
-            double hungerWidth = Math.min(maxHunger - hunger, hungerOverlay);
-            //don't render the bar at all if hunger is full
-            if (hunger < maxHunger) {
-              f = xStart - getWidth(hungerWidth + hunger, maxHunger) + 78;
-              hex2Color(flag ? colors.hungerBarDebuffColor : colors.hungerBarColor).color2Gla(foodAlpha);
-              drawTexturedModalRect(f + 1, yStart + 1, 1, 10, getWidth(hunger + hungerOverlay, maxHunger), 7);
-            }
-
-            //Draw Potential saturation
-            if (general.overlays.hunger.showSaturationBar) {
-              //maximum potential saturation cannot combine with current saturation to go over 20
-              double saturationWidth = Math.min(potentialSat, maxHunger - currentSat);
-
-              //Potential Saturation cannot go over potential hunger + current hunger combined
-              saturationWidth = Math.min(saturationWidth, hunger + hungerWidth);
-              saturationWidth = Math.min(saturationWidth, hungerOverlay + hunger);
-              if ((potentialSat + currentSat) > (hunger + hungerWidth)) {
-                double diff = (potentialSat + currentSat) - (hunger + hungerWidth);
-                saturationWidth = potentialSat - diff;
-              }
-              //offset used to decide where to place the bar
-              f = xStart - getWidth(saturationWidth + currentSat, maxHunger) + 78;
-              hex2Color(flag ? colors.saturationBarDebuffColor : colors.saturationBarColor).color2Gla(foodAlpha);
-              if (true)//currentSat > 0)
-                drawTexturedModalRect(f + 1, yStart + 1, 1, 10, getWidth(saturationWidth + currentSat, maxHunger), 7);
-              else ;//drawTexturedModalRect(f, yStart+1, 1, 10, getWidthfloor(saturationWidth,20), 7);
-
-            }
-          }
-
-          if (general.overlays.hunger.showExhaustionOverlay) {
-            exhaustion = Math.min(exhaustion, 4);
-            f = xStart - getWidth(exhaustion, 4) + 80;
-            //draw exhaustion
-            GlStateManager.color(1, 1, 1, .25f);
-            drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(exhaustion, 4f), 9);
-          }
-
-          //draw hunger amount
-          int h1 = (int) Math.floor(hunger);
-
-          int i3 = general.displayIcons ? 1 : 0;
-          if (numbers.showPercent) h1 = (int) hunger * 5;
-          int c = Integer.decode(flag ? colors.hungerBarDebuffColor : colors.hungerBarColor);
-          if (numbers.showHungerNumbers) drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
-
-          //Reset back to normal settings
-          Color.reset();
-
-          mc.getTextureManager().bindTexture(ICON_VANILLA);
-          GuiIngameForge.left_height += 10;
-
-          if (general.displayIcons) {
-
-            int k5 = 52;
-            int k6 = 16;
-            if (flag) {
-              k5 += 36;
-              k6 = k5 + 45;
-            }
-            //Draw hunger icon
-            //hunger background
-            drawTexturedModalRect(xStart + 82, yStart, k6, 27, 9, 9);
-
-            //hunger
-            drawTexturedModalRect(xStart + 82, yStart, k5, 27, 9, 9);
-          }
-          GlStateManager.disableBlend();
-          //Revert our state back
-          GlStateManager.popMatrix();
-          mc.profiler.endSection();
-        }
-      }
-
+      //this draws first
       case HEALTH: {
         event.setCanceled(true);
         updateCounter = mc.ingameGUI.getUpdateCounter();
@@ -377,7 +256,322 @@ public class OverlaySuperclass {
         //Revert our state back
         GlStateManager.popMatrix();
         mc.profiler.endSection();
-      }
+      }break;
+
+      //this draws second
+      case ARMOR: {
+        //armor stuff
+        event.setCanceled(true);
+        double armor = calculateArmorValue();
+        if (armor < 1) return;
+        boolean warning = false;
+        int warningAmount = 0;
+        for (EntityEquipmentSlot slot : armorList) {
+          if (!general.overlays.lowArmorWarning) break;
+          ItemStack stack = player.getItemStackFromSlot(slot);
+          int max = stack.getMaxDamage();
+          int current = stack.getItemDamage();
+          int percentage = 100;
+          if (max != 0) percentage = 100 * (max - current) / (max);
+          if (percentage < 5) {
+            if (!(stack.getItem() instanceof ItemArmor)) continue;
+            warning = true;
+            warningAmount += ((ItemArmor) stack.getItem()).getArmorMaterial().getDamageReductionAmount(slot);
+          }
+        }
+
+        //Push to avoid lasting changes
+        if (warning && general.overlays.lowArmorWarning) armorAlpha = (int) (Minecraft.getSystemTime() / 250) % 2;
+        if (general.overlays.swap) {
+        }
+        int xStart = scaledWidth / 2 - 91;
+        int yStart = scaledHeight - GuiIngameForge.left_height;
+        GuiIngameForge.left_height +=10;
+        mc.profiler.startSection("armor");
+        GlStateManager.pushMatrix();
+        GlStateManager.enableBlend();
+
+        //Bind our Custom bar
+        mc.getTextureManager().bindTexture(ICON_BAR);
+        //Bar background
+
+        //Pass 1, draw bar portion
+        //how many layers are there? remember to start at 0
+        int index = (int) Math.min(Math.ceil(armor / 20) - 1, colors.advancedColors.armorColorValues.length - 1);
+
+        armor -= warningAmount;
+        //if armor >20
+        if (armor + warningAmount <= 20) {
+          //bar background
+          if (!general.overlays.fullArmorBar) drawScaledBar(armor + warningAmount, 20, xStart, yStart + 1, true);
+          else drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
+          //calculate bar color
+          hex2Color(colors.advancedColors.armorColorValues[0]).color2Gl();
+          //draw portion of bar based on armor
+          drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor, 20), 7);
+
+          //draw damaged bar
+          hex2Color(colors.advancedColors.armorColorValues[0]).color2Gla(armorAlpha);
+          drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor + warningAmount, 20), 7);
+        } else {
+          //we have wrapped, draw 2 bars
+          //bar background
+          drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
+
+          //draw first bar
+          //case 1: bar is not capped and is partially filled
+          if (warningAmount != 0 || index < colors.advancedColors.armorColorValues.length && (armor + warningAmount) % 20 != 0) {
+            //draw complete first bar
+            hex2Color(colors.advancedColors.armorColorValues[index - 1]).color2Gl();
+            drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, 79, 7);
+
+            //draw partial second bar
+            hex2Color(colors.advancedColors.armorColorValues[index]).color2Gl();
+            drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor % 20, 20), 7);
+          }
+          //case 2, bar is a multiple of 20 or it is capped
+          else {
+            //draw complete second bar
+            hex2Color(colors.advancedColors.armorColorValues[index]).color2Gl();
+            drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, 79, 7);
+          }
+          // now handle the low armor warning
+          if (warningAmount > 0) {
+            //armor and armor warning on same index
+            if ((int) Math.ceil((warningAmount + armor) / 20) == (int) Math.ceil(armor / 20)) {
+              //draw one bar
+              hex2Color(colors.advancedColors.armorColorValues[index]).color2Gla(armorAlpha);
+              drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor + warningAmount - index * 20, 20), 7);
+            }
+          }
+        }
+        //draw armor amount
+        int i1 = (int) Math.floor(armor + warningAmount);
+        int i3 = (general.displayIcons) ? 1 : 0;
+        int c = Integer.decode(colors.advancedColors.armorColorValues[index]);
+        if (numbers.showPercent) i1 = (int) (armor + warningAmount) * 5;
+        int i2 = getStringLength(i1 + "");
+        if (numbers.showArmorNumbers) drawStringOnHUD(i1 + "", xStart - 9 * i3 - i2 + leftTextOffset, yStart - 1, c);
+        //Reset back to normal settings
+
+        Color.reset();
+
+        mc.getTextureManager().bindTexture(ICON_VANILLA);
+
+        if (general.displayIcons)
+          //Draw armor icon
+          drawTexturedModalRect(xStart - 10, yStart, 43, 9, 9, 9);
+
+        //armor icon
+        GlStateManager.disableBlend();
+        //Revert our state back
+        GlStateManager.popMatrix();
+        mc.profiler.endSection();
+
+        //armor toughness
+
+      }break;
+
+      //this draws third
+      case FOOD: {
+        event.setCanceled(true);
+        if (player.getRidingEntity() == null) {
+          double hunger = player.getFoodStats().getFoodLevel();
+          double maxHunger = HungerHelper.getMaxHunger(player);
+          double currentSat = player.getFoodStats().getSaturationLevel();
+          float exhaustion = getExhaustion(player);
+          //Push to avoid lasting changes
+          int xStart = scaledWidth / 2 + 10;
+          int yStart = scaledHeight - GuiIngameForge.right_height;
+          GuiIngameForge.right_height += 10;
+
+          mc.profiler.startSection("hunger");
+          GlStateManager.pushMatrix();
+          GlStateManager.enableBlend();
+          float alpha2 = hunger / maxHunger <= general.overlays.lowHungerThreshold && general.overlays.lowHungerWarning ? (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
+
+          //Bind our Custom bar
+          mc.getTextureManager().bindTexture(ICON_BAR);
+          //Bar background
+          Color.reset();
+          drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
+          //draw portion of bar based on hunger amount
+          float f = xStart + 79 - getWidth(hunger, maxHunger);
+          boolean flag = player.isPotionActive(MobEffects.HUNGER);
+          hex2Color(flag ? colors.hungerBarDebuffColor : colors.hungerBarColor).color2Gla(alpha2);
+          drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(hunger, maxHunger), 7);
+          if (currentSat > 0 && general.overlays.hunger.showSaturationBar) {
+            //draw saturation
+            hex2Color(flag ? colors.saturationBarDebuffColor : colors.saturationBarColor).color2Gla(alpha2);
+            f += getWidth(hunger, maxHunger) - getWidth(currentSat, maxHunger);
+            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(currentSat, maxHunger), 7);
+          }
+          //render held hunger overlay
+          if (general.overlays.hunger.showHeldFoodOverlay &&
+                  player.getHeldItemMainhand().getItem() instanceof ItemFood) {
+            ItemStack stack = player.getHeldItemMainhand();
+            if (foodIncrease) foodAlpha += general.overlays.hunger.transitionSpeed;
+            else foodAlpha -= general.overlays.hunger.transitionSpeed;
+            if (foodAlpha >= 1) foodIncrease = false;
+            else if (foodAlpha <= 0) foodIncrease = true;
+            ItemFood foodItem = ((ItemFood) stack.getItem());
+            double hungerOverlay = foodItem.getHealAmount(stack);
+            double saturationMultiplier = foodItem.getSaturationModifier(stack);
+            double potentialSat = 2 * hungerOverlay * saturationMultiplier;
+
+            //Draw Potential hunger
+            double hungerWidth = Math.min(maxHunger - hunger, hungerOverlay);
+            //don't render the bar at all if hunger is full
+            if (hunger < maxHunger) {
+              f = xStart - getWidth(hungerWidth + hunger, maxHunger) + 78;
+              hex2Color(flag ? colors.hungerBarDebuffColor : colors.hungerBarColor).color2Gla(foodAlpha);
+              drawTexturedModalRect(f + 1, yStart + 1, 1, 10, getWidth(hunger + hungerOverlay, maxHunger), 7);
+            }
+
+            //Draw Potential saturation
+            if (general.overlays.hunger.showSaturationBar) {
+              //maximum potential saturation cannot combine with current saturation to go over 20
+              double saturationWidth = Math.min(potentialSat, maxHunger - currentSat);
+
+              //Potential Saturation cannot go over potential hunger + current hunger combined
+              saturationWidth = Math.min(saturationWidth, hunger + hungerWidth);
+              saturationWidth = Math.min(saturationWidth, hungerOverlay + hunger);
+              if ((potentialSat + currentSat) > (hunger + hungerWidth)) {
+                double diff = (potentialSat + currentSat) - (hunger + hungerWidth);
+                saturationWidth = potentialSat - diff;
+              }
+              //offset used to decide where to place the bar
+              f = xStart - getWidth(saturationWidth + currentSat, maxHunger) + 78;
+              hex2Color(flag ? colors.saturationBarDebuffColor : colors.saturationBarColor).color2Gla(foodAlpha);
+              if (true)//currentSat > 0)
+                drawTexturedModalRect(f + 1, yStart + 1, 1, 10, getWidth(saturationWidth + currentSat, maxHunger), 7);
+              else ;//drawTexturedModalRect(f, yStart+1, 1, 10, getWidthfloor(saturationWidth,20), 7);
+
+            }
+          }
+
+          if (general.overlays.hunger.showExhaustionOverlay) {
+            exhaustion = Math.min(exhaustion, 4);
+            f = xStart - getWidth(exhaustion, 4) + 80;
+            //draw exhaustion
+            GlStateManager.color(1, 1, 1, .25f);
+            drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(exhaustion, 4f), 9);
+          }
+
+          //draw hunger amount
+          int h1 = (int) Math.floor(hunger);
+
+          int i3 = general.displayIcons ? 1 : 0;
+          if (numbers.showPercent) h1 = (int) hunger * 5;
+          int c = Integer.decode(flag ? colors.hungerBarDebuffColor : colors.hungerBarColor);
+          if (numbers.showHungerNumbers) drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
+
+          //Reset back to normal settings
+          Color.reset();
+
+          mc.getTextureManager().bindTexture(ICON_VANILLA);
+          GuiIngameForge.left_height += 10;
+
+          if (general.displayIcons) {
+
+            int k5 = 52;
+            int k6 = 16;
+            if (flag) {
+              k5 += 36;
+              k6 = k5 + 45;
+            }
+            //Draw hunger icon
+            //hunger background
+            drawTexturedModalRect(xStart + 82, yStart, k6, 27, 9, 9);
+
+            //hunger
+            drawTexturedModalRect(xStart + 82, yStart, k5, 27, 9, 9);
+          }
+          GlStateManager.disableBlend();
+          //Revert our state back
+          GlStateManager.popMatrix();
+          mc.profiler.endSection();
+        }
+
+        if (general.overlays.displayToughnessBar) {
+          //armor toughness stuff
+          double armorToughness = player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue();
+          if (armorToughness >= 1) {
+            //Push to avoid lasting changes
+            int xStart = scaledWidth / 2 + 10;
+            int yStart = scaledHeight - GuiIngameForge.right_height;
+            GuiIngameForge.right_height += 10;
+            mc.profiler.startSection("armortoughness");
+            GlStateManager.pushMatrix();
+            GlStateManager.enableBlend();
+
+            //Bind our Custom bar
+            mc.getTextureManager().bindTexture(ICON_BAR);
+            int f;
+
+            //Bar background
+            if (general.displayIcons)
+              //Draw armor toughness icon
+              drawTexturedModalRect(xStart + 82, yStart, 83, 0, 9, 9);
+            //draw bar portion
+            int toughnessindex = (int) Math.min(Math.ceil(armorToughness / 20) - 1, colors.advancedColors.armorToughnessColorValues.length - 1);
+
+            if (armorToughness <= 20) {
+              f = xStart + 79 - getWidth(armorToughness, 20);
+              if (!general.overlays.fullToughnessBar) drawScaledBar(armorToughness, 20, f - 1, yStart, false);
+              else drawTexturedModalRect(f, yStart, 0, 0, 81, 9);
+
+              //calculate bar color
+              hex2Color(colors.advancedColors.armorToughnessColorValues[0]).color2Gl();
+              //draw portion of bar based on armor toughness amount
+              drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(armorToughness, 20), 7);
+
+            } else {
+              drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
+              //we have wrapped, draw 2 bars
+              int size = colors.advancedColors.armorToughnessColorValues.length;
+              //if we are out of colors wrap the bar
+              if (toughnessindex < size && armorToughness % 20 != 0) {
+
+                //draw complete first bar
+                hex2Color(colors.advancedColors.armorToughnessColorValues[toughnessindex - 1]).color2Gl();
+                drawTexturedModalRect(xStart, yStart + 1, 0, 10, 79, 7);
+
+                //draw partial second bar
+                f = xStart + 79 - getWidth(armorToughness % 20, 20);
+
+                hex2Color(colors.advancedColors.armorToughnessColorValues[toughnessindex]).color2Gl();
+                drawTexturedModalRect(f, yStart + 1, 0, 10, getWidth(armorToughness % 20, 20), 7);
+              }
+              //case 2, bar is a multiple of 20 or it is capped
+              else {
+                //draw complete second bar
+                hex2Color(colors.advancedColors.armorToughnessColorValues[toughnessindex]).color2Gl();
+                drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, 79, 7);
+              }
+            }
+
+            //draw armor toughness amount
+            int iq1 = (int) Math.floor(armorToughness);
+            int iq2 = (general.displayIcons) ? 1 : 0;
+
+            int toughnesscolor = Integer.decode(colors.advancedColors.armorToughnessColorValues[toughnessindex]);
+            if (numbers.showPercent) iq1 = (int) armorToughness * 5;
+            if (numbers.showArmorToughnessNumbers)
+              drawStringOnHUD(iq1 + "", xStart + 9 * iq2 + rightTextOffset, yStart - 1, toughnesscolor);
+            //Reset back to normal settings
+
+            mc.getTextureManager().bindTexture(ICON_VANILLA);
+            GuiIngameForge.left_height += 10;
+
+
+            //Revert our state back
+            GlStateManager.popMatrix();
+            mc.profiler.endSection();
+          }
+        }
+      }break;
+
       case HEALTHMOUNT: {
         //Push to avoid lasting changes
         updateCounter = mc.ingameGUI.getUpdateCounter();
@@ -452,197 +646,8 @@ public class OverlaySuperclass {
         //Revert our state back
         GlStateManager.popMatrix();
         mc.profiler.endSection();
-      }
-      case ARMOR: {
-        //armor stuff
-          event.setCanceled(true);
-          double armor = calculateArmorValue();
-          if (armor < 1) return;
-          boolean warning = false;
-          int warningAmount = 0;
-          for (EntityEquipmentSlot slot : armorList) {
-            if (!general.overlays.lowArmorWarning) break;
-            ItemStack stack = player.getItemStackFromSlot(slot);
-            int max = stack.getMaxDamage();
-            int current = stack.getItemDamage();
-            int percentage = 100;
-            if (max != 0) percentage = 100 * (max - current) / (max);
-            if (percentage < 5) {
-              if (!(stack.getItem() instanceof ItemArmor)) continue;
-              warning = true;
-              warningAmount += ((ItemArmor) stack.getItem()).getArmorMaterial().getDamageReductionAmount(slot);
-            }
-          }
+      }break;
 
-          //Push to avoid lasting changes
-          if (warning && general.overlays.lowArmorWarning) armorAlpha = (int) (Minecraft.getSystemTime() / 250) % 2;
-          int absorb = MathHelper.ceil(player.getAbsorptionAmount());
-          if (general.overlays.swap) absorb = 0;
-          int xStart = scaledWidth / 2 - 91;
-          int yStart = scaledHeight - 49;
-          if (absorb > 0) yStart -= 10;
-          mc.profiler.startSection("armor");
-          GlStateManager.pushMatrix();
-          GlStateManager.enableBlend();
-
-          //Bind our Custom bar
-          mc.getTextureManager().bindTexture(ICON_BAR);
-          //Bar background
-
-          //Pass 1, draw bar portion
-          //how many layers are there? remember to start at 0
-          int index = (int) Math.min(Math.ceil(armor / 20) - 1, colors.advancedColors.armorColorValues.length - 1);
-
-          armor -= warningAmount;
-          //if armor >20
-          if (armor + warningAmount <= 20) {
-            //bar background
-            if (!general.overlays.fullArmorBar) drawScaledBar(armor + warningAmount, 20, xStart, yStart + 1, true);
-            else drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
-            //calculate bar color
-            hex2Color(colors.advancedColors.armorColorValues[0]).color2Gl();
-            //draw portion of bar based on armor
-            drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor, 20), 7);
-
-            //draw damaged bar
-            hex2Color(colors.advancedColors.armorColorValues[0]).color2Gla(armorAlpha);
-            drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor + warningAmount, 20), 7);
-          } else {
-            //we have wrapped, draw 2 bars
-            //bar background
-            drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
-
-            //draw first bar
-            //case 1: bar is not capped and is partially filled
-            if (warningAmount != 0 || index < colors.advancedColors.armorColorValues.length && (armor + warningAmount) % 20 != 0) {
-              //draw complete first bar
-              hex2Color(colors.advancedColors.armorColorValues[index - 1]).color2Gl();
-              drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, 79, 7);
-
-              //draw partial second bar
-              hex2Color(colors.advancedColors.armorColorValues[index]).color2Gl();
-              drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor % 20, 20), 7);
-            }
-            //case 2, bar is a multiple of 20 or it is capped
-            else {
-              //draw complete second bar
-              hex2Color(colors.advancedColors.armorColorValues[index]).color2Gl();
-              drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, 79, 7);
-            }
-            // now handle the low armor warning
-            if (warningAmount > 0) {
-              //armor and armor warning on same index
-              if ((int) Math.ceil((warningAmount + armor) / 20) == (int) Math.ceil(armor / 20)) {
-                //draw one bar
-                hex2Color(colors.advancedColors.armorColorValues[index]).color2Gla(armorAlpha);
-                drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor + warningAmount - index * 20, 20), 7);
-              }
-            }
-          }
-          //draw armor amount
-          int i1 = (int) Math.floor(armor + warningAmount);
-          int i3 = (general.displayIcons) ? 1 : 0;
-          int c = Integer.decode(colors.advancedColors.armorColorValues[index]);
-          if (numbers.showPercent) i1 = (int) (armor + warningAmount) * 5;
-          int i2 = getStringLength(i1 + "");
-          if (numbers.showArmorNumbers) drawStringOnHUD(i1 + "", xStart - 9 * i3 - i2 + leftTextOffset, yStart - 1, c);
-          //Reset back to normal settings
-
-          Color.reset();
-
-          mc.getTextureManager().bindTexture(ICON_VANILLA);
-
-          if (general.displayIcons)
-            //Draw armor icon
-            drawTexturedModalRect(xStart - 10, yStart, 43, 9, 9, 9);
-
-          //armor icon
-          GlStateManager.disableBlend();
-          //Revert our state back
-          GlStateManager.popMatrix();
-          mc.profiler.endSection();
-
-          //armor toughness
-        if (general.overlays.displayToughnessBar) {
-          //armor toughness stuff
-          double armorToughness = player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue();
-          if (armorToughness >= 1) {
-            //Push to avoid lasting changes
-            int xStart1 = scaledWidth / 2 + 10;
-            int yStart1 = scaledHeight - 49;
-            if (ClassicBar.TOUGHASNAILS) yStart1 -= 10;
-
-            mc.profiler.startSection("armortoughness");
-            GlStateManager.pushMatrix();
-            GlStateManager.enableBlend();
-
-            //Bind our Custom bar
-            mc.getTextureManager().bindTexture(ICON_BAR);
-            int f;
-
-            //Bar background
-            if (general.displayIcons)
-              //Draw armor toughness icon
-              drawTexturedModalRect(xStart1 + 82, yStart1, 83, 0, 9, 9);
-            //draw bar portion
-            int toughnessindex = (int) Math.min(Math.ceil(armorToughness / 20) - 1, colors.advancedColors.armorToughnessColorValues.length - 1);
-
-            if (armorToughness <= 20) {
-              f = xStart1 + 79 - getWidth(armorToughness, 20);
-              if (!general.overlays.fullToughnessBar) drawScaledBar(armorToughness, 20, f - 1, yStart1, false);
-              else drawTexturedModalRect(f, yStart1, 0, 0, 81, 9);
-
-              //calculate bar color
-              hex2Color(colors.advancedColors.armorToughnessColorValues[0]).color2Gl();
-              //draw portion of bar based on armor toughness amount
-              drawTexturedModalRect(f, yStart1 + 1, 1, 10, getWidth(armorToughness, 20), 7);
-
-            } else {
-              drawTexturedModalRect(xStart1, yStart1, 0, 0, 81, 9);
-              //we have wrapped, draw 2 bars
-              int size = colors.advancedColors.armorToughnessColorValues.length;
-              //if we are out of colors wrap the bar
-              if (toughnessindex < size && armorToughness % 20 != 0) {
-
-                //draw complete first bar
-                hex2Color(colors.advancedColors.armorToughnessColorValues[toughnessindex - 1]).color2Gl();
-                drawTexturedModalRect(xStart1, yStart1 + 1, 0, 10, 79, 7);
-
-                //draw partial second bar
-                f = xStart1 + 79 - getWidth(armorToughness % 20, 20);
-
-                hex2Color(colors.advancedColors.armorToughnessColorValues[toughnessindex]).color2Gl();
-                drawTexturedModalRect(f, yStart1 + 1, 0, 10, getWidth(armorToughness % 20, 20), 7);
-              }
-              //case 2, bar is a multiple of 20 or it is capped
-              else {
-                //draw complete second bar
-                hex2Color(colors.advancedColors.armorToughnessColorValues[toughnessindex]).color2Gl();
-                drawTexturedModalRect(xStart1 + 1, yStart1 + 1, 1, 10, 79, 7);
-              }
-            }
-
-            //draw armor toughness amount
-            int iq1 = (int) Math.floor(armorToughness);
-            int iq2 = (general.displayIcons) ? 1 : 0;
-
-            int tougnesscolor = Integer.decode(colors.advancedColors.armorToughnessColorValues[toughnessindex]);
-            if (numbers.showPercent) iq1 = (int) armorToughness * 5;
-            if (numbers.showArmorToughnessNumbers)
-              drawStringOnHUD(iq1 + "", xStart1 + 9 * iq2 + rightTextOffset, yStart1 - 1, tougnesscolor);
-            //Reset back to normal settings
-
-            mc.getTextureManager().bindTexture(ICON_VANILLA);
-            GuiIngameForge.left_height += 10;
-
-
-            //Revert our state back
-            GlStateManager.popMatrix();
-            mc.profiler.endSection();
-          }
-        }
-
-        }
       case AIR: {
         event.setCanceled(true);
         int air = player.getAir();
@@ -650,10 +655,8 @@ public class OverlaySuperclass {
         //Push to avoid lasting changes
 
         int xStart = scaledWidth / 2 + 10;
-        int yStart = scaledHeight - 49;
-        if (general.overlays.displayToughnessBar && player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue() >= 1)
-          yStart -= 10;
-        if (ClassicBar.TOUGHASNAILS) yStart -= 10;
+        int yStart = scaledHeight - GuiIngameForge.right_height;
+        GuiIngameForge.right_height +=10;
 
         mc.profiler.startSection("air");
         GlStateManager.pushMatrix();
@@ -690,7 +693,7 @@ public class OverlaySuperclass {
         //Revert our state back
         GlStateManager.popMatrix();
         mc.profiler.endSection();
-      }
+      }break;
     }
   }
 

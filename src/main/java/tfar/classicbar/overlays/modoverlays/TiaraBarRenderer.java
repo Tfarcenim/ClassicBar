@@ -41,7 +41,7 @@ public class TiaraBarRenderer {
 
     Entity renderViewEnity = mc.getRenderViewEntity();
     if (//event.isCanceled() ||
-      //  event.getType() != RenderGameOverlayEvent.ElementType.HEALTH ||
+        event.getType() != RenderGameOverlayEvent.ElementType.ALL ||
             !(renderViewEnity instanceof EntityPlayer))
       return;
 
@@ -52,7 +52,7 @@ public class TiaraBarRenderer {
     ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
     NBTTagCompound nbt = stack.getTagCompound();
     if (nbt == null) {
-      System.out.println("error");
+      //System.out.println("error");
       return;
     }
     //System.out.println(nbt);
@@ -63,11 +63,8 @@ public class TiaraBarRenderer {
     //Push to avoid lasting changes
 
     int xStart = scaledWidth / 2 + 10;
-    int yStart = scaledHeight - 49;
-    if (ClassicBar.TOUGHASNAILS) yStart -= 10;
-    if (player.getAir() < 300) yStart -= 10;
-    if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue() >= 1 && general.overlays.displayToughnessBar)
-      yStart -= 10;
+    int yStart = scaledHeight - GuiIngameForge.right_height;
+    GuiIngameForge.right_height +=10;
     mc.profiler.startSection("flight");
     //GlStateManager.pushMatrix();
     GlStateManager.enableBlend();

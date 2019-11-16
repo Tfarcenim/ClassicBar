@@ -24,13 +24,15 @@ import static java.util.Arrays.stream;
 import static tfar.classicbar.config.ModConfig.general;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
-@Mod(modid = ClassicBar.MODID, name = ClassicBar.MODNAME, version = ClassicBar.MODVERSION, useMetadata = true, clientSideOnly = true)
+@Mod(modid = ClassicBar.MODID, name = ClassicBar.MODNAME, version = ClassicBar.MODVERSION,
+        useMetadata = true,dependencies = ClassicBar.DEPENDENCIES,clientSideOnly = true)
 public class ClassicBar {
 
   public static final String MODID = "classicbar";
-
   public static final String MODNAME = "Classic Bar";
   public static final String MODVERSION = "@VERSION@";
+  public static final String DEPENDENCIES = "after:randomtweaks@[2.7.1.0,);";
+
   public static final String[] problemMods = new String[]{"mantle", "toughasnails"};
 
   public static final boolean TOUGHASNAILS = Loader.isModLoaded("toughasnails");

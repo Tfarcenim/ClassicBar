@@ -12,6 +12,7 @@ import toughasnails.api.TANCapabilities;
 import toughasnails.api.TANPotions;
 import toughasnails.api.config.GameplayOption;
 import toughasnails.api.config.SyncedConfig;
+import toughasnails.api.stat.capability.IThirst;
 import toughasnails.thirst.ThirstHandler;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
@@ -32,13 +33,12 @@ public class ThirstBarRenderer {
     @SubscribeEvent//(priority = EventPriority.HIGH)
     public void renderThirstBar(RenderGameOverlayEvent.Post event) {
         Entity renderViewEntity = mc.getRenderViewEntity();
-        if (//event.getType() != RenderGameOverlayEvent.ElementType.AIR ||
-                event.isCanceled() ||
+        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL ||
              !SyncedConfig.getBooleanValue(GameplayOption.ENABLE_THIRST) ||
                  !(renderViewEntity instanceof EntityPlayer)) return;
         EntityPlayer player = (EntityPlayer) renderViewEntity;
         if (player.capabilities.isCreativeMode)return;
-        ThirstHandler thirstStats = (ThirstHandler)player.getCapability(TANCapabilities.THIRST, null);
+        IThirst thirstStats = player.getCapability(TANCapabilities.THIRST, null);
         double thirst = thirstStats.getThirst();
         double hydration = thirstStats.getHydration();
         double thirstExhaustion = thirstStats.getExhaustion();
@@ -48,7 +48,9 @@ public class ThirstBarRenderer {
         //Push to avoid lasting changes
 
         int xStart = scaledWidth / 2 + 10;
-        int yStart = scaledHeight - 49;
+
+        int yStart = scaledHeight - GuiIngameForge.right_height;
+        GuiIngameForge.right_height +=10;
 
         mc.profiler.startSection("thirst");
         GlStateManager.pushMatrix();

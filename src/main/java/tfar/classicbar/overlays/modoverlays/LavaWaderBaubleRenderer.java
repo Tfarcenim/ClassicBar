@@ -36,8 +36,8 @@ public class LavaWaderBaubleRenderer {
   public void renderLavaBar(RenderGameOverlayEvent.Pre event) {
 
     Entity renderViewEnity = mc.getRenderViewEntity();
-    if (event.isCanceled()
-            || !(renderViewEnity instanceof EntityPlayer)) {
+    if (event.getType() != RenderGameOverlayEvent.ElementType.ALL ||
+             !(renderViewEnity instanceof EntityPlayer)) {
       return;
     }
     EntityPlayer player = (EntityPlayer) renderViewEnity;
@@ -55,12 +55,9 @@ public class LavaWaderBaubleRenderer {
     int scaledHeight = event.getResolution().getScaledHeight();
     //Push to avoid lasting changes
 
-    int absorb = MathHelper.ceil(player.getAbsorptionAmount());
-
     int xStart = scaledWidth / 2 - 91;
-    int yStart = scaledHeight - 49;
-    if (absorb > 0) yStart -= 10;
-    if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue() >= 1) yStart -= 10;
+    int yStart = scaledHeight - GuiIngameForge.right_height;
+    GuiIngameForge.right_height +=10;
     mc.profiler.startSection("charge");
     //GlStateManager.pushMatrix();
     GlStateManager.enableBlend();

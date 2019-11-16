@@ -5,18 +5,14 @@ import lumien.randomthings.item.ItemLavaWader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.Color;
@@ -37,12 +33,11 @@ public class LavaCharmRenderer {
   public LavaCharmRenderer() {
   }
 
-  @SubscribeEvent(priority = EventPriority.LOW)
   public void renderLavaBar(RenderGameOverlayEvent.Pre event) {
 
     Entity renderViewEnity = mc.getRenderViewEntity();
-    if (event.isCanceled()
-            || !(renderViewEnity instanceof EntityPlayer)) return;
+    if (event.getType() != RenderGameOverlayEvent.ElementType.ALL ||
+             !(renderViewEnity instanceof EntityPlayer)) return;
     EntityPlayer player = (EntityPlayer) renderViewEnity;
     if (player.capabilities.isCreativeMode) return;
     ItemStack stack = ItemStack.EMPTY;
@@ -59,12 +54,9 @@ public class LavaCharmRenderer {
     int scaledHeight = event.getResolution().getScaledHeight();
     //Push to avoid lasting changes
 
-    int absorb = MathHelper.ceil(player.getAbsorptionAmount());
-
     int xStart = scaledWidth / 2 - 91;
-    int yStart = scaledHeight - 49;
-    if (absorb > 0) yStart -= 10;
-    if (player.getEntityAttribute(SharedMonsterAttributes.ARMOR).getAttributeValue() >= 1) yStart -= 10;
+    int yStart = scaledHeight - GuiIngameForge.right_height;
+    GuiIngameForge.right_height +=10;
     mc.profiler.startSection("charge");
     //GlStateManager.pushMatrix();
     GlStateManager.enableBlend();

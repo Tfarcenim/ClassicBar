@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import tfar.classicbar.compat.ToughAsNailsHelper;
-import toughasnails.thirst.ThirstHandler;
+import toughasnails.api.stat.capability.IThirst;
 
 public class MessageHydrationSync implements IMessage, IMessageHandler<MessageHydrationSync, IMessage>
 {
@@ -37,7 +37,7 @@ public class MessageHydrationSync implements IMessage, IMessageHandler<MessageHy
     {
         // defer to the next game loop; we can't guarantee that Minecraft.thePlayer is initialized yet
         EntityPlayer player = NetworkHelper.getSidedPlayer(ctx);
-        ThirstHandler thirstHandler = ToughAsNailsHelper.getHandler(player);
+        IThirst thirstHandler = ToughAsNailsHelper.getHandler(player);
         Minecraft.getMinecraft().addScheduledTask(() -> thirstHandler.setHydration(message.hydrationLevel));
         return null;
     }

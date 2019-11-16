@@ -81,6 +81,9 @@ public class ModConfig {
                 @Config.Name("Show Saturation Bar")
                 public boolean showSaturationBar = true;
 
+                @Config.Name("Show Hunger Bar While on Mount")
+                public boolean showHungerBarOnMount = false;
+
                 @Config.Name("Show Held Food Overlay")
                 public boolean showHeldFoodOverlay = true;
 
