@@ -77,7 +77,8 @@ public class OverlaySuperclass {
 
         IAttributeInstance maxHealthAttribute = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
         int xStart = scaledWidth / 2 - 91;
-        int yStart = scaledHeight - 39;
+        int yStart = scaledHeight - GuiIngameForge.left_height;
+        GuiIngameForge.left_height +=10;
         double maxHealth = maxHealthAttribute.getAttributeValue();
 
         mc.profiler.startSection("health");
@@ -128,8 +129,9 @@ public class OverlaySuperclass {
         }
         //draw absorption bar if it exists
         if (absorb > 0) {
+          GuiIngameForge.right_height += 10;
           int index = (int) Math.ceil(absorb / maxHealth) - 1;
-          if (general.overlays.swap) yStart -= 10;
+         // if (general.overlays.swap) yStart -= 10;
           Color.reset();
           //no wrapping
           if (absorb <= maxHealth) {
@@ -231,7 +233,6 @@ public class OverlaySuperclass {
         Color.reset();
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);
-        GuiIngameForge.left_height += 10;
         if (absorb > 0) {
           GuiIngameForge.left_height += 10;
         }
@@ -470,7 +471,6 @@ public class OverlaySuperclass {
           Color.reset();
 
           mc.getTextureManager().bindTexture(ICON_VANILLA);
-          GuiIngameForge.left_height += 10;
 
           if (general.displayIcons) {
 
@@ -562,7 +562,6 @@ public class OverlaySuperclass {
             //Reset back to normal settings
 
             mc.getTextureManager().bindTexture(ICON_VANILLA);
-            GuiIngameForge.left_height += 10;
 
 
             //Revert our state back
@@ -629,7 +628,6 @@ public class OverlaySuperclass {
         Color.reset();
 
         mc.getTextureManager().bindTexture(ICON_VANILLA);
-        GuiIngameForge.left_height += 10;
 
         if (general.displayIcons) {
           //Draw mountHealth icon
@@ -684,7 +682,6 @@ public class OverlaySuperclass {
         //Reset back to normal settings
         Color.reset();
         mc.getTextureManager().bindTexture(ICON_VANILLA);
-        GuiIngameForge.left_height += 10;
         if (general.displayIcons) {
           //Draw air icon
           drawTexturedModalRect(xStart + 82, yStart, 16, 18, 9, 9);

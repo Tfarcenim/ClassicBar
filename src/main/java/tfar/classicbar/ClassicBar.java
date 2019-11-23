@@ -31,7 +31,7 @@ public class ClassicBar {
   public static final String MODID = "classicbar";
   public static final String MODNAME = "Classic Bar";
   public static final String MODVERSION = "@VERSION@";
-  public static final String DEPENDENCIES = "after:randomtweaks@[2.7.1.0,);";
+  public static final String DEPENDENCIES = "after:randomtweaks@[1.12.2-2.7.1.0,);";
 
   public static final String[] problemMods = new String[]{"mantle", "toughasnails"};
 

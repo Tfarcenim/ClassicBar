@@ -13,7 +13,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.Color;
 import tfar.classicbar.compat.BaublesHelper;
@@ -27,16 +28,19 @@ import static tfar.classicbar.config.ModConfig.*;
 public class LavaCharmRenderer {
   private final Minecraft mc = Minecraft.getMinecraft();
 
-  public static final Item Lava_Charm = ForgeRegistries.ITEMS.getValue(new ResourceLocation("randomthings:lavacharm"));
+  @GameRegistry.ObjectHolder("randomthings:lavacharm")
+  public static final Item lava_charm = null;
+
   public static final ResourceLocation ICON_LAVA = new ResourceLocation("randomthings", "textures/gui/lavacharmbar.png");
 
   public LavaCharmRenderer() {
   }
 
+  @SubscribeEvent(receiveCanceled = true)
   public void renderLavaBar(RenderGameOverlayEvent.Pre event) {
 
     Entity renderViewEnity = mc.getRenderViewEntity();
-    if (event.getType() != RenderGameOverlayEvent.ElementType.ALL ||
+    if (event.getType() != RenderGameOverlayEvent.ElementType.ARMOR ||
              !(renderViewEnity instanceof EntityPlayer)) return;
     EntityPlayer player = (EntityPlayer) renderViewEnity;
     if (player.capabilities.isCreativeMode) return;
@@ -46,7 +50,7 @@ public class LavaCharmRenderer {
     if (stack.isEmpty()) return;
     NBTTagCompound nbt = stack.getTagCompound();
     if (nbt == null) {
-      //System.out.println("error");
+      //proceeding will crash the game
       return;
     }
     int charge = nbt.getInteger("charge");
@@ -55,8 +59,8 @@ public class LavaCharmRenderer {
     //Push to avoid lasting changes
 
     int xStart = scaledWidth / 2 - 91;
-    int yStart = scaledHeight - GuiIngameForge.right_height;
-    GuiIngameForge.right_height +=10;
+    int yStart = scaledHeight - GuiIngameForge.left_height;
+    GuiIngameForge.left_height += 10;
     mc.profiler.startSection("charge");
     //GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
@@ -90,7 +94,6 @@ public class LavaCharmRenderer {
 
     mc.getTextureManager().bindTexture(ICON_VANILLA);
 
-    GuiIngameForge.left_height += 10;
     //GlStateManager.disableBlend();
     //Revert our state back
     //GlStateManager.popMatrix();

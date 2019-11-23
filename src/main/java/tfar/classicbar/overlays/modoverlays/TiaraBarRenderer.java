@@ -4,7 +4,6 @@ import baubles.api.BaublesApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,11 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import tfar.classicbar.ClassicBar;
 import tfar.classicbar.Color;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
@@ -36,12 +32,12 @@ public class TiaraBarRenderer {
   public TiaraBarRenderer() {
   }
 
-  @SubscribeEvent(priority = EventPriority.HIGHEST)
+  @SubscribeEvent(receiveCanceled = true)
   public void renderTiaraBar(RenderGameOverlayEvent.Pre event) {
 
     Entity renderViewEnity = mc.getRenderViewEntity();
     if (//event.isCanceled() ||
-        event.getType() != RenderGameOverlayEvent.ElementType.ALL ||
+        event.getType() != RenderGameOverlayEvent.ElementType.FOOD ||
             !(renderViewEnity instanceof EntityPlayer))
       return;
 
