@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import tfar.classicbar.ClassicBar;
+import tfar.classicbar.EventHandler;
 import tfar.classicbar.ModUtils;
 
 import static tfar.classicbar.config.IdiotHandler.idiots;
@@ -70,8 +71,11 @@ public class ModConfig {
             @Config.Name("Display low hunger warning")
             public boolean lowHungerWarning = true;
 
-            @Config.Name("Swap absorption & armor?")
-            public boolean swap = false;
+            @Config.Name("Bar left order")
+            public String[] leftorder = new String[]{"health","armor","absorption","lavacharm","lavacharm2"};
+
+            @Config.Name("Bar right order")
+            public String[] rightorder = new String[]{"healthmount","food","armortoughness","thirst","air","flighttiara","decay"};
 
             @Config.Name("Low hunger warning threshold")
             public double lowHungerThreshold = .3;
@@ -206,6 +210,7 @@ public class ModConfig {
                 ConfigManager.sync(ClassicBar.MODID, Config.Type.INSTANCE);
                 idiots.idiotsTryingToParseBadHexColorsDOTJpeg();
                 idiots.emptyArrayFixer();
+                EventHandler.setup();
                 ClassicBar.logger.info("Syncing Classic Bar Configs");
             }
         }

@@ -7,13 +7,13 @@ import net.minecraftforge.fml.common.eventhandler.IEventListener;
 import net.minecraftforge.fml.relauncher.Side;
 import tfar.classicbar.config.ModConfig;
 import tfar.classicbar.network.SyncHandler;
-import tfar.classicbar.overlays.*;
 import tfar.classicbar.overlays.modoverlays.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
+import tfar.classicbar.overlays.vanillaoverlays.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Arrays.stream;
-import static tfar.classicbar.config.ModConfig.general;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
 @Mod(modid = ClassicBar.MODID, name = ClassicBar.MODNAME, version = ClassicBar.MODVERSION,
@@ -63,24 +62,25 @@ public class ClassicBar {
     MinecraftForge.EVENT_BUS.register(new ModConfig.ConfigEventHandler());
     //Register renderers for events
     ClassicBar.logger.info("Registering Vanilla Overlay");
-    MinecraftForge.EVENT_BUS.register(new OverlaySuperclass());
+    MinecraftForge.EVENT_BUS.register(new EventHandler());
+
+    EventHandler.registerAll(new AbsorptionRenderer(),new AirRenderer(), new ArmorRenderer(), new ArmorToughnessRenderer(),
+            new HealthRenderer(), new HungerRenderer(), new MountHealthRenderer());
 
     //mod renderers
     ClassicBar.logger.info("Registering Mod Overlays");
-    if (Loader.isModLoaded("randomthings")) MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
-    if (Loader.isModLoaded("lavawaderbauble")) {
-      MinecraftForge.EVENT_BUS.register(new LavaWaderBaubleRenderer());
-    }
-    if (BETWEENLANDS) MinecraftForge.EVENT_BUS.register(new DecayRenderer());
+    if (Loader.isModLoaded("randomthings")) EventHandler.register(new LavaCharmRenderer());
+    if (Loader.isModLoaded("lavawaderbauble")) EventHandler.register(new LavaWaderBaubleRenderer());
+    if (BETWEENLANDS) EventHandler.register(new DecayRenderer());
     //if (Loader.isModLoaded("superiorshields"))
     //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
-    if (TOUGHASNAILS)
-      MinecraftForge.EVENT_BUS.register(new ThirstBarRenderer());
-    if (Loader.isModLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
+    if (TOUGHASNAILS) EventHandler.register(new ThirstBarRenderer());
+    if (Loader.isModLoaded("botania")) EventHandler.register(new TiaraBarRenderer());
+    EventHandler.setup();
 
     boolean areProblemModsPresent = stream(problemMods).anyMatch(Loader::isModLoaded);
     if (areProblemModsPresent) {
-      logger.info("Unregistering problematic overlays.");
+      logger.info("Unregistering problematic overlayorder.");
       ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners;
       try {
         Field f = EventBus.class.getDeclaredField("listeners");

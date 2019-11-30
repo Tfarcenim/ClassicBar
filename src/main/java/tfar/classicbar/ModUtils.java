@@ -36,8 +36,8 @@ public class ModUtils {
     int i = getWidth(absorb, maxHealth);
 
     if (left) {
-      drawTexturedModalRect(x, y - 1, 0, 0, i + 1, 9);
-      drawTexturedModalRect(x + i + 1, y - 1, 79, 0, 2, 9);
+      drawTexturedModalRect(x, y, 0, 0, i + 1, 9);
+      drawTexturedModalRect(x + i + 1, y, 79, 0, 2, 9);
     } else {
       drawTexturedModalRect(x + 2, y, 80 - i, 0, i + 1, 9);
       drawTexturedModalRect(x, y, 0, 0, 2, 9);

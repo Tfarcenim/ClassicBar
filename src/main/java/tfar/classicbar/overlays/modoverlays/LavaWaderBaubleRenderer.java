@@ -16,7 +16,9 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import tfar.classicbar.Color;
+import tfar.classicbar.overlays.IBarOverlay;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
@@ -25,23 +27,19 @@ import static tfar.classicbar.overlays.modoverlays.LavaCharmRenderer.ICON_LAVA;
 
 /*
     Class handles the drawing of the lava charm*/
-public class LavaWaderBaubleRenderer {
-  private final Minecraft mc = Minecraft.getMinecraft();
-  public static final Item LavaWaderBauble = ForgeRegistries.ITEMS.getValue(new ResourceLocation("lavawaderbauble:lavawaderbauble"));
+public class LavaWaderBaubleRenderer implements IBarOverlay {
 
-  public LavaWaderBaubleRenderer() {
+  @GameRegistry.ObjectHolder("lavawaderbauble:lavawaderbauble")
+  public static final Item LavaWaderBauble = null;
+
+  @Override
+  public boolean shouldRender(EntityPlayer player) {
+    return true;
   }
 
-  @SubscribeEvent(priority = EventPriority.LOW)
-  public void renderLavaBar(RenderGameOverlayEvent.Pre event) {
+  @Override
+  public void render(EntityPlayer player,int width, int height) {
 
-    Entity renderViewEnity = mc.getRenderViewEntity();
-    if (event.getType() != RenderGameOverlayEvent.ElementType.ALL ||
-             !(renderViewEnity instanceof EntityPlayer)) {
-      return;
-    }
-    EntityPlayer player = (EntityPlayer) renderViewEnity;
-    if (player.capabilities.isCreativeMode) return;
     int i1 = BaublesApi.isBaubleEquipped(player, LavaWaderBauble);
     if (i1 == -1) return;
     ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
@@ -51,13 +49,10 @@ public class LavaWaderBaubleRenderer {
       return;
     }
     int charge = nbt.getInteger("charge");
-    int scaledWidth = event.getResolution().getScaledWidth();
-    int scaledHeight = event.getResolution().getScaledHeight();
     //Push to avoid lasting changes
 
-    int xStart = scaledWidth / 2 - 91;
-    int yStart = scaledHeight - GuiIngameForge.right_height;
-    GuiIngameForge.right_height +=10;
+    int xStart = width / 2 - 91;
+    int yStart = height - GuiIngameForge.left_height;
     mc.profiler.startSection("charge");
     //GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
@@ -91,11 +86,14 @@ public class LavaWaderBaubleRenderer {
 
     mc.getTextureManager().bindTexture(ICON_VANILLA);
 
-    GuiIngameForge.left_height += 10;
-    //GlStateManager.disableBlend();
+    GlStateManager.disableBlend();
     //Revert our state back
-    //GlStateManager.popMatrix();
+    GlStateManager.popMatrix();
     mc.profiler.endSection();
   }
 
+  @Override
+  public String name() {
+    return "lavawader2";
+  }
 }

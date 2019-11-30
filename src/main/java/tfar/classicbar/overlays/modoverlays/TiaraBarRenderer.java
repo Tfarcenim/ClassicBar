@@ -3,17 +3,15 @@ package tfar.classicbar.overlays.modoverlays;
 import baubles.api.BaublesApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import tfar.classicbar.Color;
+import tfar.classicbar.overlays.IBarOverlay;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
@@ -22,45 +20,34 @@ import static tfar.classicbar.config.ModConfig.*;
 /*
     Class handles the drawing of the tiara
  */
-public class TiaraBarRenderer {
+public class TiaraBarRenderer implements IBarOverlay {
   private final Minecraft mc = Minecraft.getMinecraft();
 
-  static final Item tiara = ForgeRegistries.ITEMS.getValue(new ResourceLocation("botania:flighttiara"));
+  @GameRegistry.ObjectHolder("botania:flighttiara")
+  public static final Item tiara = null;
   private static final ResourceLocation ICON_BOTANIA = new ResourceLocation("botania", "textures/gui/hudicons.png");
 
-
-  public TiaraBarRenderer() {
-  }
-
-  @SubscribeEvent(receiveCanceled = true)
-  public void renderTiaraBar(RenderGameOverlayEvent.Pre event) {
-
-    Entity renderViewEnity = mc.getRenderViewEntity();
-    if (//event.isCanceled() ||
-        event.getType() != RenderGameOverlayEvent.ElementType.FOOD ||
-            !(renderViewEnity instanceof EntityPlayer))
-      return;
-
-    EntityPlayer player = (EntityPlayer) mc.getRenderViewEntity();
-    if (player.capabilities.isCreativeMode) return;
+  @Override
+  public boolean shouldRender(EntityPlayer player) {
     int i1 = BaublesApi.isBaubleEquipped(player, tiara);
-    if (i1 == -1) return;
+    if (i1 == -1) return false;
     ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
     NBTTagCompound nbt = stack.getTagCompound();
-    if (nbt == null) {
-      //System.out.println("error");
-      return;
-    }
-    //System.out.println(nbt);
+    return nbt != null;
+  }
+
+  @Override
+  public void render(EntityPlayer player,int width, int height) {
+
+    int i1 = BaublesApi.isBaubleEquipped(player, tiara);
+    ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
+    NBTTagCompound nbt = stack.getTagCompound();
     int timeLeft = nbt.getInteger("timeLeft");
     int dashCooldown = nbt.getInteger("dashCooldown");
-    int scaledWidth = event.getResolution().getScaledWidth();
-    int scaledHeight = event.getResolution().getScaledHeight();
     //Push to avoid lasting changes
 
-    int xStart = scaledWidth / 2 + 10;
-    int yStart = scaledHeight - GuiIngameForge.right_height;
-    GuiIngameForge.right_height +=10;
+    int xStart = width / 2 + 10;
+    int yStart = height - GuiIngameForge.right_height;
     mc.profiler.startSection("flight");
     //GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
@@ -97,11 +84,14 @@ public class TiaraBarRenderer {
     //Reset back to normal settings
 
     mc.getTextureManager().bindTexture(ICON_VANILLA);
-
-    GuiIngameForge.left_height += 10;
     //GlStateManager.disableBlend();
     //Revert our state back
-    //GlStateManager.popMatrix();
+    GlStateManager.popMatrix();
     mc.profiler.endSection();
+  }
+
+  @Override
+  public String name() {
+    return "flighttiara";
   }
 }

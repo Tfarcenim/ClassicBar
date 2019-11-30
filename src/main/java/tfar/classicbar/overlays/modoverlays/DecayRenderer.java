@@ -6,10 +6,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tfar.classicbar.Color;
 import tfar.classicbar.compat.Decay;
+import tfar.classicbar.overlays.IBarOverlay;
 import thebetweenlands.api.capability.IDecayCapability;
 import thebetweenlands.common.config.BetweenlandsConfig;
 
@@ -19,33 +18,26 @@ import static tfar.classicbar.config.ModConfig.general;
 import static tfar.classicbar.config.ModConfig.numbers;
 
 /*
-    Class handles the drawing of the thirst bar
+    Class handles the drawing of the Betweenlands Decay bar
  */
 
-public class DecayRenderer {
-    private final Minecraft mc = Minecraft.getMinecraft();
+public class DecayRenderer implements IBarOverlay {
+
     private static final ResourceLocation DECAY_BAR_TEXTURE = new ResourceLocation("thebetweenlands:textures/gui/decay_bar.png");
 
-    public DecayRenderer() {
+    @Override
+    public boolean shouldRender(EntityPlayer player) {
+        return BetweenlandsConfig.WORLD_AND_DIMENSION.dimensionId == player.dimension;
     }
 
-    @SubscribeEvent//(priority = EventPriority.HIGH)
-    public void renderDecayBar(RenderGameOverlayEvent.Post event) {
-        Entity renderViewEntity = mc.getRenderViewEntity();
-        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL ||
-                event.isCanceled() ||
-                 !(renderViewEntity instanceof EntityPlayer)) return;
-        EntityPlayer player = (EntityPlayer) renderViewEntity;
-        if (player.capabilities.isCreativeMode || BetweenlandsConfig.WORLD_AND_DIMENSION.dimensionId != player.dimension)return;
+    @Override
+    public void render(EntityPlayer player, int width, int height) {
         IDecayCapability decayCap = Decay.getDecayHandler(player);
         double decay = 20 - decayCap.getDecayStats().getDecayLevel();
-        int scaledWidth = event.getResolution().getScaledWidth();
-        int scaledHeight = event.getResolution().getScaledHeight();
         //Push to avoid lasting changes
 
-        int xStart = scaledWidth / 2 + 10;
-        int yStart = scaledHeight - GuiIngameForge.right_height;
-        GuiIngameForge.right_height += 10;
+        int xStart = width / 2 + 10;
+        int yStart = height - GuiIngameForge.right_height;
         mc.profiler.startSection("decay");
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
@@ -55,33 +47,13 @@ public class DecayRenderer {
         //Bar background
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
-        //draw portion of bar based on thirst amount
+        //draw portion of bar based on decay amount
 
         float f = xStart+79-getWidth(decay,20);
         hex2Color("#81552D"/*mods.thirstBarColor*/).color2Gl();
         drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(decay,20), 7);
 
-        //draw hydration if present
-  /*      if (hydration>0){
-            f = xStart + 79 - getWidth(hydration, 20);
-            hex2Color((dehydration) ? mods.deHydrationSecondaryBarColor : mods.hydrationBarColor).color2Gl();
-            drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(hydration,20), 7);
-        }*/
-
-        //draw thirst exhaustion
-    /*    normalFractions = xStart - getWidth(thirstStats.getExhaustion(), 4) + 80;
-        GlStateManager.color(1, 1, 1, .25f);
-        drawTexturedModalRect(normalFractions, yStart + 1, 1, 28, getWidth(thirstStats.getExhaustion(), 4), 9);*/
-
-       /* if (true/*general.overlays.hunger.showExhaustionOverlay) {
-            thirstExhaustion = Math.min(thirstExhaustion,4);
-            f = xStart - getWidth(thirstExhaustion, 4) + 80;
-            //draw exhaustion
-            GlStateManager.color(1, 1, 1, .25f);
-            drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(thirstExhaustion, 4), 9);
-        }*/
-
-        //draw thirst amount
+        //draw decay amount
         int h1 = (int) Math.floor(decay);
         int c = Integer.decode("#81552D"/*mods.thirstBarColor*/);
         if (numbers.showPercent)h1 = (int)decay*5;
@@ -89,20 +61,22 @@ public class DecayRenderer {
         //Reset back to normal settings
         Color.reset();
 
-        GuiIngameForge.left_height += 10;
 
         if (general.displayIcons) {
             //Draw thirst icon
             mc.getTextureManager().bindTexture(DECAY_BAR_TEXTURE);
 
             drawTexturedModalRect(xStart + 82, yStart, 18, 0, 9,9);
-                drawTexturedModalRect(xStart + 82, yStart, 0, 0, 9, 9);
+            drawTexturedModalRect(xStart + 82, yStart, 0, 0, 9, 9);
         }
-        mc.getTextureManager().bindTexture(ICON_VANILLA);
-
-        //GlStateManager.disableBlend();
         //Revert our state back
+        mc.getTextureManager().bindTexture(ICON_VANILLA);
         GlStateManager.popMatrix();
         mc.profiler.endSection();
+    }
+
+    @Override
+    public String name() {
+        return "decay";
     }
 }
