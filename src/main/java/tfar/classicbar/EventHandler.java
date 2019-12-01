@@ -11,23 +11,23 @@ import tfar.classicbar.config.ModConfig;
 import tfar.classicbar.overlays.IBarOverlay;
 
 import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-import static tfar.classicbar.ModUtils.ICON_VANILLA;
-import static tfar.classicbar.ModUtils.mc;
+import static tfar.classicbar.config.ModConfig.general;
 
 public class EventHandler {
 
-  private static final List<IBarOverlay> left = new ArrayList<>();
-  private static final List<IBarOverlay> right = new ArrayList<>();
-  private static final Map<String,IBarOverlay> registry = new HashMap<>();
+  private static final List<IBarOverlay> combined = new ArrayList<>();
+  private static final Map<String, IBarOverlay> registry = new HashMap<>();
   public static final Minecraft mc = Minecraft.getMinecraft();
 
-  public static void register(IBarOverlay iBarOverlay){
-    registry.put(iBarOverlay.name(),iBarOverlay);
+  public static void register(IBarOverlay iBarOverlay) {
+    registry.put(iBarOverlay.name(), iBarOverlay);
   }
 
-  public static void registerAll(IBarOverlay... iBarOverlay){
-    Arrays.stream(iBarOverlay).forEach( overlay -> registry.put(overlay.name(),overlay));
+  public static void registerAll(IBarOverlay... iBarOverlay) {
+    Arrays.stream(iBarOverlay).forEach(overlay -> registry.put(overlay.name(), overlay));
   }
 
   @SubscribeEvent
@@ -40,40 +40,68 @@ public class EventHandler {
       case FOOD:
       case HEALTH:
         event.setCanceled(true);
-        default:return;
+      default:
+        return;
       case ALL:
     }
     Entity entity = mc.getRenderViewEntity();
     if (!(entity instanceof EntityPlayer)) return;
     EntityPlayer player = (EntityPlayer) entity;
-    if (player.capabilities.isCreativeMode)return;
+    if (player.capabilities.isCreativeMode) return;
     int scaledWidth = event.getResolution().getScaledWidth();
     int scaledHeight = event.getResolution().getScaledHeight();
 
-    left.stream()
-            .filter(iBarOverlay -> iBarOverlay.shouldRender(player))
-            .forEach(iBarOverlay -> {
-              iBarOverlay.render(player, scaledWidth, scaledHeight);
-              GuiIngameForge.left_height += 10;
-            });
-    right.stream()
-            .filter(iBarOverlay -> iBarOverlay.shouldRender(player))
-            .forEach(iBarOverlay -> {
-              iBarOverlay.render(player, scaledWidth, scaledHeight);
-              GuiIngameForge.right_height += 10;
-            });
+    int initial_right_height = GuiIngameForge.right_height;
+    int initial_left_height = GuiIngameForge.left_height;
+
+    mc.getTextureManager().bindTexture(ModUtils.ICON_BAR);
+    Supplier<Stream<IBarOverlay>> supplier = () -> combined.stream().filter(iBarOverlay -> iBarOverlay.shouldRender(player));
+
+    supplier.get().forEach(iBarOverlay -> {
+      iBarOverlay.renderBar(player, scaledWidth, scaledHeight);
+      if (iBarOverlay.rightHandSide())
+       GuiIngameForge.right_height+=10;
+      else GuiIngameForge.left_height+=10;
+    });
+
+    GuiIngameForge.right_height = initial_right_height;
+    GuiIngameForge.left_height = initial_left_height;
+
+    supplier.get().forEach(iBarOverlay -> {
+      if (iBarOverlay.shouldRenderText())
+      iBarOverlay.renderText(player, scaledWidth, scaledHeight);
+      if (iBarOverlay.rightHandSide())
+        GuiIngameForge.right_height+=10;
+      else GuiIngameForge.left_height+=10;
+    });
+
+    if (general.displayIcons) {
+      GuiIngameForge.right_height = initial_right_height;
+      GuiIngameForge.left_height = initial_left_height;
+
+      supplier.get().forEach(iBarOverlay -> {
+        iBarOverlay.renderIcon(player, scaledWidth, scaledHeight);
+        if (iBarOverlay.rightHandSide())
+          GuiIngameForge.right_height += 10;
+        else GuiIngameForge.left_height += 10;
+      });
+    }
+    mc.getTextureManager().bindTexture(Gui.ICONS);
   }
 
-  public static void setup(){
-    left.clear();
-    right.clear();
+  public static void setup() {
+    combined.clear();
     Arrays.stream(ModConfig.general.overlays.leftorder).forEach(e -> {
-      if (registry.get(e) != null)
-      left.add(registry.get(e));
+      if (registry.get(e) != null) {
+
+        combined.add(
+
+                registry.get(e).setSide(false));
+      }
     });
     Arrays.stream(ModConfig.general.overlays.rightorder).forEach(e -> {
       if (registry.get(e) != null)
-        right.add(registry.get(e));
+        combined.add(registry.get(e).setSide(true));
     });
   }
 }

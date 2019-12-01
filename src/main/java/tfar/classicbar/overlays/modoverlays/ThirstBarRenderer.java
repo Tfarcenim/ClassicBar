@@ -2,7 +2,6 @@ package tfar.classicbar.overlays.modoverlays;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.GuiIngameForge;
 import tfar.classicbar.Color;
 import tfar.classicbar.overlays.IBarOverlay;
 import toughasnails.api.TANCapabilities;
@@ -22,13 +21,26 @@ import static toughasnails.handler.thirst.ThirstOverlayHandler.OVERLAY;
 
 public class ThirstBarRenderer implements IBarOverlay {
 
+  public boolean side;
+
+  @Override
+  public IBarOverlay setSide(boolean side) {
+    this.side = side;
+    return this;
+  }
+
+  @Override
+  public boolean rightHandSide() {
+    return side;
+  }
+
   @Override
   public boolean shouldRender(EntityPlayer player) {
     return SyncedConfig.getBooleanValue(GameplayOption.ENABLE_THIRST);
   }
 
   @Override
-  public void render(EntityPlayer player,int width, int height) {
+  public void renderBar(EntityPlayer player, int width, int height) {
 
     IThirst thirstStats = player.getCapability(TANCapabilities.THIRST, null);
     double thirst = thirstStats.getThirst();
@@ -38,25 +50,17 @@ public class ThirstBarRenderer implements IBarOverlay {
     //Push to avoid lasting changes
 
     int xStart = width / 2 + 10;
-
-    int yStart = width - GuiIngameForge.right_height;
+    int yStart = height - getSidedOffset();
 
     mc.profiler.startSection("thirst");
-    GlStateManager.pushMatrix();
-    GlStateManager.enableBlend();
-    int backgroundOffset = 0;
-    int iconIndex = 0;
-    boolean dehydration = false;
-    if(player.isPotionActive(TANPotions.thirst)) {
-      iconIndex += 4;
-      backgroundOffset += 117;
-      dehydration= true;
-    }
 
     GlStateManager.pushMatrix();
-    //Bind our Custom bar
-    mc.getTextureManager().bindTexture(ICON_BAR);
+    GlStateManager.enableBlend();
+
+    boolean dehydration = player.isPotionActive(TANPotions.thirst);
+
     //Bar background
+    Color.reset();
     drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
     //draw portion of bar based on thirst amount
@@ -65,17 +69,14 @@ public class ThirstBarRenderer implements IBarOverlay {
     hex2Color((dehydration) ? mods.deHydrationBarColor : mods.thirstBarColor).color2Gl();
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(thirst,20), 7);
 
+
+
     //draw hydration if present
     if (hydration>0){
       f = xStart + 79 - getWidth(hydration, 20);
       hex2Color((dehydration) ? mods.deHydrationSecondaryBarColor : mods.hydrationBarColor).color2Gl();
       drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(hydration,20), 7);
     }
-
-    //draw thirst exhaustion
-    /*    normalFractions = xStart - getWidth(thirstStats.getExhaustion(), 4) + 80;
-        GlStateManager.color(1, 1, 1, .25f);
-        drawTexturedModalRect(normalFractions, yStart + 1, 1, 28, getWidth(thirstStats.getExhaustion(), 4), 9);*/
 
     if (true/*general.overlayorder.hunger.showExhaustionOverlay*/) {
       thirstExhaustion = Math.min(thirstExhaustion,4);
@@ -84,30 +85,44 @@ public class ThirstBarRenderer implements IBarOverlay {
       GlStateManager.color(1, 1, 1, .25f);
       drawTexturedModalRect(f, yStart + 1, 1, 28, getWidth(thirstExhaustion, 4), 9);
     }
-
-    //draw thirst amount
-    int h1 = (int) Math.floor(thirst);
-    int c = Integer.decode((dehydration) ? mods.deHydrationBarColor : mods.thirstBarColor);
-    if (numbers.showPercent)h1 = (int)thirst*5;
-    if (numbers.showThirstNumbers)drawStringOnHUD(h1 + "", xStart + 9 * ((general.displayIcons) ? 1 : 0) + rightTextOffset, yStart - 1, c);
-    //Reset back to normal settings
-    Color.reset();
-
-
-    if (general.displayIcons) {
-      //Draw thirst icon
-      mc.getTextureManager().bindTexture(OVERLAY);
-
-      drawTexturedModalRect(xStart + 82, yStart, backgroundOffset, 16, 9,9);
-      drawTexturedModalRect(xStart + 82, yStart, (iconIndex + 4) * 9, 16, 9, 9);
-    }
-    mc.getTextureManager().bindTexture(ICON_VANILLA);
-
-    //GlStateManager.disableBlend();
-    //Revert our state back
     GlStateManager.disableBlend();
     GlStateManager.popMatrix();
     mc.profiler.endSection();
+  }
+
+  @Override
+  public boolean shouldRenderText() {
+    return numbers.showThirstNumbers;
+  }
+
+  @Override
+  public void renderText(EntityPlayer player, int width, int height) {
+    int xStart = width / 2 + 10;
+    int yStart = height - getSidedOffset();
+    boolean dehydration = player.isPotionActive(TANPotions.thirst);
+    IThirst thirstStats = player.getCapability(TANCapabilities.THIRST, null);
+    double thirst = thirstStats.getThirst();
+    int h1 = (int) Math.floor(thirst);
+    int c = Integer.decode((dehydration) ? mods.deHydrationBarColor : mods.thirstBarColor);
+    if (numbers.showPercent)h1 = (int)thirst*5;
+    drawStringOnHUD(h1 + "", xStart + 9 * ((general.displayIcons) ? 1 : 0) + rightTextOffset, yStart - 1, c);
+  }
+
+  @Override
+  public void renderIcon(EntityPlayer player, int width, int height) {
+    int xStart = width / 2 + 10;
+    int yStart = height - getSidedOffset();
+    //Draw thirst icon
+    int backgroundOffset = 0;
+    int iconIndex = 0;
+    if(player.isPotionActive(TANPotions.thirst)) {
+      iconIndex += 4;
+      backgroundOffset += 117;
+    }
+    mc.getTextureManager().bindTexture(OVERLAY);
+
+    drawTexturedModalRect(xStart + 82, yStart, backgroundOffset, 16, 9,9);
+    drawTexturedModalRect(xStart + 82, yStart, (iconIndex + 4) * 9, 16, 9, 9);
   }
 
   @Override

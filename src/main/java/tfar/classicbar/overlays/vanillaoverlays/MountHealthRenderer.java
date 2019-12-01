@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.GuiIngameForge;
 import tfar.classicbar.Color;
 import tfar.classicbar.overlays.IBarOverlay;
 
@@ -24,13 +25,26 @@ public class MountHealthRenderer implements IBarOverlay {
 
   private double mountHealth = 0;
 
+  public boolean side;
+
+  @Override
+  public IBarOverlay setSide(boolean side) {
+    this.side = side;
+    return this;
+  }
+
+  @Override
+  public boolean rightHandSide() {
+    return side;
+  }
+
   @Override
   public boolean shouldRender(EntityPlayer player) {
     return player.getRidingEntity() instanceof EntityLivingBase;
   }
 
   @Override
-  public void render(EntityPlayer player, int width, int height) {
+  public void renderBar(EntityPlayer player, int width, int height) {
     //Push to avoid lasting changes
     updateCounter = mc.ingameGUI.getUpdateCounter();
 
@@ -49,19 +63,15 @@ public class MountHealthRenderer implements IBarOverlay {
     }
 
     this.mountHealth = mountHealth;
-    IAttributeInstance maxHealthAttribute = mount.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
     int xStart = width / 2 + 10;
-    int yStart = height - 39;
-    double maxHealth = maxHealthAttribute.getAttributeValue();
+    int yStart = height - getSidedOffset();
+    double maxHealth = mount.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue();
 
     mc.profiler.startSection("mountHealth");
     GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
     int i4 = (highlight) ? 18 : 0;
 
-
-    //Bind our Custom bar
-    mc.getTextureManager().bindTexture(ICON_BAR);
     //Bar background
     drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9);
 
@@ -73,34 +83,39 @@ public class MountHealthRenderer implements IBarOverlay {
     float f = xStart + 79 - getWidth(mountHealth, maxHealth);
     //draw portion of bar based on mountHealth remaining
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
-    //draw mountHealth amount
-    int h1 = (int) Math.ceil(mountHealth);
-
-    int i3 = general.displayIcons ? 1 : 0;
-    if (numbers.showPercent) h1 = (int) (100 * mountHealth / maxHealth);
-    if (numbers.showMountHealthNumbers)
-      drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, calculateScaledColor(mountHealth, maxHealth, 16).colorToText());
-
-    //Reset back to normal settings
-    Color.reset();
-
-    mc.getTextureManager().bindTexture(ICON_VANILLA);
-
-    if (general.displayIcons) {
-      //Draw mountHealth icon
-      //heart background
-      drawTexturedModalRect(xStart + 82, yStart, 16, 0, 9, 9);
-      //heart
-      drawTexturedModalRect(xStart + 82, yStart, 88, 9, 9, 9);
-
-    }
-
-    //Reset back to normal settings
 
     GlStateManager.disableBlend();
     //Revert our state back
     GlStateManager.popMatrix();
     mc.profiler.endSection();
+  }
+
+  @Override
+  public boolean shouldRenderText() {
+    return numbers.showMountHealthNumbers;
+  }
+
+  @Override
+  public void renderText(EntityPlayer player, int width, int height) {
+    int h1 = (int) Math.ceil(mountHealth);
+
+    int xStart = width / 2 + 10;
+    int yStart = height - getSidedOffset();
+    EntityLivingBase mount = (EntityLivingBase) player.getRidingEntity();
+    double maxHealth = mount.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue();
+    int i3 = general.displayIcons ? 1 : 0;
+    if (numbers.showPercent) h1 = (int) (100 * mountHealth / maxHealth);
+    drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, calculateScaledColor(mountHealth, maxHealth, 16).colorToText());
+  }
+
+  @Override
+  public void renderIcon(EntityPlayer player, int width, int height) {
+    int xStart = width / 2 + 10;
+    int yStart = height - getSidedOffset();
+    //heart background
+    drawTexturedModalRect(xStart + 82, yStart, 16, 0, 9, 9);
+    //heart
+    drawTexturedModalRect(xStart + 82, yStart, 88, 9, 9, 9);
   }
 
   @Override

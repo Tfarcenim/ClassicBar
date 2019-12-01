@@ -2,7 +2,6 @@ package tfar.classicbar;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
@@ -13,7 +12,6 @@ public class ModUtils {
 
   public static final int leftTextOffset = -5;
 
-  public static final ResourceLocation ICON_VANILLA = Gui.ICONS;
   public static ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
   public static final Minecraft mc = Minecraft.getMinecraft();
   private static final FontRenderer fontRenderer = mc.fontRenderer;

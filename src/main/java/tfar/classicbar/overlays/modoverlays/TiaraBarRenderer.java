@@ -27,17 +27,29 @@ public class TiaraBarRenderer implements IBarOverlay {
   public static final Item tiara = null;
   private static final ResourceLocation ICON_BOTANIA = new ResourceLocation("botania", "textures/gui/hudicons.png");
 
+  public boolean side;
+
+  @Override
+  public IBarOverlay setSide(boolean side) {
+    this.side = side;
+    return this;
+  }
+
+  @Override
+  public boolean rightHandSide() {
+    return side;
+  }
+
   @Override
   public boolean shouldRender(EntityPlayer player) {
     int i1 = BaublesApi.isBaubleEquipped(player, tiara);
     if (i1 == -1) return false;
-    ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
-    NBTTagCompound nbt = stack.getTagCompound();
+    NBTTagCompound nbt = BaublesApi.getBaublesHandler(player).getStackInSlot(i1).getTagCompound();
     return nbt != null;
   }
 
   @Override
-  public void render(EntityPlayer player,int width, int height) {
+  public void renderBar(EntityPlayer player, int width, int height) {
 
     int i1 = BaublesApi.isBaubleEquipped(player, tiara);
     ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
@@ -47,13 +59,11 @@ public class TiaraBarRenderer implements IBarOverlay {
     //Push to avoid lasting changes
 
     int xStart = width / 2 + 10;
-    int yStart = height - GuiIngameForge.right_height;
+    int yStart = height - getSidedOffset();
     mc.profiler.startSection("flight");
     //GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
 
-    //Bind our Custom bar
-    mc.getTextureManager().bindTexture(ICON_BAR);
     //Bar background
     GlStateManager.color(1, 1, 1, 1);
     //draw main background
@@ -74,8 +84,41 @@ public class TiaraBarRenderer implements IBarOverlay {
     if (numbers.showPercent) i2 = timeLeft / 12;
     int i3 = (general.displayIcons) ? 1 : 0;
     int c = Integer.decode(mods.flightBarColor);
-    if (numbers.showTiaraNumbers)drawStringOnHUD(i2 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
+    drawStringOnHUD(i2 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
 
+    //Revert our state back
+    GlStateManager.popMatrix();
+    mc.profiler.endSection();
+  }
+
+  @Override
+  public boolean shouldRenderText() {
+    return numbers.showTiaraNumbers;
+  }
+
+  @Override
+  public void renderText(EntityPlayer player, int width, int height) {
+    int i1 = BaublesApi.isBaubleEquipped(player, tiara);
+    ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
+    NBTTagCompound nbt = stack.getTagCompound();
+    int timeLeft = nbt.getInteger("timeLeft");
+    int xStart = width / 2 + 10;
+    int yStart = height - getSidedOffset();
+    int i2 = timeLeft / 20;
+    //draw timeLeft amount
+    if (numbers.showPercent) i2 = timeLeft / 12;
+    int i3 = (general.displayIcons) ? 1 : 0;
+    int c = Integer.decode(mods.flightBarColor);
+    drawStringOnHUD(i2 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
+  }
+
+  @Override
+  public void renderIcon(EntityPlayer player, int width, int height) {
+
+    int xStart = width / 2 + 10;
+    int yStart = height - getSidedOffset();
+    int i1 = BaublesApi.isBaubleEquipped(player, tiara);
+    ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
     mc.getTextureManager().bindTexture(ICON_BOTANIA);
     Color.reset();
     if (general.displayIcons)
@@ -83,11 +126,6 @@ public class TiaraBarRenderer implements IBarOverlay {
       drawTexturedModalRect(xStart + 81, yStart, Math.max(stack.getItemDamage() * 9 - 9, 0), 0, 9, 9);
     //Reset back to normal settings
 
-    mc.getTextureManager().bindTexture(ICON_VANILLA);
-    //GlStateManager.disableBlend();
-    //Revert our state back
-    GlStateManager.popMatrix();
-    mc.profiler.endSection();
   }
 
   @Override

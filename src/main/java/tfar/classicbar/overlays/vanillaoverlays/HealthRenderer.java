@@ -1,6 +1,7 @@
 package tfar.classicbar.overlays.vanillaoverlays;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -20,23 +21,22 @@ public class HealthRenderer implements IBarOverlay {
 
   private final Minecraft mc = Minecraft.getMinecraft();
 
-  private float foodAlpha = 0;
-  private boolean foodIncrease = true;
-
-  private int updateCounter = 0;
   private double playerHealth = 0;
   private long healthUpdateCounter = 0;
   private double lastPlayerHealth = 0;
-  private double displayHealth = 0;
-  private int alpha;
 
-  long lastSystemTime;
+  public boolean side;
 
-  private double mountHealth = 0;
+  @Override
+  public IBarOverlay setSide(boolean side) {
+    this.side = side;
+    return this;
+  }
 
-  private float armorAlpha = 1;
-  private static EntityEquipmentSlot[] armorList = new EntityEquipmentSlot[]{EntityEquipmentSlot.HEAD,
-          EntityEquipmentSlot.CHEST, EntityEquipmentSlot.LEGS, EntityEquipmentSlot.FEET};
+  @Override
+  public boolean rightHandSide() {
+    return side;
+  }
 
   @Override
   public boolean shouldRender(EntityPlayer player) {
@@ -44,8 +44,8 @@ public class HealthRenderer implements IBarOverlay {
   }
 
   @Override
-  public void render(EntityPlayer player, int width, int height) {
-    updateCounter = mc.ingameGUI.getUpdateCounter();
+  public void renderBar(EntityPlayer player, int width, int height) {
+    int updateCounter = mc.ingameGUI.getUpdateCounter();
 
     double health = player.getHealth();
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
@@ -59,12 +59,11 @@ public class HealthRenderer implements IBarOverlay {
       /* lastPlayerHealth = playerHealth;*/
     }
     playerHealth = health;
-    displayHealth = health + (lastPlayerHealth - health) * ((double) player.hurtResistantTime / player.maxHurtResistantTime);
+    double displayHealth = health + (lastPlayerHealth - health) * ((double) player.hurtResistantTime / player.maxHurtResistantTime);
 
-    IAttributeInstance maxHealthAttribute = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
     int xStart = width / 2 - 91;
     int yStart = height - GuiIngameForge.left_height;
-    double maxHealth = maxHealthAttribute.getAttributeValue();
+    double maxHealth = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue();
 
     mc.profiler.startSection("health");
     GlStateManager.pushMatrix();
@@ -76,14 +75,12 @@ public class HealthRenderer implements IBarOverlay {
 
     int i4 = (highlight) ? 18 : 0;
 
-    //Bind our Custom bar
-    mc.getTextureManager().bindTexture(ICON_BAR);
     //Bar background
     drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9);
 
     //is the bar changing
     //Pass 1, draw bar portion
-    alpha = health <= 0 ? 1 : health / maxHealth <= general.overlays.lowHealthThreshold && general.overlays.lowHealthWarning ?
+    int alpha = health <= 0 ? 1 : health / maxHealth <= general.overlays.lowHealthThreshold && general.overlays.lowHealthWarning ?
             (int) (Minecraft.getSystemTime() / 250) % 2 : 1;
 
     //interpolate the bar
@@ -106,39 +103,66 @@ public class HealthRenderer implements IBarOverlay {
     //draw portion of bar based on health remaining
     drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
 
-
     if (k5 == 52) {
       //draw poison overlay
       GlStateManager.color(0, .5f, 0, .5f);
       drawTexturedModalRect(xStart + 1, yStart + 1, 1, 36, getWidth(health, maxHealth), 7);
     }
-    int h1 = (int) Math.round(health);
-    int i2 = general.displayIcons ? 1 : 0;
-    if (numbers.showPercent) h1 = (int) (100 * health / maxHealth);
-    int i1 = getStringLength(h1 + "");
 
-    if (numbers.showHealthNumbers)
-      drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth, k5).colorToText());
-
-    //Reset back to normal settings
     Color.reset();
-
-    mc.getTextureManager().bindTexture(ICON_VANILLA);
-
-    if (general.displayIcons) {
-      int i5 = (player.world.getWorldInfo().isHardcoreModeEnabled()) ? 5 : 0;
-      //Draw health icon
-      //heart background
-      drawTexturedModalRect(xStart - 10, yStart, 16, 9 * i5, 9, 9);
-      //heart
-      drawTexturedModalRect(xStart - 10, yStart, 36 + k5, 9 * i5, 9, 9);
-    }
     //Reset back to normal settings
 
     GlStateManager.disableBlend();
     //Revert our state back
     GlStateManager.popMatrix();
     mc.profiler.endSection();
+  }
+
+  @Override
+  public boolean shouldRenderText() {
+    return numbers.showHealthNumbers;
+  }
+
+  @Override
+  public void renderText(EntityPlayer player, int width, int height) {
+    double health = player.getHealth();
+
+    int xStart = width / 2 - 91;
+    int yStart = height - GuiIngameForge.left_height;
+    double maxHealth = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getAttributeValue();
+
+    int k5 = 16;
+
+    if (player.isPotionActive(MobEffects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.isPotionActive(MobEffects.WITHER)) k5 += 72;//evaluates to 88
+
+    int h1 = (int) Math.round(health);
+    int i2 = general.displayIcons ? 1 : 0;
+    if (numbers.showPercent) h1 = (int) (100 * health / maxHealth);
+    int i1 = getStringLength(h1 + "");
+
+    drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth, k5).colorToText());
+  }
+
+  @Override
+  public void renderIcon(EntityPlayer player, int width, int height) {
+    mc.getTextureManager().bindTexture(Gui.ICONS);
+
+    int k5 = 16;
+
+    if (player.isPotionActive(MobEffects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.isPotionActive(MobEffects.WITHER)) k5 += 72;//evaluates to 88
+
+    int xStart = width / 2 - 91;
+    int yStart = height - GuiIngameForge.left_height;
+    int i5 = (player.world.getWorldInfo().isHardcoreModeEnabled()) ? 5 : 0;
+    //Draw health icon
+    //heart background
+    Color.reset();
+
+    drawTexturedModalRect(xStart - 10, yStart, 16, 9 * i5, 9, 9);
+    //heart
+    drawTexturedModalRect(xStart - 10, yStart, 36 + k5, 9 * i5, 9, 9);
   }
 
   @Override

@@ -27,35 +27,46 @@ public class LavaCharmRenderer implements IBarOverlay {
   @GameRegistry.ObjectHolder("randomthings:lavacharm")
   public static final Item lava_charm = null;
 
+  public boolean side;
+
+  @Override
+  public boolean rightHandSide() {
+    return side;
+  }
+
+  @Override
+  public IBarOverlay setSide(boolean side) {
+    this.side = side;
+    return this;
+  }
+
   public static final ResourceLocation ICON_LAVA = new ResourceLocation("randomthings", "textures/gui/lavacharmbar.png");
 
   @Override
   public boolean shouldRender(EntityPlayer player) {
-    return true;
-  }
-
-  @Override
-  public void render(EntityPlayer player,int width, int height) {
     ItemStack stack = ItemStack.EMPTY;
     if (ClassicBar.BAUBLES)stack = BaublesHelper.getLavaWader(player);
     if (stack.isEmpty())stack = getLavaCharm(player);
-    if (stack.isEmpty()) return;
     NBTTagCompound nbt = stack.getTagCompound();
-    if (nbt == null) {
-      //proceeding will crash the game
-      return;
-    }
+    //proceeding will crash the game
+    return nbt != null;
+  }
+
+  @Override
+  public void renderBar(EntityPlayer player, int width, int height) {
+    ItemStack stack = ItemStack.EMPTY;
+    if (ClassicBar.BAUBLES)stack = BaublesHelper.getLavaWader(player);
+    if (stack.isEmpty())stack = getLavaCharm(player);
+    NBTTagCompound nbt = stack.getTagCompound();
     int charge = nbt.getInteger("charge");
     //Push to avoid lasting changes
 
     int xStart = width / 2 - 91;
-    int yStart = height - GuiIngameForge.left_height;
+    int yStart = height - getSidedOffset();
     mc.profiler.startSection("charge");
     //GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
 
-    //Bind our Custom bar
-    mc.getTextureManager().bindTexture(ICON_BAR);
     //Bar background
     Color.reset();
     drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
@@ -65,28 +76,41 @@ public class LavaCharmRenderer implements IBarOverlay {
     //calculate bar color
     //draw portion of bar based on charge amount
     drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(charge, 200), 7);
+
+    Color.reset();
+    GlStateManager.popMatrix();
+    mc.profiler.endSection();
+  }
+
+  @Override
+  public boolean shouldRenderText() {
+    return numbers.showLavaNumbers;
+  }
+
+  @Override
+  public void renderText(EntityPlayer player, int width, int height) {
+    int xStart = width / 2 - 91;
+    int yStart = height - getSidedOffset();
+    ItemStack stack = ItemStack.EMPTY;
+    if (ClassicBar.BAUBLES)stack = BaublesHelper.getLavaWader(player);
+    if (stack.isEmpty())stack = getLavaCharm(player);
+    NBTTagCompound nbt = stack.getTagCompound();
+    int charge = nbt.getInteger("charge");
     int i2 = charge/20;
     //draw charge amount
     if (numbers.showPercent) i2 /= 3;
     int i3 = getStringLength(i2 + "");
     int i4 = (general.displayIcons) ? 1 : 0;
     int c = Integer.decode(mods.lavaBarColor);
-    if (numbers.showLavaNumbers)drawStringOnHUD(i2 + "", xStart - 9 * i4 - i3 + leftTextOffset, yStart - 1, c);
+    drawStringOnHUD(i2 + "", xStart - 9 * i4 - i3 + leftTextOffset, yStart - 1, c);
+  }
 
+  @Override
+  public void renderIcon(EntityPlayer player, int width, int height) {
     mc.getTextureManager().bindTexture(ICON_LAVA);
-    Color.reset();
-
-    if (general.displayIcons)
-      //Draw charge icon
-      drawTexturedModalRect(xStart - 10, yStart, 1, 1, 9, 9);
-    //Reset back to normal settings
-
-    mc.getTextureManager().bindTexture(ICON_VANILLA);
-
-    //GlStateManager.disableBlend();
-    //Revert our state back
-    GlStateManager.popMatrix();
-    mc.profiler.endSection();
+    int xStart = width / 2 - 91;
+    int yStart = height - getSidedOffset();
+    drawTexturedModalRect(xStart - 10, yStart, 1, 1, 9, 9);
   }
 
   @Override
