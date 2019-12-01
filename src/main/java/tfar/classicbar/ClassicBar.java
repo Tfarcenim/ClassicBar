@@ -17,10 +17,9 @@ import tfar.classicbar.overlays.vanillaoverlays.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static java.util.Arrays.stream;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
 @Mod(modid = ClassicBar.MODID, name = ClassicBar.MODNAME, version = ClassicBar.MODVERSION,
@@ -78,7 +77,7 @@ public class ClassicBar {
     if (Loader.isModLoaded("botania")) EventHandler.register(new TiaraBarRenderer());
     EventHandler.setup();
 
-    boolean areProblemModsPresent = stream(problemMods).anyMatch(Loader::isModLoaded);
+    boolean areProblemModsPresent = Arrays.stream(problemMods).anyMatch(Loader::isModLoaded);
     if (areProblemModsPresent) {
       logger.info("Unregistering problematic overlayorder.");
       ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners;

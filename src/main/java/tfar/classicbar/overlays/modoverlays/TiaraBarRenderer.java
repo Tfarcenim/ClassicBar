@@ -79,12 +79,6 @@ public class TiaraBarRenderer implements IBarOverlay {
     //draw portion of bar based on timeLeft amount
     float f = xStart + 79 - getWidth(timeLeft, 1200);
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(timeLeft, 1200), 7);
-    int i2 = timeLeft / 20;
-    //draw timeLeft amount
-    if (numbers.showPercent) i2 = timeLeft / 12;
-    int i3 = (general.displayIcons) ? 1 : 0;
-    int c = Integer.decode(mods.flightBarColor);
-    drawStringOnHUD(i2 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
 
     //Revert our state back
     GlStateManager.popMatrix();

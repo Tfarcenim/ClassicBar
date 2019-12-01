@@ -117,40 +117,6 @@ public class AbsorptionRenderer implements IBarOverlay {
         drawTexturedModalRect(xStart + 1, yStart, 1, 10, getWidth(absorb % maxHealth, maxHealth), 7);
       }
     }
-    // handle the text
-    int a1 = getStringLength((int) absorb + "");
-    int a2 = general.displayIcons ? 1 : 0;
-    int a3 = (int) absorb;
-    int c = 0;
-
-    switch (k5) {
-      case 16: {
-        c = hex2Color(colors.advancedColors.absorptionColorValues[index]).colorToText();
-        break;
-      }
-      case 52: {
-        c = hex2Color(colors.advancedColors.absorptionPoisonColorValues[index]).colorToText();
-        break;
-      }
-      case 88: {
-        c = hex2Color(colors.advancedColors.absorptionWitherColorValues[index]).colorToText();
-        break;
-      }
-    }
-
-    drawStringOnHUD(a3 + "", xStart - a1 - 9 * a2 - 5, yStart - 2, c);
-
-    int h1 = (int) Math.round(absorb);
-    int i2 = general.displayIcons ? 1 : 0;
-    if (numbers.showPercent) h1 = (int) (100 * absorb / maxHealth);
-    int i1 = getStringLength(h1 + "");
-
-
-    //Reset back to normal settings
-    Color.reset();
-
-    //Reset back to normal settings
-
     GlStateManager.disableBlend();
     //Revert our state back
     GlStateManager.popMatrix();

@@ -75,7 +75,7 @@ public class HungerHelper {
   private static double getPITweaksHunger(EntityPlayer player){
     try {
 
-      return f3.getBoolean(instance) ? player.getFoodStats().getFoodLevel() : 20;
+      return f3.getBoolean(instance) ? Math.max(player.getFoodStats().getFoodLevel(),20) : 20;
     } catch (IllegalAccessException e){
       e.printStackTrace();
       return 20;
@@ -86,7 +86,7 @@ public class HungerHelper {
     double max = 20;
 
     if (ClassicBar.PITWEAKS) return getPITweaksHunger(player);
-    if (ClassicBar.RANDOMTWEAKS) return getMaxRTHunger(player);
+    else if (ClassicBar.RANDOMTWEAKS) return getMaxRTHunger(player);
     else if (ClassicBar.IBLIS) return getMaxIblisHunger(player);
 
     return max;

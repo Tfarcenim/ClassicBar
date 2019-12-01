@@ -3,15 +3,12 @@ package tfar.classicbar.overlays.vanillaoverlays;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.GuiIngameForge;
 import tfar.classicbar.Color;
-import tfar.classicbar.ModUtils;
 import tfar.classicbar.overlays.IBarOverlay;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
-import static tfar.classicbar.config.ModConfig.numbers;
 
 public class ArmorToughnessRenderer implements IBarOverlay {
 
