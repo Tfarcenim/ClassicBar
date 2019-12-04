@@ -52,6 +52,7 @@ public class DecayRenderer implements IBarOverlay {
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
 
+        Color.reset();
         //Bar background
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
         //draw portion of bar based on decay amount

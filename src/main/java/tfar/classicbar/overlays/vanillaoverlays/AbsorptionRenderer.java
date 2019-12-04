@@ -96,7 +96,7 @@ public class AbsorptionRenderer implements IBarOverlay {
           break;
         }
       }
-      drawTexturedModalRect(xStart + 1, yStart, 1, 10, 79, 7);
+      drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, 79, 7);
       //is it on the edge or capped already?
       if (absorb % maxHealth != 0 && index < colors.advancedColors.absorptionColorValues.length - 1) {
         //draw second partial bar
@@ -114,7 +114,7 @@ public class AbsorptionRenderer implements IBarOverlay {
             break;
           }
         }
-        drawTexturedModalRect(xStart + 1, yStart, 1, 10, getWidth(absorb % maxHealth, maxHealth), 7);
+        drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(absorb % maxHealth, maxHealth), 7);
       }
     }
     GlStateManager.disableBlend();
@@ -147,7 +147,7 @@ public class AbsorptionRenderer implements IBarOverlay {
     if (player.isPotionActive(MobEffects.POISON)) k5 += 36;//evaluates to 52
     else if (player.isPotionActive(MobEffects.WITHER)) k5 += 72;//evaluates to 88
 
-    int index = (int) Math.ceil(absorb / maxHealth) - 1;
+    int index = Math.min((int) Math.ceil(absorb / maxHealth),colors.advancedColors.absorptionColorValues.length) - 1;
 
     switch (k5) {
       case 16: {

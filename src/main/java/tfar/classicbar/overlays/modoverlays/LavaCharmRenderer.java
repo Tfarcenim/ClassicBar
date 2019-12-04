@@ -9,7 +9,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.Color;
@@ -64,7 +63,7 @@ public class LavaCharmRenderer implements IBarOverlay {
     int xStart = width / 2 - 91;
     int yStart = height - getSidedOffset();
     mc.profiler.startSection("charge");
-    //GlStateManager.pushMatrix();
+    GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
 
     //Bar background

@@ -40,6 +40,7 @@ public class AirRenderer implements IBarOverlay {
     mc.profiler.startSection("air");
     GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
+    Color.reset();
 
     //Bar background
     drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
@@ -50,10 +51,6 @@ public class AirRenderer implements IBarOverlay {
     float f = xStart + 79 - getWidth(air, 300);
     hex2Color(colors.oxygenBarColor).color2Gl();
     drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(air, 300), 7);
-
-
-    Color.reset();
-
 
     GlStateManager.disableBlend();
     //Revert our state back

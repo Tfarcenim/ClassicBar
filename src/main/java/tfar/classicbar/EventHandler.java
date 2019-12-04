@@ -1,6 +1,5 @@
 package tfar.classicbar;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,13 +13,13 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static tfar.classicbar.ModUtils.mc;
 import static tfar.classicbar.config.ModConfig.general;
 
 public class EventHandler {
 
   private static final List<IBarOverlay> combined = new ArrayList<>();
   private static final Map<String, IBarOverlay> registry = new HashMap<>();
-  public static final Minecraft mc = Minecraft.getMinecraft();
 
   public static void register(IBarOverlay iBarOverlay) {
     registry.put(iBarOverlay.name(), iBarOverlay);

@@ -90,7 +90,7 @@ public class ArmorRenderer implements IBarOverlay {
       else {
         //draw complete second bar
         hex2Color(colors.advancedColors.armorColorValues[index]).color2Gl();
-        drawTexturedModalRect(xStart + 1, yStart, 1, 10, 79, 7);
+        drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, 79, 7);
       }
       // now handle the low armor warning
       if (warningAmount > 0) {

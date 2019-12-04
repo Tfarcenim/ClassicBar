@@ -8,7 +8,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import tfar.classicbar.Color;
 import tfar.classicbar.overlays.IBarOverlay;
@@ -21,7 +20,6 @@ import static tfar.classicbar.config.ModConfig.*;
     Class handles the drawing of the tiara
  */
 public class TiaraBarRenderer implements IBarOverlay {
-  private final Minecraft mc = Minecraft.getMinecraft();
 
   @GameRegistry.ObjectHolder("botania:flighttiara")
   public static final Item tiara = null;
@@ -61,7 +59,7 @@ public class TiaraBarRenderer implements IBarOverlay {
     int xStart = width / 2 + 10;
     int yStart = height - getSidedOffset();
     mc.profiler.startSection("flight");
-    //GlStateManager.pushMatrix();
+    GlStateManager.pushMatrix();
     GlStateManager.enableBlend();
 
     //Bar background

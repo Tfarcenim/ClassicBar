@@ -1,27 +1,19 @@
 package tfar.classicbar.overlays.vanillaoverlays;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.GuiIngameForge;
-import tfar.classicbar.Color;
 import tfar.classicbar.overlays.IBarOverlay;
 
 import static tfar.classicbar.ColorUtils.calculateScaledColor;
 import static tfar.classicbar.ModUtils.*;
-import static tfar.classicbar.ModUtils.drawTexturedModalRect;
 import static tfar.classicbar.config.ModConfig.general;
 import static tfar.classicbar.config.ModConfig.numbers;
 
 public class MountHealthRenderer implements IBarOverlay {
 
-  private int updateCounter = 0;
   private long healthUpdateCounter = 0;
-
-  long lastSystemTime;
 
   private double mountHealth = 0;
 
@@ -46,7 +38,7 @@ public class MountHealthRenderer implements IBarOverlay {
   @Override
   public void renderBar(EntityPlayer player, int width, int height) {
     //Push to avoid lasting changes
-    updateCounter = mc.ingameGUI.getUpdateCounter();
+    int updateCounter = mc.ingameGUI.getUpdateCounter();
 
     EntityLivingBase mount = (EntityLivingBase) player.getRidingEntity();
     if (mount.isDead) return;
@@ -55,10 +47,8 @@ public class MountHealthRenderer implements IBarOverlay {
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3L % 2L == 1L;
 
     if (mountHealth < this.mountHealth && player.hurtResistantTime > 0) {
-      lastSystemTime = Minecraft.getSystemTime();
       healthUpdateCounter = (long) (updateCounter + 20);
     } else if (mountHealth > this.mountHealth && player.hurtResistantTime > 0) {
-      lastSystemTime = Minecraft.getSystemTime();
       healthUpdateCounter = (long) (updateCounter + 10);
     }
 
