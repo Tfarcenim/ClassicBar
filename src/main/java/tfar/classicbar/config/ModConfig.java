@@ -75,7 +75,7 @@ public class ModConfig {
             public String[] leftorder = new String[]{"health","armor","absorption","lavacharm","lavacharm2"};
 
             @Config.Name("Bar right order")
-            public String[] rightorder = new String[]{"healthmount","food","armortoughness","thirst","air","flighttiara","decay"};
+            public String[] rightorder = new String[]{"blood","healthmount","food","armortoughness","thirst","air","flighttiara","decay"};
 
             @Config.Name("Low hunger warning threshold")
             public double lowHungerThreshold = .3;

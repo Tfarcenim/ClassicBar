@@ -40,6 +40,8 @@ public class ClassicBar {
   public static final boolean PITWEAKS = Loader.isModLoaded("pitweaks");
   public static final boolean BETWEENLANDS = Loader.isModLoaded("thebetweenlands");
 
+  public static final boolean VAMPIRISM = Loader.isModLoaded("vampirism");
+
   public static final boolean HUNGERCHANGED = IBLIS || RANDOMTWEAKS || PITWEAKS;
 
 
@@ -75,6 +77,7 @@ public class ClassicBar {
     //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
     if (TOUGHASNAILS) EventHandler.register(new ThirstBarRenderer());
     if (Loader.isModLoaded("botania")) EventHandler.register(new TiaraBarRenderer());
+    if (VAMPIRISM) EventHandler.register(new VampireRenderer());
     EventHandler.setup();
 
     boolean areProblemModsPresent = Arrays.stream(problemMods).anyMatch(Loader::isModLoaded);

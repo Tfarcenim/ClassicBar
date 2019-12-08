@@ -7,9 +7,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
+import tfar.classicbar.ClassicBar;
 import tfar.classicbar.Color;
 import tfar.classicbar.ModUtils;
 import tfar.classicbar.compat.HungerHelper;
+import tfar.classicbar.compat.VampireHelper;
 import tfar.classicbar.overlays.IBarOverlay;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
@@ -36,7 +38,7 @@ public class HungerRenderer implements IBarOverlay {
 
   @Override
   public boolean shouldRender(EntityPlayer player) {
-    return player.getRidingEntity() == null;
+    return !ClassicBar.VAMPIRISM || !VampireHelper.isVampire(player);//player.getRidingEntity() == null;
   }
 
   @Override

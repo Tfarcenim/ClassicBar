@@ -4,10 +4,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import tfar.classicbar.Color;
-import tfar.classicbar.compat.Decay;
 import tfar.classicbar.overlays.IBarOverlay;
 import thebetweenlands.api.capability.IDecayCapability;
 import thebetweenlands.common.config.BetweenlandsConfig;
+import thebetweenlands.common.registries.CapabilityRegistry;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
@@ -42,7 +42,7 @@ public class DecayRenderer implements IBarOverlay {
 
     @Override
     public void renderBar(EntityPlayer player, int width, int height) {
-        IDecayCapability decayCap = Decay.getDecayHandler(player);
+        IDecayCapability decayCap = player.getCapability(CapabilityRegistry.CAPABILITY_DECAY, null);
         double decay = 20 - decayCap.getDecayStats().getDecayLevel();
         //Push to avoid lasting changes
 
@@ -73,7 +73,7 @@ public class DecayRenderer implements IBarOverlay {
     public void renderText(EntityPlayer player, int width, int height) {
         //draw decay amount
 
-        IDecayCapability decayCap = Decay.getDecayHandler(player);
+        IDecayCapability decayCap = player.getCapability(CapabilityRegistry.CAPABILITY_DECAY, null);
         double decay = 20 - decayCap.getDecayStats().getDecayLevel();
 
         int h1 = (int) Math.floor(decay);
