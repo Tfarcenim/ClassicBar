@@ -90,17 +90,7 @@ public class EventHandler {
 
   public static void setup() {
     combined.clear();
-    Arrays.stream(ModConfig.general.overlays.leftorder).forEach(e -> {
-      if (registry.get(e) != null) {
-
-        combined.add(
-
-                registry.get(e).setSide(false));
-      }
-    });
-    Arrays.stream(ModConfig.general.overlays.rightorder).forEach(e -> {
-      if (registry.get(e) != null)
-        combined.add(registry.get(e).setSide(true));
-    });
+    Arrays.stream(ModConfig.general.overlays.leftorder).filter(s -> registry.get(s) != null).forEach(e -> combined.add(registry.get(e).setSide(false)));
+    Arrays.stream(ModConfig.general.overlays.rightorder).filter(s -> registry.get(s) != null).forEach(e -> combined.add(registry.get(e).setSide(true)));
   }
 }

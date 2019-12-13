@@ -82,26 +82,23 @@ public class ClassicBar {
 
     boolean areProblemModsPresent = Arrays.stream(problemMods).anyMatch(Loader::isModLoaded);
     if (areProblemModsPresent) {
-      logger.info("Unregistering problematic overlayorder.");
+      logger.info("Unregistering problematic overlays.");
       ConcurrentHashMap<Object, ArrayList<IEventListener>> listeners;
       try {
         Field f = EventBus.class.getDeclaredField("listeners");
         f.setAccessible(true);
         listeners = (ConcurrentHashMap<Object, ArrayList<IEventListener>>) f.get(MinecraftForge.EVENT_BUS);
-        for (Map.Entry<Object, ArrayList<IEventListener>> entry : listeners.entrySet()) {
-          String s = entry.getKey().getClass().getCanonicalName();
-          //System.out.println(s);
-          //System.out.println(entry);
-
+        listeners.keySet().forEach(key -> {
+          String s = key.getClass().getCanonicalName();
           if ("slimeknights.mantle.client.ExtraHeartRenderHandler".equals(s)) {
             logger.info("Unregistered Mantle bar");
-            MinecraftForge.EVENT_BUS.unregister(entry.getKey());
+            MinecraftForge.EVENT_BUS.unregister(key);
           }
-          if ("toughasnails.handler.thirst.ThirstOverlayHandler".equals(s)) {
+          else if ("toughasnails.handler.thirst.ThirstOverlayHandler".equals(s)) {
             logger.info("Unregistered Thirst bar");
-            MinecraftForge.EVENT_BUS.unregister(entry.getKey());
+            MinecraftForge.EVENT_BUS.unregister(key);
           }
-        }
+        });
       } catch (IllegalAccessException | NoSuchFieldException e) {
         e.printStackTrace();
       }

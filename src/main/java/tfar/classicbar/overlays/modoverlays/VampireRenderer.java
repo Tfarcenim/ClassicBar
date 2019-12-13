@@ -21,8 +21,6 @@ import static tfar.classicbar.config.ModConfig.numbers;
 public class VampireRenderer implements IBarOverlay {
 
     private static final ResourceLocation VAMPIRISM_ICONS =  new ResourceLocation("vampirism:textures/gui/icons.png");
-
-
     public boolean side;
 
     @Override
@@ -58,9 +56,9 @@ public class VampireRenderer implements IBarOverlay {
         //Bar background
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
         //draw portion of bar based on blood amount
-        float f = xStart+79-getWidth(blood,20);
+        float f = xStart+79-getWidth(blood,maxBlood);
         hex2Color("#FF0000"/*mods.thirstBarColor*/).color2Gl();
-        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(blood,20), 7);
+        drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(blood,maxBlood), 7);
 
         GlStateManager.popMatrix();
         mc.profiler.endSection();
@@ -80,7 +78,7 @@ public class VampireRenderer implements IBarOverlay {
 
         int h1 = blood;
         int c = Integer.decode("#FF0000"/*mods.thirstBarColor*/);
-        if (numbers.showPercent)h1 = (int)blood*5;
+        if (numbers.showPercent)h1 = blood *5;
         int xStart = width / 2 + 10;
         int yStart = height - getSidedOffset();
         drawStringOnHUD(h1 + "", xStart + 9 * ((general.displayIcons) ? 1 : 0) + rightTextOffset, yStart - 1, c);
@@ -91,7 +89,7 @@ public class VampireRenderer implements IBarOverlay {
 
         int xStart = width / 2 + 10;
         int yStart = height - getSidedOffset();
-        //Draw thirst icon
+        //Draw blood icon
         mc.getTextureManager().bindTexture(VAMPIRISM_ICONS);
         GlStateManager.enableBlend();
 
