@@ -16,18 +16,18 @@ import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static java.util.Arrays.stream;
 import static tfar.classicbar.config.ModConfig.general;
 
 @Mod(value = ClassicBar.MODID)
 public class ClassicBar {
 
   public static final String MODID = "classicbar";
-  public static final String[] problemMods = new String[]{"mantle", "toughasnails"};
+  public static final String[] problemMods = new String[]{"mantle"};
 
 //  public static final boolean TOUGHASNAILS = ModList.get().isLoaded("toughasnails");
  // public static final boolean IBLIS = ModList.get().isLoaded("iblis");
@@ -63,12 +63,11 @@ public class ClassicBar {
 
       //if (ModList.get().isLoaded("superiorshields"))
       //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
-      //if (ModList.get().isLoaded("toughasnails"))
-        //     MinecraftForge.EVENT_BUS.register(new ThirstBarRenderer());
+
         //MinecraftForge.EVENT_BUS.register(new BetterDivingRenderer());
       //  if (ModList.get().isLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
 
-      boolean areProblemModsPresent = stream(problemMods).anyMatch(ModList.get()::isLoaded);
+      boolean areProblemModsPresent = Arrays.stream(problemMods).anyMatch(ModList.get()::isLoaded);
       if (areProblemModsPresent) {
         logger.info("Unregistering problematic overlays.");
         ConcurrentHashMap<Object, List<IEventListener>> listeners;
@@ -83,10 +82,6 @@ public class ClassicBar {
 
             if ("slimeknights.mantle.client.ExtraHeartRenderHandler".equals(s)) {
               logger.info("Unregistered Mantle bar");
-              MinecraftForge.EVENT_BUS.unregister(entry.getKey());
-            }
-            if ("toughasnails.handler.thirst.ThirstOverlayHandler".equals(s)) {
-              logger.info("Unregistered Thirst bar");
               MinecraftForge.EVENT_BUS.unregister(entry.getKey());
             }
           }
