@@ -46,7 +46,7 @@ public class EventHandler {
     Entity entity = mc.getRenderViewEntity();
     if (!(entity instanceof EntityPlayer)) return;
     EntityPlayer player = (EntityPlayer) entity;
-    if (player.capabilities.isCreativeMode) return;
+    if (player.capabilities.isCreativeMode || player.isSpectator()) return;
     int scaledWidth = event.getResolution().getScaledWidth();
     int scaledHeight = event.getResolution().getScaledHeight();
 
