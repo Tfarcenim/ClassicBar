@@ -2,21 +2,16 @@ package tfar.classicbar;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import tfar.classicbar.config.ModConfig;
-
-import static tfar.classicbar.config.ModConfig.numbers;
 
 public class ModUtils {
   public static final int rightTextOffset = 82;
 
   public static final int leftTextOffset = -5;
 
-  public static final ResourceLocation ICON_VANILLA = AbstractGui.GUI_ICONS_LOCATION;
   public static ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
   public static final Minecraft mc = Minecraft.getInstance();
   private static final FontRenderer fontRenderer = mc.fontRenderer;
@@ -48,7 +43,6 @@ public class ModUtils {
   }
 
   public static void drawStringOnHUD(String string, int xOffset, int yOffset, int color) {
-    if (!numbers.showNumbers) return;
    /* double scale = numbers.numberScale;
     GlStateManager.pushMatrix();
     GlStateManager.scale(scale, scale, 1);

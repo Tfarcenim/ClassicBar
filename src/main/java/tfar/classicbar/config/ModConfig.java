@@ -1,223 +1,120 @@
 package tfar.classicbar.config;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Mod;
+import com.google.common.collect.Lists;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import tfar.classicbar.ClassicBar;
-import tfar.classicbar.ModUtils;
+import tfar.classicbar.EventHandler;
 
-import static tfar.classicbar.config.IdiotHandler.idiots;
+import java.util.List;
 
-//@Config(modid = ClassicBar.MODID)
+@Mod.EventBusSubscriber(modid = ClassicBar.MODID, bus = Mod.EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
 public class ModConfig {
 
-  //  @Config.Comment("General Options")
-    public static ConfigGeneral general = new ConfigGeneral();
+  public static ForgeConfigSpec.BooleanValue displayIcons;
+  public static ForgeConfigSpec.BooleanValue displayToughnessBar;
+  public static ForgeConfigSpec.BooleanValue fullAbsorptionBar;
+  public static ForgeConfigSpec.BooleanValue fullArmorBar;
+  public static ForgeConfigSpec.BooleanValue fullToughnessBar;
+  public static ForgeConfigSpec.BooleanValue lowArmorWarning;
+  public static ForgeConfigSpec.BooleanValue lowHealthWarning;
+  public static ForgeConfigSpec.DoubleValue lowHealthThreshold;
+  public static ForgeConfigSpec.BooleanValue lowHungerWarning;
+  public static ForgeConfigSpec.DoubleValue lowHungerThreshold;
+  public static ForgeConfigSpec.BooleanValue showSaturationBar;
+  public static ForgeConfigSpec.BooleanValue showHeldFoodOverlay;
+  public static ForgeConfigSpec.BooleanValue showExhaustionOverlay;
+  public static ForgeConfigSpec.BooleanValue showPercent;
 
-  //  @Config.Comment("General Options")
-  public static ConfigNumbers numbers = new ConfigNumbers();
+  public static ForgeConfigSpec.BooleanValue showAbsorptionNumbers;
+  public static ForgeConfigSpec.BooleanValue showAirNumbers;
+  public static ForgeConfigSpec.BooleanValue showArmorNumbers;
+  public static ForgeConfigSpec.BooleanValue showArmorToughnessNumbers;
+  public static ForgeConfigSpec.BooleanValue showHealthNumbers;
+  public static ForgeConfigSpec.BooleanValue showHungerNumbers;
+  public static ForgeConfigSpec.BooleanValue showMountHealthNumbers;
 
- //   @Config.Comment("Color Options")
-    public static ConfigColors colors = new ConfigColors();
+  public static ForgeConfigSpec.DoubleValue transitionSpeed;
+  public static ForgeConfigSpec.ConfigValue<String> hungerBarColor;
+  public static ForgeConfigSpec.ConfigValue<String> hungerBarDebuffColor;
+  public static ForgeConfigSpec.ConfigValue<String> oxygenBarColor;
+  public static ForgeConfigSpec.ConfigValue<String> saturationBarColor;
+  public static ForgeConfigSpec.ConfigValue<String> saturationBarDebuffColor;
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> armorColorValues;
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> armorToughnessColorValues;
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionColorValues;
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionPoisonColorValues;
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionWitherColorValues;
+  public static ForgeConfigSpec.ConfigValue<List<? extends Double>> normalFractions;
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> normalColors;
+  public static ForgeConfigSpec.ConfigValue<List<? extends Double>> poisonedFractions;
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> poisonedColors;
+  public static ForgeConfigSpec.ConfigValue<List<? extends Double>> witheredFractions;
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> witheredColors;
+  public static ForgeConfigSpec.ConfigValue<String> lavaBarColor;
+  public static ForgeConfigSpec.ConfigValue<String> flightBarColor;
 
-   // @Config.Comment("Warnings")
-    public static ConfigWarnings warnings = new ConfigWarnings();
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> leftorder;
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> rightorder;
 
- //   @Config.Comment("Mod Options")
-    public static ConfigMods mods = new ConfigMods();
+  public ModConfig(ForgeConfigSpec.Builder builder) {
+    builder.push("general");
+    displayIcons = builder.define("display_icons", true);
 
-    public static class ConfigGeneral {
- //       @Config.Name("Bar Overlays")
-  //      @Config.Comment("Tweak the bars themselves")
-        public BarOverlays overlays = new BarOverlays();
-//        @Config.Name("Show Icons")
-//        @Config.Comment("Whether to show icons next to the bars")
-        public boolean displayIcons = true;
- //       @Config.Name("Texture Style")
-  //      @Config.Comment("Texture Style of bars: 0 for default, 1 for new")
-        public int style = 1;
-        public class BarOverlays {
+    displayToughnessBar = builder.comment("Whether to show icons next to the bars").define("display_icons", true);
+    fullAbsorptionBar = builder.define("full_absorption_bar", false);
+    fullArmorBar = builder.define("full_armor_bar", false);
+    fullToughnessBar = builder.define("full_toughness_bar", false);
+    lowArmorWarning = builder.define("display_low_armor_warning", true);
+    lowHealthWarning = builder.define("display_low_health_warning", true);
+    lowHealthThreshold = builder.defineInRange("low_health_threshold", .2, 0, 1);
+    lowHungerWarning = builder.define("display_low_hunger_warning", true);
+    lowHungerThreshold = builder.defineInRange("low_hunger_threshold", .3, 0, 1);
 
-//            @Config.Name("Hunger Bar Overlays")
-            public HungerBarConfig hunger = new HungerBarConfig();
+    showAbsorptionNumbers = builder.define("show_absorption_numbers",true);
+    showAirNumbers = builder.define("show_air_numbers",true);
+    showArmorNumbers = builder.define("show_armor_numbers",true);
+    showArmorToughnessNumbers = builder.define("show_armor_toughness_numbers",true);
+    showHealthNumbers = builder.define("show_health_numbers",true);
+    showHungerNumbers = builder.define("show_hunger_numbers",true);
+    showMountHealthNumbers = builder.define("show_mount_health_numbers",true);
 
-  //          @Config.Name("Display Armor Toughness Bar")
-  //          @Config.RequiresMcRestart
-  //          @Config.Comment("REQUIRES A RESTART TO APPLY!")
-            public boolean displayToughnessBar = true;
+    showSaturationBar = builder.define("show_saturation_bar", true);
+    showHeldFoodOverlay = builder.define("show_held_food_overlay", true);
+    showExhaustionOverlay = builder.define("show_exhaustion_overlay", true);
+    showPercent = builder.define("show_percent", false);
+    transitionSpeed = builder.defineInRange("transition_speed", .3, 0, 1);
 
- //           @Config.Name("Draw full absorption Bar")
-            public boolean fullAbsorptionBar = false;
+    hungerBarColor = builder.define("hunger_bar_color","#B34D00",String.class::isInstance);
+    hungerBarDebuffColor = builder.define("hunger_bar_debuff_color","#249016",String.class::isInstance);
+    oxygenBarColor = builder.define("oxygen_bar_color","#00E6E6",String.class::isInstance);
+    saturationBarColor = builder.define("saturation_bar_color","#FFCC00",String.class::isInstance);
+    saturationBarDebuffColor = builder.define("saturation_bar_debuff_color","#87BC00",String.class::isInstance);
+    lavaBarColor = builder.define("lava_bar_color","#FF8000",String.class::isInstance);
+    flightBarColor = builder.define("flight_bar_color","#FFFFFF",String.class::isInstance);
 
- //           @Config.Name("Draw full armor Bar")
-            public boolean fullArmorBar = false;
+    armorColorValues = builder.defineList("armor_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"),String.class::isInstance);
+    armorToughnessColorValues = builder.defineList("armor_toughness_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"),String.class::isInstance);
+    absorptionColorValues = builder.defineList("absorption_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
+    absorptionPoisonColorValues = builder.defineList("absorption_poison_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
+    absorptionWitherColorValues = builder.defineList("absorption_wither_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
 
-//            @Config.Name("Draw full toughness Bar")
-            public boolean fullToughnessBar = false;
+    normalColors = builder.defineList("normal_colors", Lists.newArrayList("#FF0000", "#FFFF00", "#00FF00"),String.class::isInstance);
+    normalFractions = builder.defineList("normal_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
+    poisonedColors = builder.defineList("poisoned_colors", Lists.newArrayList("#00FF00", "#55FF55", "#00FF00"),String.class::isInstance);
+    poisonedFractions = builder.defineList("poisoned_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
+    witheredColors = builder.defineList("withered_colors", Lists.newArrayList("#555555", "#AAAAAA", "#555555"),String.class::isInstance);
+    witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
 
- //           @Config.Name("Display low armor warning")
-            public boolean lowArmorWarning = false;
+    leftorder = builder.defineList("left_order", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2"),String.class::isInstance);
+    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","healthmount","food","armortoughness","thirst","air","flighttiara","decay"),String.class::isInstance);
+  }
 
-  //          @Config.Name("Display low health warning")
-            public boolean lowHealthWarning = true;
-
-  //          @Config.Name("Low health warning threshold")
-   //         @Config.RangeDouble(min = 0, max = 1)
-            public double lowHealthThreshold = .2;
-
- //           @Config.Name("Display low hunger warning")
-            public boolean lowHungerWarning = true;
-
-  //          @Config.Name("Swap absorption & armor?")
-            public boolean swap = false;
-
-  //          @Config.Name("Low hunger warning threshold")
-            public double lowHungerThreshold = .3;
-
-            public class HungerBarConfig {
-
-   //             @Config.Name("Show Saturation Bar")
-                public boolean showSaturationBar = true;
-
-   //             @Config.Name("Show Held Food Overlay")
-                public boolean showHeldFoodOverlay = true;
-
- //               @Config.Name("Show Exhaustion Overlay")
-                public boolean showExhaustionOverlay = true;
-
-  //              @Config.Name("Transistion speed of bar")
-  //              @Config.RangeDouble(min = 0.001, max = .2)
-                public float transitionSpeed = .02f;
-            }
-        }
-
-    }
-
-    public static class ConfigNumbers {
- //       @Config.Name("Percentage based")
-        public boolean showPercent = false;
-
-//        @Config.Comment("Numbers info")
-
-//        @Config.Name("Show Numbers")
-        public boolean showNumbers = true;
-
-  //      @Config.Name("Numbers scale")
-  //      @Config.Comment("unused")
- //       @Config.RangeDouble(min = 0, max = 1)
-        public double numberScale = .75;
-    }
-
-    public static class ConfigColors {
- //       @Config.Name("Advanced Options")
-        public AdvancedColors advancedColors = new AdvancedColors();
- //       @Config.Name("Hunger Bar Color")
-        public String hungerBarColor = "#B34D00";
-//        @Config.Name("Hunger Debuff Color")
-        public String hungerBarDebuffColor = "#249016";
-//        @Config.Name("Oxygen Bar Color")
-        public String oxygenBarColor = "#00E6E6";
-//        @Config.Name("Saturation Bar Color")
-        public String saturationBarColor = "#FFCC00";
-//        @Config.Name("Saturation Debuff Color")
-        public String saturationBarDebuffColor = "#87BC00";
-
-
-        public class AdvancedColors {
-  //          @Config.Comment("Colors must be specified in #RRGGBB format")
- //           @Config.Name("Armor color values")
-            public String[] armorColorValues = new String[]{"#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"};
-//            @Config.Name("Armor Toughness Bar Color")
-            public String[] armorToughnessColorValues = new String[]{"#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"};
- //           @Config.Name("Absorption Bar Color")
-            public String[] absorptionColorValues = new String[]{"#D4AF37","#C2C73B","#8DC337","#36BA77","#4A5BC4","#D89AE2","#DF9DC7","#DFA99D","#D4DF9D","#3E84C6","#B8C1E8","#DFDFDF"};
-
-//            @Config.Name("Absorption Poison Bar Color")
-            public String[] absorptionPoisonColorValues = new String[]{"#D4AF37","#C2C73B","#8DC337","#36BA77","#4A5BC4","#D89AE2","#DF9DC7","#DFA99D","#D4DF9D","#3E84C6","#B8C1E8","#DFDFDF"};
-
-//            @Config.Name("Absorption Wither Bar Color")
-            public String[] absorptionWitherColorValues = new String[]{"#D4AF37","#C2C73B","#8DC337","#36BA77","#4A5BC4","#D89AE2","#DF9DC7","#DFA99D","#D4DF9D","#3E84C6","#B8C1E8","#DFDFDF"};
-
-   //         @Config.Name("Health fractions")
-            public double[] normalFractions = new double[]{.25, .5, .75};
-  //          @Config.Name("Colors")
-            public String[] normalColors = new String[]{"#FF0000", "#FFFF00", "#00FF00"};
-
-  //          @Config.Name("Poisoned fractions")
-            public double[] poisonedFractions = new double[]{.25, .5, .75};
-  //          @Config.Name("Poisoned Colors")
-            public String[] poisonedColors = new String[]{"#00FF00", "#55FF55", "#00FF00"};
-
- //           @Config.Name("Withered fractions")
-            public double[] witheredFractions = new double[]{.25, .5, .75};
- //           @Config.Name("Withered Colors")
-            public String[] witheredColors = new String[]{"#555555", "#AAAAAA", "#555555"};
-        }
-    }
-
-    public static class ConfigWarnings {
-//        @Config.Name("Show Advanced Rocketry warning")
- //       @Config.Comment("Warning when advanced rocketry is installed")
-        public boolean advancedRocketryWarning = true;
-
-  //      @Config.Name("Show Rustic warning")
-  //      @Config.Comment("Warning when Rustic is installed")
-        public boolean rusticWarning = true;
-    }
-
-    @Mod.EventBusSubscriber(modid = ClassicBar.MODID)
-    public static class ConfigEventHandler {
-
-        @SubscribeEvent
-        public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
-            if (event.getModID().equals(ClassicBar.MODID)) {
-    //          ConfigManager.sync(ClassicBar.MODID, Config.Type.INSTANCE);
-                idiots.idiotsTryingToParseBadHexColorsDOTJpeg();
-                idiots.emptyArrayFixer();
-                ClassicBar.logger.info("Syncing Classic Bar Configs");
-            }
-        }
-
-        @SubscribeEvent
-        public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
-            idiots.idiotsTryingToParseBadHexColorsDOTJpeg();
-            PlayerEntity p = e.getPlayer();
-            if (ModList.get().isLoaded("advancedrocketry") && warnings.advancedRocketryWarning && general.overlays.displayToughnessBar) {
-
-                p.sendMessage(new StringTextComponent(TextFormatting.RED + "Toughness bar may not display correctly, change the placement in advanced rocketry config." +
-                        " This is NOT a bug."));
-            }
-            if (ModList.get().isLoaded("rustic") && warnings.rusticWarning) {
-                p.sendMessage(new StringTextComponent(TextFormatting.RED + "Armor bar may not display correctly, disable Rustic's extra armor overlay amd restart the game." +
-                        " This is NOT a bug."));
-            }
-        }
-    }
-
-    public static class ConfigMods {
-   //     @Config.Name("Lava Bar Color")
-        public String lavaBarColor = "#FF8000";
-
-  //      @Config.Name("Thirst Bar Color")
-        public String thirstBarColor = "#1C5EE4";
-
-  //      @Config.Name("Flight Bar Color")
-        public String flightBarColor = "#FFFFFF";
-
-   //     @Config.Name("Hydration Bar Color")
-        public String hydrationBarColor = "#00A3E2";
-
-   //     @Config.Name("Dehydration Bar Color")
-   //     @Config.Comment("This is the overlay for thirst when underneath the effect")
-        public String deHydrationBarColor = "#5A891C";
-
-   //     @Config.Name("Dehydration Secondary Bar Color")
-  //      @Config.Comment("This is the overlay for hydration when underneath the effect")
-        public String deHydrationSecondaryBarColor = "#85CF25";
-    }
+  @SubscribeEvent
+  public static void onConfigChanged(net.minecraftforge.fml.config.ModConfig.ModConfigEvent event) {
+      EventHandler.setup();
+      ClassicBar.logger.info("Syncing Classic Bar Configs");
+  }
 }

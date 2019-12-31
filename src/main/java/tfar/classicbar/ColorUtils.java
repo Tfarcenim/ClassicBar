@@ -1,8 +1,10 @@
 package tfar.classicbar;
 
+import tfar.classicbar.config.ModConfig;
+
+import java.util.List;
 import java.util.regex.Pattern;
 
-import static tfar.classicbar.config.ModConfig.colors;
 
 public class ColorUtils {
     public static final Pattern p1 = Pattern.compile("^#[0-9A-Fa-f]{6}$");
@@ -18,38 +20,38 @@ public class ColorUtils {
     public static Color calculateScaledColor(double d1, double d2, int effect) {
         double d3 = (d1 / d2);
 
-        String[] colorCodes;
-        double[] colorFractions;
+        List<? extends String> colorCodes;
+        List<? extends Double> colorFractions;
 
         switch (effect){
-            case 16: colorCodes = colors.advancedColors.normalColors;
-            colorFractions = colors.advancedColors.normalFractions; break;
-            case 52: colorCodes = colors.advancedColors.poisonedColors;
-                colorFractions = colors.advancedColors.poisonedFractions; break;
-            case 88: colorCodes = colors.advancedColors.witheredColors;
-                colorFractions = colors.advancedColors.witheredFractions; break;
+            case 16: colorCodes = ModConfig.normalColors.get();
+            colorFractions = ModConfig.normalFractions.get(); break;
+            case 52: colorCodes = ModConfig.poisonedColors.get();
+                colorFractions = ModConfig.poisonedFractions.get(); break;
+            case 88: colorCodes = ModConfig.witheredColors.get();
+                colorFractions = ModConfig.witheredFractions.get(); break;
             default: return Color.BLACK;
         }
 
-        if (colorCodes.length != colorFractions.length) return Color.BLACK;
-        int i1 = colorFractions.length - 1;
+        if (colorCodes.size() != colorFractions.size()) return Color.BLACK;
+        int i1 = colorFractions.size() - 1;
         int i3 = 0;
         for (int i2 = 0; i2 < i1; i2++) {
-            if (d3 < colorFractions[i2]) break;
+            if (d3 < colorFractions.get(i2)) break;
             i3++;
         }
 
         //return first color in the list if health is too low
-        if (d3 <= colorFractions[0])
-            return hex2Color(colorCodes[0]);
+        if (d3 <= colorFractions.get(0))
+            return hex2Color(colorCodes.get(0));
         //return last color in the list if health is too high
-        if (d3 >= colorFractions[colorFractions.length - 1])
-            return hex2Color(colorCodes[colorFractions.length - 1]);
+        if (d3 >= colorFractions.get(colorFractions.size() - 1))
+            return hex2Color(colorCodes.get(colorCodes.size() - 1));
 
-        Color c1 = hex2Color(colorCodes[i3 - 1]);
-        Color c2 = hex2Color(colorCodes[i3]);
+        Color c1 = hex2Color(colorCodes.get(i3 - 1));
+        Color c2 = hex2Color(colorCodes.get(i3));
 
-        double d4 = (d3 - colorFractions[i3 - 1]) / (colorFractions[i3] - colorFractions[i3 - 1]);
+        double d4 = d3 - colorFractions.get(i3 - 1) / (colorFractions.get(i3) - colorFractions.get(i3 - 1));
         return c1.colorBlend(c2, d4);
     }
 }

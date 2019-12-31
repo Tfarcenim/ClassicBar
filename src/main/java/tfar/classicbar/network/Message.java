@@ -6,6 +6,8 @@ import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import tfar.classicbar.ClassicBar;
 
+import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
+
 
 public class Message {
 
@@ -24,6 +26,6 @@ public class Message {
             MessageSaturationSync::encode,
             MessageSaturationSync::new,
             MessageSaturationSync::handle);
-
+    EVENT_BUS.register(new SyncHandler());
   }
 }
