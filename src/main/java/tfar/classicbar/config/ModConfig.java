@@ -85,7 +85,7 @@ public class ModConfig {
     showHeldFoodOverlay = builder.define("show_held_food_overlay", true);
     showExhaustionOverlay = builder.define("show_exhaustion_overlay", true);
     showPercent = builder.define("show_percent", false);
-    transitionSpeed = builder.defineInRange("transition_speed", .3, 0, 1);
+    transitionSpeed = builder.defineInRange("transition_speed", 3, 0, Double.MAX_VALUE);
 
     hungerBarColor = builder.define("hunger_bar_color","#B34D00",String.class::isInstance);
     hungerBarDebuffColor = builder.define("hunger_bar_debuff_color","#249016",String.class::isInstance);

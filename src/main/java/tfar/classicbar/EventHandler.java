@@ -50,8 +50,8 @@ public class EventHandler {
     if (player.abilities.isCreativeMode || player.isSpectator()) return;
     mc.getProfiler().startSection("classicbars_hud");
 
-    int scaledWidth = mc.func_228018_at_().getScaledWidth();
-    int scaledHeight = mc.func_228018_at_().getScaledHeight();
+    int scaledWidth = mc.getWindow().getScaledWidth();
+    int scaledHeight = mc.getWindow().getScaledHeight();
 
     int initial_right_height = ForgeIngameGui.right_height;
     int initial_left_height = ForgeIngameGui.left_height;

@@ -1,28 +1,20 @@
 package tfar.classicbar.overlays.vanilla;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Food;
-import net.minecraft.potion.Effects;
 import net.minecraft.item.ItemStack;
-import tfar.classicbar.ClassicBar;
+import net.minecraft.potion.Effects;
 import tfar.classicbar.Color;
 import tfar.classicbar.ModUtils;
-import tfar.classicbar.config.ModConfig;
 import tfar.classicbar.overlays.IBarOverlay;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
-import static tfar.classicbar.config.ModConfig.showSaturationBar;
 
 public class Hunger implements IBarOverlay {
-
-  private float foodAlpha = 0;
-  private boolean foodIncrease = true;
 
   public boolean side;
 
@@ -75,10 +67,9 @@ public class Hunger implements IBarOverlay {
     if (showHeldFoodOverlay.get() &&
             player.getHeldItemMainhand().getItem().isFood()) {
       ItemStack stack = player.getHeldItemMainhand();
-      if (foodIncrease) foodAlpha += transitionSpeed.get();
-      else foodAlpha -= transitionSpeed.get();
-      if (foodAlpha >= 1) foodIncrease = false;
-      else if (foodAlpha <= 0) foodIncrease = true;
+      double time = System.currentTimeMillis()/1000d * transitionSpeed.get();
+      double foodAlpha = Math.sin(time)/2 + .5;
+
       Food food = stack.getItem().getFood();
       double hungerOverlay = food.getHealing();
       double saturationMultiplier = food.getSaturation();
@@ -89,7 +80,7 @@ public class Hunger implements IBarOverlay {
       //don't render the bar at all if hunger is full
       if (hunger < maxHunger) {
         f = xStart - getWidth(hungerWidth + hunger, maxHunger) + 78;
-        hex2Color(hungerActive ? hungerBarDebuffColor.get() : hungerBarColor.get()).color2Gla(foodAlpha);
+        hex2Color(hungerActive ? hungerBarDebuffColor.get() : hungerBarColor.get()).color2Gla((float)foodAlpha);
         drawTexturedModalRect(f + 1, yStart + 1, 1, 10, getWidth(hunger + hungerOverlay, maxHunger), 7);
       }
 
@@ -107,7 +98,7 @@ public class Hunger implements IBarOverlay {
         }
         //offset used to decide where to place the bar
         f = xStart - getWidth(saturationWidth + currentSat, maxHunger) + 78;
-        hex2Color(hungerActive ? saturationBarDebuffColor.get() : saturationBarColor.get()).color2Gla(foodAlpha);
+        hex2Color(hungerActive ? saturationBarDebuffColor.get() : saturationBarColor.get()).color2Gla((float)foodAlpha);
         if (true)//currentSat > 0)
           drawTexturedModalRect(f + 1, yStart + 1, 1, 10, getWidth(saturationWidth + currentSat, maxHunger), 7);
         else ;//drawTexturedModalRect(f, yStart+1, 1, 10, getWidthfloor(saturationWidth,20), 7);
