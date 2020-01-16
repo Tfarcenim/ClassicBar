@@ -2,23 +2,22 @@ package tfar.classicbar;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.EventBus;
-import net.minecraftforge.fml.common.eventhandler.IEventListener;
-import net.minecraftforge.fml.relauncher.Side;
-import tfar.classicbar.config.ModConfig;
-import tfar.classicbar.network.SyncHandler;
-import tfar.classicbar.overlays.modoverlays.*;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
+import net.minecraftforge.fml.common.eventhandler.IEventListener;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
+import tfar.classicbar.config.ModConfig;
+import tfar.classicbar.network.SyncHandler;
+import tfar.classicbar.overlays.modoverlays.*;
 import tfar.classicbar.overlays.vanillaoverlays.*;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Mod.EventBusSubscriber(Side.CLIENT)
@@ -37,12 +36,11 @@ public class ClassicBar {
   public static final boolean IBLIS = Loader.isModLoaded("iblis");
   public static final boolean BAUBLES = Loader.isModLoaded("baubles");
   public static final boolean RANDOMTWEAKS = Loader.isModLoaded("randomtweaks");
-  public static final boolean PITWEAKS = Loader.isModLoaded("pitweaks");
   public static final boolean BETWEENLANDS = Loader.isModLoaded("thebetweenlands");
 
   public static final boolean VAMPIRISM = Loader.isModLoaded("vampirism");
 
-  public static final boolean HUNGERCHANGED = IBLIS || RANDOMTWEAKS || PITWEAKS;
+  public static final boolean HUNGERCHANGED = IBLIS || RANDOMTWEAKS;
 
 
   public static Logger logger;

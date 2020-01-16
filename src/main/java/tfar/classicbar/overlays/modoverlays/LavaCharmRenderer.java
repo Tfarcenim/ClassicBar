@@ -46,6 +46,7 @@ public class LavaCharmRenderer implements IBarOverlay {
     ItemStack stack = ItemStack.EMPTY;
     if (ClassicBar.BAUBLES)stack = BaublesHelper.getLavaWader(player);
     if (stack.isEmpty())stack = getLavaCharm(player);
+    if (stack.isEmpty())return false;
     NBTTagCompound nbt = stack.getTagCompound();
     //proceeding will crash the game
     return nbt != null;
