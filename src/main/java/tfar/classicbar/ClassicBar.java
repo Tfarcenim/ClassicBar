@@ -1,5 +1,6 @@
 package tfar.classicbar;
 
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,8 +18,10 @@ import net.minecraftforge.fml.network.FMLNetworkConstants;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import tfar.classicbar.compat.Helpers;
 import tfar.classicbar.config.ModConfig;
 import tfar.classicbar.network.Message;
+import tfar.classicbar.overlays.mod.Blood;
 import tfar.classicbar.overlays.vanilla.*;
 
 import java.lang.reflect.Field;
@@ -60,6 +63,7 @@ public class ClassicBar {
 
     EventHandler.registerAll(new Absorption(), new Air(), new Armor(), new ArmorToughness(),
             new Health(), new Hunger(), new MountHealth());
+    if (Helpers.vampirismloaded)EventHandler.register(new Blood());
 
     //mod renderers
     ClassicBar.logger.info("Registering Mod Overlays");

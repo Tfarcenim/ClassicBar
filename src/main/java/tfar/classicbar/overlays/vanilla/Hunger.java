@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effects;
 import tfar.classicbar.Color;
 import tfar.classicbar.ModUtils;
+import tfar.classicbar.compat.Helpers;
 import tfar.classicbar.overlays.IBarOverlay;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
@@ -31,7 +32,7 @@ public class Hunger implements IBarOverlay {
 
   @Override
   public boolean shouldRender(PlayerEntity player) {
-    return true;//!ClassicBar.VAMPIRISM || !VampireHelper.isVampire(player);//player.getRidingEntity() == null;
+    return !Helpers.vampirismloaded || !Helpers.isVampire(player);
   }
 
   @Override

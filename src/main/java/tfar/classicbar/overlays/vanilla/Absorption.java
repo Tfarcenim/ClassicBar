@@ -52,11 +52,11 @@ public class Absorption implements IBarOverlay {
 
     //draw absorption bar
     int index = (int) Math.ceil(absorb / maxHealth) - 1;
-    // if (general.overlayorder.swap) yStart -= 10;
     Color.reset();
     //no wrapping
     if (absorb <= maxHealth) {
-      if (!fullAbsorptionBar.get()) drawScaledBar(absorb, maxHealth, xStart, yStart, true);
+      //background
+      if (!fullAbsorptionBar.get()) drawScaledBar(absorb, maxHealth, xStart, yStart + 1, true);
       else drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 
       switch (k5) {
