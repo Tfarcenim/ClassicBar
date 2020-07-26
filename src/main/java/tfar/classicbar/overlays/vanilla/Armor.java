@@ -1,7 +1,7 @@
 package tfar.classicbar.overlays.vanilla;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -9,13 +9,13 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import tfar.classicbar.Color;
 import tfar.classicbar.config.ModConfig;
-import tfar.classicbar.overlays.IBarOverlay;
+import tfar.classicbar.overlays.BarOverlay;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.ModUtils.drawTexturedModalRect;
 
-public class Armor implements IBarOverlay {
+public class Armor implements BarOverlay {
 
   private float armorAlpha = 1;
   private static EquipmentSlotType[] armorList = new EquipmentSlotType[]{EquipmentSlotType.HEAD,
@@ -24,7 +24,7 @@ public class Armor implements IBarOverlay {
   public boolean side;
 
   @Override
-  public IBarOverlay setSide(boolean side) {
+  public BarOverlay setSide(boolean side) {
     this.side = side;
     return this;
   }
@@ -40,7 +40,7 @@ public class Armor implements IBarOverlay {
   }
 
   @Override
-  public void renderBar(PlayerEntity player, int width, int height) {
+  public void renderBar(MatrixStack stack,PlayerEntity player, int width, int height) {
     double armor = calculateArmorValue();
     int warningAmount = ModConfig.lowArmorWarning.get() ? getDamagedAmount(player) : 0;
 
@@ -58,37 +58,37 @@ public class Armor implements IBarOverlay {
     armor -= warningAmount;
     if (armor + warningAmount <= 20) {
       //bar background
-      if (!ModConfig.fullArmorBar.get()) drawScaledBar(armor + warningAmount, 20, xStart, yStart + 1, true);
-      else drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
+      if (!ModConfig.fullArmorBar.get()) drawScaledBar(stack,armor + warningAmount, 20, xStart, yStart + 1, true);
+      else drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
       //calculate bar color
       hex2Color(ModConfig.armorColorValues.get().get(0)).color2Gl();
       //draw portion of bar based on armor
-      drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor, 20), 7);
+      drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(armor, 20), 7);
 
       //draw damaged bar
       hex2Color(ModConfig.armorColorValues.get().get(0)).color2Gla(armorAlpha);
-      drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor + warningAmount, 20), 7);
+      drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(armor + warningAmount, 20), 7);
     } else {
       //we have wrapped, draw 2 bars
       //bar background
-      drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
+      drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
 
       //draw first bar
       //case 1: bar is not capped and is partially filled
       if (warningAmount != 0 || index < ModConfig.armorColorValues.get().size() && (armor + warningAmount) % 20 != 0) {
         //draw complete first bar
         hex2Color(ModConfig.armorColorValues.get().get(index - 1)).color2Gl();
-        drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, 79, 7);
+        drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, 79, 7);
 
         //draw partial second bar
         hex2Color(ModConfig.armorColorValues.get().get(index)).color2Gl();
-        drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(armor % 20, 20), 7);
+        drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(armor % 20, 20), 7);
       }
       //case 2, bar is a multiple of 20 or it is capped
       else {
         //draw complete second bar
         hex2Color(ModConfig.armorColorValues.get().get(index)).color2Gl();
-        drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, 79, 7);
+        drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, 79, 7);
       }
       // now handle the low armor warning
       if (warningAmount > 0) {
@@ -96,7 +96,7 @@ public class Armor implements IBarOverlay {
         if ((int) Math.ceil((warningAmount + armor) / 20) == (int) Math.ceil(armor / 20)) {
           //draw one bar
           hex2Color(ModConfig.armorColorValues.get().get(index)).color2Gla(armorAlpha);
-          drawTexturedModalRect(xStart + 1, yStart, 1, 10, getWidth(armor + warningAmount - index * 20, 20), 7);
+          drawTexturedModalRect(stack,xStart + 1, yStart, 1, 10, getWidth(armor + warningAmount - index * 20, 20), 7);
         }
       }
     }
@@ -132,7 +132,7 @@ public class Armor implements IBarOverlay {
   }
 
   @Override
-  public void renderText(PlayerEntity player, int width, int height) {
+  public void renderText(MatrixStack stack,PlayerEntity player, int width, int height) {
     int xStart = width / 2 - 91;
     int yStart = height - getSidedOffset();
     double armor = calculateArmorValue();
@@ -144,17 +144,17 @@ public class Armor implements IBarOverlay {
     int c = Integer.decode(ModConfig.armorColorValues.get().get(index));
     if (ModConfig.showPercent.get()) i1 = (int) (armor + warningAmount) * 5;
     int i2 = getStringLength(i1 + "");
-    drawStringOnHUD(i1 + "", xStart - 9 * i3 - i2 + leftTextOffset, yStart - 1, c);
+    drawStringOnHUD(stack,i1 + "", xStart - 9 * i3 - i2 + leftTextOffset, yStart - 1, c);
   }
 
   @Override
-  public void renderIcon(PlayerEntity player, int width, int height) {
+  public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
     mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
     int xStart = width / 2 - 91;
     int yStart = height - getSidedOffset();
     Color.reset();
     //Draw armor icon
-    drawTexturedModalRect(xStart - 10, yStart, 43, 9, 9, 9);
+    drawTexturedModalRect(stack,xStart - 10, yStart, 43, 9, 9, 9);
   }
 
   @Override

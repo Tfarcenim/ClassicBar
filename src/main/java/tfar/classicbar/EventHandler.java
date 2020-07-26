@@ -1,5 +1,6 @@
 package tfar.classicbar;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -7,7 +8,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import tfar.classicbar.config.ModConfig;
-import tfar.classicbar.overlays.IBarOverlay;
+import tfar.classicbar.overlays.BarOverlay;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -19,14 +20,14 @@ import static tfar.classicbar.config.ModConfig.rightorder;
 
 public class EventHandler {
 
-  private static final List<IBarOverlay> combined = new ArrayList<>();
-  private static final Map<String, IBarOverlay> registry = new HashMap<>();
+  private static final List<BarOverlay> combined = new ArrayList<>();
+  private static final Map<String, BarOverlay> registry = new HashMap<>();
 
-  public static void register(IBarOverlay iBarOverlay) {
+  public static void register(BarOverlay iBarOverlay) {
     registry.put(iBarOverlay.name(), iBarOverlay);
   }
 
-  public static void registerAll(IBarOverlay... iBarOverlay) {
+  public static void registerAll(BarOverlay... iBarOverlay) {
     Arrays.stream(iBarOverlay).forEach(overlay -> registry.put(overlay.name(), overlay));
   }
 
@@ -57,10 +58,12 @@ public class EventHandler {
     int initial_left_height = ForgeIngameGui.left_height;
 
     mc.getTextureManager().bindTexture(ModUtils.ICON_BAR);
-    Supplier<Stream<IBarOverlay>> supplier = () -> combined.stream().filter(iBarOverlay -> iBarOverlay.shouldRender(player));
+    Supplier<Stream<BarOverlay>> supplier = () -> combined.stream().filter(iBarOverlay -> iBarOverlay.shouldRender(player));
+
+    MatrixStack matrices = event.getMatrixStack();
 
     supplier.get().forEach(iBarOverlay -> {
-      iBarOverlay.renderBar(player, scaledWidth, scaledHeight);
+      iBarOverlay.renderBar(matrices,player, scaledWidth, scaledHeight);
         increment(iBarOverlay.rightHandSide(),10);
     });
 
@@ -69,7 +72,7 @@ public class EventHandler {
 
     supplier.get().forEach(iBarOverlay -> {
       if (iBarOverlay.shouldRenderText())
-        iBarOverlay.renderText(player, scaledWidth, scaledHeight);
+        iBarOverlay.renderText(matrices,player, scaledWidth, scaledHeight);
         increment(iBarOverlay.rightHandSide(),10);
     });
 
@@ -78,7 +81,7 @@ public class EventHandler {
       ForgeIngameGui.left_height = initial_left_height;
 
       supplier.get().forEach(iBarOverlay -> {
-        iBarOverlay.renderIcon(player, scaledWidth, scaledHeight);
+        iBarOverlay.renderIcon(matrices,player, scaledWidth, scaledHeight);
           increment(iBarOverlay.rightHandSide(),10);
       });
     }

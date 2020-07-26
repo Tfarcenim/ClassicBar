@@ -1,22 +1,22 @@
 package tfar.classicbar.overlays.vanilla;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.entity.player.PlayerEntity;
 import tfar.classicbar.Color;
-import tfar.classicbar.config.ModConfig;
-import tfar.classicbar.overlays.IBarOverlay;
+import tfar.classicbar.overlays.BarOverlay;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 
-public class Air implements IBarOverlay {
+public class Air implements BarOverlay {
 
   public boolean side;
 
   @Override
-  public IBarOverlay setSide(boolean side) {
+  public BarOverlay setSide(boolean side) {
     this.side = side;
     return this;
   }
@@ -32,7 +32,7 @@ public class Air implements IBarOverlay {
   }
 
   @Override
-  public void renderBar(PlayerEntity player, int width, int height) {
+  public void renderBar(MatrixStack stack,PlayerEntity player, int width, int height) {
     //Push to avoid lasting changes
 
     int xStart = width / 2 + 10;
@@ -43,14 +43,14 @@ public class Air implements IBarOverlay {
     Color.reset();
 
     //Bar background
-    drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
+    drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
 
     //draw portion of bar based on air amount
     int air = player.getAir();
 
     int f = xStart + 79 - getWidth(air, 300);
     hex2Color(oxygenBarColor.get()).color2Gl();
-    drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(air, 300), 7);
+    drawTexturedModalRect(stack,f, yStart + 1, 1, 10, getWidth(air, 300), 7);
 
     RenderSystem.disableBlend();
     //Revert our state back
@@ -63,7 +63,7 @@ public class Air implements IBarOverlay {
   }
 
   @Override
-  public void renderText(PlayerEntity player, int width, int height) {
+  public void renderText(MatrixStack stack,PlayerEntity player, int width, int height) {
     //draw air amount
     int air = player.getAir();
     int xStart = width / 2 + 10;
@@ -74,17 +74,17 @@ public class Air implements IBarOverlay {
     int c = Integer.decode(oxygenBarColor.get());
     int i3 = displayIcons.get() ? 1 : 0;
     if (showPercent.get()) h1 = air / 3;
-    drawStringOnHUD(h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
+    drawStringOnHUD(stack,h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
   }
 
   @Override
-  public void renderIcon(PlayerEntity player, int width, int height) {
+  public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
 
     int xStart = width / 2 + 10;
     int yStart = height - getSidedOffset();
     mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
     //Draw air icon
-    drawTexturedModalRect(xStart + 82, yStart, 16, 18, 9, 9);
+    drawTexturedModalRect(stack,xStart + 82, yStart, 16, 18, 9, 9);
   }
 
   @Override

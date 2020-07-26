@@ -1,23 +1,22 @@
 package tfar.classicbar.overlays.vanilla;
 
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effects;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.Color;
 import tfar.classicbar.config.ModConfig;
-import tfar.classicbar.overlays.IBarOverlay;
+import tfar.classicbar.overlays.BarOverlay;
 
 import static tfar.classicbar.ColorUtils.calculateScaledColor;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.showHealthNumbers;
 
-public class Health implements IBarOverlay {
+public class Health implements BarOverlay {
 
   private double playerHealth = 0;
   private long healthUpdateCounter = 0;
@@ -26,7 +25,7 @@ public class Health implements IBarOverlay {
   public boolean side;
 
   @Override
-  public IBarOverlay setSide(boolean side) {
+  public BarOverlay setSide(boolean side) {
     this.side = side;
     return this;
   }
@@ -42,7 +41,7 @@ public class Health implements IBarOverlay {
   }
 
   @Override
-  public void renderBar(PlayerEntity player, int width, int height) {
+  public void renderBar(MatrixStack stack, PlayerEntity player, int width, int height) {
     int updateCounter = mc.ingameGUI.getTicks();
 
     double health = player.getHealth();
@@ -61,7 +60,7 @@ public class Health implements IBarOverlay {
 
     int xStart = width / 2 - 91;
     int yStart = height - ForgeIngameGui.left_height;
-    double maxHealth = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getValue();
+    double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
 
     RenderSystem.pushMatrix();
     RenderSystem.enableBlend();
@@ -73,7 +72,7 @@ public class Health implements IBarOverlay {
     int i4 = (highlight) ? 18 : 0;
 
     //Bar background
-    drawTexturedModalRect(xStart, yStart, 0, i4, 81, 9);
+    drawTexturedModalRect(stack,xStart, yStart, 0, i4, 81, 9);
 
     //is the bar changing
     //Pass 1, draw bar portion
@@ -86,7 +85,7 @@ public class Health implements IBarOverlay {
       RenderSystem.color4f(1, 1, 1, alpha);
       if (displayHealth > health) {
         //draw interpolation
-        drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(displayHealth, maxHealth), 7);
+        drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(displayHealth, maxHealth), 7);
         //Health is increasing, idk what to do here
       } else {/*
                   f = xStart + getWidth(health, maxHealth);
@@ -98,12 +97,12 @@ public class Health implements IBarOverlay {
 
     calculateScaledColor(health, maxHealth, k5).color2Gla(alpha);
     //draw portion of bar based on health remaining
-    drawTexturedModalRect(xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
+    drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
 
     if (k5 == 52) {
       //draw poison overlay
       RenderSystem.color4f(0, .5f, 0, .5f);
-      drawTexturedModalRect(xStart + 1, yStart + 1, 1, 36, getWidth(health, maxHealth), 7);
+      drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 36, getWidth(health, maxHealth), 7);
     }
 
     Color.reset();
@@ -118,12 +117,12 @@ public class Health implements IBarOverlay {
   }
 
   @Override
-  public void renderText(PlayerEntity player, int width, int height) {
+  public void renderText(MatrixStack stack,PlayerEntity player, int width, int height) {
     double health = player.getHealth();
 
     int xStart = width / 2 - 91;
     int yStart = height - ForgeIngameGui.left_height;
-    double maxHealth = player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).getValue();
+    double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
 
     int k5 = 16;
 
@@ -135,11 +134,11 @@ public class Health implements IBarOverlay {
     if (ModConfig.showPercent.get()) h1 = (int) (100 * health / maxHealth);
     int i1 = getStringLength(h1 + "");
 
-    drawStringOnHUD(h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth, k5).colorToText());
+    drawStringOnHUD(stack,h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth, k5).colorToText());
   }
 
   @Override
-  public void renderIcon(PlayerEntity player, int width, int height) {
+  public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
     mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
 
     int k5 = 16;
@@ -154,9 +153,9 @@ public class Health implements IBarOverlay {
     //heart background
     Color.reset();
 
-    drawTexturedModalRect(xStart - 10, yStart, 16, 9 * i5, 9, 9);
+    drawTexturedModalRect(stack,xStart - 10, yStart, 16, 9 * i5, 9, 9);
     //heart
-    drawTexturedModalRect(xStart - 10, yStart, 36 + k5, 9 * i5, 9, 9);
+    drawTexturedModalRect(stack,xStart - 10, yStart, 36 + k5, 9 * i5, 9, 9);
   }
 
   @Override
