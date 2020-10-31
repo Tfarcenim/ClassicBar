@@ -10,6 +10,7 @@ loaderVersion="[25,)" #mandatory (24 is current forge version)
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://github.com/Tfarcenim/ClassicBar/issues" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
+license="Unlicense"
 [[mods]] #mandatory
 # The modid of the mod
 modId="classicbar" #mandatory
