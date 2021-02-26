@@ -1,13 +1,19 @@
 package tfar.classicbar;
 
-import de.teamlapen.vampirism.util.Helper;
-import net.minecraftforge.api.distmarker.Dist;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.EventBus;
 import net.minecraftforge.eventbus.api.IEventListener;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -15,20 +21,18 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.FMLNetworkConstants;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import tfar.classicbar.compat.Helpers;
 import tfar.classicbar.config.ModConfig;
 import tfar.classicbar.network.Message;
 import tfar.classicbar.overlays.mod.Blood;
-import tfar.classicbar.overlays.vanilla.*;
-
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import tfar.classicbar.overlays.mod.Feathers;
+import tfar.classicbar.overlays.vanilla.Absorption;
+import tfar.classicbar.overlays.vanilla.Air;
+import tfar.classicbar.overlays.vanilla.Armor;
+import tfar.classicbar.overlays.vanilla.ArmorToughness;
+import tfar.classicbar.overlays.vanilla.Health;
+import tfar.classicbar.overlays.vanilla.Hunger;
+import tfar.classicbar.overlays.vanilla.MountHealth;
 
 
 @Mod(value = ClassicBar.MODID)
@@ -64,6 +68,7 @@ public class ClassicBar {
     EventHandler.registerAll(new Absorption(), new Air(), new Armor(), new ArmorToughness(),
             new Health(), new Hunger(), new MountHealth());
     if (Helpers.vampirismloaded)EventHandler.register(new Blood());
+    if (Helpers.elenaiDodgeLoaded)EventHandler.register(new Feathers());
 
     //mod renderers
     ClassicBar.logger.info("Registering Mod Overlays");
