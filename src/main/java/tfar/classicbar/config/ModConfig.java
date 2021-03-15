@@ -109,7 +109,7 @@ public class ModConfig {
     witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
 
     leftorder = builder.defineList("left_order", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2"),String.class::isInstance);
-    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","healthmount","food","armortoughness","thirst","air","flighttiara","decay"),String.class::isInstance);
+    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","healthmount","food","feathers","armortoughness","thirst","air","flighttiara","decay"),String.class::isInstance);
   }
 
   @SubscribeEvent
