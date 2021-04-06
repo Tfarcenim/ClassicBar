@@ -42,8 +42,7 @@ public class Feathers implements BarOverlay {
 
 	@Override
 	public void renderBar(MatrixStack stack,PlayerEntity player, int width, int height) {
-		FeathersHelper helper = new FeathersHelper();
-		double feathers = helper.getFeatherLevel(Minecraft.getInstance().player);
+		double feathers = FeathersHelper.getFeatherLevel(Minecraft.getInstance().player);
 		int maxFeathers = 20;
 		
 		int xStart = width / 2 + 10;
@@ -69,8 +68,7 @@ public class Feathers implements BarOverlay {
 	public void renderText(MatrixStack stack,PlayerEntity player, int width, int height) {
 		//draw feathers amount
 
-		FeathersHelper helper = new FeathersHelper();
-		double feathers = helper.getFeatherLevel(Minecraft.getInstance().player);
+		double feathers = FeathersHelper.getFeatherLevel(Minecraft.getInstance().player);
 		
 		int h1 = (int) feathers;
 		int c = Integer.decode("#22a5f0");
