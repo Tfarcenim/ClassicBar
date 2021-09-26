@@ -3,14 +3,18 @@ package tfar.classicbar.overlays.mod;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import tfar.classicbar.Color;
 import tfar.classicbar.config.ModConfig;
 import tfar.classicbar.overlays.BarOverlay;
+
+import java.util.Optional;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
@@ -33,15 +37,12 @@ public class Blood implements BarOverlay {
 
 	@Override
 	public boolean shouldRender(PlayerEntity player) {
-		return Helper.isVampire(player);
+		return VampirismAPI.getFactionPlayerHandler(player).map(a -> a.isInFaction(VReference.VAMPIRE_FACTION)).orElse(false);
 	}
 
 	@Override
 	public void renderBar(MatrixStack stack,PlayerEntity player, int width, int height) {
-		IBloodStats stats = VampirePlayer.get(player).getBloodStats();
-		double blood = stats.getBloodLevel();
-		//Push to avoid lasting changes
-		int maxBlood = stats.getMaxBlood();
+		int bloodWidth = getBloodStats(player).map(stats -> getWidth(stats.getBloodLevel(), stats.getMaxBlood())).orElse(0);
 
 		int xStart = width / 2 + 10;
 		int yStart = height - getSidedOffset();
@@ -52,9 +53,9 @@ public class Blood implements BarOverlay {
 		//Bar background
 		drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
 		//draw portion of bar based on blood amount
-		int f = xStart + 79 - getWidth(blood, maxBlood);
+		int f = xStart + 79 - bloodWidth;
 		hex2Color("#FF0000"/*mods.thirstBarColor*/).color2Gl();
-		drawTexturedModalRect(stack,f, yStart + 1, 1, 10, getWidth(blood, maxBlood), 7);
+		drawTexturedModalRect(stack,f, yStart + 1, 1, 10, bloodWidth, 7);
 
 		RenderSystem.popMatrix();
 	}
@@ -67,9 +68,7 @@ public class Blood implements BarOverlay {
 	@Override
 	public void renderText(MatrixStack stack,PlayerEntity player, int width, int height) {
 		//draw blood amount
-
-		IBloodStats stats = VampirePlayer.get(player).getBloodStats();
-		int blood = stats.getBloodLevel();
+		int blood = getBloodStats(player).map(IBloodStats::getBloodLevel).orElse(0);
 
 		int h1 = blood;
 		int c = Integer.decode("#FF0000"/*mods.thirstBarColor*/);
@@ -90,6 +89,13 @@ public class Blood implements BarOverlay {
 
 		drawTexturedModalRect(stack,xStart + 82, yStart, 0, 0, 9, 9);
 		drawTexturedModalRect(stack,xStart + 82, yStart, 9, 0, 9, 9);
+	}
+
+	/**
+	 * only call if player is vampire
+	 */
+	private Optional<IBloodStats> getBloodStats(PlayerEntity player) {
+		return VampirismAPI.getFactionPlayerHandler(player).map(IFactionPlayerHandler::getCurrentFactionPlayer).orElse(Optional.empty()).map(a -> ((IVampirePlayer) a).getBloodStats());
 	}
 
 	@Override

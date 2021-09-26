@@ -69,6 +69,9 @@ repositories {
      maven {
         url "https://www.cursemaven.com"
     }
+    maven {
+        url "https://maven.maxanier.de"
+    }
 
 }
 
@@ -77,7 +80,7 @@ dependencies {
     
 	compile fg.deobf("curse.maven:elenaidodge2-442962:3214812")
 	
-    compileOnly fg.deobf("curse.maven:vampirism-become-a-vampire:2902558")
+    compileOnly fg.deobf("de.teamlapen.vampirism:Vampirism:1.16.5-1.8.1:api")
 
 
 }
