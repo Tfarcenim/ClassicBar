@@ -75,7 +75,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}" //21
     
-	compile fg.deobf("curse.maven:elenaidodge2-442962:3214812")
+	compile fg.deobf("curse.maven:elenaidodge2-442962:3259805")
 	
     compileOnly fg.deobf("curse.maven:vampirism-become-a-vampire:2902558")
 
