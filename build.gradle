@@ -81,7 +81,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}" //21
     
-	compile fg.deobf("curse.maven:elenaidodge2-442962:3343309")
+	implementation fg.deobf("curse.maven:elenaidodge2-442962:3343309")
 	
 
     //compile against the Vampirism API
