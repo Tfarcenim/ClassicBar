@@ -37,7 +37,7 @@ public class MountHealth implements BarOverlay {
   }
 
   @Override
-  public void renderBar(MatrixStack stack, PlayerEntity player, int width, int height) {
+  public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
     //Push to avoid lasting changes
     int updateCounter = mc.ingameGUI.getTicks();
 
@@ -54,8 +54,8 @@ public class MountHealth implements BarOverlay {
     }
 
     this.mountHealth = mountHealth;
-    int xStart = width / 2 + 10;
-    int yStart = height - getSidedOffset();
+    int xStart = screenWidth / 2 + 10;
+    int yStart = screenHeight - getSidedOffset();
     double maxHealth = mount.getAttribute(Attributes.MAX_HEALTH).getValue();
 
     RenderSystem.pushMatrix();

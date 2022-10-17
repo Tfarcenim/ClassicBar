@@ -18,7 +18,7 @@ import static tfar.classicbar.ModUtils.drawTexturedModalRect;
 public class Armor implements BarOverlay {
 
   private float armorAlpha = 1;
-  private static EquipmentSlotType[] armorList = new EquipmentSlotType[]{EquipmentSlotType.HEAD,
+  private static final EquipmentSlotType[] armorList = new EquipmentSlotType[]{EquipmentSlotType.HEAD,
           EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET};
 
   public boolean side;
@@ -40,15 +40,15 @@ public class Armor implements BarOverlay {
   }
 
   @Override
-  public void renderBar(MatrixStack stack,PlayerEntity player, int width, int height) {
+  public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
     double armor = calculateArmorValue();
     int warningAmount = ModConfig.lowArmorWarning.get() ? getDamagedAmount(player) : 0;
 
     //Push to avoid lasting changes
     if (warningAmount > 0) armorAlpha = (int) (System.currentTimeMillis() / 250) % 2;
 
-    int xStart = width / 2 - 91;
-    int yStart = height - getSidedOffset();
+    int xStart = screenWidth / 2 - 91;
+    int yStart = screenHeight - getSidedOffset();
     RenderSystem.pushMatrix();
     RenderSystem.enableBlend();
 

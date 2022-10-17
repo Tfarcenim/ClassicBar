@@ -32,23 +32,23 @@ public class ArmorToughness implements BarOverlay {
   }
 
   @Override
-  public void renderBar(MatrixStack stack,PlayerEntity player, int width, int height) {
+  public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
     //armor toughness stuff
     double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
     //Push to avoid lasting changes
-    int xStart = width / 2 + 10;
-    int yStart = height - getSidedOffset();
+    int xStart = screenWidth / 2 + 10;
+    int yStart = screenHeight - getSidedOffset();
     RenderSystem.pushMatrix();
     RenderSystem.enableBlend();
     int f;
-    //draw bar portion
+    //draw bar background portion
     Color.reset();
     int toughnessindex = (int) Math.min(Math.ceil(armorToughness / 20) - 1, ModConfig.armorToughnessColorValues.get().size() - 1);
 
     if (armorToughness <= 20) {
       f = xStart + 79 - getWidth(armorToughness, 20);
       if (!ModConfig.fullToughnessBar.get()) drawScaledBar(stack,armorToughness, 20, f - 1, yStart, false);
-      else drawTexturedModalRect(stack,f, yStart, 0, 0, 81, 9);
+      else drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
 
       //calculate bar color
       hex2Color(ModConfig.armorToughnessColorValues.get().get(0)).color2Gl();
@@ -72,7 +72,7 @@ public class ArmorToughness implements BarOverlay {
         hex2Color(ModConfig.armorToughnessColorValues.get().get(toughnessindex)).color2Gl();
         drawTexturedModalRect(stack,f, yStart + 1, 0, 10, getWidth(armorToughness % 20, 20), 7);
       }
-      //case 2, bar is a multiple of 20 or it is capped
+      //case 2, bar is a multiple of 20, or it is capped
       else {
         //draw complete second bar
         hex2Color(ModConfig.armorToughnessColorValues.get().get(toughnessindex)).color2Gl();

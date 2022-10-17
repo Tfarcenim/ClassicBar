@@ -38,14 +38,14 @@ public class Blood implements BarOverlay {
 	}
 
 	@Override
-	public void renderBar(MatrixStack stack,PlayerEntity player, int width, int height) {
+	public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
 		VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).ifPresent(stats -> {
 			double blood = stats.getBloodLevel();
 			//Push to avoid lasting changes
 			int maxBlood = stats.getMaxBlood();
 
-			int xStart = width / 2 + 10;
-			int yStart = height - getSidedOffset();
+			int xStart = screenWidth / 2 + 10;
+			int yStart = screenHeight - getSidedOffset();
 			stack.push();
 			GlStateManager.enableBlend();
 

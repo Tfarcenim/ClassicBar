@@ -37,14 +37,14 @@ public class Hunger implements BarOverlay {
   }
 
   @Override
-  public void renderBar(MatrixStack matrices,PlayerEntity player, int width, int height) {
+  public void renderBar(MatrixStack matrices, PlayerEntity player, int screenWidth, int screenHeight) {
     double hunger = player.getFoodStats().getFoodLevel();
     double maxHunger = 20;//HungerHelper.getMaxHunger(player);
     double currentSat = player.getFoodStats().getSaturationLevel();
     float exhaustion = getExhaustion(player);
     //Push to avoid lasting changes
-    int xStart = width / 2 + 10;
-    int yStart = height - getSidedOffset();
+    int xStart = screenWidth / 2 + 10;
+    int yStart = screenHeight - getSidedOffset();
 
     RenderSystem.pushMatrix();
     RenderSystem.enableBlend();

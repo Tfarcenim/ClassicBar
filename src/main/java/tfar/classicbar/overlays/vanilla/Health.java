@@ -41,7 +41,7 @@ public class Health implements BarOverlay {
   }
 
   @Override
-  public void renderBar(MatrixStack stack, PlayerEntity player, int width, int height) {
+  public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
     int updateCounter = mc.ingameGUI.getTicks();
 
     double health = player.getHealth();
@@ -58,8 +58,8 @@ public class Health implements BarOverlay {
     playerHealth = health;
     double displayHealth = health + (lastPlayerHealth - health) * ((double) player.hurtResistantTime / player.maxHurtResistantTime);
 
-    int xStart = width / 2 - 91;
-    int yStart = height - ForgeIngameGui.left_height;
+    int xStart = screenWidth / 2 - 91;
+    int yStart = screenHeight - ForgeIngameGui.left_height;
     double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
 
     RenderSystem.pushMatrix();

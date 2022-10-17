@@ -9,7 +9,7 @@ public interface BarOverlay {
   boolean shouldRender(PlayerEntity player);
   boolean rightHandSide();
   BarOverlay setSide(boolean right);
-  void renderBar(MatrixStack stack,PlayerEntity player, int width, int height);
+  void renderBar(MatrixStack stack,PlayerEntity player, int screenWidth, int screenHeight);
   boolean shouldRenderText();
   void renderText(MatrixStack stack,PlayerEntity player, int width, int height);
   void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height);

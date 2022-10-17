@@ -32,11 +32,11 @@ public class Air implements BarOverlay {
   }
 
   @Override
-  public void renderBar(MatrixStack stack,PlayerEntity player, int width, int height) {
+  public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
     //Push to avoid lasting changes
 
-    int xStart = width / 2 + 10;
-    int yStart = height - getSidedOffset();
+    int xStart = screenWidth / 2 + 10;
+    int yStart = screenHeight - getSidedOffset();
 
     RenderSystem.pushMatrix();
     RenderSystem.enableBlend();

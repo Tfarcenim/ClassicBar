@@ -34,7 +34,7 @@ public class Color {
         float b = this.b / 255f;
         RenderSystem.color4f(r, g, b, a);
     }
-    public static void reset(){
+    public static void reset() {
         RenderSystem.color4f(1,1,1,1);
     }
 }

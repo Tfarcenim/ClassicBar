@@ -35,12 +35,12 @@ public class Absorption implements BarOverlay {
   }
 
   @Override
-  public void renderBar(MatrixStack stack,PlayerEntity player, int width, int height) {
+  public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
 
     double absorb = player.getAbsorptionAmount();
 
-    int xStart = width / 2 - 91;
-    int yStart = height - getSidedOffset();
+    int xStart = screenWidth / 2 - 91;
+    int yStart = screenHeight - getSidedOffset();
     double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
 
     RenderSystem.pushMatrix();

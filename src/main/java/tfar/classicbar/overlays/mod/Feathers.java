@@ -41,12 +41,12 @@ public class Feathers implements BarOverlay {
 	}
 
 	@Override
-	public void renderBar(MatrixStack stack,PlayerEntity player, int width, int height) {
+	public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
 		double feathers = FeathersHelper.getFeatherLevel(Minecraft.getInstance().player);
 		int maxFeathers = 20;
 		
-		int xStart = width / 2 + 10;
-		int yStart = height - getSidedOffset();
+		int xStart = screenWidth / 2 + 10;
+		int yStart = screenHeight - getSidedOffset();
 		GlStateManager.enableBlend();
 
 		Color.reset();
