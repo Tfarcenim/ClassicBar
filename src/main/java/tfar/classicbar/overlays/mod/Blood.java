@@ -46,8 +46,8 @@ public class Blood implements BarOverlay {
 
 			int xStart = screenWidth / 2 + 10;
 			int yStart = screenHeight - getSidedOffset();
-			stack.push();
-			GlStateManager.enableBlend();
+			stack.pushPose();
+			GlStateManager._enableBlend();
 
 			Color.reset();
 			//Bar background
@@ -57,7 +57,7 @@ public class Blood implements BarOverlay {
 			hex2Color("#FF0000"/*mods.thirstBarColor*/).color2Gl();
 			drawTexturedModalRect(stack,f, yStart + 1, 1, 10, getWidth(blood, maxBlood), 7);
 
-			stack.pop();
+			stack.popPose();
 		});
 	}
 
@@ -88,8 +88,8 @@ public class Blood implements BarOverlay {
 		int xStart = width / 2 + 10;
 		int yStart = height - getSidedOffset();
 		//Draw blood icon
-		mc.getTextureManager().bindTexture(VAMPIRISM_ICONS);
-		GlStateManager.enableBlend();
+		mc.getTextureManager().bind(VAMPIRISM_ICONS);
+		GlStateManager._enableBlend();
 
 		drawTexturedModalRect(stack,xStart + 82, yStart, 0, 0, 9, 9);
 		drawTexturedModalRect(stack,xStart + 82, yStart, 9, 0, 9, 9);

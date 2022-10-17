@@ -47,8 +47,8 @@ public class Absorption implements BarOverlay {
     RenderSystem.enableBlend();
     int k5 = 16;
 
-    if (player.isPotionActive(Effects.POISON)) k5 += 36;//evaluates to 52
-    else if (player.isPotionActive(Effects.WITHER)) k5 += 72;//evaluates to 88
+    if (player.hasEffect(Effects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.hasEffect(Effects.WITHER)) k5 += 72;//evaluates to 88
 
     //draw absorption bar
     int index = (int) Math.ceil(absorb / maxHealth) - 1;
@@ -144,8 +144,8 @@ public class Absorption implements BarOverlay {
 
     int k5 = 16;
 
-    if (player.isPotionActive(Effects.POISON)) k5 += 36;//evaluates to 52
-    else if (player.isPotionActive(Effects.WITHER)) k5 += 72;//evaluates to 88
+    if (player.hasEffect(Effects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.hasEffect(Effects.WITHER)) k5 += 72;//evaluates to 88
 
     int index = Math.min((int) Math.ceil(absorb / maxHealth),absorptionColorValues.get().size()) - 1;
 
@@ -170,11 +170,11 @@ public class Absorption implements BarOverlay {
 
   @Override
   public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
-    mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     int xStart = width / 2 - 91;
     int yStart = height - getSidedOffset();
 
-    int i5 = (player.world.getWorldInfo().isHardcore()) ? 5 : 0;
+    int i5 = (player.level.getLevelData().isHardcore()) ? 5 : 0;
     //draw absorption icon
     drawTexturedModalRect(stack,xStart - 10, yStart, 16, 9 * i5, 9, 9);
     drawTexturedModalRect(stack,xStart - 10, yStart, 160, 0, 9, 9);

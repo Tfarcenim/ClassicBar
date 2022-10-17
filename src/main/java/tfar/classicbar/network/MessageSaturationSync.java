@@ -26,7 +26,7 @@ public class MessageSaturationSync {
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> NetworkHelper.getSidedPlayer(ctx.get()).getFoodStats().setFoodSaturationLevel(saturationLevel));
+        ctx.get().enqueueWork(() -> NetworkHelper.getSidedPlayer(ctx.get()).getFoodData().setSaturation(saturationLevel));
         ctx.get().setPacketHandled(true);
     }
 }

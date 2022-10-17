@@ -38,9 +38,9 @@ public class Hunger implements BarOverlay {
 
   @Override
   public void renderBar(MatrixStack matrices, PlayerEntity player, int screenWidth, int screenHeight) {
-    double hunger = player.getFoodStats().getFoodLevel();
+    double hunger = player.getFoodData().getFoodLevel();
     double maxHunger = 20;//HungerHelper.getMaxHunger(player);
-    double currentSat = player.getFoodStats().getSaturationLevel();
+    double currentSat = player.getFoodData().getSaturationLevel();
     float exhaustion = getExhaustion(player);
     //Push to avoid lasting changes
     int xStart = screenWidth / 2 + 10;
@@ -58,7 +58,7 @@ public class Hunger implements BarOverlay {
     drawTexturedModalRect(matrices,xStart, yStart, 0, 0, 81, 9);
     //draw portion of bar based on hunger amount
     int f = xStart + 79 - getWidth(hunger, maxHunger);
-    boolean hungerActive = player.isPotionActive(Effects.HUNGER);
+    boolean hungerActive = player.hasEffect(Effects.HUNGER);
     hex2Color(hungerActive ? hungerBarDebuffColor.get() : hungerBarColor.get()).color2Gla(alpha2);
     drawTexturedModalRect(matrices,f, yStart + 1, 1, 10, getWidth(hunger, maxHunger), 7);
     if (currentSat > 0 && showSaturationBar.get()) {
@@ -69,14 +69,14 @@ public class Hunger implements BarOverlay {
     }
     //render held hunger overlay
     if (showHeldFoodOverlay.get() &&
-            player.getHeldItemMainhand().getItem().isFood()) {
-      ItemStack stack = player.getHeldItemMainhand();
+            player.getMainHandItem().getItem().isEdible()) {
+      ItemStack stack = player.getMainHandItem();
       double time = System.currentTimeMillis()/1000d * transitionSpeed.get();
       double foodAlpha = Math.sin(time)/2 + .5;
 
-      Food food = stack.getItem().getFood();
-      double hungerOverlay = food.getHealing();
-      double saturationMultiplier = food.getSaturation();
+      Food food = stack.getItem().getFoodProperties();
+      double hungerOverlay = food.getNutrition();
+      double saturationMultiplier = food.getSaturationModifier();
       double potentialSat = 2 * hungerOverlay * saturationMultiplier;
 
       //Draw Potential hunger
@@ -133,8 +133,8 @@ public class Hunger implements BarOverlay {
     int xStart = width / 2 + 10;
     int yStart = height - getSidedOffset();
     //draw hunger amount
-    double hunger = player.getFoodStats().getFoodLevel();
-    boolean hungerActive = player.isPotionActive(Effects.HUNGER);
+    double hunger = player.getFoodData().getFoodLevel();
+    boolean hungerActive = player.hasEffect(Effects.HUNGER);
 
     int h1 = (int) Math.floor(hunger);
 
@@ -149,8 +149,8 @@ public class Hunger implements BarOverlay {
 
     int xStart = width / 2 + 10;
     int yStart = height - getSidedOffset();
-    mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
-    boolean hungerActive = player.isPotionActive(Effects.HUNGER);
+    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+    boolean hungerActive = player.hasEffect(Effects.HUNGER);
 
     int k5 = 52;
     int k6 = 16;

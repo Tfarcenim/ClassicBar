@@ -15,10 +15,10 @@ public class ModUtils {
 
   public static ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
   public static final Minecraft mc = Minecraft.getInstance();
-  private static final FontRenderer fontRenderer = mc.fontRenderer;
+  private static final FontRenderer fontRenderer = mc.font;
 
   public static void drawTexturedModalRect(MatrixStack stack,int x, int y, int textureX, int textureY, int width, int height) {
-    mc.ingameGUI.blit(stack,x, y, textureX, textureY, width, height);
+    mc.gui.blit(stack,x, y, textureX, textureY, width, height);
   }
 
   public static int getWidth(double d1, double d2) {
@@ -28,7 +28,7 @@ public class ModUtils {
   }
 
   public static int getStringLength(String s) {
-    return fontRenderer.getStringWidth(s);
+    return fontRenderer.width(s);
   }
 
   public static void drawScaledBar(MatrixStack stack,double absorb, double maxHealth, int x, int y, boolean left) {
@@ -56,14 +56,14 @@ public class ModUtils {
     xOffset += 2;
     yOffset += 2;
 
-    fontRenderer.drawStringWithShadow(stack,string, xOffset, yOffset, color);
+    fontRenderer.drawShadow(stack,string, xOffset, yOffset, color);
   }
 
   public static float getExhaustion(PlayerEntity player) {
-    return ObfuscationReflectionHelper.getPrivateValue(FoodStats.class, player.getFoodStats(), "field_75126_c");
+    return ObfuscationReflectionHelper.getPrivateValue(FoodStats.class, player.getFoodData(), "exhaustionLevel");
   }
 
   public static void setExhaustion(PlayerEntity player, float exhaustion) {
-    ObfuscationReflectionHelper.setPrivateValue(FoodStats.class, player.getFoodStats(), exhaustion, "field_75126_c");
+    ObfuscationReflectionHelper.setPrivateValue(FoodStats.class, player.getFoodData(), exhaustion, "exhaustionLevel");
   }
 }

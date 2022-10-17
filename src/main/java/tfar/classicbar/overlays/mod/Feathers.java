@@ -47,7 +47,7 @@ public class Feathers implements BarOverlay {
 		
 		int xStart = screenWidth / 2 + 10;
 		int yStart = screenHeight - getSidedOffset();
-		GlStateManager.enableBlend();
+		GlStateManager._enableBlend();
 
 		Color.reset();
 		//Bar background
@@ -85,8 +85,8 @@ public class Feathers implements BarOverlay {
 		int yStart = height - getSidedOffset();
 		
 		//Draw feathers icon
-		mc.getTextureManager().bindTexture(DODGE_ICONS);
-		GlStateManager.enableBlend();
+		mc.getTextureManager().bind(DODGE_ICONS);
+		GlStateManager._enableBlend();
 
 		drawTexturedModalRect(stack,xStart + 82, yStart, 34, 0, 9, 9);
 	}

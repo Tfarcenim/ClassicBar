@@ -33,23 +33,23 @@ public class MountHealth implements BarOverlay {
 
   @Override
   public boolean shouldRender(PlayerEntity player) {
-    return player.getRidingEntity() instanceof LivingEntity;
+    return player.getVehicle() instanceof LivingEntity;
   }
 
   @Override
   public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
     //Push to avoid lasting changes
-    int updateCounter = mc.ingameGUI.getTicks();
+    int updateCounter = mc.gui.getGuiTicks();
 
-    LivingEntity mount = (LivingEntity) player.getRidingEntity();
+    LivingEntity mount = (LivingEntity) player.getVehicle();
     if (!mount.isAlive()) return;
     double mountHealth = mount.getHealth();
 
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3L % 2L == 1L;
 
-    if (mountHealth < this.mountHealth && player.hurtResistantTime > 0) {
+    if (mountHealth < this.mountHealth && player.invulnerableTime > 0) {
       healthUpdateCounter = (long) (updateCounter + 20);
-    } else if (mountHealth > this.mountHealth && player.hurtResistantTime > 0) {
+    } else if (mountHealth > this.mountHealth && player.invulnerableTime > 0) {
       healthUpdateCounter = (long) (updateCounter + 10);
     }
 
@@ -90,7 +90,7 @@ public class MountHealth implements BarOverlay {
 
     int xStart = width / 2 + 10;
     int yStart = height - getSidedOffset();
-    LivingEntity mount = (LivingEntity) player.getRidingEntity();
+    LivingEntity mount = (LivingEntity) player.getVehicle();
     double maxHealth = mount.getAttribute(Attributes.MAX_HEALTH).getValue();
     int i3 = ModConfig.displayIcons.get() ? 1 : 0;
     if (ModConfig.showPercent.get()) h1 = (int) (100 * mountHealth / maxHealth);

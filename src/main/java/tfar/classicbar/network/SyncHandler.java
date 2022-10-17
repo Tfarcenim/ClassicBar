@@ -31,24 +31,24 @@ public class SyncHandler {
       return;
 
     ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
-    Float lastSaturationLevel = lastSaturationLevels.get(player.getUniqueID());
+    Float lastSaturationLevel = lastSaturationLevels.get(player.getUUID());
     //Float lastHydrationLevel = lastHydrationLevels.get(player.getUniqueID());
-    Float lastExhaustionLevel = lastExhaustionLevels.get(player.getUniqueID());
+    Float lastExhaustionLevel = lastExhaustionLevels.get(player.getUUID());
     //Float lastThirstExhaustionLevel = lastThirstExhaustionLevels.get(player.getUniqueID());
 
 
-    if (lastSaturationLevel == null || lastSaturationLevel != player.getFoodStats().getSaturationLevel()) {
+    if (lastSaturationLevel == null || lastSaturationLevel != player.getFoodData().getSaturationLevel()) {
 
-      Object msg = new MessageSaturationSync(player.getFoodStats().getSaturationLevel());
-      Message.INSTANCE.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
-      lastSaturationLevels.put(player.getUniqueID(), player.getFoodStats().getSaturationLevel());
+      Object msg = new MessageSaturationSync(player.getFoodData().getSaturationLevel());
+      Message.INSTANCE.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+      lastSaturationLevels.put(player.getUUID(), player.getFoodData().getSaturationLevel());
     }
 
     float exhaustionLevel = ModUtils.getExhaustion(player);
     if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
       Object msg = new MessageExhaustionSync(ModUtils.getExhaustion(player));
-      Message.INSTANCE.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
-      lastExhaustionLevels.put(player.getUniqueID(), exhaustionLevel);
+      Message.INSTANCE.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+      lastExhaustionLevels.put(player.getUUID(), exhaustionLevel);
     }
 
     /*if (ClassicBar.TOUGHASNAILS) {
@@ -71,8 +71,8 @@ public class SyncHandler {
     if (!(event.getPlayer() instanceof ServerPlayerEntity))
       return;
 
-    lastSaturationLevels.remove(event.getPlayer().getUniqueID());
-    lastExhaustionLevels.remove(event.getPlayer().getUniqueID());
+    lastSaturationLevels.remove(event.getPlayer().getUUID());
+    lastExhaustionLevels.remove(event.getPlayer().getUUID());
     /*if (ClassicBar.TOUGHASNAILS) {
       lastHydrationLevels.remove(event.player.getUniqueID());
       lastThirstExhaustionLevels.remove(event.player.getUniqueID());

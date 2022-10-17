@@ -106,7 +106,7 @@ public class ArmorToughness implements BarOverlay {
 
   @Override
   public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
-    mc.getTextureManager().bindTexture(ICON_BAR);
+    mc.getTextureManager().bind(ICON_BAR);
     int xStart = width / 2 + 10;
     int yStart = height - getSidedOffset();
     //Draw armor toughness icon

@@ -45,19 +45,19 @@ public class EventHandler {
         return;
       case ALL:
     }
-    Entity entity = mc.getRenderViewEntity();
+    Entity entity = mc.getCameraEntity();
     if (!(entity instanceof PlayerEntity)) return;
     PlayerEntity player = (PlayerEntity) entity;
-    if (player.abilities.isCreativeMode || player.isSpectator()) return;
-    mc.getProfiler().startSection("classicbars_hud");
+    if (player.abilities.instabuild || player.isSpectator()) return;
+    mc.getProfiler().push("classicbars_hud");
 
-    int scaledWidth = mc.getMainWindow().getScaledWidth();
-    int scaledHeight = mc.getMainWindow().getScaledHeight();
+    int scaledWidth = mc.getWindow().getGuiScaledWidth();
+    int scaledHeight = mc.getWindow().getGuiScaledHeight();
 
     int initial_right_height = ForgeIngameGui.right_height;
     int initial_left_height = ForgeIngameGui.left_height;
 
-    mc.getTextureManager().bindTexture(ModUtils.ICON_BAR);
+    mc.getTextureManager().bind(ModUtils.ICON_BAR);
     Supplier<Stream<BarOverlay>> supplier = () -> combined.stream().filter(iBarOverlay -> iBarOverlay.shouldRender(player));
 
     MatrixStack matrices = event.getMatrixStack();
@@ -85,8 +85,8 @@ public class EventHandler {
           increment(iBarOverlay.rightHandSide(),10);
       });
     }
-    mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
-    mc.getProfiler().endSection();
+    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+    mc.getProfiler().pop();
   }
 
   public void increment(boolean side ,int amount){

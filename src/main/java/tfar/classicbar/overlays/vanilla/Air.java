@@ -28,7 +28,7 @@ public class Air implements BarOverlay {
 
   @Override
   public boolean shouldRender(PlayerEntity player) {
-    return player.getAir() < 300;
+    return player.getAirSupply() < 300;
   }
 
   @Override
@@ -46,7 +46,7 @@ public class Air implements BarOverlay {
     drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
 
     //draw portion of bar based on air amount
-    int air = player.getAir();
+    int air = player.getAirSupply();
 
     int f = xStart + 79 - getWidth(air, 300);
     hex2Color(oxygenBarColor.get()).color2Gl();
@@ -65,7 +65,7 @@ public class Air implements BarOverlay {
   @Override
   public void renderText(MatrixStack stack,PlayerEntity player, int width, int height) {
     //draw air amount
-    int air = player.getAir();
+    int air = player.getAirSupply();
     int xStart = width / 2 + 10;
     int yStart = height - getSidedOffset();
 
@@ -82,7 +82,7 @@ public class Air implements BarOverlay {
 
     int xStart = width / 2 + 10;
     int yStart = height - getSidedOffset();
-    mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     //Draw air icon
     drawTexturedModalRect(stack,xStart + 82, yStart, 16, 18, 9, 9);
   }

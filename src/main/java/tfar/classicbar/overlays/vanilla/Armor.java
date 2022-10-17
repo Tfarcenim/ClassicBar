@@ -118,14 +118,14 @@ public class Armor implements BarOverlay {
   public static int getDamagedAmount(PlayerEntity player){
     int warningAmount = 0;
     for (EquipmentSlotType slot : armorList) {
-      ItemStack stack = player.getItemStackFromSlot(slot);
+      ItemStack stack = player.getItemBySlot(slot);
       if (!(stack.getItem() instanceof ArmorItem)) continue;
       int max = stack.getMaxDamage();
-      int current = stack.getDamage();
+      int current = stack.getDamageValue();
       int percentage = 100;
       if (max != 0) percentage = 100 * (max - current) / (max);
       if (percentage < 5) {
-        warningAmount += ((ArmorItem) stack.getItem()).getArmorMaterial().getDamageReductionAmount(slot);
+        warningAmount += ((ArmorItem) stack.getItem()).getMaterial().getDefenseForSlot(slot);
       }
     }
     return warningAmount;
@@ -149,7 +149,7 @@ public class Armor implements BarOverlay {
 
   @Override
   public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
-    mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     int xStart = width / 2 - 91;
     int yStart = height - getSidedOffset();
     Color.reset();
@@ -163,7 +163,7 @@ public class Armor implements BarOverlay {
   }
 
   private static int calculateArmorValue() {
-    int currentArmorValue = mc.player.getTotalArmorValue();
+    int currentArmorValue = mc.player.getArmorValue();
 
    /* for (ItemStack itemStack : mc.player.getArmorInventoryList()) {
       if (itemStack.getItem() instanceof ISpecialArmor) {

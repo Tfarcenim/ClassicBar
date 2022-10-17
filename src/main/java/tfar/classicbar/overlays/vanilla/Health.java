@@ -42,21 +42,21 @@ public class Health implements BarOverlay {
 
   @Override
   public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
-    int updateCounter = mc.ingameGUI.getTicks();
+    int updateCounter = mc.gui.getGuiTicks();
 
     double health = player.getHealth();
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
 
     //player is damaged and resistant
-    if (health < playerHealth && player.hurtResistantTime > 0) {
+    if (health < playerHealth && player.invulnerableTime > 0) {
       healthUpdateCounter = updateCounter + 20;
       lastPlayerHealth = playerHealth;
-    } else if (health > playerHealth && player.hurtResistantTime > 0) {
+    } else if (health > playerHealth && player.invulnerableTime > 0) {
       healthUpdateCounter = updateCounter + 10;
       /* lastPlayerHealth = playerHealth;*/
     }
     playerHealth = health;
-    double displayHealth = health + (lastPlayerHealth - health) * ((double) player.hurtResistantTime / player.maxHurtResistantTime);
+    double displayHealth = health + (lastPlayerHealth - health) * ((double) player.invulnerableTime / player.invulnerableDuration);
 
     int xStart = screenWidth / 2 - 91;
     int yStart = screenHeight - ForgeIngameGui.left_height;
@@ -66,8 +66,8 @@ public class Health implements BarOverlay {
     RenderSystem.enableBlend();
     int k5 = 16;
 
-    if (player.isPotionActive(Effects.POISON)) k5 += 36;//evaluates to 52
-    else if (player.isPotionActive(Effects.WITHER)) k5 += 72;//evaluates to 88
+    if (player.hasEffect(Effects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.hasEffect(Effects.WITHER)) k5 += 72;//evaluates to 88
 
     int i4 = (highlight) ? 18 : 0;
 
@@ -126,8 +126,8 @@ public class Health implements BarOverlay {
 
     int k5 = 16;
 
-    if (player.isPotionActive(Effects.POISON)) k5 += 36;//evaluates to 52
-    else if (player.isPotionActive(Effects.WITHER)) k5 += 72;//evaluates to 88
+    if (player.hasEffect(Effects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.hasEffect(Effects.WITHER)) k5 += 72;//evaluates to 88
 
     int h1 = (int) Math.round(health);
     int i2 = ModConfig.displayIcons.get() ? 1 : 0;
@@ -139,16 +139,16 @@ public class Health implements BarOverlay {
 
   @Override
   public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
-    mc.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
 
     int k5 = 16;
 
-    if (player.isPotionActive(Effects.POISON)) k5 += 36;//evaluates to 52
-    else if (player.isPotionActive(Effects.WITHER)) k5 += 72;//evaluates to 88
+    if (player.hasEffect(Effects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.hasEffect(Effects.WITHER)) k5 += 72;//evaluates to 88
 
     int xStart = width / 2 - 91;
     int yStart = height - ForgeIngameGui.left_height;
-    int i5 = (player.world.getWorldInfo().isHardcore()) ? 5 : 0;
+    int i5 = (player.level.getLevelData().isHardcore()) ? 5 : 0;
     //Draw health icon
     //heart background
     Color.reset();
