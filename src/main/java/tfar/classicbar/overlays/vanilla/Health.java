@@ -49,10 +49,10 @@ public class Health implements BarOverlay {
 
     //player is damaged and resistant
     if (health < playerHealth && player.hurtResistantTime > 0) {
-      healthUpdateCounter = (long) (updateCounter + 20);
+      healthUpdateCounter = updateCounter + 20;
       lastPlayerHealth = playerHealth;
     } else if (health > playerHealth && player.hurtResistantTime > 0) {
-      healthUpdateCounter = (long) (updateCounter + 10);
+      healthUpdateCounter = updateCounter + 10;
       /* lastPlayerHealth = playerHealth;*/
     }
     playerHealth = health;
@@ -76,8 +76,8 @@ public class Health implements BarOverlay {
 
     //is the bar changing
     //Pass 1, draw bar portion
-    int alpha = health <= 0 ? 1 : health / maxHealth <= ModConfig.lowHealthThreshold.get() && ModConfig.lowHealthWarning.get() ?
-            (int) (System.currentTimeMillis() / 250) % 2 : 1;
+    boolean warn = health / maxHealth <= ModConfig.lowHealthThreshold.get() && ModConfig.lowHealthWarning.get();
+    long alpha = health <= 0 ? 1 : warn ? (System.currentTimeMillis() / 250) % 2 : 1;
 
     //interpolate the bar
     if (displayHealth != health) {
@@ -86,7 +86,7 @@ public class Health implements BarOverlay {
       if (displayHealth > health) {
         //draw interpolation
         drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(displayHealth, maxHealth), 7);
-        //Health is increasing, idk what to do here
+        //Health is increasing, IDK what to do here
       } else {/*
                   f = xStart + getWidth(health, maxHealth);
                   drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(health - displayHealth, maxHealth), 7, general.style, true, true);*/

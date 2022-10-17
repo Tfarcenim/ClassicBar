@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -81,7 +81,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}" //21
     
-	compileOnly fg.deobf("curse.maven:elenaidodge2-442962:3259805")
+	compile fg.deobf("curse.maven:elenaidodge2-442962:3343309")
 	
 
     //compile against the Vampirism API

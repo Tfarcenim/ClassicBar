@@ -48,8 +48,10 @@ public class Hunger implements BarOverlay {
 
     RenderSystem.pushMatrix();
     RenderSystem.enableBlend();
-    float alpha2 = hunger / maxHunger <= lowHungerThreshold.get() && lowHungerWarning.get() ? (int) (System.currentTimeMillis() / 250) % 2 : 1;
 
+    boolean warn = hunger / maxHunger <= lowHungerThreshold.get() && lowHungerWarning.get();
+
+    long alpha2 = warn ? (System.currentTimeMillis() / 250) % 2 : 1;
 
     //Bar background
     Color.reset();
