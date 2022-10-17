@@ -1,6 +1,6 @@
 package tfar.classicbar.network;
 
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -15,12 +15,12 @@ public class MessageSaturationSync {
         this.saturationLevel = saturationLevel;
     }
 
-    public MessageSaturationSync(PacketBuffer buf)
+    public MessageSaturationSync(FriendlyByteBuf buf)
     {
         this.saturationLevel = buf.readFloat();
     }
 
-    public void encode(PacketBuffer buf)
+    public void encode(FriendlyByteBuf buf)
     {
         buf.writeFloat(saturationLevel);
     }

@@ -1,9 +1,9 @@
 package tfar.classicbar;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -46,8 +46,8 @@ public class EventHandler {
       case ALL:
     }
     Entity entity = mc.getCameraEntity();
-    if (!(entity instanceof PlayerEntity)) return;
-    PlayerEntity player = (PlayerEntity) entity;
+    if (!(entity instanceof Player)) return;
+    Player player = (Player) entity;
     if (player.abilities.instabuild || player.isSpectator()) return;
     mc.getProfiler().push("classicbars_hud");
 
@@ -60,7 +60,7 @@ public class EventHandler {
     mc.getTextureManager().bind(ModUtils.ICON_BAR);
     Supplier<Stream<BarOverlay>> supplier = () -> combined.stream().filter(iBarOverlay -> iBarOverlay.shouldRender(player));
 
-    MatrixStack matrices = event.getMatrixStack();
+    PoseStack matrices = event.getMatrixStack();
 
     supplier.get().forEach(iBarOverlay -> {
       iBarOverlay.renderBar(matrices,player, scaledWidth, scaledHeight);
@@ -85,7 +85,7 @@ public class EventHandler {
           increment(iBarOverlay.rightHandSide(),10);
       });
     }
-    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+    mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
     mc.getProfiler().pop();
   }
 

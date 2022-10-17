@@ -1,12 +1,12 @@
 package tfar.classicbar.overlays.vanilla;
 
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.Effects;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.Color;
 import tfar.classicbar.config.ModConfig;
@@ -36,12 +36,12 @@ public class Health implements BarOverlay {
   }
 
   @Override
-  public boolean shouldRender(PlayerEntity player) {
+  public boolean shouldRender(Player player) {
     return true;
   }
 
   @Override
-  public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
+  public void renderBar(PoseStack stack, Player player, int screenWidth, int screenHeight) {
     int updateCounter = mc.gui.getGuiTicks();
 
     double health = player.getHealth();
@@ -66,8 +66,8 @@ public class Health implements BarOverlay {
     RenderSystem.enableBlend();
     int k5 = 16;
 
-    if (player.hasEffect(Effects.POISON)) k5 += 36;//evaluates to 52
-    else if (player.hasEffect(Effects.WITHER)) k5 += 72;//evaluates to 88
+    if (player.hasEffect(MobEffects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.hasEffect(MobEffects.WITHER)) k5 += 72;//evaluates to 88
 
     int i4 = (highlight) ? 18 : 0;
 
@@ -117,7 +117,7 @@ public class Health implements BarOverlay {
   }
 
   @Override
-  public void renderText(MatrixStack stack,PlayerEntity player, int width, int height) {
+  public void renderText(PoseStack stack,Player player, int width, int height) {
     double health = player.getHealth();
 
     int xStart = width / 2 - 91;
@@ -126,8 +126,8 @@ public class Health implements BarOverlay {
 
     int k5 = 16;
 
-    if (player.hasEffect(Effects.POISON)) k5 += 36;//evaluates to 52
-    else if (player.hasEffect(Effects.WITHER)) k5 += 72;//evaluates to 88
+    if (player.hasEffect(MobEffects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.hasEffect(MobEffects.WITHER)) k5 += 72;//evaluates to 88
 
     int h1 = (int) Math.round(health);
     int i2 = ModConfig.displayIcons.get() ? 1 : 0;
@@ -138,13 +138,13 @@ public class Health implements BarOverlay {
   }
 
   @Override
-  public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
-    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+  public void renderIcon(PoseStack stack,Player player, int width, int height) {
+    mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
 
     int k5 = 16;
 
-    if (player.hasEffect(Effects.POISON)) k5 += 36;//evaluates to 52
-    else if (player.hasEffect(Effects.WITHER)) k5 += 72;//evaluates to 88
+    if (player.hasEffect(MobEffects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.hasEffect(MobEffects.WITHER)) k5 += 72;//evaluates to 88
 
     int xStart = width / 2 - 91;
     int yStart = height - ForgeIngameGui.left_height;

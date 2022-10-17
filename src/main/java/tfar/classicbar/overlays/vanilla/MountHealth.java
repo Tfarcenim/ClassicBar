@@ -1,10 +1,10 @@
 package tfar.classicbar.overlays.vanilla;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.config.ModConfig;
 import tfar.classicbar.overlays.BarOverlay;
 
@@ -32,12 +32,12 @@ public class MountHealth implements BarOverlay {
   }
 
   @Override
-  public boolean shouldRender(PlayerEntity player) {
+  public boolean shouldRender(Player player) {
     return player.getVehicle() instanceof LivingEntity;
   }
 
   @Override
-  public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
+  public void renderBar(PoseStack stack, Player player, int screenWidth, int screenHeight) {
     //Push to avoid lasting changes
     int updateCounter = mc.gui.getGuiTicks();
 
@@ -85,7 +85,7 @@ public class MountHealth implements BarOverlay {
   }
 
   @Override
-  public void renderText(MatrixStack stack,PlayerEntity player, int width, int height) {
+  public void renderText(PoseStack stack,Player player, int width, int height) {
     int h1 = (int) Math.ceil(mountHealth);
 
     int xStart = width / 2 + 10;
@@ -98,7 +98,7 @@ public class MountHealth implements BarOverlay {
   }
 
   @Override
-  public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
+  public void renderIcon(PoseStack stack,Player player, int width, int height) {
     int xStart = width / 2 + 10;
     int yStart = height - getSidedOffset();
     //heart background

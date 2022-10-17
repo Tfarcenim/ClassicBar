@@ -1,9 +1,9 @@
 package tfar.classicbar.overlays.vanilla;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.Color;
 import tfar.classicbar.overlays.BarOverlay;
 
@@ -27,12 +27,12 @@ public class Air implements BarOverlay {
   }
 
   @Override
-  public boolean shouldRender(PlayerEntity player) {
+  public boolean shouldRender(Player player) {
     return player.getAirSupply() < 300;
   }
 
   @Override
-  public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
+  public void renderBar(PoseStack stack, Player player, int screenWidth, int screenHeight) {
     //Push to avoid lasting changes
 
     int xStart = screenWidth / 2 + 10;
@@ -63,7 +63,7 @@ public class Air implements BarOverlay {
   }
 
   @Override
-  public void renderText(MatrixStack stack,PlayerEntity player, int width, int height) {
+  public void renderText(PoseStack stack,Player player, int width, int height) {
     //draw air amount
     int air = player.getAirSupply();
     int xStart = width / 2 + 10;
@@ -78,11 +78,11 @@ public class Air implements BarOverlay {
   }
 
   @Override
-  public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
+  public void renderIcon(PoseStack stack,Player player, int width, int height) {
 
     int xStart = width / 2 + 10;
     int yStart = height - getSidedOffset();
-    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+    mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
     //Draw air icon
     drawTexturedModalRect(stack,xStart + 82, yStart, 16, 18, 9, 9);
   }

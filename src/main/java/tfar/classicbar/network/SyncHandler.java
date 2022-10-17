@@ -1,6 +1,6 @@
 package tfar.classicbar.network;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,10 +27,10 @@ public class SyncHandler {
 
   @SubscribeEvent
   public void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
-    if (!(event.getEntity() instanceof ServerPlayerEntity))
+    if (!(event.getEntity() instanceof ServerPlayer))
       return;
 
-    ServerPlayerEntity player = (ServerPlayerEntity) event.getEntity();
+    ServerPlayer player = (ServerPlayer) event.getEntity();
     Float lastSaturationLevel = lastSaturationLevels.get(player.getUUID());
     //Float lastHydrationLevel = lastHydrationLevels.get(player.getUniqueID());
     Float lastExhaustionLevel = lastExhaustionLevels.get(player.getUUID());
@@ -68,7 +68,7 @@ public class SyncHandler {
 
   @SubscribeEvent
   public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-    if (!(event.getPlayer() instanceof ServerPlayerEntity))
+    if (!(event.getPlayer() instanceof ServerPlayer))
       return;
 
     lastSaturationLevels.remove(event.getPlayer().getUUID());

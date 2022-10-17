@@ -1,12 +1,12 @@
 package tfar.classicbar.overlays.vanilla;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ItemStack;
 import tfar.classicbar.Color;
 import tfar.classicbar.config.ModConfig;
 import tfar.classicbar.overlays.BarOverlay;
@@ -18,8 +18,8 @@ import static tfar.classicbar.ModUtils.drawTexturedModalRect;
 public class Armor implements BarOverlay {
 
   private float armorAlpha = 1;
-  private static final EquipmentSlotType[] armorList = new EquipmentSlotType[]{EquipmentSlotType.HEAD,
-          EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET};
+  private static final EquipmentSlot[] armorList = new EquipmentSlot[]{EquipmentSlot.HEAD,
+          EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
   public boolean side;
 
@@ -35,12 +35,12 @@ public class Armor implements BarOverlay {
   }
 
   @Override
-  public boolean shouldRender(PlayerEntity player) {
+  public boolean shouldRender(Player player) {
     return calculateArmorValue() >= 1;
   }
 
   @Override
-  public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
+  public void renderBar(PoseStack stack, Player player, int screenWidth, int screenHeight) {
     double armor = calculateArmorValue();
     int warningAmount = ModConfig.lowArmorWarning.get() ? getDamagedAmount(player) : 0;
 
@@ -115,9 +115,9 @@ public class Armor implements BarOverlay {
     return ModConfig.showArmorNumbers.get();
   }
 
-  public static int getDamagedAmount(PlayerEntity player){
+  public static int getDamagedAmount(Player player){
     int warningAmount = 0;
-    for (EquipmentSlotType slot : armorList) {
+    for (EquipmentSlot slot : armorList) {
       ItemStack stack = player.getItemBySlot(slot);
       if (!(stack.getItem() instanceof ArmorItem)) continue;
       int max = stack.getMaxDamage();
@@ -132,7 +132,7 @@ public class Armor implements BarOverlay {
   }
 
   @Override
-  public void renderText(MatrixStack stack,PlayerEntity player, int width, int height) {
+  public void renderText(PoseStack stack,Player player, int width, int height) {
     int xStart = width / 2 - 91;
     int yStart = height - getSidedOffset();
     double armor = calculateArmorValue();
@@ -148,8 +148,8 @@ public class Armor implements BarOverlay {
   }
 
   @Override
-  public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
-    mc.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+  public void renderIcon(PoseStack stack,Player player, int width, int height) {
+    mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
     int xStart = width / 2 - 91;
     int yStart = height - getSidedOffset();
     Color.reset();

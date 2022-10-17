@@ -9,12 +9,12 @@ import static tfar.classicbar.ModUtils.rightTextOffset;
 
 import com.elenai.elenaidodge2.ElenaiDodge2;
 import com.elenai.elenaidodge2.api.FeathersHelper;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
 import tfar.classicbar.Color;
 import tfar.classicbar.config.ModConfig;
 import tfar.classicbar.overlays.BarOverlay;
@@ -36,12 +36,12 @@ public class Feathers implements BarOverlay {
 	}
 
 	@Override
-	public boolean shouldRender(PlayerEntity player) {
+	public boolean shouldRender(Player player) {
 		return true;
 	}
 
 	@Override
-	public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
+	public void renderBar(PoseStack stack, Player player, int screenWidth, int screenHeight) {
 		double feathers = FeathersHelper.getFeatherLevel(Minecraft.getInstance().player);
 		int maxFeathers = 20;
 		
@@ -65,7 +65,7 @@ public class Feathers implements BarOverlay {
 	}
 
 	@Override
-	public void renderText(MatrixStack stack,PlayerEntity player, int width, int height) {
+	public void renderText(PoseStack stack,Player player, int width, int height) {
 		//draw feathers amount
 
 		double feathers = FeathersHelper.getFeatherLevel(Minecraft.getInstance().player);
@@ -79,7 +79,7 @@ public class Feathers implements BarOverlay {
 	}
 
 	@Override
-	public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
+	public void renderIcon(PoseStack stack,Player player, int width, int height) {
 
 		int xStart = width / 2 + 10;
 		int yStart = height - getSidedOffset();

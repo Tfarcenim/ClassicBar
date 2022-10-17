@@ -1,6 +1,6 @@
 package tfar.classicbar.network;
 
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 import tfar.classicbar.ModUtils;
 
@@ -15,11 +15,11 @@ public class MessageExhaustionSync {
         this.exhaustionLevel = exhaustionLevel;
     }
 
-    public MessageExhaustionSync(PacketBuffer buf) {
+    public MessageExhaustionSync(FriendlyByteBuf buf) {
         this.exhaustionLevel = buf.readFloat();
     }
 
-    public void encode(PacketBuffer buf) {
+    public void encode(FriendlyByteBuf buf) {
         buf.writeFloat(exhaustionLevel);
     }
 

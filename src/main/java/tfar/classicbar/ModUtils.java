@@ -1,11 +1,11 @@
 package tfar.classicbar;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.FoodStats;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class ModUtils {
@@ -15,9 +15,9 @@ public class ModUtils {
 
   public static ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
   public static final Minecraft mc = Minecraft.getInstance();
-  private static final FontRenderer fontRenderer = mc.font;
+  private static final Font fontRenderer = mc.font;
 
-  public static void drawTexturedModalRect(MatrixStack stack,int x, int y, int textureX, int textureY, int width, int height) {
+  public static void drawTexturedModalRect(PoseStack stack,int x, int y, int textureX, int textureY, int width, int height) {
     mc.gui.blit(stack,x, y, textureX, textureY, width, height);
   }
 
@@ -31,7 +31,7 @@ public class ModUtils {
     return fontRenderer.width(s);
   }
 
-  public static void drawScaledBar(MatrixStack stack,double absorb, double maxHealth, int x, int y, boolean left) {
+  public static void drawScaledBar(PoseStack stack,double absorb, double maxHealth, int x, int y, boolean left) {
     int i = getWidth(absorb, maxHealth);
 
     if (left) {
@@ -43,7 +43,7 @@ public class ModUtils {
     }
   }
 
-  public static void drawStringOnHUD(MatrixStack stack,String string, int xOffset, int yOffset, int color) {
+  public static void drawStringOnHUD(PoseStack stack,String string, int xOffset, int yOffset, int color) {
    /* double scale = numbers.numberScale;
     GlStateManager.pushMatrix();
     GlStateManager.scale(scale, scale, 1);
@@ -59,11 +59,11 @@ public class ModUtils {
     fontRenderer.drawShadow(stack,string, xOffset, yOffset, color);
   }
 
-  public static float getExhaustion(PlayerEntity player) {
-    return ObfuscationReflectionHelper.getPrivateValue(FoodStats.class, player.getFoodData(), "exhaustionLevel");
+  public static float getExhaustion(Player player) {
+    return ObfuscationReflectionHelper.getPrivateValue(FoodData.class, player.getFoodData(), "exhaustionLevel");
   }
 
-  public static void setExhaustion(PlayerEntity player, float exhaustion) {
-    ObfuscationReflectionHelper.setPrivateValue(FoodStats.class, player.getFoodData(), exhaustion, "exhaustionLevel");
+  public static void setExhaustion(Player player, float exhaustion) {
+    ObfuscationReflectionHelper.setPrivateValue(FoodData.class, player.getFoodData(), exhaustion, "exhaustionLevel");
   }
 }

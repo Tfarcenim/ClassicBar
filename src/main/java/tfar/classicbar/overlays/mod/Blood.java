@@ -1,14 +1,14 @@
 package tfar.classicbar.overlays.mod;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
 import tfar.classicbar.Color;
 import tfar.classicbar.config.ModConfig;
 import tfar.classicbar.overlays.BarOverlay;
@@ -33,12 +33,12 @@ public class Blood implements BarOverlay {
 	}
 
 	@Override
-	public boolean shouldRender(PlayerEntity player) {
+	public boolean shouldRender(Player player) {
 		return VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION;
 	}
 
 	@Override
-	public void renderBar(MatrixStack stack, PlayerEntity player, int screenWidth, int screenHeight) {
+	public void renderBar(PoseStack stack, Player player, int screenWidth, int screenHeight) {
 		VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).ifPresent(stats -> {
 			double blood = stats.getBloodLevel();
 			//Push to avoid lasting changes
@@ -67,7 +67,7 @@ public class Blood implements BarOverlay {
 	}
 
 	@Override
-	public void renderText(MatrixStack stack,PlayerEntity player, int width, int height) {
+	public void renderText(PoseStack stack,Player player, int width, int height) {
 		//draw blood amount
 		VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).ifPresent(stats -> {
 					int blood = stats.getBloodLevel();
@@ -83,7 +83,7 @@ public class Blood implements BarOverlay {
 	}
 
 	@Override
-	public void renderIcon(MatrixStack stack,PlayerEntity player, int width, int height) {
+	public void renderIcon(PoseStack stack,Player player, int width, int height) {
 
 		int xStart = width / 2 + 10;
 		int yStart = height - getSidedOffset();
