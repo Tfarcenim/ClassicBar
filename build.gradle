@@ -42,7 +42,9 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
+            //When running Vampirism in deobf environment this is required for Vampirism's mixins to be remapped
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 examplemod {
                     source sourceSets.main
@@ -56,6 +58,9 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
+            //When running Vampirism in deobf environment this is required for Vampirism's mixins to be remapped
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             mods {
                 examplemod {
                     source sourceSets.main
@@ -69,6 +74,10 @@ repositories {
      maven {
         url "https://www.cursemaven.com"
     }
+    //Maven repo for Vampirism
+    maven {
+        url = "https://maven.maxanier.de"
+    }
 
 }
 
@@ -77,8 +86,14 @@ dependencies {
     
 	compile fg.deobf("curse.maven:elenaidodge2-442962:3259805")
 	
-    compileOnly fg.deobf("curse.maven:vampirism-become-a-vampire:2902558")
 
+    //compile against the Vampirism API
+    compileOnly fg.deobf("de.teamlapen.vampirism:Vampirism:1.16.4-1.7.12:api")
+    //Alternative using the full jar from CurseForge
+    //compileOnly fg.deobf("curse.maven:vampirism-become-a-vampire:2902558")
+
+    //at runtime (in your development environment) use the full Vampirism jar
+    //runtimeOnly fg.deobf("de.teamlapen.vampirism:Vampirism:1.16.4-1.7.12")
 
 }
 
