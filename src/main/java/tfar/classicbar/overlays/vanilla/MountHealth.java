@@ -1,34 +1,26 @@
 package tfar.classicbar.overlays.vanilla;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.config.ModConfig;
-import tfar.classicbar.overlays.BarOverlay;
+import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.impl.BarOverlayImpl;
 
 import static tfar.classicbar.ColorUtils.calculateScaledColor;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.showMountHealthNumbers;
 
-public class MountHealth implements BarOverlay {
+public class MountHealth extends BarOverlayImpl {
 
   private long healthUpdateCounter = 0;
 
   private double mountHealth = 0;
 
-  public boolean side;
-
-  @Override
-  public BarOverlay setSide(boolean side) {
-    this.side = side;
-    return this;
-  }
-
-  @Override
-  public boolean rightHandSide() {
-    return side;
+  public MountHealth() {
+    super("health_mount");
   }
 
   @Override
@@ -37,7 +29,7 @@ public class MountHealth implements BarOverlay {
   }
 
   @Override
-  public void renderBar(PoseStack stack, Player player, int screenWidth, int screenHeight) {
+  public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
     //Push to avoid lasting changes
     int updateCounter = mc.gui.getGuiTicks();
 
@@ -48,18 +40,16 @@ public class MountHealth implements BarOverlay {
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3L % 2L == 1L;
 
     if (mountHealth < this.mountHealth && player.invulnerableTime > 0) {
-      healthUpdateCounter = (long) (updateCounter + 20);
+      healthUpdateCounter = updateCounter + 20;
     } else if (mountHealth > this.mountHealth && player.invulnerableTime > 0) {
-      healthUpdateCounter = (long) (updateCounter + 10);
+      healthUpdateCounter = updateCounter + 10;
     }
 
     this.mountHealth = mountHealth;
     int xStart = screenWidth / 2 + 10;
-    int yStart = screenHeight - getSidedOffset();
+    int yStart = screenHeight - vOffset;
     double maxHealth = mount.getAttribute(Attributes.MAX_HEALTH).getValue();
 
-    RenderSystem.pushMatrix();
-    RenderSystem.enableBlend();
     int i4 = (highlight) ? 18 : 0;
 
     //Bar background
@@ -73,10 +63,6 @@ public class MountHealth implements BarOverlay {
     int f = xStart + 79 - getWidth(mountHealth, maxHealth);
     //draw portion of bar based on mountHealth remaining
     drawTexturedModalRect(stack,f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
-
-    RenderSystem.disableBlend();
-    //Revert our state back
-    RenderSystem.popMatrix();
   }
 
   @Override
@@ -85,11 +71,11 @@ public class MountHealth implements BarOverlay {
   }
 
   @Override
-  public void renderText(PoseStack stack,Player player, int width, int height) {
+  public void renderText(PoseStack stack,Player player, int width, int height,int vOffset) {
     int h1 = (int) Math.ceil(mountHealth);
 
-    int xStart = width / 2 + 10;
-    int yStart = height - getSidedOffset();
+    int xStart = width / 2 + getHOffset();
+    int yStart = height - vOffset;
     LivingEntity mount = (LivingEntity) player.getVehicle();
     double maxHealth = mount.getAttribute(Attributes.MAX_HEALTH).getValue();
     int i3 = ModConfig.displayIcons.get() ? 1 : 0;
@@ -98,17 +84,12 @@ public class MountHealth implements BarOverlay {
   }
 
   @Override
-  public void renderIcon(PoseStack stack,Player player, int width, int height) {
+  public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + 10;
-    int yStart = height - getSidedOffset();
+    int yStart = height - vOffset;
     //heart background
     drawTexturedModalRect(stack,xStart + 82, yStart, 16, 0, 9, 9);
     //heart
     drawTexturedModalRect(stack,xStart + 82, yStart, 88, 9, 9, 9);
-  }
-
-  @Override
-  public String name() {
-    return "healthmount";
   }
 }

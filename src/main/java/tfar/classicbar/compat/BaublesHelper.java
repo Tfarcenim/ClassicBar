@@ -1,9 +1,6 @@
 package tfar.classicbar.compat;
 
 //import baubles.api.BaublesApi;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-
 //import static tfar.classicbar.overlays.modoverlays.LavaCharmRenderer.Lava_Charm;
 
 public class BaublesHelper {

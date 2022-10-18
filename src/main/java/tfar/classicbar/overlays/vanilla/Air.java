@@ -1,29 +1,20 @@
 package tfar.classicbar.overlays.vanilla;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.Color;
-import tfar.classicbar.overlays.BarOverlay;
+import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.impl.BarOverlayImpl;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 
-public class Air implements BarOverlay {
+public class Air extends BarOverlayImpl {
 
-  public boolean side;
-
-  @Override
-  public BarOverlay setSide(boolean side) {
-    this.side = side;
-    return this;
-  }
-
-  @Override
-  public boolean rightHandSide() {
-    return side;
+  public Air() {
+    super("air");
   }
 
   @Override
@@ -32,14 +23,11 @@ public class Air implements BarOverlay {
   }
 
   @Override
-  public void renderBar(PoseStack stack, Player player, int screenWidth, int screenHeight) {
-    //Push to avoid lasting changes
+  public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
 
     int xStart = screenWidth / 2 + 10;
-    int yStart = screenHeight - getSidedOffset();
+    int yStart = screenHeight - vOffset;
 
-    RenderSystem.pushMatrix();
-    RenderSystem.enableBlend();
     Color.reset();
 
     //Bar background
@@ -51,10 +39,6 @@ public class Air implements BarOverlay {
     int f = xStart + 79 - getWidth(air, 300);
     hex2Color(oxygenBarColor.get()).color2Gl();
     drawTexturedModalRect(stack,f, yStart + 1, 1, 10, getWidth(air, 300), 7);
-
-    RenderSystem.disableBlend();
-    //Revert our state back
-    RenderSystem.popMatrix();
   }
 
   @Override
@@ -63,11 +47,11 @@ public class Air implements BarOverlay {
   }
 
   @Override
-  public void renderText(PoseStack stack,Player player, int width, int height) {
+  public void renderText(PoseStack stack,Player player, int width, int height,int vOffset) {
     //draw air amount
     int air = player.getAirSupply();
-    int xStart = width / 2 + 10;
-    int yStart = height - getSidedOffset();
+    int xStart = width / 2 + getHOffset();
+    int yStart = height - vOffset;
 
     int h1 = (int) Math.floor(air / 20);
 
@@ -78,17 +62,10 @@ public class Air implements BarOverlay {
   }
 
   @Override
-  public void renderIcon(PoseStack stack,Player player, int width, int height) {
-
+  public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + 10;
-    int yStart = height - getSidedOffset();
-    mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
+    int yStart = height - vOffset;
     //Draw air icon
     drawTexturedModalRect(stack,xStart + 82, yStart, 16, 18, 9, 9);
-  }
-
-  @Override
-  public String name() {
-    return "air";
   }
 }

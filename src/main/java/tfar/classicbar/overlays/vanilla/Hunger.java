@@ -2,33 +2,25 @@ package tfar.classicbar.overlays.vanilla;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.Color;
 import tfar.classicbar.ModUtils;
 import tfar.classicbar.compat.Helpers;
-import tfar.classicbar.overlays.BarOverlay;
+import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.impl.BarOverlayImpl;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 
-public class Hunger implements BarOverlay {
+public class Hunger extends BarOverlayImpl {
 
-  public boolean side;
-
-  @Override
-  public BarOverlay setSide(boolean side) {
-    this.side = side;
-    return this;
-  }
-
-  @Override
-  public boolean rightHandSide() {
-    return side;
+  public Hunger() {
+    super("food");
   }
 
   @Override
@@ -37,17 +29,14 @@ public class Hunger implements BarOverlay {
   }
 
   @Override
-  public void renderBar(PoseStack matrices, Player player, int screenWidth, int screenHeight) {
+  public void renderBar(ForgeIngameGui gui, PoseStack matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
     double hunger = player.getFoodData().getFoodLevel();
     double maxHunger = 20;//HungerHelper.getMaxHunger(player);
     double currentSat = player.getFoodData().getSaturationLevel();
-    float exhaustion = getExhaustion(player);
-    //Push to avoid lasting changes
-    int xStart = screenWidth / 2 + 10;
-    int yStart = screenHeight - getSidedOffset();
+    float exhaustion = player.getFoodData().getExhaustionLevel();
 
-    RenderSystem.pushMatrix();
-    RenderSystem.enableBlend();
+    int xStart = screenWidth / 2 + 10;
+    int yStart = screenHeight - vOffset;
 
     boolean warn = hunger / maxHunger <= lowHungerThreshold.get() && lowHungerWarning.get();
 
@@ -114,13 +103,9 @@ public class Hunger implements BarOverlay {
       exhaustion = Math.min(exhaustion, 4);
       f = xStart - getWidth(exhaustion, 4) + 80;
       //draw exhaustion
-      RenderSystem.color4f(1, 1, 1, .25f);
+      RenderSystem.setShaderColor(1, 1, 1, .25f);
       drawTexturedModalRect(matrices,f, yStart + 1, 1, 28, getWidth(exhaustion, 4f), 9);
     }
-
-    //Revert our state back
-    RenderSystem.disableBlend();
-    RenderSystem.popMatrix();
   }
 
   @Override
@@ -129,9 +114,9 @@ public class Hunger implements BarOverlay {
   }
 
   @Override
-  public void renderText(PoseStack stack,Player player, int width, int height) {
+  public void renderText(PoseStack stack,Player player, int width, int height,int vOffset) {
     int xStart = width / 2 + 10;
-    int yStart = height - getSidedOffset();
+    int yStart = height - vOffset;
     //draw hunger amount
     double hunger = player.getFoodData().getFoodLevel();
     boolean hungerActive = player.hasEffect(MobEffects.HUNGER);
@@ -145,11 +130,10 @@ public class Hunger implements BarOverlay {
   }
 
   @Override
-  public void renderIcon(PoseStack stack,Player player, int width, int height) {
+  public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
 
     int xStart = width / 2 + 10;
-    int yStart = height - getSidedOffset();
-    mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
+    int yStart = height - vOffset;
     boolean hungerActive = player.hasEffect(MobEffects.HUNGER);
 
     int k5 = 52;
@@ -165,10 +149,5 @@ public class Hunger implements BarOverlay {
     //hunger
     drawTexturedModalRect(stack,xStart + 82, yStart, k5, 27, 9, 9);
 
-  }
-
-  @Override
-  public String name() {
-    return "food";
   }
 }

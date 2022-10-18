@@ -3,36 +3,28 @@ package tfar.classicbar.overlays.vanilla;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.Color;
+import tfar.classicbar.EventHandler;
 import tfar.classicbar.config.ModConfig;
-import tfar.classicbar.overlays.BarOverlay;
+import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.impl.BarOverlayImpl;
 
 import static tfar.classicbar.ColorUtils.calculateScaledColor;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.showHealthNumbers;
 
-public class Health implements BarOverlay {
+public class Health extends BarOverlayImpl {
 
   private double playerHealth = 0;
   private long healthUpdateCounter = 0;
   private double lastPlayerHealth = 0;
 
-  public boolean side;
-
-  @Override
-  public BarOverlay setSide(boolean side) {
-    this.side = side;
-    return this;
-  }
-
-  @Override
-  public boolean rightHandSide() {
-    return side;
+  public Health() {
+    super("health");
   }
 
   @Override
@@ -41,7 +33,7 @@ public class Health implements BarOverlay {
   }
 
   @Override
-  public void renderBar(PoseStack stack, Player player, int screenWidth, int screenHeight) {
+  public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
     int updateCounter = mc.gui.getGuiTicks();
 
     double health = player.getHealth();
@@ -58,12 +50,10 @@ public class Health implements BarOverlay {
     playerHealth = health;
     double displayHealth = health + (lastPlayerHealth - health) * ((double) player.invulnerableTime / player.invulnerableDuration);
 
-    int xStart = screenWidth / 2 - 91;
-    int yStart = screenHeight - ForgeIngameGui.left_height;
+    int xStart = screenWidth / 2 + getHOffset();
+    int yStart = screenHeight - vOffset;
     double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
 
-    RenderSystem.pushMatrix();
-    RenderSystem.enableBlend();
     int k5 = 16;
 
     if (player.hasEffect(MobEffects.POISON)) k5 += 36;//evaluates to 52
@@ -82,7 +72,7 @@ public class Health implements BarOverlay {
     //interpolate the bar
     if (displayHealth != health) {
       //reset to white
-      RenderSystem.color4f(1, 1, 1, alpha);
+      RenderSystem.setShaderColor(1, 1, 1, alpha);
       if (displayHealth > health) {
         //draw interpolation
         drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(displayHealth, maxHealth), 7);
@@ -101,14 +91,11 @@ public class Health implements BarOverlay {
 
     if (k5 == 52) {
       //draw poison overlay
-      RenderSystem.color4f(0, .5f, 0, .5f);
+      RenderSystem.setShaderColor(0, .5f, 0, .5f);
       drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 36, getWidth(health, maxHealth), 7);
     }
 
     Color.reset();
-
-    RenderSystem.disableBlend();
-    RenderSystem.popMatrix();
   }
 
   @Override
@@ -117,11 +104,11 @@ public class Health implements BarOverlay {
   }
 
   @Override
-  public void renderText(PoseStack stack,Player player, int width, int height) {
+  public void renderText(PoseStack stack,Player player, int width, int height, int vOffset) {
     double health = player.getHealth();
 
     int xStart = width / 2 - 91;
-    int yStart = height - ForgeIngameGui.left_height;
+    int yStart = height - vOffset;
     double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
 
     int k5 = 16;
@@ -130,7 +117,7 @@ public class Health implements BarOverlay {
     else if (player.hasEffect(MobEffects.WITHER)) k5 += 72;//evaluates to 88
 
     int h1 = (int) Math.round(health);
-    int i2 = ModConfig.displayIcons.get() ? 1 : 0;
+    int i2 = EventHandler.icons ? 1 : 0;
     if (ModConfig.showPercent.get()) h1 = (int) (100 * health / maxHealth);
     int i1 = getStringLength(h1 + "");
 
@@ -138,16 +125,14 @@ public class Health implements BarOverlay {
   }
 
   @Override
-  public void renderIcon(PoseStack stack,Player player, int width, int height) {
-    mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
-
+  public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
     int k5 = 16;
 
     if (player.hasEffect(MobEffects.POISON)) k5 += 36;//evaluates to 52
     else if (player.hasEffect(MobEffects.WITHER)) k5 += 72;//evaluates to 88
 
     int xStart = width / 2 - 91;
-    int yStart = height - ForgeIngameGui.left_height;
+    int yStart = height - vOffset;
     int i5 = (player.level.getLevelData().isHardcore()) ? 5 : 0;
     //Draw health icon
     //heart background
@@ -156,10 +141,5 @@ public class Health implements BarOverlay {
     drawTexturedModalRect(stack,xStart - 10, yStart, 16, 9 * i5, 9, 9);
     //heart
     drawTexturedModalRect(stack,xStart - 10, yStart, 36 + k5, 9 * i5, 9, 9);
-  }
-
-  @Override
-  public String name() {
-    return "health";
   }
 }

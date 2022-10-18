@@ -4,8 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.network.NetworkDirection;
-import tfar.classicbar.ModUtils;
+import net.minecraftforge.network.NetworkDirection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,9 +43,9 @@ public class SyncHandler {
       lastSaturationLevels.put(player.getUUID(), player.getFoodData().getSaturationLevel());
     }
 
-    float exhaustionLevel = ModUtils.getExhaustion(player);
+    float exhaustionLevel = player.getFoodData().getExhaustionLevel();
     if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
-      Object msg = new MessageExhaustionSync(ModUtils.getExhaustion(player));
+      Object msg = new MessageExhaustionSync(player.getFoodData().getExhaustionLevel());
       Message.INSTANCE.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
       lastExhaustionLevels.put(player.getUUID(), exhaustionLevel);
     }

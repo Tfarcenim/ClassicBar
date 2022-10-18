@@ -1,50 +1,31 @@
 package tfar.classicbar;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.EventBus;
-import net.minecraftforge.eventbus.api.IEventListener;
-import net.minecraftforge.fml.ExtensionPoint;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.FMLNetworkConstants;
-import tfar.classicbar.compat.Helpers;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import tfar.classicbar.config.ModConfig;
 import tfar.classicbar.network.Message;
-import tfar.classicbar.overlays.mod.Blood;
-import tfar.classicbar.overlays.mod.Feathers;
-import tfar.classicbar.overlays.vanilla.Absorption;
-import tfar.classicbar.overlays.vanilla.Air;
-import tfar.classicbar.overlays.vanilla.Armor;
-import tfar.classicbar.overlays.vanilla.ArmorToughness;
-import tfar.classicbar.overlays.vanilla.Health;
-import tfar.classicbar.overlays.vanilla.Hunger;
-import tfar.classicbar.overlays.vanilla.MountHealth;
 
 
 @Mod(value = ClassicBar.MODID)
 public class ClassicBar {
 
   public static final String MODID = "classicbar";
-  public static final String[] problemMods = new String[]{"mantle"};
 
   public ClassicBar() {
     ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.CLIENT, CLIENT_SPEC);
-    ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
-    FMLJavaModLoadingContext.get().getModEventBus().addListener(this::postInit);
+   // ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(() -> FMLNetworkConstants.IGNORESERVERONLY, (a, b) -> true));
+
+    if(FMLEnvironment.dist.isClient()) {
+      FMLJavaModLoadingContext.get().getModEventBus().addListener(this::postInit);
+      EventHandler.setupOverlays();
+    }
   }
 
   public static final ModConfig CLIENT;
@@ -60,54 +41,6 @@ public class ClassicBar {
 
   public void postInit(FMLClientSetupEvent event) {
     Message.registerMessages(MODID);
-
-    //Register renderers for events
-    ClassicBar.logger.info("Registering Vanilla Overlay");
-    MinecraftForge.EVENT_BUS.register(new EventHandler());
-
-    EventHandler.registerAll(new Absorption(), new Air(), new Armor(), new ArmorToughness(),
-            new Health(), new Hunger(), new MountHealth());
-    if (Helpers.vampirismloaded)EventHandler.register(new Blood());
-    if (Helpers.elenaiDodgeLoaded)EventHandler.register(new Feathers());
-
-    //mod renderers
-    ClassicBar.logger.info("Registering Mod Overlays");
-
-    //mod renderers
-    ClassicBar.logger.info("Registering Mod Overlays");
-    // if (ModList.get().isLoaded("randomthings")) MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
-    if (ModList.get().isLoaded("lavawaderbauble")) {
-      //  MinecraftForge.EVENT_BUS.register(new LavaWaderBaubleRenderer());
-    }
-
-    //if (ModList.get().isLoaded("superiorshields"))
-    //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
-
-    //MinecraftForge.EVENT_BUS.register(new BetterDivingRenderer());
-    //  if (ModList.get().isLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
-
-    boolean areProblemModsPresent = Arrays.stream(problemMods).anyMatch(ModList.get()::isLoaded);
-    if (areProblemModsPresent) {
-      logger.info("Unregistering problematic overlays.");
-      ConcurrentHashMap<Object, List<IEventListener>> listeners;
-      try {
-        Field f = EventBus.class.getDeclaredField("listeners");
-        f.setAccessible(true);
-        listeners = (ConcurrentHashMap<Object, List<IEventListener>>) f.get(MinecraftForge.EVENT_BUS);
-        for (Map.Entry<Object, List<IEventListener>> entry : listeners.entrySet()) {
-          String s = entry.getKey().getClass().getCanonicalName();
-          //System.out.println(s);
-          //System.out.println(entry);
-
-          if ("slimeknights.mantle.client.ExtraHeartRenderHandler".equals(s)) {
-            logger.info("Unregistered Mantle bar");
-            MinecraftForge.EVENT_BUS.unregister(entry.getKey());
-          }
-        }
-      } catch (IllegalAccessException | NoSuchFieldException e) {
-        e.printStackTrace();
-      }
-    }
-    EventHandler.setup();
+    EventHandler.cacheConfigs();
   }
 }

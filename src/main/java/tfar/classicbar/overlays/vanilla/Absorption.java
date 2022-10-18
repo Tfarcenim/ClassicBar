@@ -1,32 +1,23 @@
 package tfar.classicbar.overlays.vanilla;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.Color;
-import tfar.classicbar.overlays.BarOverlay;
+import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.impl.BarOverlayImpl;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 import static tfar.classicbar.config.ModConfig.fullAbsorptionBar;
 
-public class Absorption implements BarOverlay {
+public class Absorption extends BarOverlayImpl {
 
-  public boolean side;
-
-  @Override
-  public BarOverlay setSide(boolean side) {
-    this.side = side;
-    return this;
-  }
-
-  @Override
-  public boolean rightHandSide() {
-    return side;
+  public Absorption() {
+    super("absorption");
   }
 
   @Override
@@ -35,16 +26,14 @@ public class Absorption implements BarOverlay {
   }
 
   @Override
-  public void renderBar(PoseStack stack, Player player, int screenWidth, int screenHeight) {
+  public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
 
     double absorb = player.getAbsorptionAmount();
 
     int xStart = screenWidth / 2 - 91;
-    int yStart = screenHeight - getSidedOffset();
+    int yStart = screenHeight - vOffset;
     double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
 
-    RenderSystem.pushMatrix();
-    RenderSystem.enableBlend();
     int k5 = 16;
 
     if (player.hasEffect(MobEffects.POISON)) k5 += 36;//evaluates to 52
@@ -56,7 +45,7 @@ public class Absorption implements BarOverlay {
     //no wrapping
     if (absorb <= maxHealth) {
       //background
-      if (!fullAbsorptionBar.get()) drawScaledBar(stack,absorb, maxHealth, xStart, yStart + 1, true);
+      if (!fullAbsorptionBar.get()) drawScaledBar(stack,absorb, maxHealth, xStart, yStart + 1, rightHandSide());
       else drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
 
       switch (k5) {
@@ -118,9 +107,6 @@ public class Absorption implements BarOverlay {
         drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(absorb % maxHealth, maxHealth), 7);
       }
     }
-    RenderSystem.disableBlend();
-    //Revert our state back
-    RenderSystem.popMatrix();
   }
 
   @Override
@@ -129,12 +115,12 @@ public class Absorption implements BarOverlay {
   }
 
   @Override
-  public void renderText(PoseStack stack,Player player, int width, int height) {
+  public void renderText(PoseStack stack,Player player, int width, int height,int vOffset) {
 
     double absorb = player.getAbsorptionAmount();
     double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
-    int xStart = width / 2 - 91;
-    int yStart = height - getSidedOffset();
+    int xStart = width / 2 + getHOffset();
+    int yStart = height - vOffset;
 
     // handle the text
     int a1 = getStringLength((int) absorb + "");
@@ -169,19 +155,13 @@ public class Absorption implements BarOverlay {
   }
 
   @Override
-  public void renderIcon(PoseStack stack,Player player, int width, int height) {
-    mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
-    int xStart = width / 2 - 91;
-    int yStart = height - getSidedOffset();
+  public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
+    int xStart = width / 2 + getHOffset();
+    int yStart = height - vOffset;
 
     int i5 = (player.level.getLevelData().isHardcore()) ? 5 : 0;
     //draw absorption icon
     drawTexturedModalRect(stack,xStart - 10, yStart, 16, 9 * i5, 9, 9);
     drawTexturedModalRect(stack,xStart - 10, yStart, 160, 0, 9, 9);
-  }
-
-  @Override
-  public String name() {
-    return "absorption";
   }
 }

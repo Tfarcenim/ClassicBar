@@ -3,10 +3,7 @@ package tfar.classicbar;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class ModUtils {
   public static final int rightTextOffset = 82;
@@ -38,8 +35,8 @@ public class ModUtils {
       drawTexturedModalRect(stack,x, y - 1, 0, 0, i + 1, 9);
       drawTexturedModalRect(stack,x + i + 1, y - 1, 79, 0, 2, 9);
     } else {
-      drawTexturedModalRect(stack,x + 2, y, 80 - i, 0, i + 1, 9);
-      drawTexturedModalRect(stack,x, y, 0, 0, 2, 9);
+      drawTexturedModalRect(stack,x + 2, y -1, 80 - i, 0, i + 1, 9);
+      drawTexturedModalRect(stack,x, y-1, 0, 0, 2, 9);
     }
   }
 
@@ -57,13 +54,5 @@ public class ModUtils {
     yOffset += 2;
 
     fontRenderer.drawShadow(stack,string, xOffset, yOffset, color);
-  }
-
-  public static float getExhaustion(Player player) {
-    return ObfuscationReflectionHelper.getPrivateValue(FoodData.class, player.getFoodData(), "exhaustionLevel");
-  }
-
-  public static void setExhaustion(Player player, float exhaustion) {
-    ObfuscationReflectionHelper.setPrivateValue(FoodData.class, player.getFoodData(), exhaustion, "exhaustionLevel");
   }
 }

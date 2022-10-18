@@ -2,8 +2,8 @@ package tfar.classicbar.network;
 
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 import tfar.classicbar.ClassicBar;
 
 import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;

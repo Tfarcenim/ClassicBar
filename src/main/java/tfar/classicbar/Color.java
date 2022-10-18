@@ -13,10 +13,7 @@ public class Color {
     }
 
     public void color2Gl() {
-        float r = this.r / 255f;
-        float g = this.g / 255f;
-        float b = this.b / 255f;
-        RenderSystem.color3f(r, g, b);
+        color2Gla(1);
     }
     public Color colorBlend(Color c2, double d) {
         int r = (int) Math.floor(this.r * (1 - d) + c2.r * d);
@@ -32,9 +29,9 @@ public class Color {
         float r = this.r / 255f;
         float g = this.g / 255f;
         float b = this.b / 255f;
-        RenderSystem.color4f(r, g, b, a);
+        RenderSystem.setShaderColor(r, g, b, a);
     }
     public static void reset() {
-        RenderSystem.color4f(1,1,1,1);
+        RenderSystem.setShaderColor(1,1,1,1);
     }
 }

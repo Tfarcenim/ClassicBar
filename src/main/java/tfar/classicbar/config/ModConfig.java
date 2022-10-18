@@ -5,6 +5,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
 
@@ -113,8 +114,8 @@ public class ModConfig {
   }
 
   @SubscribeEvent
-  public static void onConfigChanged(net.minecraftforge.fml.config.ModConfig.ModConfigEvent event) {
-      EventHandler.setup();
+  public static void onConfigChanged(ModConfigEvent event) {
+      EventHandler.cacheConfigs();
       ClassicBar.logger.info("Syncing Classic Bar Configs");
   }
 }

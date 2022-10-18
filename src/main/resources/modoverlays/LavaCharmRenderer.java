@@ -24,7 +24,6 @@ import tfar.classicbar.compat.BaublesHelper;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
-import static tfar.classicbar.config.ModConfig.*;
 
 /*
     Class handles the drawing of the lava charm*/

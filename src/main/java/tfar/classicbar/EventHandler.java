@@ -1,27 +1,32 @@
 package tfar.classicbar;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.fml.ModList;
+import tfar.classicbar.compat.Helpers;
 import tfar.classicbar.config.ModConfig;
-import tfar.classicbar.overlays.BarOverlay;
+import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.overlays.mod.Blood;
+import tfar.classicbar.overlays.mod.Feathers;
+import tfar.classicbar.overlays.vanilla.*;
 
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import static tfar.classicbar.ModUtils.mc;
 import static tfar.classicbar.config.ModConfig.leftorder;
 import static tfar.classicbar.config.ModConfig.rightorder;
 
-public class EventHandler {
+public class EventHandler implements IIngameOverlay {
 
-  private static final List<BarOverlay> combined = new ArrayList<>();
+  private static final List<BarOverlay> all = new ArrayList<>();
+  private static final List<BarOverlay> right = new ArrayList<>();
   private static final Map<String, BarOverlay> registry = new HashMap<>();
+
+  public static boolean icons;
 
   public static void register(BarOverlay iBarOverlay) {
     registry.put(iBarOverlay.name(), iBarOverlay);
@@ -31,72 +36,73 @@ public class EventHandler {
     Arrays.stream(iBarOverlay).forEach(overlay -> registry.put(overlay.name(), overlay));
   }
 
-  @SubscribeEvent
-  public void renderBars(RenderGameOverlayEvent.Pre event) {
-    //cancel all events that the mod handles as we don't want them to draw
-    switch (event.getType()) {
-      case AIR:
-      case ARMOR:
-      case HEALTHMOUNT:
-      case FOOD:
-      case HEALTH:
-        event.setCanceled(true);
-      default:
-        return;
-      case ALL:
-    }
+  public void render(ForgeIngameGui gui, PoseStack matrices, float partialTick, int screenWidth, int screenHeight) {
+
     Entity entity = mc.getCameraEntity();
-    if (!(entity instanceof Player)) return;
-    Player player = (Player) entity;
-    if (player.abilities.instabuild || player.isSpectator()) return;
+    if (!(entity instanceof Player player)) return;
+    if (player.getAbilities().instabuild || player.isSpectator()) return;
     mc.getProfiler().push("classicbars_hud");
 
-    int scaledWidth = mc.getWindow().getGuiScaledWidth();
-    int scaledHeight = mc.getWindow().getGuiScaledHeight();
+    int initial_right_height = gui.right_height;
+    int initial_left_height = gui.left_height;
 
-    int initial_right_height = ForgeIngameGui.right_height;
-    int initial_left_height = ForgeIngameGui.left_height;
-
-    mc.getTextureManager().bind(ModUtils.ICON_BAR);
-    Supplier<Stream<BarOverlay>> supplier = () -> combined.stream().filter(iBarOverlay -> iBarOverlay.shouldRender(player));
-
-    PoseStack matrices = event.getMatrixStack();
-
-    supplier.get().forEach(iBarOverlay -> {
-      iBarOverlay.renderBar(matrices,player, scaledWidth, scaledHeight);
-        increment(iBarOverlay.rightHandSide(),10);
-    });
-
-    ForgeIngameGui.right_height = initial_right_height;
-    ForgeIngameGui.left_height = initial_left_height;
-
-    supplier.get().forEach(iBarOverlay -> {
-      if (iBarOverlay.shouldRenderText())
-        iBarOverlay.renderText(matrices,player, scaledWidth, scaledHeight);
-        increment(iBarOverlay.rightHandSide(),10);
-    });
-
-    if (ModConfig.displayIcons.get()) {
-      ForgeIngameGui.right_height = initial_right_height;
-      ForgeIngameGui.left_height = initial_left_height;
-
-      supplier.get().forEach(iBarOverlay -> {
-        iBarOverlay.renderIcon(matrices,player, scaledWidth, scaledHeight);
-          increment(iBarOverlay.rightHandSide(),10);
-      });
+    for (BarOverlay overlay : all) {
+      boolean rightHand = overlay.rightHandSide();
+        overlay.render(gui, matrices, player, screenWidth, screenHeight, getOffset(gui,rightHand));
     }
-    mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
+
+   // mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
     mc.getProfiler().pop();
   }
 
-  public void increment(boolean side ,int amount){
-    if (side)ForgeIngameGui.right_height+=amount;
-    else ForgeIngameGui.left_height+=amount;
+  public static void increment(ForgeIngameGui gui,boolean side ,int amount){
+    if (side)gui.right_height+=amount;
+    else gui.left_height+=amount;
   }
 
-  public static void setup() {
-    combined.clear();
-    leftorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> combined.add(registry.get(e).setSide(false)));
-    rightorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> combined.add(registry.get(e).setSide(true)));
+  public static int getOffset(ForgeIngameGui gui,boolean right) {
+    return right ? gui.right_height : gui.left_height;
+  }
+
+  public static void cacheConfigs() {
+    all.clear();
+    leftorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(false)));
+    rightorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(true)));
+    icons = ModConfig.displayIcons.get();
+  }
+
+  public static void setupOverlays() {
+    EventHandler.disableVanilla();
+    OverlayRegistry.registerOverlayTop(ClassicBar.MODID,new EventHandler());
+
+    //Register renderers for events
+    ClassicBar.logger.info("Registering Vanilla Overlays");
+
+    EventHandler.registerAll(new Absorption(), new Air(), new Armor(), new ArmorToughness(),
+            new Health(), new Hunger(), new MountHealth());
+    if (Helpers.vampirismloaded)EventHandler.register(new Blood());
+    if (Helpers.elenaiDodgeLoaded)EventHandler.register(new Feathers());
+
+    //mod renderers
+    ClassicBar.logger.info("Registering Mod Overlays");
+    // if (ModList.get().isLoaded("randomthings")) MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
+    if (ModList.get().isLoaded("lavawaderbauble")) {
+      //  MinecraftForge.EVENT_BUS.register(new LavaWaderBaubleRenderer());
+    }
+
+    //if (ModList.get().isLoaded("superiorshields"))
+    //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
+
+    //MinecraftForge.EVENT_BUS.register(new BetterDivingRenderer());
+    //  if (ModList.get().isLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
+
+  }
+
+  public static void disableVanilla() {
+    OverlayRegistry.enableOverlay(ForgeIngameGui.AIR_LEVEL_ELEMENT,false);
+    OverlayRegistry.enableOverlay(ForgeIngameGui.ARMOR_LEVEL_ELEMENT,false);
+    OverlayRegistry.enableOverlay(ForgeIngameGui.FOOD_LEVEL_ELEMENT,false);
+    OverlayRegistry.enableOverlay(ForgeIngameGui.MOUNT_HEALTH_ELEMENT,false);
+    OverlayRegistry.enableOverlay(ForgeIngameGui.PLAYER_HEALTH_ELEMENT,false);
   }
 }

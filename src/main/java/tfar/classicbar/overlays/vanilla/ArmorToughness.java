@@ -1,29 +1,22 @@
 package tfar.classicbar.overlays.vanilla;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.Color;
 import tfar.classicbar.config.ModConfig;
-import tfar.classicbar.overlays.BarOverlay;
+import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.impl.BarOverlayImpl;
 
 import static tfar.classicbar.ColorUtils.hex2Color;
 import static tfar.classicbar.ModUtils.*;
 
-public class ArmorToughness implements BarOverlay {
+public class ArmorToughness  extends BarOverlayImpl {
 
-  public boolean side;
-
-  @Override
-  public BarOverlay setSide(boolean side) {
-    this.side = side;
-    return this;
-  }
-
-  @Override
-  public boolean rightHandSide() {
-    return side;
+  public ArmorToughness() {
+    super("armor_toughness");
   }
 
   @Override
@@ -32,14 +25,12 @@ public class ArmorToughness implements BarOverlay {
   }
 
   @Override
-  public void renderBar(PoseStack stack, Player player, int screenWidth, int screenHeight) {
+  public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
     //armor toughness stuff
     double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
     //Push to avoid lasting changes
     int xStart = screenWidth / 2 + 10;
-    int yStart = screenHeight - getSidedOffset();
-    RenderSystem.pushMatrix();
-    RenderSystem.enableBlend();
+    int yStart = screenHeight - vOffset;
     int f;
     //draw bar background portion
     Color.reset();
@@ -79,9 +70,6 @@ public class ArmorToughness implements BarOverlay {
         drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, 79, 7);
       }
     }
-
-    //Revert our state back
-    RenderSystem.popMatrix();
   }
 
   @Override
@@ -90,9 +78,9 @@ public class ArmorToughness implements BarOverlay {
   }
 
   @Override
-  public void renderText(PoseStack stack,Player player, int width, int height) {
-    int xStart = width / 2 + 10;
-    int yStart = height - getSidedOffset();
+  public void renderText(PoseStack stack,Player player, int width, int height,int vOffset) {
+    int xStart = width / 2 + getHOffset();
+    int yStart = height - vOffset;
     double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
     int toughnessindex = (int) Math.min(Math.ceil(armorToughness / 20) - 1, ModConfig.armorToughnessColorValues.get().size() - 1);
     //draw armor toughness amount
@@ -105,16 +93,16 @@ public class ArmorToughness implements BarOverlay {
   }
 
   @Override
-  public void renderIcon(PoseStack stack,Player player, int width, int height) {
-    mc.getTextureManager().bind(ICON_BAR);
+  public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + 10;
-    int yStart = height - getSidedOffset();
+    int yStart = height - vOffset;
     //Draw armor toughness icon
     drawTexturedModalRect(stack,xStart + 82, yStart, 83, 0, 9, 9);
   }
 
   @Override
-  public String name() {
-    return "armortoughness";
+  public ResourceLocation getIconRL() {
+    return ICON_BAR;
   }
+
 }
