@@ -38,7 +38,7 @@ public class ArmorToughness  extends BarOverlayImpl {
 
     if (armorToughness <= 20) {
       f = xStart + 79 - getWidth(armorToughness, 20);
-      if (!ModConfig.fullToughnessBar.get()) drawScaledBar(stack,armorToughness, 20, f - 1, yStart, false);
+      if (isFitted()) drawScaledBar(stack,armorToughness, 20, f - 1, yStart, false);
       else drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
 
       //calculate bar color
@@ -70,6 +70,11 @@ public class ArmorToughness  extends BarOverlayImpl {
         drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, 79, 7);
       }
     }
+  }
+
+  @Override
+  public boolean isFitted() {
+    return !ModConfig.fullToughnessBar.get();
   }
 
   @Override

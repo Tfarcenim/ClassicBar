@@ -23,7 +23,6 @@ import static tfar.classicbar.config.ModConfig.rightorder;
 public class EventHandler implements IIngameOverlay {
 
   private static final List<BarOverlay> all = new ArrayList<>();
-  private static final List<BarOverlay> right = new ArrayList<>();
   private static final Map<String, BarOverlay> registry = new HashMap<>();
 
   public static boolean icons;

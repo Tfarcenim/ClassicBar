@@ -49,7 +49,7 @@ public class Armor  extends BarOverlayImpl {
     armor -= warningAmount;
     if (armor + warningAmount <= 20) {
       //bar background
-      if (!ModConfig.fullArmorBar.get()) drawScaledBar(stack,armor + warningAmount, 20, xStart, yStart + 1, rightHandSide());
+      if (isFitted()) drawScaledBar(stack,armor + warningAmount, 20, xStart, yStart + 1, rightHandSide());
       else drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
       //calculate bar color
       hex2Color(ModConfig.armorColorValues.get().get(0)).color2Gl();
@@ -75,7 +75,7 @@ public class Armor  extends BarOverlayImpl {
         hex2Color(ModConfig.armorColorValues.get().get(index)).color2Gl();
         drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(armor % 20, 20), 7);
       }
-      //case 2, bar is a multiple of 20 or it is capped
+      //case 2, bar is a multiple of 20, or it is capped
       else {
         //draw complete second bar
         hex2Color(ModConfig.armorColorValues.get().get(index)).color2Gl();
@@ -91,10 +91,12 @@ public class Armor  extends BarOverlayImpl {
         }
       }
     }
-
-    //Reset back to normal settings
-
     Color.reset();
+  }
+
+  @Override
+  public boolean isFitted() {
+    return !ModConfig.fullArmorBar.get();
   }
 
   @Override

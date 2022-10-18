@@ -17,8 +17,6 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public BarOverlayImpl(String name) {
         this.name = name;
     }
-
-    @Override
     public boolean shouldRender(Player player) {
         return true;
     }
@@ -50,6 +48,18 @@ public abstract class BarOverlayImpl implements BarOverlay {
         }
     }
 
+    public abstract void renderBar(ForgeIngameGui gui,PoseStack stack,Player player, int screenWidth, int screenHeight,int vOffset);
+
+    public boolean shouldRenderText() {
+        return true;
+    }
+    public abstract void renderText(PoseStack stack,Player player, int width, int height,int vOffset);
+    public abstract void renderIcon(PoseStack stack,Player player, int width, int height,int vOffset);
+
+    public int getHOffset() {
+        return rightHandSide() ? 10 : -91;
+    }
+
     @Override
     public int getBarWidth() {
         return 0;
@@ -59,12 +69,6 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public int getBarColor() {
         return 0;
     }
-
-    @Override
-    public boolean shouldRenderText() {
-        return true;
-    }
-
     @Override
     public ResourceLocation getIconRL() {
         return GuiComponent.GUI_ICONS_LOCATION;
