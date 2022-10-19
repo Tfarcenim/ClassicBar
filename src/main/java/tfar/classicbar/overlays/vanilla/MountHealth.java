@@ -2,17 +2,13 @@ package tfar.classicbar.overlays.vanilla;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.util.ColorUtils;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
-
-import static tfar.classicbar.util.ColorUtils.calculateScaledColor;
-import static tfar.classicbar.util.ModUtils.*;
-import static tfar.classicbar.config.ClassicBarsConfig.showMountHealthNumbers;
 
 public class MountHealth extends BarOverlayImpl {
 
@@ -53,14 +49,14 @@ public class MountHealth extends BarOverlayImpl {
     double maxHealth = mount.getMaxHealth();
     int i4 = (highlight) ? 18 : 0;
     //Bar background
-    drawTexturedModalRect(stack,xStart, yStart, 0, i4, 81, 9);
+    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 0, i4, 81, 9);
     //is the bar changing
     //Pass 1, draw bar portion
     //calculate bar color
-    calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).color2Gl();
+    ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).color2Gl();
     double f = xStart + (rightHandSide() ? ModUtils.WIDTH - barWidth : 0);
     //draw portion of bar based on mountHealth remaining
-    drawTexturedModalRect(stack,f, yStart + 1, 1, 10, barWidth, 7);
+    ModUtils.drawTexturedModalRect(stack,f, yStart + 1, 1, 10, barWidth, 7);
   }
   @Override
   public int getBarWidth(Player player) {
@@ -71,7 +67,7 @@ public class MountHealth extends BarOverlayImpl {
   }
   @Override
   public boolean shouldRenderText() {
-    return showMountHealthNumbers.get();
+    return ClassicBarsConfig.showMountHealthNumbers.get();
   }
 
   @Override
@@ -80,7 +76,7 @@ public class MountHealth extends BarOverlayImpl {
     int yStart = height - vOffset;
     LivingEntity mount = (LivingEntity) player.getVehicle();
     double maxHealth = mount.getMaxHealth();
-    textHelper(stack,xStart,yStart,mountHealth,calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).colorToText());
+    textHelper(stack,xStart,yStart,mountHealth, ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).colorToText());
   }
 
   @Override
@@ -88,8 +84,8 @@ public class MountHealth extends BarOverlayImpl {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     //heart background
-    drawTexturedModalRect(stack,xStart, yStart, 16, 0, 9, 9);
+    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 16, 0, 9, 9);
     //heart
-    drawTexturedModalRect(stack,xStart, yStart, 88, 9, 9, 9);
+    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 88, 9, 9, 9);
   }
 }

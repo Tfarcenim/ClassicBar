@@ -1,22 +1,18 @@
 package tfar.classicbar.overlays.vanilla;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.client.gui.ForgeIngameGui;
+import tfar.classicbar.compat.Helpers;
+import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
-import tfar.classicbar.compat.Helpers;
-import tfar.classicbar.impl.BarOverlayImpl;
-
-import static tfar.classicbar.util.ColorUtils.hex2Color;
-import static tfar.classicbar.config.ClassicBarsConfig.*;
-import static tfar.classicbar.util.ModUtils.getStringLength;
-import static tfar.classicbar.util.ModUtils.leftTextOffset;
 
 public class Hunger extends BarOverlayImpl {
 
@@ -52,17 +48,17 @@ public class Hunger extends BarOverlayImpl {
 
     hungerColor.color2Gl();
     renderSecondaryBar(matrices,f, yStart,  ModUtils.getWidth(hunger, maxHunger));
-    if (currentSat > 0 && showSaturationBar.get()) {
+    if (currentSat > 0 && ClassicBarsConfig.showSaturationBar.get()) {
       //draw saturation
       satColor.color2Gl();
       f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(currentSat, maxSat) : 0);
       renderMainBar(matrices,f, yStart, ModUtils.getWidth(currentSat, maxSat));
     }
     //render held hunger overlay
-    if (showHeldFoodOverlay.get() &&
+    if (ClassicBarsConfig.showHeldFoodOverlay.get() &&
             player.getMainHandItem().getItem().isEdible()) {
       ItemStack stack = player.getMainHandItem();
-      double time = System.currentTimeMillis()/1000d * transitionSpeed.get();
+      double time = System.currentTimeMillis()/1000d * ClassicBarsConfig.transitionSpeed.get();
       double foodAlpha = Math.sin(time)/2 + .5;
 
       FoodProperties food = stack.getItem().getFoodProperties(stack,player);
@@ -80,7 +76,7 @@ public class Hunger extends BarOverlayImpl {
       }
 
       //Draw Potential saturation
-      if (showSaturationBar.get()) {
+      if (ClassicBarsConfig.showSaturationBar.get()) {
         //maximum potential saturation cannot combine with current saturation to go over 20
         double saturationWidth = Math.min(potentialSat, maxHunger - currentSat);
 
@@ -101,7 +97,7 @@ public class Hunger extends BarOverlayImpl {
       }
     }
 
-    if (showExhaustionOverlay.get()) {
+    if (ClassicBarsConfig.showExhaustionOverlay.get()) {
       exhaustion = Math.min(exhaustion, 4);
       f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
       //draw exhaustion
@@ -126,7 +122,7 @@ public class Hunger extends BarOverlayImpl {
 
   @Override
   public boolean shouldRenderText() {
-    return showHungerNumbers.get();
+    return ClassicBarsConfig.showHungerNumbers.get();
   }
 
   @Override

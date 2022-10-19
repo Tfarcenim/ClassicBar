@@ -3,14 +3,11 @@ package tfar.classicbar.overlays.vanilla;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
+import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
-import tfar.classicbar.util.Color;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
-
-import static tfar.classicbar.util.ColorUtils.hex2Color;
-import static tfar.classicbar.util.ModUtils.*;
-import static tfar.classicbar.config.ClassicBarsConfig.*;
 
 public class Air extends BarOverlayImpl {
 
@@ -34,11 +31,11 @@ public class Air extends BarOverlayImpl {
     double f = xStart + (rightHandSide() ? ModUtils.WIDTH - barWidth : 0);
     Color color = getPrimaryBarColor(0,player);
     color.color2Gl();
-    drawTexturedModalRect(stack,f + 1, yStart + 1, 1, 10,barWidth, 7);
+    ModUtils.drawTexturedModalRect(stack,f + 1, yStart + 1, 1, 10,barWidth, 7);
   }
   @Override
   public boolean shouldRenderText() {
-    return showAirNumbers.get();
+    return ClassicBarsConfig.showAirNumbers.get();
   }
 
   @Override
@@ -65,6 +62,6 @@ public class Air extends BarOverlayImpl {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     //Draw air icon
-    drawTexturedModalRect(stack,xStart, yStart, 16, 18, 9, 9);
+    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 16, 18, 9, 9);
   }
 }

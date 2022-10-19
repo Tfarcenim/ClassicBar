@@ -1,7 +1,6 @@
 package tfar.classicbar.overlays.vanilla;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.config.ClassicBarsConfig;
@@ -10,8 +9,6 @@ import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
-
-import static tfar.classicbar.util.ModUtils.*;
 
 public class Absorption extends BarOverlayImpl {
 
@@ -51,17 +48,17 @@ public class Absorption extends BarOverlayImpl {
             renderMainBar(stack, xStart, yStart, ModUtils.getWidth(absorb, maxHealth));
         } else {
             //draw background bar
-            drawTexturedModalRect(stack, xStart, yStart, 0, 0, 81, 9);
+            ModUtils.drawTexturedModalRect(stack, xStart, yStart, 0, 0, 81, 9);
             //we have wrapped, draw 2 bars
             //draw first full bar
             Color secondary = getSecondaryBarColor(index - 1, player);
             secondary.color2Gl();
-            drawTexturedModalRect(stack, xStart + 1, yStart + 1, 1, 10, 79, 7);
+            ModUtils.drawTexturedModalRect(stack, xStart + 1, yStart + 1, 1, 10, 79, 7);
             //is it on the edge or capped already?
             if (absorb % maxHealth != 0 && index < ConfigCache.absorption.size() - 1) {
                 //draw second partial bar
                 primary.color2Gl();
-                drawTexturedModalRect(stack, xStart + 1, yStart + 1, 1, 10, getWidth(absorb % maxHealth, maxHealth), 7);
+                ModUtils.drawTexturedModalRect(stack, xStart + 1, yStart + 1, 1, 10, ModUtils.getWidth(absorb % maxHealth, maxHealth), 7);
             }
         }
     }
@@ -116,7 +113,7 @@ public class Absorption extends BarOverlayImpl {
 
         int i5 = (player.level.getLevelData().isHardcore()) ? 5 : 0;
         //draw absorption icon
-        drawTexturedModalRect(stack, xStart, yStart, 16, 9 * i5, 9, 9);
-        drawTexturedModalRect(stack, xStart, yStart, 160, 0, 9, 9);
+        ModUtils.drawTexturedModalRect(stack, xStart, yStart, 16, 9 * i5, 9, 9);
+        ModUtils.drawTexturedModalRect(stack, xStart, yStart, 160, 0, 9, 9);
     }
 }

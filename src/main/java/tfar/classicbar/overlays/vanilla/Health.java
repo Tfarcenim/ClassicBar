@@ -1,20 +1,16 @@
 package tfar.classicbar.overlays.vanilla;
 
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.world.entity.ai.attributes.Attributes;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.util.Color;
+import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ColorUtils;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
-
-import static tfar.classicbar.util.ModUtils.*;
-import static tfar.classicbar.config.ClassicBarsConfig.showHealthNumbers;
 
 public class Health extends BarOverlayImpl {
 
@@ -36,6 +32,7 @@ public class Health extends BarOverlayImpl {
     int updateCounter = gui.getGuiTicks();
 
     double health = player.getHealth();
+    double barWidth = getBarWidth(player);
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
 
     //player is damaged and resistant
@@ -57,10 +54,11 @@ public class Health extends BarOverlayImpl {
 
     int i4 = (highlight) ? 18 : 0;
 
+    Color.reset();
     //Bar background
-    drawTexturedModalRect(stack,xStart, yStart, 0, i4, 81, 9);
+    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 0, i4, 81, 9);
 
-    double f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(health, maxHealth) : 0);
+    double f = xStart + (rightHandSide() ? ModUtils.WIDTH - barWidth : 0);
 
     //is the bar changing
     //Pass 1, draw bar portion
@@ -70,7 +68,7 @@ public class Health extends BarOverlayImpl {
       Color.reset();
       if (displayHealth > health) {
         //draw interpolation
-        drawTexturedModalRect(stack,f + 1, yStart + 1, 1, 10, getWidth(displayHealth, maxHealth), 7);
+        ModUtils.drawTexturedModalRect(stack,f + 1, yStart + 1, 1, 10, ModUtils.getWidth(displayHealth, maxHealth), 7);
         //Health is increasing, IDK what to do here
       } else {/*
                   f = xStart + getWidth(health, maxHealth);
@@ -79,18 +77,14 @@ public class Health extends BarOverlayImpl {
     }
     //calculate bar color
     Color primary = getPrimaryBarColor(0,player);
-
     primary.color2Gl();
     //draw portion of bar based on health remaining
-    drawTexturedModalRect(stack,f + 2, yStart + 1, 2, 10, getWidth(health, maxHealth), 7);
-
+    ModUtils.drawTexturedModalRect(stack,f + 2, yStart + 1, 2, 10, barWidth, 7);
     if (effect == HealthEffect.POISON) {
       //draw poison overlay
       RenderSystem.setShaderColor(0, .5f, 0, .5f);
-      drawTexturedModalRect(stack,f + 1, yStart + 1, 1, 36, getWidth(health, maxHealth), 7);
+      ModUtils.drawTexturedModalRect(stack,f + 1, yStart + 1, 1, 36, barWidth, 7);
     }
-
-    Color.reset();
   }
 
   @Override
@@ -102,14 +96,20 @@ public class Health extends BarOverlayImpl {
   }
 
   @Override
+  public int getBarWidth(Player player) {
+    double health = player.getHealth();
+    double maxHealth = player.getMaxHealth();
+    return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxHealth,health) / health);
+  }
+
+  @Override
   public boolean shouldRenderText() {
-    return showHealthNumbers.get();
+    return ClassicBarsConfig.showHealthNumbers.get();
   }
 
   @Override
   public void renderText(PoseStack stack,Player player, int width, int height, int vOffset) {
     double health = player.getHealth();
-
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     textHelper(stack,xStart,yStart,health,getPrimaryBarColor(0,player).colorToText());
@@ -125,8 +125,8 @@ public class Health extends BarOverlayImpl {
     //Draw health icon
     //heart background
     Color.reset();
-    drawTexturedModalRect(stack,xStart, yStart, 16, 9 * i5, 9, 9);
+    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 16, 9 * i5, 9, 9);
     //heart
-    drawTexturedModalRect(stack,xStart, yStart, 36 + effect.i, 9 * i5, 9, 9);
+    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 36 + effect.i, 9 * i5, 9, 9);
   }
 }

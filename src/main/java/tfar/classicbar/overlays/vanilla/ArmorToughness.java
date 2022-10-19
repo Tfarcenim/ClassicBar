@@ -11,8 +11,6 @@ import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.ModUtils;
 
-import static tfar.classicbar.util.ModUtils.*;
-
 public class ArmorToughness extends BarOverlayImpl {
 
     public ArmorToughness() {
@@ -42,7 +40,7 @@ public class ArmorToughness extends BarOverlayImpl {
         if (index == 0) {
             primary.color2Gl();
             //draw portion of bar based on armor toughness amount
-            drawTexturedModalRect(stack, xStart + 1, yStart + 1, 1, 10, getWidth(armorToughness, 20), 7);
+            ModUtils.drawTexturedModalRect(stack, xStart + 1, yStart + 1, 1, 10, ModUtils.getWidth(armorToughness, 20), 7);
         } else {
             //we have wrapped, draw 2 bars
             int size = ConfigCache.armor_toughness.size();
@@ -51,16 +49,16 @@ public class ArmorToughness extends BarOverlayImpl {
                 Color secondary = getSecondaryBarColor(index - 1, player);
                 //draw complete first bar
                 secondary.color2Gl();
-                drawTexturedModalRect(stack, xStart, yStart + 1, 0, 10, 79, 7);
+                ModUtils.drawTexturedModalRect(stack, xStart, yStart + 1, 0, 10, 79, 7);
                 //draw partial second bar
                 primary.color2Gl();
                 double f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(armorToughness % 20, 20) : 0);
                 renderMainBar(stack, f, yStart, ModUtils.getWidth(armorToughness % 20, 20));
-                drawTexturedModalRect(stack, f, yStart + 1, 0, 10, getWidth(armorToughness % 20, 20), 7);
+                ModUtils.drawTexturedModalRect(stack, f, yStart + 1, 0, 10, ModUtils.getWidth(armorToughness % 20, 20), 7);
             } else { //case 2, bar is a multiple of 20, or it is capped
                 //draw complete second bar
                 primary.color2Gl();
-                drawTexturedModalRect(stack, xStart + 1, yStart + 1, 1, 10, 79, 7);
+                ModUtils.drawTexturedModalRect(stack, xStart + 1, yStart + 1, 1, 10, 79, 7);
             }
         }
     }
@@ -99,10 +97,10 @@ public class ArmorToughness extends BarOverlayImpl {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         //Draw armor toughness icon
-        drawTexturedModalRect(stack, xStart, yStart, 83, 0, 9, 9);
+        ModUtils.drawTexturedModalRect(stack, xStart, yStart, 83, 0, 9, 9);
     }
     @Override
     public ResourceLocation getIconRL() {
-        return ICON_BAR;
+        return ModUtils.ICON_BAR;
     }
 }
