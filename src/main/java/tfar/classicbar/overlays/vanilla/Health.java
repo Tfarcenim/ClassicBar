@@ -51,7 +51,7 @@ public class Health extends BarOverlayImpl {
 
     int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
-    double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
+    double maxHealth = player.getMaxHealth();
 
     HealthEffect effect = getHealthEffect(player);
 
@@ -96,7 +96,7 @@ public class Health extends BarOverlayImpl {
   @Override
   public Color getPrimaryBarColor(int index, Player player) {
     double health = player.getHealth();
-    double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
+    double maxHealth = player.getMaxHealth();
     HealthEffect effect = getHealthEffect(player);
     return ColorUtils.calculateScaledColor(health,maxHealth,effect);
   }

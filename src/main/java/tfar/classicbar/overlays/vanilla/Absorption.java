@@ -32,7 +32,7 @@ public class Absorption extends BarOverlayImpl {
 
         int xStart = screenWidth / 2 + getHOffset();
         int yStart = screenHeight - vOffset;
-        double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
+        double maxHealth = player.getMaxHealth();
 
         if (rightHandSide()) {
             xStart += ModUtils.WIDTH - barWidth;
@@ -68,7 +68,7 @@ public class Absorption extends BarOverlayImpl {
 
     public int getBarWidth(Player player) {
         double absorb = player.getAbsorptionAmount();
-        double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
+        double maxHealth = player.getMaxHealth();
         return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxHealth, absorb) / maxHealth);
     }
 
@@ -100,7 +100,7 @@ public class Absorption extends BarOverlayImpl {
     public void renderText(PoseStack stack, Player player, int width, int height, int vOffset) {
 
         double absorb = player.getAbsorptionAmount();
-        double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
+        double maxHealth = player.getMaxHealth();
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         // handle the text
