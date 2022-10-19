@@ -7,7 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.client.ForgeIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import tfar.classicbar.Color;
+import tfar.classicbar.util.Color;
 import toughasnails.api.TANCapabilities;
 import toughasnails.api.TANPotions;
 import toughasnails.api.config.GameplayOption;

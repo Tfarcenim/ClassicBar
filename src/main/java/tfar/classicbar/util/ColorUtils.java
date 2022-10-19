@@ -1,7 +1,6 @@
 package tfar.classicbar.util;
 
-import tfar.classicbar.Color;
-import tfar.classicbar.config.ModConfig;
+import tfar.classicbar.config.ClassicBarsConfig;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ public class ColorUtils {
         int r = i1 >> 16 & 0xFF;
         int g = i1 >> 8 & 0xFF;
         int b = i1 & 0xFF;
-        return new Color(r, g, b);
+        return Color.from(r, g, b);
     }
 
     public static Color calculateScaledColor(double d1, double d2, int effect) {
@@ -22,12 +21,12 @@ public class ColorUtils {
         List<? extends Double> colorFractions;
 
         switch (effect){
-            case 16: colorCodes = ModConfig.normalColors.get();
-            colorFractions = ModConfig.normalFractions.get(); break;
-            case 52: colorCodes = ModConfig.poisonedColors.get();
-                colorFractions = ModConfig.poisonedFractions.get(); break;
-            case 88: colorCodes = ModConfig.witheredColors.get();
-                colorFractions = ModConfig.witheredFractions.get(); break;
+            case 16: colorCodes = ClassicBarsConfig.normalColors.get();
+            colorFractions = ClassicBarsConfig.normalFractions.get(); break;
+            case 52: colorCodes = ClassicBarsConfig.poisonedColors.get();
+                colorFractions = ClassicBarsConfig.poisonedFractions.get(); break;
+            case 88: colorCodes = ClassicBarsConfig.witheredColors.get();
+                colorFractions = ClassicBarsConfig.witheredFractions.get(); break;
             default: return Color.BLACK;
         }
 

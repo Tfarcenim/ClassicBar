@@ -3,12 +3,13 @@ package tfar.classicbar.overlays.vanilla;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.Color;
+import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.impl.BarOverlayImpl;
 
 import static tfar.classicbar.util.ColorUtils.hex2Color;
 import static tfar.classicbar.util.ModUtils.*;
-import static tfar.classicbar.config.ModConfig.*;
+import static tfar.classicbar.config.ClassicBarsConfig.*;
 
 public class Air extends BarOverlayImpl {
 
@@ -35,7 +36,7 @@ public class Air extends BarOverlayImpl {
     //draw portion of bar based on air amount
     int air = player.getAirSupply();
 
-    int f = xStart + 79 - getWidth(air, 300);
+    double f = xStart + 79 - getWidth(air, 300);
     hex2Color(oxygenBarColor.get()).color2Gl();
     drawTexturedModalRect(stack,f, yStart + 1, 1, 10, getWidth(air, 300), 7);
   }
@@ -55,8 +56,7 @@ public class Air extends BarOverlayImpl {
     int h1 = (int) Math.floor(air / 20);
 
     int c = Integer.decode(oxygenBarColor.get());
-    int i3 = displayIcons.get() ? 1 : 0;
-    if (showPercent.get()) h1 = air / 3;
+    int i3 = ConfigCache.icons ? 1 : 0;
     drawStringOnHUD(stack,h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
   }
 

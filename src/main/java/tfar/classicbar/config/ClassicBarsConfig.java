@@ -12,21 +12,17 @@ import tfar.classicbar.EventHandler;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = ClassicBar.MODID, bus = Mod.EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
-public class ModConfig {
+public class ClassicBarsConfig {
 
-  public static ForgeConfigSpec.BooleanValue displayIcons;
+  static ForgeConfigSpec.BooleanValue displayIcons;
   public static ForgeConfigSpec.BooleanValue displayToughnessBar;
   public static ForgeConfigSpec.BooleanValue fullAbsorptionBar;
   public static ForgeConfigSpec.BooleanValue fullArmorBar;
   public static ForgeConfigSpec.BooleanValue fullToughnessBar;
   public static ForgeConfigSpec.BooleanValue lowArmorWarning;
-  public static ForgeConfigSpec.BooleanValue lowHungerWarning;
-  public static ForgeConfigSpec.DoubleValue lowHungerThreshold;
   public static ForgeConfigSpec.BooleanValue showSaturationBar;
   public static ForgeConfigSpec.BooleanValue showHeldFoodOverlay;
   public static ForgeConfigSpec.BooleanValue showExhaustionOverlay;
-  public static ForgeConfigSpec.BooleanValue showPercent;
-
   public static ForgeConfigSpec.BooleanValue showAbsorptionNumbers;
   public static ForgeConfigSpec.BooleanValue showAirNumbers;
   public static ForgeConfigSpec.BooleanValue showArmorNumbers;
@@ -36,12 +32,12 @@ public class ModConfig {
   public static ForgeConfigSpec.BooleanValue showMountHealthNumbers;
 
   public static ForgeConfigSpec.DoubleValue transitionSpeed;
-  public static ForgeConfigSpec.ConfigValue<String> hungerBarColor;
-  public static ForgeConfigSpec.ConfigValue<String> hungerBarDebuffColor;
+  static ForgeConfigSpec.ConfigValue<String> hungerBarColor;
+  static ForgeConfigSpec.ConfigValue<String> hungerBarDebuffColor;
+  static ForgeConfigSpec.ConfigValue<String> saturationBarColor;
+  static ForgeConfigSpec.ConfigValue<String> saturationBarDebuffColor;
   public static ForgeConfigSpec.ConfigValue<String> oxygenBarColor;
-  public static ForgeConfigSpec.ConfigValue<String> saturationBarColor;
-  public static ForgeConfigSpec.ConfigValue<String> saturationBarDebuffColor;
-  public static ForgeConfigSpec.ConfigValue<List<? extends String>> armorColorValues;
+  static ForgeConfigSpec.ConfigValue<List<? extends String>> armorColorValues;
   public static ForgeConfigSpec.ConfigValue<List<? extends String>> armorToughnessColorValues;
   public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionColorValues;
   public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionPoisonColorValues;
@@ -58,7 +54,7 @@ public class ModConfig {
   public static ForgeConfigSpec.ConfigValue<List<? extends String>> leftorder;
   public static ForgeConfigSpec.ConfigValue<List<? extends String>> rightorder;
 
-  public ModConfig(ForgeConfigSpec.Builder builder) {
+  public ClassicBarsConfig(ForgeConfigSpec.Builder builder) {
     builder.push("general");
     displayIcons = builder.define("display_icons", true);
 
@@ -67,8 +63,6 @@ public class ModConfig {
     fullArmorBar = builder.define("full_armor_bar", false);
     fullToughnessBar = builder.define("full_toughness_bar", false);
     lowArmorWarning = builder.define("display_low_armor_warning", true);
-    lowHungerWarning = builder.define("display_low_hunger_warning", true);
-    lowHungerThreshold = builder.defineInRange("low_hunger_threshold", .3, 0, 1);
 
     showAbsorptionNumbers = builder.define("show_absorption_numbers",true);
     showAirNumbers = builder.define("show_air_numbers",true);
@@ -81,7 +75,6 @@ public class ModConfig {
     showSaturationBar = builder.define("show_saturation_bar", true);
     showHeldFoodOverlay = builder.define("show_held_food_overlay", true);
     showExhaustionOverlay = builder.define("show_exhaustion_overlay", true);
-    showPercent = builder.define("show_percent", false);
     transitionSpeed = builder.defineInRange("transition_speed", 3, 0, Double.MAX_VALUE);
 
     hungerBarColor = builder.define("hunger_bar_color","#B34D00",String.class::isInstance);

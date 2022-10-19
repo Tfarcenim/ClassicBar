@@ -9,7 +9,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import tfar.classicbar.config.ModConfig;
+import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.network.Message;
 
 
@@ -28,11 +28,11 @@ public class ClassicBar {
     }
   }
 
-  public static final ModConfig CLIENT;
+  public static final ClassicBarsConfig CLIENT;
   public static final ForgeConfigSpec CLIENT_SPEC;
 
   static {
-    final Pair<ModConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ModConfig::new);
+    final Pair<ClassicBarsConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ClassicBarsConfig::new);
     CLIENT_SPEC = specPair.getRight();
     CLIENT = specPair.getLeft();
   }

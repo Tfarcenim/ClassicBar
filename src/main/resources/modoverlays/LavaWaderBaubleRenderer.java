@@ -16,7 +16,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import tfar.classicbar.Color;
+import tfar.classicbar.util.Color;
 
 import static tfar.classicbar.util.ColorUtils.hex2Color;
 import static tfar.classicbar.util.ModUtils.*;

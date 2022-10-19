@@ -8,11 +8,11 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.Color;
-import tfar.classicbar.config.ModConfig;
+import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.util.Color;
+import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
 
-import static tfar.classicbar.util.ColorUtils.hex2Color;
 import static tfar.classicbar.util.ModUtils.*;
 
 public class Blood extends BarOverlayImpl {
@@ -26,6 +26,11 @@ public class Blood extends BarOverlayImpl {
 	@Override
 	public boolean shouldRender(Player player) {
 		return VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION;
+	}
+
+	@Override
+	public Color getPrimaryBarColor(int index, Player player) {
+		return Color.RED;
 	}
 
 	@Override
@@ -44,8 +49,8 @@ public class Blood extends BarOverlayImpl {
 			//Bar background
 			drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
 			//draw portion of bar based on blood amount
-			int f = xStart + 79 - getWidth(blood, maxBlood);
-			hex2Color("#FF0000"/*mods.thirstBarColor*/).color2Gl();
+			double f = xStart + 79 - getWidth(blood, maxBlood);
+			getSecondaryBarColor(0, player).color2Gl();
 			drawTexturedModalRect(stack,f, yStart + 1, 1, 10, getWidth(blood, maxBlood), 7);
 
 			stack.popPose();
@@ -54,7 +59,7 @@ public class Blood extends BarOverlayImpl {
 
 	@Override
 	public boolean shouldRenderText() {
-		return ModConfig.showHungerNumbers.get();
+		return ClassicBarsConfig.showHungerNumbers.get();
 	}
 
 	@Override
@@ -64,11 +69,10 @@ public class Blood extends BarOverlayImpl {
 					int blood = stats.getBloodLevel();
 
 					int h1 = blood;
-					int c = Integer.decode("#FF0000");
-					if (ModConfig.showPercent.get()) h1 = blood * 5;
+					int c = getPrimaryBarColor(0, player).colorToText();
 					int xStart = width / 2 + getHOffset();
 					int yStart = height - vOffset;
-					drawStringOnHUD(stack,h1 + "", xStart + 9 * ((ModConfig.displayIcons.get()) ? 1 : 0) + rightTextOffset, yStart - 1, c);
+					drawStringOnHUD(stack,h1 + "", xStart + 9 * (ConfigCache.icons ? 1 : 0) + rightTextOffset, yStart - 1, c);
 		});
 
 	}

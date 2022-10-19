@@ -7,14 +7,16 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.Color;
+import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 import tfar.classicbar.compat.Helpers;
 import tfar.classicbar.impl.BarOverlayImpl;
 
 import static tfar.classicbar.util.ColorUtils.hex2Color;
-import static tfar.classicbar.util.ModUtils.*;
-import static tfar.classicbar.config.ModConfig.*;
+import static tfar.classicbar.config.ClassicBarsConfig.*;
+import static tfar.classicbar.util.ModUtils.getStringLength;
+import static tfar.classicbar.util.ModUtils.leftTextOffset;
 
 public class Hunger extends BarOverlayImpl {
 
@@ -32,28 +34,29 @@ public class Hunger extends BarOverlayImpl {
     double hunger = player.getFoodData().getFoodLevel();
     double maxHunger = 20;//HungerHelper.getMaxHunger(player);
     double currentSat = player.getFoodData().getSaturationLevel();
+    double maxSat = maxHunger;
     float exhaustion = player.getFoodData().getExhaustionLevel();
 
-    int xStart = screenWidth / 2 + 10;
+    int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
-
-    boolean warn = hunger / maxHunger <= lowHungerThreshold.get() && lowHungerWarning.get();
-
-    long alpha2 = warn ? (System.currentTimeMillis() / 250) % 2 : 1;
 
     //Bar background
     Color.reset();
-    drawTexturedModalRect(matrices,xStart, yStart, 0, 0, 81, 9);
+    renderFullBarBackground(matrices,xStart,yStart);
     //draw portion of bar based on hunger amount
-    int f = xStart + 79 - getWidth(hunger, maxHunger);
+    double f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(hunger, maxHunger) : 0);
     boolean hungerActive = player.hasEffect(MobEffects.HUNGER);
-    hex2Color(hungerActive ? hungerBarDebuffColor.get() : hungerBarColor.get()).color2Gla(alpha2);
-    drawTexturedModalRect(matrices,f, yStart + 1, 1, 10, getWidth(hunger, maxHunger), 7);
+
+    Color hungerColor = getSecondaryBarColor(0,player);
+    Color satColor = getPrimaryBarColor(0,player);
+
+    hungerColor.color2Gl();
+    renderSecondaryBar(matrices,f, yStart,  ModUtils.getWidth(hunger, maxHunger));
     if (currentSat > 0 && showSaturationBar.get()) {
       //draw saturation
-      hex2Color(hungerActive ? saturationBarDebuffColor.get() : saturationBarColor.get()).color2Gla(alpha2);
-      f += getWidth(hunger, maxHunger) - getWidth(currentSat, maxHunger);
-      ModUtils.drawTexturedModalRect(matrices,f, yStart + 1, 1, 10, getWidth(currentSat, maxHunger), 7);
+      satColor.color2Gl();
+      f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(currentSat, maxSat) : 0);
+      renderMainBar(matrices,f, yStart, ModUtils.getWidth(currentSat, maxSat));
     }
     //render held hunger overlay
     if (showHeldFoodOverlay.get() &&
@@ -62,7 +65,7 @@ public class Hunger extends BarOverlayImpl {
       double time = System.currentTimeMillis()/1000d * transitionSpeed.get();
       double foodAlpha = Math.sin(time)/2 + .5;
 
-      FoodProperties food = stack.getItem().getFoodProperties();
+      FoodProperties food = stack.getItem().getFoodProperties(stack,player);
       double hungerOverlay = food.getNutrition();
       double saturationMultiplier = food.getSaturationModifier();
       double potentialSat = 2 * hungerOverlay * saturationMultiplier;
@@ -71,9 +74,9 @@ public class Hunger extends BarOverlayImpl {
       double hungerWidth = Math.min(maxHunger - hunger, hungerOverlay);
       //don't render the bar at all if hunger is full
       if (hunger < maxHunger) {
-        f = xStart - getWidth(hungerWidth + hunger, maxHunger) + 78;
-        hex2Color(hungerActive ? hungerBarDebuffColor.get() : hungerBarColor.get()).color2Gla((float)foodAlpha);
-        drawTexturedModalRect(matrices,f + 1, yStart + 1, 1, 10, getWidth(hunger + hungerOverlay, maxHunger), 7);
+        f = xStart - ModUtils.getWidth(hungerWidth + hunger, maxHunger) + 78;
+        hungerColor.color2Gla((float)foodAlpha);
+        ModUtils.drawTexturedModalRect(matrices,f + 1, yStart + 1, 1, 10, ModUtils.getWidth(hunger + hungerOverlay, maxHunger), 7);
       }
 
       //Draw Potential saturation
@@ -89,10 +92,10 @@ public class Hunger extends BarOverlayImpl {
           saturationWidth = potentialSat - diff;
         }
         //offset used to decide where to place the bar
-        f = xStart - getWidth(saturationWidth + currentSat, maxHunger) + 78;
-        hex2Color(hungerActive ? saturationBarDebuffColor.get() : saturationBarColor.get()).color2Gla((float)foodAlpha);
+        f = xStart - ModUtils.getWidth(saturationWidth + currentSat, maxHunger) + 78;
+        satColor.color2Gla((float)foodAlpha);
         if (true)//currentSat > 0)
-          drawTexturedModalRect(matrices,f + 1, yStart + 1, 1, 10, getWidth(saturationWidth + currentSat, maxHunger), 7);
+          ModUtils.drawTexturedModalRect(matrices,f + 1, yStart + 1, 1, 10, ModUtils.getWidth(saturationWidth + currentSat, maxHunger), 7);
         else ;//drawTexturedModalRect(f, yStart+1, 1, 10, getWidthfloor(saturationWidth,20), 7);
 
       }
@@ -100,11 +103,25 @@ public class Hunger extends BarOverlayImpl {
 
     if (showExhaustionOverlay.get()) {
       exhaustion = Math.min(exhaustion, 4);
-      f = xStart - getWidth(exhaustion, 4) + 80;
+      f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
       //draw exhaustion
       RenderSystem.setShaderColor(1, 1, 1, .25f);
-      drawTexturedModalRect(matrices,f, yStart + 1, 1, 28, getWidth(exhaustion, 4f), 9);
+      ModUtils.drawTexturedModalRect(matrices,f, yStart + 1, 1, 28, ModUtils.getWidth(exhaustion, 4f), 9);
     }
+  }
+
+  //saturation
+  @Override
+  public Color getPrimaryBarColor(int index, Player player) {
+    boolean hunger = player.hasEffect(MobEffects.HUNGER);
+    return hunger ? ConfigCache.saturationDebuff : ConfigCache.saturation;
+  }
+
+  //hunger
+  @Override
+  public Color getSecondaryBarColor(int index, Player player) {
+    boolean hunger = player.hasEffect(MobEffects.HUNGER);
+    return hunger ? ConfigCache.hungerDebuff : ConfigCache.hunger;
   }
 
   @Override
@@ -114,7 +131,8 @@ public class Hunger extends BarOverlayImpl {
 
   @Override
   public void renderText(PoseStack stack,Player player, int width, int height,int vOffset) {
-    int xStart = width / 2 + 10;
+    int xStart = width / 2 + getIconOffset();
+
     int yStart = height - vOffset;
     //draw hunger amount
     double hunger = player.getFoodData().getFoodLevel();
@@ -122,16 +140,22 @@ public class Hunger extends BarOverlayImpl {
 
     int h1 = (int) Math.floor(hunger);
 
-    int i3 = displayIcons.get() ? 1 : 0;
-    if (showPercent.get()) h1 = (int) hunger * 5;
-    int c = Integer.decode(hungerActive ? hungerBarDebuffColor.get() : hungerBarColor.get());
-    drawStringOnHUD(stack,h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, c);
+
+    int i3 = ConfigCache.icons ? 1 : 0;
+    int c = getSecondaryBarColor(0,player).colorToText();
+
+    if (rightHandSide()) {
+      ModUtils.drawStringOnHUD(stack, h1 + "", xStart + 9 * i3, yStart - 1, c);
+    } else {
+      int i1 = getStringLength(h1 + "");
+      ModUtils.drawStringOnHUD(stack, h1 + "", xStart - 9 * i3 - i1 - leftTextOffset, yStart - 1, c);
+    }
   }
 
   @Override
   public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
 
-    int xStart = width / 2 + 10;
+    int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     boolean hungerActive = player.hasEffect(MobEffects.HUNGER);
 
@@ -143,10 +167,10 @@ public class Hunger extends BarOverlayImpl {
     }
     //Draw hunger icon
     //hunger background
-    drawTexturedModalRect(stack,xStart + 82, yStart, k6, 27, 9, 9);
+    ModUtils.drawTexturedModalRect(stack,xStart, yStart, k6, 27, 9, 9);
 
     //hunger
-    drawTexturedModalRect(stack,xStart + 82, yStart, k5, 27, 9, 9);
+    ModUtils.drawTexturedModalRect(stack,xStart, yStart, k5, 27, 9, 9);
 
   }
 }

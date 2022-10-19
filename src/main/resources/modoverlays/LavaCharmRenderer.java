@@ -19,7 +19,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import tfar.classicbar.ClassicBar;
-import tfar.classicbar.Color;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.compat.BaublesHelper;
 
 import static tfar.classicbar.util.ColorUtils.hex2Color;

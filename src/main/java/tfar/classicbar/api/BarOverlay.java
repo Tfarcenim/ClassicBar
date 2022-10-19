@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
+import tfar.classicbar.util.Color;
 
 public interface BarOverlay {
 
@@ -20,9 +21,9 @@ public interface BarOverlay {
 
   int getBarWidth(Player player);
 
-  int getPrimaryBarColor(int index);
+  Color getPrimaryBarColor(int index,Player player);
 
-  int getSecondaryBarColor(int index);
+  Color getSecondaryBarColor(int index,Player player);
 
   boolean isFitted();
 

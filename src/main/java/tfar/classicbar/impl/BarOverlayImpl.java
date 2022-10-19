@@ -6,6 +6,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.EventHandler;
+import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 import tfar.classicbar.api.BarOverlay;
 
@@ -19,6 +21,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public BarOverlayImpl(String name) {
         this.name = name;
     }
+
     public boolean shouldRender(Player player) {
         return true;
     }
@@ -37,29 +40,35 @@ public abstract class BarOverlayImpl implements BarOverlay {
     @Override
     public void render(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
         if (shouldRender(player)) {
-            gui.setupOverlayRenderState(true,false, ModUtils.ICON_BAR);
+            gui.setupOverlayRenderState(true, false, ModUtils.ICON_BAR);
             renderBar(gui, stack, player, screenWidth, screenHeight, vOffset);
             if (shouldRenderText()) {
-                renderText(stack,player,screenWidth,screenHeight,vOffset);
+                renderText(stack, player, screenWidth, screenHeight, vOffset);
             }
-            if (EventHandler.icons) {
+            if (ConfigCache.icons) {
                 bindIconTexture();
                 renderIcon(stack, player, screenWidth, screenHeight, vOffset);
             }
-            EventHandler.increment(gui,rightHandSide(),10);
+            EventHandler.increment(gui, rightHandSide(), 10);
         }
     }
 
-    public abstract void renderBar(ForgeIngameGui gui,PoseStack stack,Player player, int screenWidth, int screenHeight,int vOffset);
+    public abstract void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset);
 
     public boolean shouldRenderText() {
         return true;
     }
-    public abstract void renderText(PoseStack stack,Player player, int width, int height,int vOffset);
-    public abstract void renderIcon(PoseStack stack,Player player, int width, int height,int vOffset);
+
+    public abstract void renderText(PoseStack stack, Player player, int width, int height, int vOffset);
+
+    public abstract void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset);
 
     public int getHOffset() {
         return rightHandSide() ? 10 : -91;
+    }
+
+    public int getIconOffset() {
+        return rightHandSide() ? 92 : -101;
     }
 
     @Override
@@ -78,22 +87,34 @@ public abstract class BarOverlayImpl implements BarOverlay {
         int yStart = screenHeight - vOffset;
 
         if (isFitted()) {
-            ModUtils.drawScaledBarBackground1(matrices,barWidth,  xStart, yStart + 1, rightHandSide());
-        } else drawTexturedModalRect(matrices,xStart, yStart, 0, 0, 81, 9);
+            ModUtils.drawScaledBarBackground1(matrices, barWidth, xStart, yStart + 1, rightHandSide());
+        } else drawTexturedModalRect(matrices, xStart, yStart, 0, 0, ModUtils.WIDTH + 4, 9);
     }
 
-    public void renderMainBar(PoseStack matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderFullBarBackground(PoseStack matrices, int xStart, int yStart) {
+        ModUtils.drawTexturedModalRect(matrices, xStart, yStart, 0, 0, ModUtils.WIDTH + 4, 9);
+    }
 
+    public void renderMainBar(PoseStack matrices, double xStart, int yStart, double barWidth) {
+        drawTexturedModalRect(matrices, xStart + 2, yStart + 2, 2, 11, barWidth, 7);
+    }
+
+    public void renderSecondaryBar(PoseStack matrices, double xStart, int yStart, double barWidth) {
+        drawTexturedModalRect(matrices, xStart + 2, yStart + 2, 2, 11, barWidth, 7);
+    }
+
+    public void renderCompleteSecondaryBar(PoseStack matrices, double xStart, int yStart) {
+        renderSecondaryBar(matrices,xStart,yStart,ModUtils.WIDTH);
     }
 
     @Override
-    public int getPrimaryBarColor(int index) {
-        return 0;
+    public Color getPrimaryBarColor(int index, Player player) {
+        return Color.BLACK;
     }
 
     @Override
-    public int getSecondaryBarColor(int index) {
-        return 0;
+    public Color getSecondaryBarColor(int index, Player player) {
+        return Color.BLACK;
     }
 
     @Override

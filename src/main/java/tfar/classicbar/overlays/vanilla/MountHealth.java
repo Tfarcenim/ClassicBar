@@ -5,12 +5,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.config.ModConfig;
+import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
 
 import static tfar.classicbar.util.ColorUtils.calculateScaledColor;
 import static tfar.classicbar.util.ModUtils.*;
-import static tfar.classicbar.config.ModConfig.showMountHealthNumbers;
+import static tfar.classicbar.config.ClassicBarsConfig.showMountHealthNumbers;
 
 public class MountHealth extends BarOverlayImpl {
 
@@ -30,7 +30,7 @@ public class MountHealth extends BarOverlayImpl {
   @Override
   public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
     //Push to avoid lasting changes
-    int updateCounter = mc.gui.getGuiTicks();
+    int updateCounter = gui.getGuiTicks();
 
     LivingEntity mount = (LivingEntity) player.getVehicle();
     if (!mount.isAlive()) return;
@@ -59,7 +59,7 @@ public class MountHealth extends BarOverlayImpl {
 
     //calculate bar color
     calculateScaledColor(mountHealth, maxHealth, 16).color2Gl();
-    int f = xStart + 79 - getWidth(mountHealth, maxHealth);
+    double f = xStart + 79 - getWidth(mountHealth, maxHealth);
     //draw portion of bar based on mountHealth remaining
     drawTexturedModalRect(stack,f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
   }
@@ -77,8 +77,7 @@ public class MountHealth extends BarOverlayImpl {
     int yStart = height - vOffset;
     LivingEntity mount = (LivingEntity) player.getVehicle();
     double maxHealth = mount.getAttribute(Attributes.MAX_HEALTH).getValue();
-    int i3 = ModConfig.displayIcons.get() ? 1 : 0;
-    if (ModConfig.showPercent.get()) h1 = (int) (100 * mountHealth / maxHealth);
+    int i3 = ConfigCache.icons ? 1 : 0;
     drawStringOnHUD(stack,h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, calculateScaledColor(mountHealth, maxHealth, 16).colorToText());
   }
 

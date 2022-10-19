@@ -5,13 +5,14 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.Color;
+import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.config.ClassicBarsConfig;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.impl.BarOverlayImpl;
 
 import static tfar.classicbar.util.ColorUtils.hex2Color;
 import static tfar.classicbar.util.ModUtils.*;
-import static tfar.classicbar.config.ModConfig.*;
-import static tfar.classicbar.config.ModConfig.fullAbsorptionBar;
+import static tfar.classicbar.config.ClassicBarsConfig.*;
 
 public class Absorption extends BarOverlayImpl {
 
@@ -44,7 +45,7 @@ public class Absorption extends BarOverlayImpl {
     //no wrapping
     if (absorb <= maxHealth) {
       //background
-      if (!fullAbsorptionBar.get()) drawScaledBar(stack,absorb, maxHealth, xStart, yStart + 1, rightHandSide());
+      if (!ClassicBarsConfig.fullAbsorptionBar.get()) drawScaledBar(stack,absorb, maxHealth, xStart, yStart + 1, rightHandSide());
       else drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
 
       switch (k5) {
@@ -123,7 +124,7 @@ public class Absorption extends BarOverlayImpl {
 
     // handle the text
     int a1 = getStringLength((int) absorb + "");
-    int a2 = displayIcons.get() ? 1 : 0;
+    int a2 = ConfigCache.icons ? 1 : 0;
     int a3 = (int) absorb;
     int c = 0;
 

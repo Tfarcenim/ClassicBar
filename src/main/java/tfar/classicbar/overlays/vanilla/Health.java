@@ -7,14 +7,13 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.Color;
-import tfar.classicbar.EventHandler;
-import tfar.classicbar.config.ModConfig;
+import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.impl.BarOverlayImpl;
 
 import static tfar.classicbar.util.ColorUtils.calculateScaledColor;
 import static tfar.classicbar.util.ModUtils.*;
-import static tfar.classicbar.config.ModConfig.showHealthNumbers;
+import static tfar.classicbar.config.ClassicBarsConfig.showHealthNumbers;
 
 public class Health extends BarOverlayImpl {
 
@@ -33,7 +32,7 @@ public class Health extends BarOverlayImpl {
 
   @Override
   public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
-    int updateCounter = mc.gui.getGuiTicks();
+    int updateCounter = gui.getGuiTicks();
 
     double health = player.getHealth();
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
@@ -78,12 +77,10 @@ public class Health extends BarOverlayImpl {
                   drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(health - displayHealth, maxHealth), 7, general.style, true, true);*/
       }
     }
-
     //calculate bar color
-
     calculateScaledColor(health, maxHealth, k5).color2Gl();
     //draw portion of bar based on health remaining
-    drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
+    drawTexturedModalRect(stack,xStart + 2, yStart + 1, 2, 10, getWidth(health, maxHealth), 7);
 
     if (k5 == 52) {
       //draw poison overlay
@@ -113,8 +110,7 @@ public class Health extends BarOverlayImpl {
     else if (player.hasEffect(MobEffects.WITHER)) k5 += 72;//evaluates to 88
 
     int h1 = (int) Math.round(health);
-    int i2 = EventHandler.icons ? 1 : 0;
-    if (ModConfig.showPercent.get()) h1 = (int) (100 * health / maxHealth);
+    int i2 = ConfigCache.icons ? 1 : 0;
     int i1 = getStringLength(h1 + "");
 
     drawStringOnHUD(stack,h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth, k5).colorToText());

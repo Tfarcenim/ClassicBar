@@ -8,7 +8,7 @@ import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.fml.ModList;
 import tfar.classicbar.compat.Helpers;
-import tfar.classicbar.config.ModConfig;
+import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.overlays.mod.Blood;
 import tfar.classicbar.overlays.mod.Feathers;
@@ -17,15 +17,13 @@ import tfar.classicbar.overlays.vanilla.*;
 import java.util.*;
 
 import static tfar.classicbar.util.ModUtils.mc;
-import static tfar.classicbar.config.ModConfig.leftorder;
-import static tfar.classicbar.config.ModConfig.rightorder;
+import static tfar.classicbar.config.ClassicBarsConfig.leftorder;
+import static tfar.classicbar.config.ClassicBarsConfig.rightorder;
 
 public class EventHandler implements IIngameOverlay {
 
   private static final List<BarOverlay> all = new ArrayList<>();
   private static final Map<String, BarOverlay> registry = new HashMap<>();
-
-  public static boolean icons;
 
   public static void register(BarOverlay iBarOverlay) {
     registry.put(iBarOverlay.name(), iBarOverlay);
@@ -67,7 +65,7 @@ public class EventHandler implements IIngameOverlay {
     all.clear();
     leftorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(false)));
     rightorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(true)));
-    icons = ModConfig.displayIcons.get();
+    ConfigCache.bake();
   }
 
   public static void setupOverlays() {
