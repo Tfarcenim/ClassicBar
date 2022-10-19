@@ -10,11 +10,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.Color;
 import tfar.classicbar.config.ModConfig;
-import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.impl.BarOverlayImpl;
 
-import static tfar.classicbar.ColorUtils.hex2Color;
-import static tfar.classicbar.ModUtils.*;
+import static tfar.classicbar.util.ColorUtils.hex2Color;
+import static tfar.classicbar.util.ModUtils.*;
 
 public class Blood extends BarOverlayImpl {
 

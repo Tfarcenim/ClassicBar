@@ -6,8 +6,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.EventHandler;
-import tfar.classicbar.ModUtils;
+import tfar.classicbar.util.ModUtils;
 import tfar.classicbar.api.BarOverlay;
+
+import static tfar.classicbar.util.ModUtils.drawTexturedModalRect;
 
 public abstract class BarOverlayImpl implements BarOverlay {
 
@@ -61,14 +63,39 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     @Override
-    public int getBarWidth() {
+    public int getBarWidth(Player player) {
+        return ModUtils.WIDTH;
+    }
+
+    public void renderBarBackground(PoseStack matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
+
+        int barWidth = getBarWidth(player);
+
+        int xStart = screenWidth / 2 + getHOffset();
+        if (isFitted() && rightHandSide()) {
+            xStart += ModUtils.WIDTH - barWidth;
+        }
+        int yStart = screenHeight - vOffset;
+
+        if (isFitted()) {
+            ModUtils.drawScaledBarBackground1(matrices,barWidth,  xStart, yStart + 1, rightHandSide());
+        } else drawTexturedModalRect(matrices,xStart, yStart, 0, 0, 81, 9);
+    }
+
+    public void renderMainBar(PoseStack matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
+
+    }
+
+    @Override
+    public int getPrimaryBarColor(int index) {
         return 0;
     }
 
     @Override
-    public int getBarColor() {
+    public int getSecondaryBarColor(int index) {
         return 0;
     }
+
     @Override
     public ResourceLocation getIconRL() {
         return GuiComponent.GUI_ICONS_LOCATION;

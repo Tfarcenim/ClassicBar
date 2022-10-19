@@ -16,7 +16,7 @@ import tfar.classicbar.overlays.vanilla.*;
 
 import java.util.*;
 
-import static tfar.classicbar.ModUtils.mc;
+import static tfar.classicbar.util.ModUtils.mc;
 import static tfar.classicbar.config.ModConfig.leftorder;
 import static tfar.classicbar.config.ModConfig.rightorder;
 

@@ -14,8 +14,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Loader;
 
-import static tfar.classicbar.ColorUtils.hex2Color;
-import static tfar.classicbar.ModUtils.*;
+import static tfar.classicbar.util.ColorUtils.hex2Color;
+import static tfar.classicbar.util.ModUtils.*;
 
 public class BetterDivingRenderer {
 

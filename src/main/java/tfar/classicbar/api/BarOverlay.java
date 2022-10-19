@@ -2,12 +2,9 @@ package tfar.classicbar.api;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.EventHandler;
-import tfar.classicbar.ModUtils;
 
 public interface BarOverlay {
 
@@ -21,9 +18,11 @@ public interface BarOverlay {
     RenderSystem.setShaderTexture(0,getIconRL());
   }
 
-  int getBarWidth();
+  int getBarWidth(Player player);
 
-  int getBarColor();
+  int getPrimaryBarColor(int index);
+
+  int getSecondaryBarColor(int index);
 
   boolean isFitted();
 

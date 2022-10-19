@@ -3,7 +3,6 @@ package tfar.classicbar.network;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
-import tfar.classicbar.ModUtils;
 
 import java.util.function.Supplier;
 

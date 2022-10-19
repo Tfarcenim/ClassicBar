@@ -20,8 +20,6 @@ public class ModConfig {
   public static ForgeConfigSpec.BooleanValue fullArmorBar;
   public static ForgeConfigSpec.BooleanValue fullToughnessBar;
   public static ForgeConfigSpec.BooleanValue lowArmorWarning;
-  public static ForgeConfigSpec.BooleanValue lowHealthWarning;
-  public static ForgeConfigSpec.DoubleValue lowHealthThreshold;
   public static ForgeConfigSpec.BooleanValue lowHungerWarning;
   public static ForgeConfigSpec.DoubleValue lowHungerThreshold;
   public static ForgeConfigSpec.BooleanValue showSaturationBar;
@@ -69,8 +67,6 @@ public class ModConfig {
     fullArmorBar = builder.define("full_armor_bar", false);
     fullToughnessBar = builder.define("full_toughness_bar", false);
     lowArmorWarning = builder.define("display_low_armor_warning", true);
-    lowHealthWarning = builder.define("display_low_health_warning", true);
-    lowHealthThreshold = builder.defineInRange("low_health_threshold", .2, 0, 1);
     lowHungerWarning = builder.define("display_low_hunger_warning", true);
     lowHungerThreshold = builder.defineInRange("low_hunger_threshold", .3, 0, 1);
 

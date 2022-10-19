@@ -6,11 +6,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.config.ModConfig;
-import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.impl.BarOverlayImpl;
 
-import static tfar.classicbar.ColorUtils.calculateScaledColor;
-import static tfar.classicbar.ModUtils.*;
+import static tfar.classicbar.util.ColorUtils.calculateScaledColor;
+import static tfar.classicbar.util.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.showMountHealthNumbers;
 
 public class MountHealth extends BarOverlayImpl {

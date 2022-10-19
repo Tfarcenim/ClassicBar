@@ -1,5 +1,6 @@
-package tfar.classicbar;
+package tfar.classicbar.util;
 
+import tfar.classicbar.Color;
 import tfar.classicbar.config.ModConfig;
 
 import java.util.List;

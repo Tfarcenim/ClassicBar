@@ -1,14 +1,17 @@
-package tfar.classicbar;
+package tfar.classicbar.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.resources.ResourceLocation;
+import tfar.classicbar.ClassicBar;
 
 public class ModUtils {
   public static final int rightTextOffset = 82;
 
   public static final int leftTextOffset = -5;
+
+  public static final int WIDTH = 78;
 
   public static ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
   public static final Minecraft mc = Minecraft.getInstance();
@@ -19,8 +22,7 @@ public class ModUtils {
   }
 
   public static int getWidth(double d1, double d2) {
-    int w = 78;
-    double d3 = Math.max(w * d1 / d2, 0);
+    double d3 = Math.max(WIDTH * d1 / d2, 0);
     return (int) Math.ceil(d3);
   }
 
@@ -37,6 +39,16 @@ public class ModUtils {
     } else {
       drawTexturedModalRect(stack,x + 2, y -1, 80 - i, 0, i + 1, 9);
       drawTexturedModalRect(stack,x, y-1, 0, 0, 2, 9);
+    }
+  }
+
+  public static void drawScaledBarBackground1(PoseStack stack, double barWidth, int x, int y, boolean right) {
+    if (right) {
+      drawTexturedModalRect(stack,x + 2, y -1, (int) (80 - barWidth), 0, (int) (barWidth + 1), 9);
+      drawTexturedModalRect(stack,x, y-1, 0, 0, 2, 9);
+    } else {
+      drawTexturedModalRect(stack,x, y - 1, 0, 0, (int) (barWidth + 1), 9);
+      drawTexturedModalRect(stack, (int) (x + barWidth + 1), y - 1, 79, 0, 2, 9);
     }
   }
 

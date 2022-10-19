@@ -10,11 +10,10 @@ import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.Color;
 import tfar.classicbar.EventHandler;
 import tfar.classicbar.config.ModConfig;
-import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.impl.BarOverlayImpl;
 
-import static tfar.classicbar.ColorUtils.calculateScaledColor;
-import static tfar.classicbar.ModUtils.*;
+import static tfar.classicbar.util.ColorUtils.calculateScaledColor;
+import static tfar.classicbar.util.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.showHealthNumbers;
 
 public class Health extends BarOverlayImpl {
@@ -66,13 +65,10 @@ public class Health extends BarOverlayImpl {
 
     //is the bar changing
     //Pass 1, draw bar portion
-    boolean warn = health / maxHealth <= ModConfig.lowHealthThreshold.get() && ModConfig.lowHealthWarning.get();
-    long alpha = health <= 0 ? 1 : warn ? (System.currentTimeMillis() / 250) % 2 : 1;
-
     //interpolate the bar
     if (displayHealth != health) {
       //reset to white
-      RenderSystem.setShaderColor(1, 1, 1, alpha);
+      Color.reset();
       if (displayHealth > health) {
         //draw interpolation
         drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(displayHealth, maxHealth), 7);
@@ -85,7 +81,7 @@ public class Health extends BarOverlayImpl {
 
     //calculate bar color
 
-    calculateScaledColor(health, maxHealth, k5).color2Gla(alpha);
+    calculateScaledColor(health, maxHealth, k5).color2Gl();
     //draw portion of bar based on health remaining
     drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(health, maxHealth), 7);
 

@@ -8,13 +8,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.Color;
-import tfar.classicbar.ModUtils;
+import tfar.classicbar.util.ModUtils;
 import tfar.classicbar.compat.Helpers;
-import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.impl.BarOverlayImpl;
 
-import static tfar.classicbar.ColorUtils.hex2Color;
-import static tfar.classicbar.ModUtils.*;
+import static tfar.classicbar.util.ColorUtils.hex2Color;
+import static tfar.classicbar.util.ModUtils.*;
 import static tfar.classicbar.config.ModConfig.*;
 
 public class Hunger extends BarOverlayImpl {

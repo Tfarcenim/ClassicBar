@@ -18,8 +18,8 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import tfar.classicbar.Color;
 
-import static tfar.classicbar.ColorUtils.hex2Color;
-import static tfar.classicbar.ModUtils.*;
+import static tfar.classicbar.util.ColorUtils.hex2Color;
+import static tfar.classicbar.util.ModUtils.*;
 
 /*
     Class handles the drawing of the tiara
