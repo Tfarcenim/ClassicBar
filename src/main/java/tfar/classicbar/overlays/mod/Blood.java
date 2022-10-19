@@ -1,20 +1,19 @@
 package tfar.classicbar.overlays.mod;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.config.ConfigCache;
-import tfar.classicbar.util.Color;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
-import static tfar.classicbar.util.ModUtils.*;
+import static tfar.classicbar.util.ModUtils.drawTexturedModalRect;
+import static tfar.classicbar.util.ModUtils.getWidth;
 
 public class Blood extends BarOverlayImpl {
 
@@ -32,7 +31,7 @@ public class Blood extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBar(ForgeGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
         VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).ifPresent(stats -> {
             int blood = stats.getBloodLevel();
             //Push to avoid lasting changes

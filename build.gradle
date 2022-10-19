@@ -1,27 +1,16 @@
-buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        maven { url = 'https://maven.parchmentmc.org' }
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.parchmentmc:librarian:1.+'
-    }
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.parchmentmc.librarian.forgegradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
-//apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
 
-
-version = "${mod_version}-${mc_version}"
+version = "${mc_version}-${mod_version}"
 group = "com.tfar.${modid}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "${modid}"
 
+// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
 minecraft {
     // The mappings can be changed at any time, and must be in the following format.
     // snapshot_YYYYMMDD   Snapshot are built nightly.
@@ -31,14 +20,13 @@ minecraft {
     mappings channel: 'parchment', version: parch_mapping+"-"+mc_version
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
-    // accessTransformer = file('build/resources/main/META-INF/accesstransformer.cfg')
+    //accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
     runs {
         client {
             workingDirectory project.file('run')
-            
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -54,13 +42,12 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-            
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
             //When running Vampirism in deobf environment this is required for Vampirism's mixins to be remapped
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
             mods {
                 examplemod {
                     source sourceSets.main
@@ -69,31 +56,51 @@ minecraft {
         }
     }
 }
-repositories {
-    maven { url "https://maven.tterrag.com/" }
-     maven {
-        url "https://www.cursemaven.com"
-    }
-    //Maven repo for Vampirism
+
+repositories{
     maven {
         url = "https://maven.maxanier.de"
     }
 
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
 }
 
 dependencies {
+    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
+    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}" //21
-    
-//	implementation fg.deobf("curse.maven:elenaidodge2-442962:3343309")
-	
-
     //compile against the Vampirism API
-    compileOnly fg.deobf("de.teamlapen.vampirism:Vampirism:1.18.2-1.8.7:api")
+    compileOnly fg.deobf("de.teamlapen.vampirism:Vampirism:1.19.2-1.8.1:api")
     //Alternative using the full jar from CurseForge
     //compileOnly fg.deobf("curse.maven:vampirism-become-a-vampire:2902558")
+    // compile against the JEI API but do not include it at runtime
+//    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
+    // at runtime, use the full JEI jar
+//    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 
-    //at runtime (in your development environment) use the full Vampirism jar
-    //runtimeOnly fg.deobf("de.teamlapen.vampirism:Vampirism:1.16.4-1.7.12")
+    //compile fileTree(dir: 'libs', include: '*.jar')
+
+    // You may put jars on which you depend on in ./libs or you may define them like so..
+    // compile "some.group:artifact:version:classifier"
+    // compile "some.group:artifact:version"
+
+    // Real examples
+    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
+    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+
+    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
+    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // These dependencies get remapped to your current MCP mappings
+    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // For more info...
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
 }
 
@@ -101,7 +108,7 @@ dependencies {
 jar {
     manifest {
         attributes([
-                "Specification-Title": "examplemod",
+                "Specification-Title": "craftingstation",
                 "Specification-Vendor": "examplemodsareus",
                 "Specification-Version": "1", // We are version 1 of ourselves
                 "Implementation-Title": project.name,

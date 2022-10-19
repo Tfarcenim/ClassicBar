@@ -2,7 +2,7 @@ package tfar.classicbar.overlays.vanilla;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -20,7 +20,7 @@ public class Air extends BarOverlayImpl {
     return player.getAirSupply() < player.getMaxAirSupply();
   }
   @Override
-  public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(ForgeGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
     int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
     double barWidth = getBarWidth(player);

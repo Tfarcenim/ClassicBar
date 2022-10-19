@@ -1,11 +1,16 @@
 package tfar.classicbar;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.ForgeIngameGui;
-import net.minecraftforge.client.gui.IIngameOverlay;
-import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
 import tfar.classicbar.compat.Helpers;
 import tfar.classicbar.config.ConfigCache;
@@ -20,7 +25,7 @@ import static tfar.classicbar.util.ModUtils.mc;
 import static tfar.classicbar.config.ClassicBarsConfig.leftorder;
 import static tfar.classicbar.config.ClassicBarsConfig.rightorder;
 
-public class EventHandler implements IIngameOverlay {
+public class EventHandler implements IGuiOverlay {
 
   private static final List<BarOverlay> all = new ArrayList<>();
   private static final Map<String, BarOverlay> registry = new HashMap<>();
@@ -33,15 +38,15 @@ public class EventHandler implements IIngameOverlay {
     Arrays.stream(iBarOverlay).forEach(overlay -> registry.put(overlay.name(), overlay));
   }
 
-  public void render(ForgeIngameGui gui, PoseStack matrices, float partialTick, int screenWidth, int screenHeight) {
+  public void render(ForgeGui gui, PoseStack matrices, float partialTick, int screenWidth, int screenHeight) {
 
     Entity entity = mc.getCameraEntity();
     if (!(entity instanceof Player player)) return;
     if (player.getAbilities().instabuild || player.isSpectator()) return;
     mc.getProfiler().push("classicbars_hud");
 
-    int initial_right_height = gui.right_height;
-    int initial_left_height = gui.left_height;
+    int initial_rightHeight = gui.rightHeight;
+    int initial_leftHeight = gui.leftHeight;
 
     for (BarOverlay overlay : all) {
       boolean rightHand = overlay.rightHandSide();
@@ -52,13 +57,13 @@ public class EventHandler implements IIngameOverlay {
     mc.getProfiler().pop();
   }
 
-  public static void increment(ForgeIngameGui gui,boolean side ,int amount){
-    if (side)gui.right_height+=amount;
-    else gui.left_height+=amount;
+  public static void increment(ForgeGui gui,boolean side ,int amount){
+    if (side)gui.rightHeight+=amount;
+    else gui.leftHeight+=amount;
   }
 
-  public static int getOffset(ForgeIngameGui gui,boolean right) {
-    return right ? gui.right_height : gui.left_height;
+  public static int getOffset(ForgeGui gui,boolean right) {
+    return right ? gui.rightHeight : gui.leftHeight;
   }
 
   public static void cacheConfigs() {
@@ -68,9 +73,9 @@ public class EventHandler implements IIngameOverlay {
     ConfigCache.bake();
   }
 
-  public static void setupOverlays() {
-    EventHandler.disableVanilla();
-    OverlayRegistry.registerOverlayTop(ClassicBar.MODID,new EventHandler());
+  public static void setupOverlays(RegisterGuiOverlaysEvent e) {
+    MinecraftForge.EVENT_BUS.addListener(EventHandler::disableVanilla);
+    e.registerBelow(VanillaGuiOverlay.CHAT_PANEL.id(),ClassicBar.MODID,new EventHandler());
 
     //Register renderers for events
     ClassicBar.logger.info("Registering Vanilla Overlays");
@@ -95,11 +100,10 @@ public class EventHandler implements IIngameOverlay {
 
   }
 
-  public static void disableVanilla() {
-    OverlayRegistry.enableOverlay(ForgeIngameGui.AIR_LEVEL_ELEMENT,false);
-    OverlayRegistry.enableOverlay(ForgeIngameGui.ARMOR_LEVEL_ELEMENT,false);
-    OverlayRegistry.enableOverlay(ForgeIngameGui.FOOD_LEVEL_ELEMENT,false);
-    OverlayRegistry.enableOverlay(ForgeIngameGui.MOUNT_HEALTH_ELEMENT,false);
-    OverlayRegistry.enableOverlay(ForgeIngameGui.PLAYER_HEALTH_ELEMENT,false);
+  private static final List<ResourceLocation> overlays = List.of(VanillaGuiOverlay.AIR_LEVEL.id(),VanillaGuiOverlay.ARMOR_LEVEL.id(),
+          VanillaGuiOverlay.PLAYER_HEALTH.id(),VanillaGuiOverlay.MOUNT_HEALTH.id(),VanillaGuiOverlay.FOOD_LEVEL.id());
+  public static void disableVanilla(RenderGuiOverlayEvent.Pre e) {
+    NamedGuiOverlay overlay = e.getOverlay();
+    if (overlays.contains(overlay.id())) e.setCanceled(true);
   }
 }

@@ -6,7 +6,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.compat.Helpers;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
@@ -26,7 +26,7 @@ public class Hunger extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(ForgeIngameGui gui, PoseStack matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(ForgeGui gui, PoseStack matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
     double hunger = player.getFoodData().getFoodLevel();
     double maxHunger = 20;//HungerHelper.getMaxHunger(player);
     
@@ -108,7 +108,7 @@ public class Hunger extends BarOverlayImpl {
       f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
       //draw exhaustion
       RenderSystem.setShaderColor(1, 1, 1, .25f);
-      ModUtils.drawTexturedModalRect(matrices,f, yStart + 1, 1, 28, ModUtils.getWidth(exhaustion, 4f), 9);
+      ModUtils.drawTexturedModalRect(matrices,f + 2, yStart + 1, 1, 28, ModUtils.getWidth(exhaustion, 4f), 9);
     }
   }
 

@@ -24,7 +24,7 @@ public class ClassicBar {
 
     if(FMLEnvironment.dist.isClient()) {
       FMLJavaModLoadingContext.get().getModEventBus().addListener(this::postInit);
-      EventHandler.setupOverlays();
+      FMLJavaModLoadingContext.get().getModEventBus().addListener(EventHandler::setupOverlays);
     }
   }
 

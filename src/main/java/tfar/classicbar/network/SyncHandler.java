@@ -1,6 +1,8 @@
 package tfar.classicbar.network;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,11 +27,10 @@ public class SyncHandler {
 
 
   @SubscribeEvent
-  public void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
-    if (!(event.getEntity() instanceof ServerPlayer))
+  public void onLivingUpdateEvent(TickEvent.PlayerTickEvent event) {
+    if (!(event.phase == TickEvent.Phase.END) || !(event.player instanceof ServerPlayer player))
       return;
 
-    ServerPlayer player = (ServerPlayer) event.getEntity();
     Float lastSaturationLevel = lastSaturationLevels.get(player.getUUID());
     //Float lastHydrationLevel = lastHydrationLevels.get(player.getUniqueID());
     Float lastExhaustionLevel = lastExhaustionLevels.get(player.getUUID());
@@ -67,11 +68,11 @@ public class SyncHandler {
 
   @SubscribeEvent
   public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-    if (!(event.getPlayer() instanceof ServerPlayer))
+    if (!(event.getEntity() instanceof ServerPlayer))
       return;
 
-    lastSaturationLevels.remove(event.getPlayer().getUUID());
-    lastExhaustionLevels.remove(event.getPlayer().getUUID());
+    lastSaturationLevels.remove(event.getEntity().getUUID());
+    lastExhaustionLevels.remove(event.getEntity().getUUID());
     /*if (ClassicBar.TOUGHASNAILS) {
       lastHydrationLevels.remove(event.player.getUniqueID());
       lastThirstExhaustionLevels.remove(event.player.getUniqueID());

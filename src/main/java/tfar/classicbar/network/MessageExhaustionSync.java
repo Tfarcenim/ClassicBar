@@ -27,9 +27,7 @@ public class MessageExhaustionSync {
         {
             // defer to the next game loop; we can't guarantee that Minecraft.thePlayer is initialized yet
             ctx.get().enqueueWork(() -> {
-
                 Player player = NetworkHelper.getSidedPlayer(ctx.get());
-
                 player.getFoodData().setExhaustion(exhaustionLevel);
             });
         }
