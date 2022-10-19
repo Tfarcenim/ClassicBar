@@ -81,6 +81,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
     @Override
     public int getBarWidth(Player player) {
+        int air = player.getAirSupply();
         return ModUtils.WIDTH;
     }
 

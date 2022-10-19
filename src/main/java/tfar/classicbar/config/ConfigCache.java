@@ -16,6 +16,7 @@ public class ConfigCache {
     public static Color hungerDebuff;
     public static Color saturation;
     public static Color saturationDebuff;
+    public static Color air;
     //public static ForgeConfigSpec.ConfigValue<List<? extends Double>> normalFractions;
     public static List<Color> normal = new ArrayList<>();
     //public static ForgeConfigSpec.ConfigValue<List<? extends Double>> poisonedFractions;
@@ -51,6 +52,7 @@ public class ConfigCache {
         hungerDebuff = ColorUtils.hex2Color(ClassicBarsConfig.hungerBarDebuffColor.get());
         saturation = ColorUtils.hex2Color(ClassicBarsConfig.saturationBarColor.get());
         saturationDebuff = ColorUtils.hex2Color(ClassicBarsConfig.saturationBarDebuffColor.get());
+        air = ColorUtils.hex2Color(ClassicBarsConfig.airBarColor.get());
     }
 
     private static void cacheList(ForgeConfigSpec.ConfigValue<List<? extends String>> config, List<Color> cache) {

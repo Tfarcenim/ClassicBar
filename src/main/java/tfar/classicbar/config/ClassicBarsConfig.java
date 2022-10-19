@@ -36,7 +36,7 @@ public class ClassicBarsConfig {
   static ForgeConfigSpec.ConfigValue<String> hungerBarDebuffColor;
   static ForgeConfigSpec.ConfigValue<String> saturationBarColor;
   static ForgeConfigSpec.ConfigValue<String> saturationBarDebuffColor;
-  public static ForgeConfigSpec.ConfigValue<String> oxygenBarColor;
+  static ForgeConfigSpec.ConfigValue<String> airBarColor;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> armorColors;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> armorToughnessColors;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionColors;
@@ -79,7 +79,7 @@ public class ClassicBarsConfig {
 
     hungerBarColor = builder.define("hunger_bar_color","#B34D00",String.class::isInstance);
     hungerBarDebuffColor = builder.define("hunger_bar_debuff_color","#249016",String.class::isInstance);
-    oxygenBarColor = builder.define("oxygen_bar_color","#00E6E6",String.class::isInstance);
+    airBarColor = builder.define("air_bar_color","#00E6E6",String.class::isInstance);
     saturationBarColor = builder.define("saturation_bar_color","#FFCC00",String.class::isInstance);
     saturationBarDebuffColor = builder.define("saturation_bar_debuff_color","#87BC00",String.class::isInstance);
     lavaBarColor = builder.define("lava_bar_color","#FF8000",String.class::isInstance);
