@@ -74,7 +74,7 @@ public class Hunger extends BarOverlayImpl {
       double hungerWidth = Math.min(maxHunger - hunger, hungerOverlay);
       //don't render the bar at all if hunger is full
       if (hunger < maxHunger) {
-        f = xStart - ModUtils.getWidth(hungerWidth + hunger, maxHunger) + 78;
+        f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(hungerWidth + hunger, maxHunger) : 0);
         hungerColor.color2Gla((float)foodAlpha);
         ModUtils.drawTexturedModalRect(matrices,f + 1, yStart + 1, 1, 10, ModUtils.getWidth(hunger + hungerOverlay, maxHunger), 7);
       }
@@ -92,7 +92,7 @@ public class Hunger extends BarOverlayImpl {
           saturationWidth = potentialSat - diff;
         }
         //offset used to decide where to place the bar
-        f = xStart - ModUtils.getWidth(saturationWidth + currentSat, maxHunger) + 78;
+        f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(saturationWidth + currentSat, maxHunger) : 0);
         satColor.color2Gla((float)foodAlpha);
         if (true)//currentSat > 0)
           ModUtils.drawTexturedModalRect(matrices,f + 1, yStart + 1, 1, 10, ModUtils.getWidth(saturationWidth + currentSat, maxHunger), 7);

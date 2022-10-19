@@ -30,7 +30,7 @@ public class Absorption extends BarOverlayImpl {
 
     double absorb = player.getAbsorptionAmount();
 
-    int xStart = screenWidth / 2 - 91;
+    int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
     double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
 
@@ -119,13 +119,10 @@ public class Absorption extends BarOverlayImpl {
 
     double absorb = player.getAbsorptionAmount();
     double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
-    int xStart = width / 2 + getHOffset();
+    int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
 
     // handle the text
-    int a1 = getStringLength((int) absorb + "");
-    int a2 = ConfigCache.icons ? 1 : 0;
-    int a3 = (int) absorb;
     int c = 0;
 
     int k5 = 16;
@@ -150,18 +147,17 @@ public class Absorption extends BarOverlayImpl {
       }
     }
 
-    drawStringOnHUD(stack,a3 + "", xStart - a1 - 9 * a2 - 5, yStart - 2, c);
-
+    textHelper(stack,xStart,yStart,absorb,c);
   }
 
   @Override
   public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
-    int xStart = width / 2 + getHOffset();
+    int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
 
     int i5 = (player.level.getLevelData().isHardcore()) ? 5 : 0;
     //draw absorption icon
-    drawTexturedModalRect(stack,xStart - 10, yStart, 16, 9 * i5, 9, 9);
-    drawTexturedModalRect(stack,xStart - 10, yStart, 160, 0, 9, 9);
+    drawTexturedModalRect(stack,xStart, yStart, 16, 9 * i5, 9, 9);
+    drawTexturedModalRect(stack,xStart, yStart, 160, 0, 9, 9);
   }
 }

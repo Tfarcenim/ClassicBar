@@ -14,18 +14,18 @@ public class ColorUtils {
         return Color.from(r, g, b);
     }
 
-    public static Color calculateScaledColor(double d1, double d2, int effect) {
+    public static Color calculateScaledColor(double d1, double d2, HealthEffect effect) {
         double d3 = (d1 / d2);
 
         List<? extends String> colorCodes;
         List<? extends Double> colorFractions;
 
         switch (effect){
-            case 16: colorCodes = ClassicBarsConfig.normalColors.get();
+            case NONE: colorCodes = ClassicBarsConfig.normalColors.get();
             colorFractions = ClassicBarsConfig.normalFractions.get(); break;
-            case 52: colorCodes = ClassicBarsConfig.poisonedColors.get();
+            case POISON: colorCodes = ClassicBarsConfig.poisonedColors.get();
                 colorFractions = ClassicBarsConfig.poisonedFractions.get(); break;
-            case 88: colorCodes = ClassicBarsConfig.witheredColors.get();
+            case WITHER: colorCodes = ClassicBarsConfig.witheredColors.get();
                 colorFractions = ClassicBarsConfig.witheredFractions.get(); break;
             default: return Color.BLACK;
         }

@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.util.HealthEffect;
 
 import static tfar.classicbar.util.ColorUtils.calculateScaledColor;
 import static tfar.classicbar.util.ModUtils.*;
@@ -58,7 +59,7 @@ public class MountHealth extends BarOverlayImpl {
     //Pass 1, draw bar portion
 
     //calculate bar color
-    calculateScaledColor(mountHealth, maxHealth, 16).color2Gl();
+    calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).color2Gl();
     double f = xStart + 79 - getWidth(mountHealth, maxHealth);
     //draw portion of bar based on mountHealth remaining
     drawTexturedModalRect(stack,f, yStart + 1, 1, 10, getWidth(mountHealth, maxHealth), 7);
@@ -71,14 +72,11 @@ public class MountHealth extends BarOverlayImpl {
 
   @Override
   public void renderText(PoseStack stack,Player player, int width, int height,int vOffset) {
-    int h1 = (int) Math.ceil(mountHealth);
-
-    int xStart = width / 2 + getHOffset();
+    int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     LivingEntity mount = (LivingEntity) player.getVehicle();
     double maxHealth = mount.getAttribute(Attributes.MAX_HEALTH).getValue();
-    int i3 = ConfigCache.icons ? 1 : 0;
-    drawStringOnHUD(stack,h1 + "", xStart + 9 * i3 + rightTextOffset, yStart - 1, calculateScaledColor(mountHealth, maxHealth, 16).colorToText());
+    textHelper(stack,xStart,yStart,mountHealth,calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).colorToText());
   }
 
   @Override
