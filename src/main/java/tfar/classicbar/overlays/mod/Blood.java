@@ -61,7 +61,7 @@ public class Blood extends BarOverlayImpl {
         VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).ifPresent(stats -> {
             int blood = stats.getBloodLevel();
             int c = getPrimaryBarColor(0, player).colorToText();
-            int xStart = width / 2 + getHOffset();
+            int xStart = width / 2 + getIconOffset();
             int yStart = height - vOffset;
             textHelper(stack, xStart, yStart, blood, c);
         });

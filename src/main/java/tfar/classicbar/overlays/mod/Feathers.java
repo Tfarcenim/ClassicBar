@@ -9,9 +9,8 @@ import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
-
-import static tfar.classicbar.util.ColorUtils.hex2Color;
-import static tfar.classicbar.util.ModUtils.*;
+import tfar.classicbar.util.ColorUtils;
+import tfar.classicbar.util.ModUtils;
 
 public class Feathers extends BarOverlayImpl {
 
@@ -37,11 +36,11 @@ public class Feathers extends BarOverlayImpl {
 
 		Color.reset();
 		//Bar background
-		drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
+		ModUtils.drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
 		//draw portion of bar based on feathers amount
-		double f = xStart + 79 - getWidth(feathers, maxFeathers);
-		hex2Color("#22a5f0").color2Gl();
-		drawTexturedModalRect(stack,f, yStart + 1, 1, 10, getWidth(feathers, maxFeathers), 7);
+		double f = xStart + 79 - ModUtils.getWidth(feathers, maxFeathers);
+		ColorUtils.hex2Color("#22a5f0").color2Gl();
+		ModUtils.drawTexturedModalRect(stack,f, yStart + 1, 1, 10, ModUtils.getWidth(feathers, maxFeathers), 7);
 
 	}
 
@@ -53,26 +52,19 @@ public class Feathers extends BarOverlayImpl {
 	@Override
 	public void renderText(PoseStack stack,Player player, int width, int height,int vOffset) {
 		//draw feathers amount
-
 		double feathers = 0;//FeathersHelper.getFeatherLevel(Minecraft.getInstance().player);
-		
-		int h1 = (int) feathers;
 		int c = Integer.decode("#22a5f0");
-		int xStart = width / 2 + getHOffset();
+		int xStart = width / 2 + getIconOffset();
 		int yStart = height - vOffset;
-		drawStringOnHUD(stack,h1 + "", xStart + 9 * (ConfigCache.icons ? 1 : 0) + rightTextOffset, yStart - 1, c);
+		textHelper(stack,xStart,yStart,feathers,c);
 	}
-
 	@Override
 	public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
-
 		int xStart = width / 2 + 10;
 		int yStart = height - vOffset;
-		
 		//Draw feathers icon
-		drawTexturedModalRect(stack,xStart + 82, yStart, 34, 0, 9, 9);
+		ModUtils.drawTexturedModalRect(stack,xStart + 82, yStart, 34, 0, 9, 9);
 	}
-
 	@Override
 	public ResourceLocation getIconRL() {
 		return DODGE_ICONS;
