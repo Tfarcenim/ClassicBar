@@ -48,8 +48,8 @@ public class ModUtils {
       drawTexturedModalRect(stack,x, y - 1, 0, 0, barWidth + 2, 9);
        drawTexturedModalRect(stack,x + barWidth + 2, y-1, WIDTH + 2, 0, 2, 9);
     } else {
-      drawTexturedModalRect(stack, (int) (x + barWidth + 1), y - 1, 79, 0, 2, 9);
-      drawTexturedModalRect(stack,x, y - 1, 0, 0, (int) (barWidth + 1), 9);
+      drawTexturedModalRect(stack,x, y - 1, 0, 0, (int) (barWidth + 2), 9);
+      drawTexturedModalRect(stack, (int) (x + barWidth + 2), y - 1, WIDTH + 2, 0, 2, 9);
     }
   }
 

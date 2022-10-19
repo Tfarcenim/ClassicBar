@@ -26,7 +26,7 @@ public class ArmorToughness extends BarOverlayImpl {
     public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
         //armor toughness stuff
         double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
-        int barWidth = getBarWidth(player);
+        double barWidth = getBarWidth(player);
         int xStart = screenWidth / 2 + getHOffset();
         if (rightHandSide()) {
             xStart += ModUtils.WIDTH - barWidth;
@@ -40,7 +40,7 @@ public class ArmorToughness extends BarOverlayImpl {
         if (index == 0) {
             primary.color2Gl();
             //draw portion of bar based on armor toughness amount
-            ModUtils.drawTexturedModalRect(stack, xStart + 1, yStart + 1, 1, 10, ModUtils.getWidth(armorToughness, 20), 7);
+            renderMainBar(stack,xStart , yStart , barWidth);
         } else {
             //we have wrapped, draw 2 bars
             int size = ConfigCache.armor_toughness.size();
@@ -58,11 +58,11 @@ public class ArmorToughness extends BarOverlayImpl {
             } else { //case 2, bar is a multiple of 20, or it is capped
                 //draw complete second bar
                 primary.color2Gl();
-                ModUtils.drawTexturedModalRect(stack, xStart + 1, yStart + 1, 1, 10, 79, 7);
+                ModUtils.drawTexturedModalRect(stack, xStart + 1, yStart + 1, 2, 10, 79, 7);
             }
         }
     }
-    public int getBarWidth(Player player) {
+    public double getBarWidth(Player player) {
         double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
         return (int) Math.ceil(ModUtils.WIDTH * Math.min(20, armorToughness) / 20d);
     }

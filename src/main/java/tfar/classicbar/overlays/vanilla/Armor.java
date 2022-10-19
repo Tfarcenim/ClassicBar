@@ -30,7 +30,7 @@ public class Armor  extends BarOverlayImpl {
   @Override
   public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
     double armor = calculateArmorValue(player);
-    int barWidth = getBarWidth(player);
+    double barWidth = getBarWidth(player);
 
     boolean warn = ClassicBarsConfig.lowArmorWarning.get() && getDamagedAmount(player) > 0;
     if (warn) armorAlpha = (int) (System.currentTimeMillis() / 250) % 2;
@@ -44,17 +44,17 @@ public class Armor  extends BarOverlayImpl {
     //bar background
     renderBarBackground(stack,player,screenWidth,screenHeight,vOffset);
     //how many layers are there? remember to start at 0
-    int index = (int) Math.min(Math.ceil(armor / 20) - 1, ConfigCache.armor.size() - 1);
+    int index = (int) Math.min(Math.ceil(armor / 20), ConfigCache.armor.size()) - 1;
     Color primary = getPrimaryBarColor(index, player);
 
     if (index == 0) {
       //calculate bar color
       primary.color2Gl();
       //draw portion of bar based on armor
-      renderMainBar(stack,xStart , yStart , ModUtils.getWidth(armor, 20));
+      renderMainBar(stack,xStart , yStart , barWidth);
       //draw damaged bar
       primary.color2Gla(armorAlpha);
-      ModUtils.drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, ModUtils.getWidth(armor, 20), 7);
+      ModUtils.drawTexturedModalRect(stack,xStart + 1, yStart + 1, 2, 10, barWidth, 7);
     } else {
       //we have wrapped, draw 2 bars
       //draw first bar
@@ -88,7 +88,7 @@ public class Armor  extends BarOverlayImpl {
   }
 
   @Override
-  public int getBarWidth(Player player) {
+  public double getBarWidth(Player player) {
     int armor = calculateArmorValue(player);
     return (int) Math.ceil(ModUtils.WIDTH * Math.min(20,armor) / 20d);
   }
@@ -135,7 +135,7 @@ public class Armor  extends BarOverlayImpl {
     int yStart = height - vOffset;
     double armor = calculateArmorValue(player);
     //draw armor amount
-    int index = (int) Math.min(Math.ceil(armor / 20) - 1, ConfigCache.armor.size() - 1);
+    int index = (int) Math.min(Math.ceil(armor / 20), ConfigCache.armor.size()) - 1;
     int c = getPrimaryBarColor(index, player).colorToText();
     textHelper(stack,xStart,yStart,armor,c);
   }

@@ -29,8 +29,12 @@ public class Hunger extends BarOverlayImpl {
   public void renderBar(ForgeIngameGui gui, PoseStack matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
     double hunger = player.getFoodData().getFoodLevel();
     double maxHunger = 20;//HungerHelper.getMaxHunger(player);
+    
+    double barWidthH = getBarWidth(player);
+    
     double currentSat = player.getFoodData().getSaturationLevel();
     double maxSat = maxHunger;
+    double barWidthS = getSatBarWidth(player);
     float exhaustion = player.getFoodData().getExhaustionLevel();
 
     int xStart = screenWidth / 2 + getHOffset();
@@ -40,19 +44,18 @@ public class Hunger extends BarOverlayImpl {
     Color.reset();
     renderFullBarBackground(matrices,xStart,yStart);
     //draw portion of bar based on hunger amount
-    double f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(hunger, maxHunger) : 0);
-    boolean hungerActive = player.hasEffect(MobEffects.HUNGER);
+    double f = xStart + (rightHandSide() ? ModUtils.WIDTH - barWidthH : 0);
 
     Color hungerColor = getSecondaryBarColor(0,player);
     Color satColor = getPrimaryBarColor(0,player);
 
     hungerColor.color2Gl();
-    renderSecondaryBar(matrices,f, yStart,  ModUtils.getWidth(hunger, maxHunger));
+    renderSecondaryBar(matrices,f, yStart,  barWidthH);
     if (currentSat > 0 && ClassicBarsConfig.showSaturationBar.get()) {
       //draw saturation
       satColor.color2Gl();
-      f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(currentSat, maxSat) : 0);
-      renderMainBar(matrices,f, yStart, ModUtils.getWidth(currentSat, maxSat));
+      f = xStart + (rightHandSide() ? ModUtils.WIDTH - barWidthS : 0);
+      renderMainBar(matrices,f, yStart, barWidthS);
     }
     //render held hunger overlay
     if (ClassicBarsConfig.showHeldFoodOverlay.get() &&
@@ -72,13 +75,13 @@ public class Hunger extends BarOverlayImpl {
       if (hunger < maxHunger) {
         f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(hungerWidth + hunger, maxHunger) : 0);
         hungerColor.color2Gla((float)foodAlpha);
-        ModUtils.drawTexturedModalRect(matrices,f + 1, yStart + 1, 1, 10, ModUtils.getWidth(hunger + hungerOverlay, maxHunger), 7);
+        ModUtils.drawTexturedModalRect(matrices,f + 2, yStart + 1, 2, 10, ModUtils.getWidth(hunger + hungerOverlay, maxHunger), 7);
       }
 
       //Draw Potential saturation
       if (ClassicBarsConfig.showSaturationBar.get()) {
         //maximum potential saturation cannot combine with current saturation to go over 20
-        double saturationWidth = Math.min(potentialSat, maxHunger - currentSat);
+        double saturationWidth = Math.min(potentialSat, maxSat - currentSat);
 
         //Potential Saturation cannot go over potential hunger + current hunger combined
         saturationWidth = Math.min(saturationWidth, hunger + hungerWidth);
@@ -87,11 +90,14 @@ public class Hunger extends BarOverlayImpl {
           double diff = (potentialSat + currentSat) - (hunger + hungerWidth);
           saturationWidth = potentialSat - diff;
         }
+
+        double w = ModUtils.getWidth(saturationWidth + currentSat, maxSat);
+
         //offset used to decide where to place the bar
-        f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(saturationWidth + currentSat, maxHunger) : 0);
+        f = xStart + (rightHandSide() ? ModUtils.WIDTH - w : 0);
         satColor.color2Gla((float)foodAlpha);
         if (true)//currentSat > 0)
-          ModUtils.drawTexturedModalRect(matrices,f + 1, yStart + 1, 1, 10, ModUtils.getWidth(saturationWidth + currentSat, maxHunger), 7);
+          ModUtils.drawTexturedModalRect(matrices,f + 2, yStart + 1, 2, 10, w, 7);
         else ;//drawTexturedModalRect(f, yStart+1, 1, 10, getWidthfloor(saturationWidth,20), 7);
 
       }
@@ -106,6 +112,18 @@ public class Hunger extends BarOverlayImpl {
     }
   }
 
+  @Override
+  public double getBarWidth(Player player) {
+    double hunger = player.getFoodData().getFoodLevel();
+    double maxHunger = 20;
+    return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxHunger,hunger) / maxHunger);
+  }
+  
+  public int getSatBarWidth(Player player) {
+    double saturation = player.getFoodData().getSaturationLevel();
+    double maxSat = 20;
+    return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxSat,saturation) / maxSat);
+  }
   //saturation
   @Override
   public Color getPrimaryBarColor(int index, Player player) {

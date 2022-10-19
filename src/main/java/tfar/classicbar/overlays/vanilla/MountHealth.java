@@ -59,7 +59,7 @@ public class MountHealth extends BarOverlayImpl {
     ModUtils.drawTexturedModalRect(stack,f, yStart + 1, 1, 10, barWidth, 7);
   }
   @Override
-  public int getBarWidth(Player player) {
+  public double getBarWidth(Player player) {
     LivingEntity mount = (LivingEntity) player.getVehicle();
     double mounthHealth = mount.getHealth();
     double maxHealth = mount.getMaxHealth();

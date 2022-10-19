@@ -31,7 +31,7 @@ public class Air extends BarOverlayImpl {
     double f = xStart + (rightHandSide() ? ModUtils.WIDTH - barWidth : 0);
     Color color = getPrimaryBarColor(0,player);
     color.color2Gl();
-    ModUtils.drawTexturedModalRect(stack,f + 1, yStart + 1, 1, 10,barWidth, 7);
+    ModUtils.drawTexturedModalRect(stack,f + 2, yStart + 1, 2, 10,barWidth, 7);
   }
   @Override
   public boolean shouldRenderText() {
@@ -39,7 +39,7 @@ public class Air extends BarOverlayImpl {
   }
 
   @Override
-  public int getBarWidth(Player player) {
+  public double getBarWidth(Player player) {
     int air = player.getAirSupply();
     int maxAir = player.getMaxAirSupply();
     return (int) Math.ceil(ModUtils.WIDTH * Math.min((double) air,maxAir) / maxAir);

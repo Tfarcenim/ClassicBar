@@ -25,7 +25,7 @@ public class Absorption extends BarOverlayImpl {
     public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
 
         double absorb = player.getAbsorptionAmount();
-        int barWidth = getBarWidth(player);
+        double barWidth = getBarWidth(player);
 
         int xStart = screenWidth / 2 + getHOffset();
         int yStart = screenHeight - vOffset;
@@ -45,7 +45,7 @@ public class Absorption extends BarOverlayImpl {
             renderBarBackground(stack,player,screenWidth,screenHeight,vOffset);
             primary.color2Gl();
             //bar
-            renderMainBar(stack, xStart, yStart, ModUtils.getWidth(absorb, maxHealth));
+            renderMainBar(stack, xStart, yStart,barWidth);
         } else {
             //draw background bar
             ModUtils.drawTexturedModalRect(stack, xStart, yStart, 0, 0, 81, 9);
@@ -63,7 +63,7 @@ public class Absorption extends BarOverlayImpl {
         }
     }
 
-    public int getBarWidth(Player player) {
+    public double getBarWidth(Player player) {
         double absorb = player.getAbsorptionAmount();
         double maxHealth = player.getMaxHealth();
         return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxHealth, absorb) / maxHealth);

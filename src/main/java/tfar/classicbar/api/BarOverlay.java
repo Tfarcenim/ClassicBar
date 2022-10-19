@@ -19,7 +19,7 @@ public interface BarOverlay {
     RenderSystem.setShaderTexture(0,getIconRL());
   }
 
-  int getBarWidth(Player player);
+  double getBarWidth(Player player);
 
   Color getPrimaryBarColor(int index,Player player);
 

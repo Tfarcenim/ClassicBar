@@ -96,7 +96,7 @@ public class Health extends BarOverlayImpl {
   }
 
   @Override
-  public int getBarWidth(Player player) {
+  public double getBarWidth(Player player) {
     double health = player.getHealth();
     double maxHealth = player.getMaxHealth();
     return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxHealth,health) / health);

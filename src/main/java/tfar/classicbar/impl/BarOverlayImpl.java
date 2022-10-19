@@ -80,15 +80,13 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return effects;
     }
     @Override
-    public int getBarWidth(Player player) {
-        int air = player.getAirSupply();
+    public double getBarWidth(Player player) {
         return ModUtils.WIDTH;
     }
 
     public void renderBarBackground(PoseStack matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
 
-        int barWidth = getBarWidth(player);
-
+        double barWidth = getBarWidth(player);
         int xStart = screenWidth / 2 + getHOffset();
         if (isFitted() && rightHandSide()) {
             xStart += ModUtils.WIDTH - barWidth;
