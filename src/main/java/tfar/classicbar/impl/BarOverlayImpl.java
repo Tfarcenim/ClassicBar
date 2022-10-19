@@ -11,7 +11,7 @@ import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 import tfar.classicbar.api.BarOverlay;
 
-import static tfar.classicbar.util.ModUtils.drawTexturedModalRect;
+import static tfar.classicbar.util.ModUtils.*;
 
 public abstract class BarOverlayImpl implements BarOverlay {
 
@@ -89,6 +89,18 @@ public abstract class BarOverlayImpl implements BarOverlay {
         if (isFitted()) {
             ModUtils.drawScaledBarBackground1(matrices, barWidth, xStart, yStart + 1, rightHandSide());
         } else drawTexturedModalRect(matrices, xStart, yStart, 0, 0, ModUtils.WIDTH + 4, 9);
+    }
+
+    public void textHelper(PoseStack stack,int xStart,int yStart,double stat, int color) {
+        int i1 = (int) Math.floor(stat);
+        int i2 = ConfigCache.icons ? 1 : 0;
+
+        if (rightHandSide()) {
+            ModUtils.drawStringOnHUD(stack, i1 + "", xStart + 9 * i2, yStart - 1, color);
+        } else {
+            int i3 = getStringLength(i1 + "");
+            ModUtils.drawStringOnHUD(stack, i1 + "", xStart - 9 * i2 - i3 - leftTextOffset, yStart - 1, color);
+        }
     }
 
     public void renderFullBarBackground(PoseStack matrices, int xStart, int yStart) {

@@ -146,18 +146,8 @@ public class Armor  extends BarOverlayImpl {
     double armor = calculateArmorValue(player);
     //draw armor amount
     int index = (int) Math.min(Math.ceil(armor / 20) - 1, ConfigCache.armor.size() - 1);
-    int i1 = (int) Math.floor(armor);
-    int i2 = ModUtils.getStringLength(i1 + "");
-    int i3 = ConfigCache.icons ? 1 : 0;
     int c = getPrimaryBarColor(index, player).colorToText();
-
-    if (rightHandSide()) {
-      ModUtils.drawStringOnHUD(stack, i2 + "", xStart + 9 * i3, yStart - 1, c);
-    } else {
-      int i4 = getStringLength(i2 + "");
-      ModUtils.drawStringOnHUD(stack, i2 + "", xStart - 9 * i3 - i4 - leftTextOffset, yStart - 1, c);
-    }
-
+    textHelper(stack,xStart,yStart,armor,c);
   }
 
   @Override

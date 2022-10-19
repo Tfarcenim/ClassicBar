@@ -132,24 +132,11 @@ public class Hunger extends BarOverlayImpl {
   @Override
   public void renderText(PoseStack stack,Player player, int width, int height,int vOffset) {
     int xStart = width / 2 + getIconOffset();
-
     int yStart = height - vOffset;
     //draw hunger amount
     double hunger = player.getFoodData().getFoodLevel();
-    boolean hungerActive = player.hasEffect(MobEffects.HUNGER);
-
-    int h1 = (int) Math.floor(hunger);
-
-
-    int i3 = ConfigCache.icons ? 1 : 0;
     int c = getSecondaryBarColor(0,player).colorToText();
-
-    if (rightHandSide()) {
-      ModUtils.drawStringOnHUD(stack, h1 + "", xStart + 9 * i3, yStart - 1, c);
-    } else {
-      int i1 = getStringLength(h1 + "");
-      ModUtils.drawStringOnHUD(stack, h1 + "", xStart - 9 * i3 - i1 - leftTextOffset, yStart - 1, c);
-    }
+    textHelper(stack,xStart,yStart,hunger,c);
   }
 
   @Override

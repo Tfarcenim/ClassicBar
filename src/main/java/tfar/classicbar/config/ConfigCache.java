@@ -10,6 +10,8 @@ public class ConfigCache {
 
     public static boolean icons;
     public static List<Color> armor = new ArrayList<>();
+
+    public static List<Color> armor_toughness = new ArrayList<>();
     public static Color hunger;
     public static Color hungerDebuff;
     public static Color saturation;
@@ -23,6 +25,11 @@ public class ConfigCache {
         for (String s : ClassicBarsConfig.armorColorValues.get()) {
             armor.add(ColorUtils.hex2Color(s));
         }
+
+        for (String s : ClassicBarsConfig.armorToughnessColorValues.get()) {
+            armor_toughness.add(ColorUtils.hex2Color(s));
+        }
+
         hunger = ColorUtils.hex2Color(ClassicBarsConfig.hungerBarColor.get());
         hungerDebuff = ColorUtils.hex2Color(ClassicBarsConfig.hungerBarDebuffColor.get());
         saturation = ColorUtils.hex2Color(ClassicBarsConfig.saturationBarColor.get());

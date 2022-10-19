@@ -38,7 +38,7 @@ public class ClassicBarsConfig {
   static ForgeConfigSpec.ConfigValue<String> saturationBarDebuffColor;
   public static ForgeConfigSpec.ConfigValue<String> oxygenBarColor;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> armorColorValues;
-  public static ForgeConfigSpec.ConfigValue<List<? extends String>> armorToughnessColorValues;
+  static ForgeConfigSpec.ConfigValue<List<? extends String>> armorToughnessColorValues;
   public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionColorValues;
   public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionPoisonColorValues;
   public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionWitherColorValues;
@@ -99,7 +99,7 @@ public class ClassicBarsConfig {
     witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
 
     leftorder = builder.defineList("left_order", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2"),String.class::isInstance);
-    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","healthmount","food","feathers","armortoughness","thirst","air","flighttiara","decay"),String.class::isInstance);
+    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","health_mount","food","feathers","armor_toughness","thirst","air","flighttiara","decay"),String.class::isInstance);
   }
 
   @SubscribeEvent

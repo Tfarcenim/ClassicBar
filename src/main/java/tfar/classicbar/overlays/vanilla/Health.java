@@ -100,7 +100,7 @@ public class Health extends BarOverlayImpl {
   public void renderText(PoseStack stack,Player player, int width, int height, int vOffset) {
     double health = player.getHealth();
 
-    int xStart = width / 2 - 91;
+    int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
 
@@ -108,12 +108,7 @@ public class Health extends BarOverlayImpl {
 
     if (player.hasEffect(MobEffects.POISON)) k5 += 36;//evaluates to 52
     else if (player.hasEffect(MobEffects.WITHER)) k5 += 72;//evaluates to 88
-
-    int h1 = (int) Math.round(health);
-    int i2 = ConfigCache.icons ? 1 : 0;
-    int i1 = getStringLength(h1 + "");
-
-    drawStringOnHUD(stack,h1 + "", xStart - 9 * i2 - i1 + leftTextOffset, yStart - 1, calculateScaledColor(health, maxHealth, k5).colorToText());
+    textHelper(stack,xStart,yStart,health,calculateScaledColor(health, maxHealth, k5).colorToText());
   }
 
   @Override
