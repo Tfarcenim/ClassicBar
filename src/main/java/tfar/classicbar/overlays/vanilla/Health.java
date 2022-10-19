@@ -10,6 +10,8 @@ import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.util.ColorUtils;
+import tfar.classicbar.util.ModUtils;
 
 import static tfar.classicbar.util.ColorUtils.calculateScaledColor;
 import static tfar.classicbar.util.ModUtils.*;
@@ -62,6 +64,8 @@ public class Health extends BarOverlayImpl {
     //Bar background
     drawTexturedModalRect(stack,xStart, yStart, 0, i4, 81, 9);
 
+    double f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(health, maxHealth) : 0);
+
     //is the bar changing
     //Pass 1, draw bar portion
     //interpolate the bar
@@ -70,7 +74,7 @@ public class Health extends BarOverlayImpl {
       Color.reset();
       if (displayHealth > health) {
         //draw interpolation
-        drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, getWidth(displayHealth, maxHealth), 7);
+        drawTexturedModalRect(stack,f + 1, yStart + 1, 1, 10, getWidth(displayHealth, maxHealth), 7);
         //Health is increasing, IDK what to do here
       } else {/*
                   f = xStart + getWidth(health, maxHealth);
@@ -78,17 +82,30 @@ public class Health extends BarOverlayImpl {
       }
     }
     //calculate bar color
-    calculateScaledColor(health, maxHealth, k5).color2Gl();
+    Color primary = getPrimaryBarColor(0,player);
+
+    primary.color2Gl();
     //draw portion of bar based on health remaining
-    drawTexturedModalRect(stack,xStart + 2, yStart + 1, 2, 10, getWidth(health, maxHealth), 7);
+    drawTexturedModalRect(stack,f + 2, yStart + 1, 2, 10, getWidth(health, maxHealth), 7);
 
     if (k5 == 52) {
       //draw poison overlay
       RenderSystem.setShaderColor(0, .5f, 0, .5f);
-      drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 36, getWidth(health, maxHealth), 7);
+      drawTexturedModalRect(stack,f + 1, yStart + 1, 1, 36, getWidth(health, maxHealth), 7);
     }
 
     Color.reset();
+  }
+
+  @Override
+  public Color getPrimaryBarColor(int index, Player player) {
+    int k5 = 16;
+    double health = player.getHealth();
+    double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
+
+    if (player.hasEffect(MobEffects.POISON)) k5 += 36;//evaluates to 52
+    else if (player.hasEffect(MobEffects.WITHER)) k5 += 72;//evaluates to 88
+    return ColorUtils.calculateScaledColor(health,maxHealth,k5);
   }
 
   @Override
@@ -102,13 +119,7 @@ public class Health extends BarOverlayImpl {
 
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
-    double maxHealth = player.getAttribute(Attributes.MAX_HEALTH).getValue();
-
-    int k5 = 16;
-
-    if (player.hasEffect(MobEffects.POISON)) k5 += 36;//evaluates to 52
-    else if (player.hasEffect(MobEffects.WITHER)) k5 += 72;//evaluates to 88
-    textHelper(stack,xStart,yStart,health,calculateScaledColor(health, maxHealth, k5).colorToText());
+    textHelper(stack,xStart,yStart,health,getPrimaryBarColor(0,player).colorToText());
   }
 
   @Override

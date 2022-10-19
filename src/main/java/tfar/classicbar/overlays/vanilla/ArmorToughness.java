@@ -30,7 +30,7 @@ public class ArmorToughness  extends BarOverlayImpl {
     //armor toughness stuff
     double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
     //Push to avoid lasting changes
-    int xStart = screenWidth / 2 + 10;
+    int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
     double f;
     //draw bar background portion
