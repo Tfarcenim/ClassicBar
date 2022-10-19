@@ -40,7 +40,7 @@ public class ArmorToughness  extends BarOverlayImpl {
 
     if (index == 0) {
       f = xStart + 79 - getWidth(armorToughness, 20);
-      if (isFitted()) drawScaledBar(stack,armorToughness, 20,(int) f - 1, yStart, false);
+      if (isFitted()) drawScaledBar(stack,armorToughness, 20,(int) f - 1, yStart + 1, false);
       else drawTexturedModalRect(stack,xStart, yStart, 0, 0, 81, 9);
 
       //calculate bar color
@@ -111,7 +111,7 @@ public class ArmorToughness  extends BarOverlayImpl {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     //Draw armor toughness icon
-    drawTexturedModalRect(stack,xStart + 82, yStart, 83, 0, 9, 9);
+    drawTexturedModalRect(stack,xStart, yStart, 83, 0, 9, 9);
   }
 
   @Override

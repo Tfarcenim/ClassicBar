@@ -118,15 +118,15 @@ public class Health extends BarOverlayImpl {
     if (player.hasEffect(MobEffects.POISON)) k5 += 36;//evaluates to 52
     else if (player.hasEffect(MobEffects.WITHER)) k5 += 72;//evaluates to 88
 
-    int xStart = width / 2 - 91;
+    int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     int i5 = (player.level.getLevelData().isHardcore()) ? 5 : 0;
     //Draw health icon
     //heart background
     Color.reset();
 
-    drawTexturedModalRect(stack,xStart - 10, yStart, 16, 9 * i5, 9, 9);
+    drawTexturedModalRect(stack,xStart, yStart, 16, 9 * i5, 9, 9);
     //heart
-    drawTexturedModalRect(stack,xStart - 10, yStart, 36 + k5, 9 * i5, 9, 9);
+    drawTexturedModalRect(stack,xStart, yStart, 36 + k5, 9 * i5, 9, 9);
   }
 }
