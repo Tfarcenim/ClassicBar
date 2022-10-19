@@ -37,11 +37,11 @@ public class ClassicBarsConfig {
   static ForgeConfigSpec.ConfigValue<String> saturationBarColor;
   static ForgeConfigSpec.ConfigValue<String> saturationBarDebuffColor;
   public static ForgeConfigSpec.ConfigValue<String> oxygenBarColor;
-  static ForgeConfigSpec.ConfigValue<List<? extends String>> armorColorValues;
-  static ForgeConfigSpec.ConfigValue<List<? extends String>> armorToughnessColorValues;
-  public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionColorValues;
-  public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionPoisonColorValues;
-  public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionWitherColorValues;
+  static ForgeConfigSpec.ConfigValue<List<? extends String>> armorColors;
+  static ForgeConfigSpec.ConfigValue<List<? extends String>> armorToughnessColors;
+  static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionColors;
+  static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionPoisonColors;
+  static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionWitherColors;
   public static ForgeConfigSpec.ConfigValue<List<? extends Double>> normalFractions;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> normalColors;
   public static ForgeConfigSpec.ConfigValue<List<? extends Double>> poisonedFractions;
@@ -85,11 +85,11 @@ public class ClassicBarsConfig {
     lavaBarColor = builder.define("lava_bar_color","#FF8000",String.class::isInstance);
     flightBarColor = builder.define("flight_bar_color","#FFFFFF",String.class::isInstance);
 
-    armorColorValues = builder.defineList("armor_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"),String.class::isInstance);
-    armorToughnessColorValues = builder.defineList("armor_toughness_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"),String.class::isInstance);
-    absorptionColorValues = builder.defineList("absorption_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
-    absorptionPoisonColorValues = builder.defineList("absorption_poison_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
-    absorptionWitherColorValues = builder.defineList("absorption_wither_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
+    armorColors = builder.defineList("armor_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"),String.class::isInstance);
+    armorToughnessColors = builder.defineList("armor_toughness_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"),String.class::isInstance);
+    absorptionColors = builder.defineList("absorption_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
+    absorptionPoisonColors = builder.defineList("absorption_poison_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
+    absorptionWitherColors = builder.defineList("absorption_wither_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
 
     normalColors = builder.defineList("normal_colors", Lists.newArrayList("#FF0000", "#FFFF00", "#00FF00"),String.class::isInstance);
     normalFractions = builder.defineList("normal_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);

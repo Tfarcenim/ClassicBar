@@ -22,23 +22,31 @@ public class ConfigCache {
     public static List<Color> poison = new ArrayList<>();
     //public static ForgeConfigSpec.ConfigValue<List<? extends Double>> witheredFractions;
     public static List<Color> wither = new ArrayList<>();
+    public static List<Color> absorption = new ArrayList<>();
+    public static List<Color> absorptionPoison = new ArrayList<>();
+    public static List<Color> absorptionWither = new ArrayList<>();
     private static void clear() {
         armor.clear();
         armor_toughness.clear();
         normal.clear();
         poison.clear();
         wither.clear();
+        absorption.clear();
+        absorptionPoison.clear();
+        absorptionWither.clear();
     }
     public static void bake() {
         clear();
         icons = ClassicBarsConfig.displayIcons.get();
 
-        cacheList(ClassicBarsConfig.armorColorValues,armor);
-        cacheList(ClassicBarsConfig.armorToughnessColorValues,armor_toughness);
+        cacheList(ClassicBarsConfig.armorColors,armor);
+        cacheList(ClassicBarsConfig.armorToughnessColors,armor_toughness);
         cacheList(ClassicBarsConfig.normalColors,normal);
         cacheList(ClassicBarsConfig.poisonedColors,poison);
         cacheList(ClassicBarsConfig.witheredColors,wither);
-
+        cacheList(ClassicBarsConfig.absorptionColors,absorption);
+        cacheList(ClassicBarsConfig.absorptionPoisonColors,absorptionPoison);
+        cacheList(ClassicBarsConfig.absorptionWitherColors,absorptionWither);
         hunger = ColorUtils.hex2Color(ClassicBarsConfig.hungerBarColor.get());
         hungerDebuff = ColorUtils.hex2Color(ClassicBarsConfig.hungerBarDebuffColor.get());
         saturation = ColorUtils.hex2Color(ClassicBarsConfig.saturationBarColor.get());

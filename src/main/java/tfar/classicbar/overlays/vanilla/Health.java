@@ -93,13 +93,6 @@ public class Health extends BarOverlayImpl {
     Color.reset();
   }
 
-  HealthEffect getHealthEffect(Player player) {
-    HealthEffect effects = HealthEffect.NONE;//16
-    if (player.hasEffect(MobEffects.POISON)) effects = HealthEffect.POISON;//evaluates to 52
-    else if (player.hasEffect(MobEffects.WITHER)) effects = HealthEffect.WITHER;//evaluates to 88
-    return effects;
-  }
-
   @Override
   public Color getPrimaryBarColor(int index, Player player) {
     double health = player.getHealth();

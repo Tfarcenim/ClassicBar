@@ -3,11 +3,13 @@ package tfar.classicbar.impl;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.EventHandler;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.util.Color;
+import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 import tfar.classicbar.api.BarOverlay;
 
@@ -71,6 +73,12 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return rightHandSide() ? 92 : -101;
     }
 
+    protected HealthEffect getHealthEffect(Player player) {
+        HealthEffect effects = HealthEffect.NONE;//16
+        if (player.hasEffect(MobEffects.POISON)) effects = HealthEffect.POISON;//evaluates to 52
+        else if (player.hasEffect(MobEffects.WITHER)) effects = HealthEffect.WITHER;//evaluates to 88
+        return effects;
+    }
     @Override
     public int getBarWidth(Player player) {
         return ModUtils.WIDTH;

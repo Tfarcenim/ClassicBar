@@ -6,14 +6,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.config.ClassicBarsConfig;
+import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
-
-import static tfar.classicbar.util.ModUtils.getStringLength;
-import static tfar.classicbar.util.ModUtils.leftTextOffset;
 
 public class Armor  extends BarOverlayImpl {
 
