@@ -1,6 +1,7 @@
 package tfar.classicbar.util;
 
 import tfar.classicbar.config.ClassicBarsConfig;
+import tfar.classicbar.config.ConfigCache;
 
 import java.util.List;
 
@@ -17,15 +18,15 @@ public class ColorUtils {
     public static Color calculateScaledColor(double d1, double d2, HealthEffect effect) {
         double d3 = (d1 / d2);
 
-        List<? extends String> colorCodes;
+        List<Color> colorCodes;
         List<? extends Double> colorFractions;
 
-        switch (effect){
-            case NONE: colorCodes = ClassicBarsConfig.normalColors.get();
+        switch (effect) {
+            case NONE: colorCodes = ConfigCache.normal;
             colorFractions = ClassicBarsConfig.normalFractions.get(); break;
-            case POISON: colorCodes = ClassicBarsConfig.poisonedColors.get();
+            case POISON: colorCodes = ConfigCache.poison;
                 colorFractions = ClassicBarsConfig.poisonedFractions.get(); break;
-            case WITHER: colorCodes = ClassicBarsConfig.witheredColors.get();
+            case WITHER: colorCodes = ConfigCache.wither;
                 colorFractions = ClassicBarsConfig.witheredFractions.get(); break;
             default: return Color.BLACK;
         }
@@ -40,13 +41,13 @@ public class ColorUtils {
 
         //return first color in the list if health is too low
         if (d3 <= colorFractions.get(0))
-            return hex2Color(colorCodes.get(0));
+            return colorCodes.get(0);
         //return last color in the list if health is too high
         if (d3 >= colorFractions.get(colorFractions.size() - 1))
-            return hex2Color(colorCodes.get(colorCodes.size() - 1));
+            return colorCodes.get(colorCodes.size() - 1);
 
-        Color c1 = hex2Color(colorCodes.get(i3 - 1));
-        Color c2 = hex2Color(colorCodes.get(i3));
+        Color c1 = colorCodes.get(i3 - 1);
+        Color c2 = colorCodes.get(i3);
 
         double d4 = d3 - colorFractions.get(i3 - 1) / (colorFractions.get(i3) - colorFractions.get(i3 - 1));
         return c1.colorBlend(c2, d4);

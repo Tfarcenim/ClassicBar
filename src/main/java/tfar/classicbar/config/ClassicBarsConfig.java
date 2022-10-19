@@ -43,11 +43,11 @@ public class ClassicBarsConfig {
   public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionPoisonColorValues;
   public static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionWitherColorValues;
   public static ForgeConfigSpec.ConfigValue<List<? extends Double>> normalFractions;
-  public static ForgeConfigSpec.ConfigValue<List<? extends String>> normalColors;
+  static ForgeConfigSpec.ConfigValue<List<? extends String>> normalColors;
   public static ForgeConfigSpec.ConfigValue<List<? extends Double>> poisonedFractions;
-  public static ForgeConfigSpec.ConfigValue<List<? extends String>> poisonedColors;
+  static ForgeConfigSpec.ConfigValue<List<? extends String>> poisonedColors;
   public static ForgeConfigSpec.ConfigValue<List<? extends Double>> witheredFractions;
-  public static ForgeConfigSpec.ConfigValue<List<? extends String>> witheredColors;
+  static ForgeConfigSpec.ConfigValue<List<? extends String>> witheredColors;
   public static ForgeConfigSpec.ConfigValue<String> lavaBarColor;
   public static ForgeConfigSpec.ConfigValue<String> flightBarColor;
 
