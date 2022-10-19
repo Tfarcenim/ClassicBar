@@ -48,32 +48,25 @@ public class Armor  extends BarOverlayImpl {
     Color primary = getPrimaryBarColor(index, player);
 
     if (index == 0) {
-
       //calculate bar color
       primary.color2Gl();
       //draw portion of bar based on armor
       renderMainBar(stack,xStart , yStart , ModUtils.getWidth(armor, 20));
-
       //draw damaged bar
       primary.color2Gla(armorAlpha);
       ModUtils.drawTexturedModalRect(stack,xStart + 1, yStart + 1, 1, 10, ModUtils.getWidth(armor, 20), 7);
     } else {
       //we have wrapped, draw 2 bars
-
       //draw first bar
       //case 1: bar is not capped and is partially filled
       if ((armor) % 20 != 0) {
         Color secondary = getSecondaryBarColor(index-1, player);
-
         //draw complete first bar
         secondary.color2Gl();
         renderCompleteSecondaryBar(stack,xStart, yStart);
-
         //draw partial second bar
         primary.color2Gl();
-
         double f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(armor % 20, 20) : 0);
-
         renderMainBar(stack,f, yStart,ModUtils.getWidth(armor % 20, 20));
       }
       //case 2, bar is a multiple of 20, or it is capped
