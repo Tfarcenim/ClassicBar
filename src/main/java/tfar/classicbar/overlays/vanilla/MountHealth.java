@@ -63,7 +63,7 @@ public class MountHealth extends BarOverlayImpl {
     LivingEntity mount = (LivingEntity) player.getVehicle();
     double mounthHealth = mount.getHealth();
     double maxHealth = mount.getMaxHealth();
-    return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxHealth,mounthHealth) / mounthHealth);
+    return Math.ceil(ModUtils.WIDTH * mounthHealth / maxHealth);
   }
   @Override
   public boolean shouldRenderText() {

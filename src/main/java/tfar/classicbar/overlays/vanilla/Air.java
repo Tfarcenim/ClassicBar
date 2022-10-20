@@ -42,7 +42,7 @@ public class Air extends BarOverlayImpl {
   public double getBarWidth(Player player) {
     int air = player.getAirSupply();
     int maxAir = player.getMaxAirSupply();
-    return (int) Math.ceil(ModUtils.WIDTH * Math.min((double) air,maxAir) / maxAir);
+    return Math.ceil(ModUtils.WIDTH * (double) air/ maxAir);
   }
   @Override
   public Color getPrimaryBarColor(int index, Player player) {

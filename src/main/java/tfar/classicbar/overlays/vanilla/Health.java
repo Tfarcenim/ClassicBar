@@ -52,7 +52,7 @@ public class Health extends BarOverlayImpl {
 
     HealthEffect effect = getHealthEffect(player);
 
-    int i4 = (highlight) ? 18 : 0;
+    int i4 = highlight ? 18 : 0;
 
     Color.reset();
     //Bar background
@@ -64,11 +64,15 @@ public class Health extends BarOverlayImpl {
     //Pass 1, draw bar portion
     //interpolate the bar
     if (displayHealth != health) {
-      //reset to white
-      Color.reset();
       if (displayHealth > health) {
+        //reset to white
+        Color.reset();
+        double w = ModUtils.getWidth(displayHealth, maxHealth);
+
+        double off = w - barWidth;
+
         //draw interpolation
-        ModUtils.drawTexturedModalRect(stack,f + 1, yStart + 1, 1, 10, ModUtils.getWidth(displayHealth, maxHealth), 7);
+        ModUtils.drawTexturedModalRect(stack,f + 1 - off, yStart + 1, 2, 10, w, 7);
         //Health is increasing, IDK what to do here
       } else {/*
                   f = xStart + getWidth(health, maxHealth);
@@ -99,7 +103,7 @@ public class Health extends BarOverlayImpl {
   public double getBarWidth(Player player) {
     double health = player.getHealth();
     double maxHealth = player.getMaxHealth();
-    return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxHealth,health) / health);
+    return Math.ceil(ModUtils.WIDTH * health / maxHealth);
   }
 
   @Override

@@ -92,7 +92,6 @@ public class Hunger extends BarOverlayImpl {
         }
 
         double w = ModUtils.getWidth(saturationWidth + currentSat, maxSat);
-
         //offset used to decide where to place the bar
         f = xStart + (rightHandSide() ? ModUtils.WIDTH - w : 0);
         satColor.color2Gla((float)foodAlpha);
@@ -105,10 +104,13 @@ public class Hunger extends BarOverlayImpl {
 
     if (ClassicBarsConfig.showExhaustionOverlay.get()) {
       exhaustion = Math.min(exhaustion, 4);
-      f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
+
+      double adjBarWidth = ModUtils.getWidth(exhaustion, 4) * 79 / ModUtils.WIDTH;
+
+      f = xStart + (rightHandSide() ? ModUtils.WIDTH + 4 - adjBarWidth : 0);
       //draw exhaustion
       RenderSystem.setShaderColor(1, 1, 1, .25f);
-      ModUtils.drawTexturedModalRect(matrices,f, yStart + 1, 1, 28, ModUtils.getWidth(exhaustion, 4f), 9);
+      ModUtils.drawTexturedModalRect(matrices,f, yStart + 1, 1, 28, adjBarWidth, 7);
     }
   }
 
@@ -116,13 +118,13 @@ public class Hunger extends BarOverlayImpl {
   public double getBarWidth(Player player) {
     double hunger = player.getFoodData().getFoodLevel();
     double maxHunger = 20;
-    return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxHunger,hunger) / maxHunger);
+    return Math.ceil(ModUtils.WIDTH * hunger / maxHunger);
   }
   
   public int getSatBarWidth(Player player) {
     double saturation = player.getFoodData().getSaturationLevel();
     double maxSat = 20;
-    return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxSat,saturation) / maxSat);
+    return (int) Math.ceil(ModUtils.WIDTH * saturation/ maxSat);
   }
   //saturation
   @Override

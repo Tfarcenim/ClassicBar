@@ -66,7 +66,7 @@ public class Absorption extends BarOverlayImpl {
     public double getBarWidth(Player player) {
         double absorb = player.getAbsorptionAmount();
         double maxHealth = player.getMaxHealth();
-        return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxHealth, absorb) / maxHealth);
+        return Math.ceil(ModUtils.WIDTH * Math.min(maxHealth, absorb) / maxHealth);
     }
 
     @Override
