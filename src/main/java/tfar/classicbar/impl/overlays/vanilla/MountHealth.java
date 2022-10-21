@@ -57,7 +57,7 @@ public class MountHealth extends BarOverlayImpl {
     ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).color2Gl();
     double f = xStart + (rightHandSide() ? BarOverlay.WIDTH - barWidth : 0);
     //draw portion of bar based on mountHealth remaining
-    ModUtils.drawTexturedModalRect(stack,f, yStart + 1, 1, 10, barWidth, 7);
+    renderPartialBar(stack,f + 2, yStart + 2, barWidth);
   }
   @Override
   public double getBarWidth(Player player) {
