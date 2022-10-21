@@ -1,8 +1,9 @@
-package tfar.classicbar.overlays.vanilla;
+package tfar.classicbar.impl.overlays.vanilla;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -32,33 +33,31 @@ public class Absorption extends BarOverlayImpl {
         double maxHealth = player.getMaxHealth();
 
         if (rightHandSide()) {
-            xStart += ModUtils.WIDTH - barWidth;
+            xStart += BarOverlay.WIDTH - barWidth;
         }
 
         //draw absorption bar
         int index = Math.min((int) Math.ceil(absorb / maxHealth), ConfigCache.absorption.size()) - 1;
-        Color.reset();
-        //no wrapping
         Color primary = getPrimaryBarColor(index, player);
-        if (index == 0) {
+        Color.reset();
+        //draw background bar
+        renderBarBackground(stack, player, screenWidth, screenHeight, vOffset);
+        if (index == 0) {//no wrapping
             //background
-            renderBarBackground(stack,player,screenWidth,screenHeight,vOffset);
             primary.color2Gl();
             //bar
-            renderMainBar(stack, xStart, yStart,barWidth);
+            renderPartialBar(stack, xStart + 2, yStart + 2, barWidth);
         } else {
-            //draw background bar
-            ModUtils.drawTexturedModalRect(stack, xStart, yStart, 0, 0, 81, 9);
             //we have wrapped, draw 2 bars
             //draw first full bar
             Color secondary = getSecondaryBarColor(index - 1, player);
             secondary.color2Gl();
-            ModUtils.drawTexturedModalRect(stack, xStart + 1, yStart + 1, 1, 10, 79, 7);
+            renderFullBar(stack, xStart + 2, yStart + 2);
             //is it on the edge or capped already?
             if (absorb % maxHealth != 0 && index < ConfigCache.absorption.size() - 1) {
                 //draw second partial bar
                 primary.color2Gl();
-                ModUtils.drawTexturedModalRect(stack, xStart + 1, yStart + 1, 1, 10, ModUtils.getWidth(absorb % maxHealth, maxHealth), 7);
+                renderPartialBar(stack, xStart + 2, yStart + 2, ModUtils.getWidth(absorb % maxHealth, maxHealth));
             }
         }
     }
@@ -66,7 +65,7 @@ public class Absorption extends BarOverlayImpl {
     public double getBarWidth(Player player) {
         double absorb = player.getAbsorptionAmount();
         double maxHealth = player.getMaxHealth();
-        return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxHealth, absorb) / maxHealth);
+        return (int) Math.ceil(BarOverlay.WIDTH * Math.min(maxHealth, absorb) / maxHealth);
     }
 
     @Override
@@ -85,14 +84,17 @@ public class Absorption extends BarOverlayImpl {
         }
         return super.getPrimaryBarColor(index, player);
     }
+
     @Override
     public boolean isFitted() {
         return !ClassicBarsConfig.fullAbsorptionBar.get();
     }
+
     @Override
     public boolean shouldRenderText() {
         return ClassicBarsConfig.showHealthNumbers.get();
     }
+
     @Override
     public void renderText(PoseStack stack, Player player, int width, int height, int vOffset) {
 

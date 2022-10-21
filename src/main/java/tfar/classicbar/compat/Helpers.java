@@ -13,8 +13,6 @@ public class Helpers {
 
 	public static final boolean vampirismloaded = ModList.get().isLoaded("vampirism");
 	public static final boolean elenaiDodgeLoaded = ModList.get().isLoaded("elenaidodge2");
-
-
 	private static final Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = CapabilityManager.get(new CapabilityToken<>() {
 	});
 

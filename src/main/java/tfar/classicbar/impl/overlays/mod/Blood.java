@@ -1,12 +1,14 @@
-package tfar.classicbar.overlays.mod;
+package tfar.classicbar.impl.overlays.mod;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
@@ -33,20 +35,28 @@ public class Blood extends BarOverlayImpl {
     @Override
     public void renderBar(ForgeGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
         VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).ifPresent(stats -> {
-            int blood = stats.getBloodLevel();
-            //Push to avoid lasting changes
-            int maxBlood = stats.getMaxBlood();
-
+            double barWidth = getBarWidth(player);
             int xStart = screenWidth / 2 + getHOffset();
             int yStart = screenHeight - vOffset;
             Color.reset();
             //Bar background
             renderFullBarBackground(stack,xStart,yStart);
             //draw portion of bar based on blood amount
-            double f = xStart + (rightHandSide() ? ModUtils.WIDTH - ModUtils.getWidth(blood, maxBlood) : 0);
+            double f = xStart + (rightHandSide() ? BarOverlay.WIDTH - barWidth : 0);
             getPrimaryBarColor(0, player).color2Gl();
-            drawTexturedModalRect(stack, f, yStart + 1, 1, 10, getWidth(blood, maxBlood), 7);
+            renderPartialBar(stack, f + 2, yStart + 2,barWidth);
         });
+    }
+
+    @Override
+    public double getBarWidth(Player player) {
+        IBloodStats stats = VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).orElse(null);
+        if (stats != null) {
+            int blood = stats.getBloodLevel();
+            int maxBlood = stats.getMaxBlood();
+            return Math.ceil((double) WIDTH * blood / maxBlood);
+        }
+        return 0;
     }
 
     @Override

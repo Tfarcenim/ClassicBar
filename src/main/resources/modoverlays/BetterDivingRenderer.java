@@ -13,6 +13,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Loader;
+import tfar.classicbar.api.BarOverlay;
 
 import static tfar.classicbar.util.ColorUtils.hex2Color;
 import static tfar.classicbar.util.ModUtils.*;
@@ -60,7 +61,7 @@ public class BetterDivingRenderer {
       GlStateManager.enableBlend();
 
       //Bind our Custom bar
-      mc.getTextureManager().bindTexture(ICON_BAR);
+      mc.getTextureManager().bindTexture(BarOverlay.ICON_BAR);
       //Bar background
    //   drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9,general.style);
       //draw portion of bar based on air amount

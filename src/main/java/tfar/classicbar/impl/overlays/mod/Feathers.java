@@ -1,4 +1,4 @@
-package tfar.classicbar.overlays.mod;
+package tfar.classicbar.impl.overlays.mod;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -42,12 +42,10 @@ public class Feathers extends BarOverlayImpl {
 		ModUtils.drawTexturedModalRect(stack,f, yStart + 1, 1, 10, ModUtils.getWidth(feathers, maxFeathers), 7);
 
 	}
-
 	@Override
 	public boolean shouldRenderText() {
 		return ClassicBarsConfig.showHungerNumbers.get();
 	}
-
 	@Override
 	public void renderText(PoseStack stack,Player player, int width, int height,int vOffset) {
 		//draw feathers amount
@@ -63,6 +61,10 @@ public class Feathers extends BarOverlayImpl {
 		int yStart = height - vOffset;
 		//Draw feathers icon
 		ModUtils.drawTexturedModalRect(stack,xStart + 82, yStart, 34, 0, 9, 9);
+	}
+	@Override
+	public double getBarWidth(Player player) {
+		throw new RuntimeException("not implemented");
 	}
 	@Override
 	public ResourceLocation getIconRL() {

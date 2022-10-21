@@ -1,4 +1,4 @@
-package tfar.classicbar.overlays.vanilla;
+package tfar.classicbar.impl.overlays.vanilla;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -58,17 +58,19 @@ public class Health extends BarOverlayImpl {
     //Bar background
     ModUtils.drawTexturedModalRect(stack,xStart, yStart, 0, i4, 81, 9);
 
-    double f = xStart + (rightHandSide() ? ModUtils.WIDTH - barWidth : 0);
+    double f = xStart + (rightHandSide() ? WIDTH - barWidth : 0);
 
     //is the bar changing
     //Pass 1, draw bar portion
     //interpolate the bar
     if (displayHealth != health) {
       //reset to white
-      Color.reset();
       if (displayHealth > health) {
+        Color.reset();
         //draw interpolation
-        ModUtils.drawTexturedModalRect(stack,f + 1, yStart + 1, 1, 10, ModUtils.getWidth(displayHealth, maxHealth), 7);
+        double w = ModUtils.getWidth(displayHealth, maxHealth);
+        double off = w - barWidth;
+        renderPartialBar(stack,f + 2 - off, yStart + 2,w);
         //Health is increasing, IDK what to do here
       } else {/*
                   f = xStart + getWidth(health, maxHealth);
@@ -79,7 +81,7 @@ public class Health extends BarOverlayImpl {
     Color primary = getPrimaryBarColor(0,player);
     primary.color2Gl();
     //draw portion of bar based on health remaining
-    ModUtils.drawTexturedModalRect(stack,f + 2, yStart + 1, 2, 10, barWidth, 7);
+    renderPartialBar(stack,f + 2, yStart + 2, barWidth);
     if (effect == HealthEffect.POISON) {
       //draw poison overlay
       RenderSystem.setShaderColor(0, .5f, 0, .5f);
@@ -99,7 +101,7 @@ public class Health extends BarOverlayImpl {
   public double getBarWidth(Player player) {
     double health = player.getHealth();
     double maxHealth = player.getMaxHealth();
-    return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxHealth,health) / health);
+    return WIDTH * health / maxHealth;
   }
 
   @Override

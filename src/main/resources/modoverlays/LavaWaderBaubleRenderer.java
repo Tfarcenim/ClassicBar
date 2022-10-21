@@ -16,6 +16,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.util.Color;
 
 import static tfar.classicbar.util.ColorUtils.hex2Color;
@@ -65,7 +66,7 @@ public class LavaWaderBaubleRenderer {
     GlStateManager.enableBlend();
 
     //Bind our Custom bar
-    mc.getTextureManager().bindTexture(ICON_BAR);
+    mc.getTextureManager().bindTexture(BarOverlay.ICON_BAR);
     //Bar background
     Color.reset();
     drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);

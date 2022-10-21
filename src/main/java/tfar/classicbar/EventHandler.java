@@ -13,17 +13,15 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
 import tfar.classicbar.compat.Helpers;
+import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.api.BarOverlay;
-import tfar.classicbar.overlays.mod.Blood;
-import tfar.classicbar.overlays.mod.Feathers;
-import tfar.classicbar.overlays.vanilla.*;
+import tfar.classicbar.impl.overlays.mod.Blood;
+import tfar.classicbar.impl.overlays.mod.Feathers;
+import tfar.classicbar.impl.overlays.vanilla.*;
+import tfar.classicbar.util.ModUtils;
 
 import java.util.*;
-
-import static tfar.classicbar.util.ModUtils.mc;
-import static tfar.classicbar.config.ClassicBarsConfig.leftorder;
-import static tfar.classicbar.config.ClassicBarsConfig.rightorder;
 
 public class EventHandler implements IGuiOverlay {
 
@@ -40,13 +38,10 @@ public class EventHandler implements IGuiOverlay {
 
   public void render(ForgeGui gui, PoseStack matrices, float partialTick, int screenWidth, int screenHeight) {
 
-    Entity entity = mc.getCameraEntity();
+    Entity entity = ModUtils.mc.getCameraEntity();
     if (!(entity instanceof Player player)) return;
     if (player.getAbilities().instabuild || player.isSpectator()) return;
-    mc.getProfiler().push("classicbars_hud");
-
-    int initial_rightHeight = gui.rightHeight;
-    int initial_leftHeight = gui.leftHeight;
+    ModUtils.mc.getProfiler().push("classicbars_hud");
 
     for (BarOverlay overlay : all) {
       boolean rightHand = overlay.rightHandSide();
@@ -54,7 +49,7 @@ public class EventHandler implements IGuiOverlay {
     }
 
    // mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
-    mc.getProfiler().pop();
+    ModUtils.mc.getProfiler().pop();
   }
 
   public static void increment(ForgeGui gui,boolean side ,int amount){
@@ -68,8 +63,8 @@ public class EventHandler implements IGuiOverlay {
 
   public static void cacheConfigs() {
     all.clear();
-    leftorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(false)));
-    rightorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(true)));
+    ClassicBarsConfig.leftorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(false)));
+    ClassicBarsConfig.rightorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(true)));
     ConfigCache.bake();
   }
 

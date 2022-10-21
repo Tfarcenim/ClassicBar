@@ -1,9 +1,10 @@
-package tfar.classicbar.overlays.vanilla;
+package tfar.classicbar.impl.overlays.vanilla;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.ColorUtils;
@@ -54,7 +55,7 @@ public class MountHealth extends BarOverlayImpl {
     //Pass 1, draw bar portion
     //calculate bar color
     ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).color2Gl();
-    double f = xStart + (rightHandSide() ? ModUtils.WIDTH - barWidth : 0);
+    double f = xStart + (rightHandSide() ? BarOverlay.WIDTH - barWidth : 0);
     //draw portion of bar based on mountHealth remaining
     ModUtils.drawTexturedModalRect(stack,f, yStart + 1, 1, 10, barWidth, 7);
   }
@@ -63,7 +64,7 @@ public class MountHealth extends BarOverlayImpl {
     LivingEntity mount = (LivingEntity) player.getVehicle();
     double mounthHealth = mount.getHealth();
     double maxHealth = mount.getMaxHealth();
-    return (int) Math.ceil(ModUtils.WIDTH * Math.min(maxHealth,mounthHealth) / mounthHealth);
+    return (int) Math.ceil(BarOverlay.WIDTH * Math.min(maxHealth,mounthHealth) / mounthHealth);
   }
   @Override
   public boolean shouldRenderText() {
