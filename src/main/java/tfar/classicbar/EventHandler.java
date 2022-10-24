@@ -70,7 +70,7 @@ public class EventHandler implements IIngameOverlay {
 
   public static void setupOverlays() {
     EventHandler.disableVanilla();
-    OverlayRegistry.registerOverlayTop(ClassicBar.MODID,new EventHandler());
+    OverlayRegistry.registerOverlayBelow(ForgeIngameGui.CHAT_PANEL_ELEMENT,ClassicBar.MODID,new EventHandler());
 
     //Register renderers for events
     ClassicBar.logger.info("Registering Vanilla Overlays");

@@ -69,10 +69,10 @@ public class Health extends BarOverlayImpl {
         Color.reset();
         double w = ModUtils.getWidth(displayHealth, maxHealth);
 
-        double off = w - barWidth;
+        double off = (rightHandSide() ? w - barWidth : 0);
 
         //draw interpolation
-        ModUtils.drawTexturedModalRect(stack,f + 1 - off, yStart + 1, 2, 10, w, 7);
+        ModUtils.drawTexturedModalRect(stack,f + 2 - off, yStart + 1, 2, 10, w, 7);
         //Health is increasing, IDK what to do here
       } else {/*
                   f = xStart + getWidth(health, maxHealth);

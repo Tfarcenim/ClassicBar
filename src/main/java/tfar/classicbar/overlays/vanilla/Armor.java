@@ -90,7 +90,7 @@ public class Armor  extends BarOverlayImpl {
   @Override
   public double getBarWidth(Player player) {
     int armor = calculateArmorValue(player);
-    return Math.ceil(ModUtils.WIDTH * armor / 20d);
+    return Math.ceil(ModUtils.WIDTH * Math.min(armor,20) / 20d);
   }
 
   @Override

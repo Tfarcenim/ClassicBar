@@ -64,7 +64,7 @@ public class ArmorToughness extends BarOverlayImpl {
     }
     public double getBarWidth(Player player) {
         double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
-        return Math.ceil(ModUtils.WIDTH *armorToughness / 20);
+        return Math.ceil(ModUtils.WIDTH * Math.min(armorToughness,20) / 20);
     }
     @Override
     public boolean isFitted() {
