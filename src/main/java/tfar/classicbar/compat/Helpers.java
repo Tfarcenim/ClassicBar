@@ -11,8 +11,12 @@ import net.minecraftforge.fml.ModList;
 
 public class Helpers {
 
-	public static final boolean vampirismloaded = ModList.get().isLoaded("vampirism");
-	public static final boolean elenaiDodgeLoaded = ModList.get().isLoaded("elenaidodge2");
+	public static final boolean vampirismloaded = loaded("vampirism");
+	public static final boolean elenaiDodgeLoaded = loaded("elenaidodge2");
+	public static final boolean parcoolLoaded = loaded("parcool") ;
+	private static boolean loaded(String modid) {
+		return ModList.get().isLoaded(modid);
+	}
 	private static final Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = CapabilityManager.get(new CapabilityToken<>() {
 	});
 

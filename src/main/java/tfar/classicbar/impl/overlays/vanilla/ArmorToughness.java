@@ -5,7 +5,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -112,6 +111,6 @@ public class ArmorToughness extends BarOverlayImpl {
 
     @Override
     public ResourceLocation getIconRL() {
-        return BarOverlay.ICON_BAR;
+        return BarOverlayImpl.ICON_BAR;
     }
 }

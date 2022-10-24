@@ -3,7 +3,6 @@ package tfar.classicbar.impl.overlays.vanilla;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -33,7 +32,7 @@ public class Absorption extends BarOverlayImpl {
         double maxHealth = player.getMaxHealth();
 
         if (rightHandSide()) {
-            xStart += BarOverlay.WIDTH - barWidth;
+            xStart += BarOverlayImpl.WIDTH - barWidth;
         }
 
         //draw absorption bar
@@ -65,7 +64,7 @@ public class Absorption extends BarOverlayImpl {
     public double getBarWidth(Player player) {
         double absorb = player.getAbsorptionAmount();
         double maxHealth = player.getMaxHealth();
-        return (int) Math.ceil(BarOverlay.WIDTH * Math.min(maxHealth, absorb) / maxHealth);
+        return (int) Math.ceil(BarOverlayImpl.WIDTH * Math.min(maxHealth, absorb) / maxHealth);
     }
 
     @Override

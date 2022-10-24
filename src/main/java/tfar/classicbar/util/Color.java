@@ -5,7 +5,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 public class Color {
     public final int r, g, b;
     public static final Color BLACK = Color.from(0,0,0);
-    public static final Color RED = Color.from(1,0,0);
+    public static final Color RED = Color.from(0xff,0,0);
+    public static final Color YELLOW = Color.from(0xff,0xff,0);
 
     protected Color(int red, int green, int blue) {
         this.r = red;

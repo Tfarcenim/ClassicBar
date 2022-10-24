@@ -1,11 +1,13 @@
 package tfar.classicbar.overlays.modoverlays;
 
-import baubles.api.BaublesApi;
-import com.mojang.blaze3d.platform.GlStateManager;
+import lumien.randomthings.item.ItemLavaCharm;
+import lumien.randomthings.item.ItemLavaWader;
 import net.minecraft.client.Minecraft;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -16,20 +18,22 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.ClassicBar;
+import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 
 import static tfar.classicbar.util.ColorUtils.hex2Color;
 import static tfar.classicbar.util.ModUtils.*;
-import static tfar.classicbar.overlays.modoverlays.LavaCharmRenderer.ICON_LAVA;
 
 /*
     Class handles the drawing of the lava charm*/
-public class LavaWaderBaubleRenderer {
+public class LavaCharmRenderer {
   private final Minecraft mc = Minecraft.getMinecraft();
-  public static final Item LavaWaderBauble = ForgeRegistries.ITEMS.getValue(new ResourceLocation("lavawaderbauble:lavawaderbauble"));
 
-  public LavaWaderBaubleRenderer() {
+  public static final Item Lava_Charm = ForgeRegistries.ITEMS.getValue(new ResourceLocation("randomthings:lavacharm"));
+  public static final ResourceLocation ICON_LAVA = new ResourceLocation("randomthings", "textures/gui/lavacharmbar.png");
+
+  public LavaCharmRenderer() {
   }
 
   @SubscribeEvent(priority = EventPriority.LOW)
@@ -37,17 +41,16 @@ public class LavaWaderBaubleRenderer {
 
     Entity renderViewEnity = mc.getRenderViewEntity();
     if (event.isCanceled()
-            || !(renderViewEnity instanceof PlayerEntity)) {
-      return;
-    }
+            || !(renderViewEnity instanceof PlayerEntity)) return;
     PlayerEntity player = (PlayerEntity) renderViewEnity;
     if (player.capabilities.isCreativeMode) return;
-    int i1 = BaublesApi.isBaubleEquipped(player, LavaWaderBauble);
-    if (i1 == -1) return;
-    ItemStack stack = BaublesApi.getBaublesHandler(player).getStackInSlot(i1);
+    ItemStack stack = ItemStack.EMPTY;
+    if (ClassicBar.BAUBLES)stack = BaublesHelper.getLavaWader(player);
+    if (stack.isEmpty())stack = getLavaCharm(player);
+    if (stack.isEmpty()) return;
     CompoundNBT nbt = stack.getTagCompound();
     if (nbt == null) {
-      System.out.println("error");
+      //System.out.println("error");
       return;
     }
     int charge = nbt.getInteger("charge");
@@ -66,7 +69,7 @@ public class LavaWaderBaubleRenderer {
     GlStateManager.enableBlend();
 
     //Bind our Custom bar
-    mc.getTextureManager().bindTexture(BarOverlay.ICON_BAR);
+    mc.getTextureManager().bindTexture(BarOverlayImpl.ICON_BAR);
     //Bar background
     Color.reset();
     drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
@@ -100,5 +103,17 @@ public class LavaWaderBaubleRenderer {
     //GlStateManager.popMatrix();
     mc.profiler.endSection();
   }
-
+  public static ItemStack getLavaCharm(PlayerEntity player) {
+    ItemStack stack1 = player.getItemStackFromSlot(EquipmentSlotType.FEET);
+    if (isWader(stack1))return stack1;
+    for (ItemStack stack : player.inventory.mainInventory)
+      if (isCharm(stack)) return stack;
+    return ItemStack.EMPTY;
+  }
+  private static boolean isCharm(ItemStack stack){
+    return stack.getItem() instanceof ItemLavaCharm;
+  }
+  private static boolean isWader(ItemStack stack){
+    return stack.getItem() instanceof ItemLavaWader;
+  }
 }

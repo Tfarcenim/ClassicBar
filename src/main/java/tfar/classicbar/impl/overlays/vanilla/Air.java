@@ -3,7 +3,6 @@ package tfar.classicbar.impl.overlays.vanilla;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -29,7 +28,7 @@ public class Air extends BarOverlayImpl {
     //Bar background
     renderFullBarBackground(stack,xStart, yStart);
     //draw portion of bar based on air amount
-    double f = xStart + (rightHandSide() ? BarOverlay.WIDTH - barWidth : 0);
+    double f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
     Color color = getPrimaryBarColor(0,player);
     color.color2Gl();
     renderPartialBar(stack,f + 2, yStart + 2,barWidth);
@@ -43,7 +42,7 @@ public class Air extends BarOverlayImpl {
   public double getBarWidth(Player player) {
     int air = player.getAirSupply();
     int maxAir = player.getMaxAirSupply();
-    return Math.ceil((double)BarOverlay.WIDTH * air/ maxAir);
+    return Math.ceil((double) BarOverlayImpl.WIDTH * air/ maxAir);
   }
   @Override
   public Color getPrimaryBarColor(int index, Player player) {

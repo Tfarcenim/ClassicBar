@@ -3,7 +3,7 @@ package tfar.classicbar.util;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.impl.BarOverlayImpl;
 
 public class ModUtils {
   public static final Minecraft mc = Minecraft.getInstance();
@@ -14,7 +14,7 @@ public class ModUtils {
   }
 
   public static double getWidth(double d1, double d2) {
-    double ratio = BarOverlay.WIDTH * d1 / d2;
+    double ratio = BarOverlayImpl.WIDTH * d1 / d2;
     return Math.ceil(ratio);
   }
 

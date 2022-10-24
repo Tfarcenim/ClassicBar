@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.config.ConfigCache;
@@ -15,6 +16,12 @@ import tfar.classicbar.util.ModUtils;
 
 public abstract class BarOverlayImpl implements BarOverlay {
 
+    //maximum width the bar can be
+    public static final int WIDTH = 77;
+    public static final int HEIGHT = 5;
+    public static final int BAR_U = 2;
+    public static final int BAR_V = 11;
+    public static final ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
     protected String name;
     protected boolean side;
 
@@ -95,10 +102,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public void drawScaledBarBackground(PoseStack stack, double barWidth, int x, int y) {
         if (rightHandSide()) {
             ModUtils.drawTexturedModalRect(stack,x, y - 1, 0, 0, barWidth + 2, 9);
-            ModUtils.drawTexturedModalRect(stack,x + barWidth + 2, y-1, BarOverlay.WIDTH + 2, 0, 2, 9);
+            ModUtils.drawTexturedModalRect(stack,x + barWidth + 2, y-1, WIDTH + 2, 0, 2, 9);
         } else {
             ModUtils.drawTexturedModalRect(stack,x, y - 1, 0, 0, (int) (barWidth + 2), 9);
-            ModUtils.drawTexturedModalRect(stack, (int) (x + barWidth + 2), y - 1, BarOverlay.WIDTH + 2, 0, 2, 9);
+            ModUtils.drawTexturedModalRect(stack, (int) (x + barWidth + 2), y - 1, WIDTH + 2, 0, 2, 9);
         }
     }
     public void textHelper(PoseStack stack,int xStart,int yStart,double stat, int color) {
@@ -109,7 +116,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
             ModUtils.drawStringOnHUD(stack, i1 + "", xStart + 9 * i2, yStart - 1, color);
         } else {
             int i3 = ModUtils.getStringLength(i1 + "");
-            ModUtils.drawStringOnHUD(stack, i1 + "", xStart - 9 * i2 - i3 - 5, yStart - 1, color);
+            ModUtils.drawStringOnHUD(stack, i1 + "", xStart - 9 * i2 - i3 + 5, yStart - 1, color);
         }
     }
     public void renderFullBarBackground(PoseStack matrices, int xStart, int yStart) {

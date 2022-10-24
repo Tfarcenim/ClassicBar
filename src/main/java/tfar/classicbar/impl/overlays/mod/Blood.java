@@ -8,14 +8,11 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
-import tfar.classicbar.util.ModUtils;
 
 import static tfar.classicbar.util.ModUtils.drawTexturedModalRect;
-import static tfar.classicbar.util.ModUtils.getWidth;
 
 public class Blood extends BarOverlayImpl {
 
@@ -42,7 +39,7 @@ public class Blood extends BarOverlayImpl {
             //Bar background
             renderFullBarBackground(stack,xStart,yStart);
             //draw portion of bar based on blood amount
-            double f = xStart + (rightHandSide() ? BarOverlay.WIDTH - barWidth : 0);
+            double f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
             getPrimaryBarColor(0, player).color2Gl();
             renderPartialBar(stack, f + 2, yStart + 2,barWidth);
         });

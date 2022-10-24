@@ -7,7 +7,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.compat.Helpers;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
@@ -45,7 +44,7 @@ public class Hunger extends BarOverlayImpl {
     Color.reset();
     renderFullBarBackground(matrices,xStart,yStart);
     //draw portion of bar based on hunger amount
-    double f = xStart + (rightHandSide() ? BarOverlay.WIDTH - barWidthH : 0);
+    double f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidthH : 0);
 
     Color hungerColor = getSecondaryBarColor(0,player);
     Color satColor = getPrimaryBarColor(0,player);
@@ -55,7 +54,7 @@ public class Hunger extends BarOverlayImpl {
     if (currentSat > 0 && ClassicBarsConfig.showSaturationBar.get()) {
       //draw saturation
       satColor.color2Gl();
-      f = xStart + (rightHandSide() ? BarOverlay.WIDTH - barWidthS : 0);
+      f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidthS : 0);
       renderPartialBar(matrices,f + 2, yStart + 2, barWidthS);
     }
     //render held hunger overlay
@@ -76,7 +75,7 @@ public class Hunger extends BarOverlayImpl {
       if (hunger < maxHunger) {
         double w = ModUtils.getWidth(hungerWidth + hunger, maxHunger);
 
-        f = xStart + (rightHandSide() ? BarOverlay.WIDTH - w : 0);
+        f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - w : 0);
         hungerColor.color2Gla((float)foodAlpha);
         renderPartialBar(matrices,f + 2, yStart + 2, w);
       }
@@ -97,7 +96,7 @@ public class Hunger extends BarOverlayImpl {
         double w = ModUtils.getWidth(saturationWidth + currentSat, maxSat);
 
         //offset used to decide where to place the bar
-        f = xStart + (rightHandSide() ? BarOverlay.WIDTH - w : 0);
+        f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - w : 0);
         satColor.color2Gla((float)foodAlpha);
         if (true)//currentSat > 0)
           renderPartialBar(matrices,f + 2, yStart + 2,w);
@@ -108,7 +107,7 @@ public class Hunger extends BarOverlayImpl {
 
     if (ClassicBarsConfig.showExhaustionOverlay.get()) {
       exhaustion = Math.min(exhaustion, 4);
-      f = xStart + (rightHandSide() ? BarOverlay.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
+      f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
       //draw exhaustion
       RenderSystem.setShaderColor(1, 1, 1, .25f);
       ModUtils.drawTexturedModalRect(matrices,f + 2, yStart + 1, 1, 28, ModUtils.getWidth(exhaustion, 4f), 9);
@@ -119,13 +118,13 @@ public class Hunger extends BarOverlayImpl {
   public double getBarWidth(Player player) {
     double hunger = player.getFoodData().getFoodLevel();
     double maxHunger = 20;
-    return Math.ceil(BarOverlay.WIDTH * hunger / maxHunger);
+    return Math.ceil(BarOverlayImpl.WIDTH * hunger / maxHunger);
   }
   
   public int getSatBarWidth(Player player) {
     double saturation = player.getFoodData().getSaturationLevel();
     double maxSat = 20;
-    return (int) Math.ceil(BarOverlay.WIDTH * saturation / maxSat);
+    return (int) Math.ceil(BarOverlayImpl.WIDTH * saturation / maxSat);
   }
   //saturation
   @Override

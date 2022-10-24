@@ -7,7 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.client.ForgeIngameGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import toughasnails.api.TANCapabilities;
 import toughasnails.api.TANPotions;
@@ -63,7 +63,7 @@ public class ThirstBarRenderer {
         }
 
         //Bind our Custom bar
-        mc.getTextureManager().bindTexture(BarOverlay.ICON_BAR);
+        mc.getTextureManager().bindTexture(BarOverlayImpl.ICON_BAR);
         //Bar background
         drawTexturedModalRect(xStart, yStart, 0, 0, 81, 9);
 

@@ -67,9 +67,19 @@ repositories{
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
     }
+
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
+
+    implementation fg.deobf("curse.maven:parcool-482378:3969415")
+
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}" //21

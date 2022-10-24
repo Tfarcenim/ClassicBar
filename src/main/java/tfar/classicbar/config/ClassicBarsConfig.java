@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
+import tfar.classicbar.impl.overlays.mod.StaminaB;
 
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class ClassicBarsConfig {
     witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
 
     leftorder = builder.defineList("left_order", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2"),String.class::isInstance);
-    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","health_mount","food","feathers","armor_toughness","thirst","air","flighttiara","decay"),String.class::isInstance);
+    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","health_mount","food", StaminaB.name,"feathers","armor_toughness","thirst","air","flighttiara","decay"),String.class::isInstance);
   }
 
   @SubscribeEvent

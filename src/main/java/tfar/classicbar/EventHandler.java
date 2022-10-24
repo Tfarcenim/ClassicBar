@@ -18,6 +18,7 @@ import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.impl.overlays.mod.Blood;
 import tfar.classicbar.impl.overlays.mod.Feathers;
+import tfar.classicbar.impl.overlays.mod.StaminaB;
 import tfar.classicbar.impl.overlays.vanilla.*;
 import tfar.classicbar.util.ModUtils;
 
@@ -79,6 +80,7 @@ public class EventHandler implements IGuiOverlay {
             new Health(), new Hunger(), new MountHealth());
     if (Helpers.vampirismloaded)EventHandler.register(new Blood());
     if (Helpers.elenaiDodgeLoaded)EventHandler.register(new Feathers());
+    if (Helpers.parcoolLoaded)EventHandler.register(new StaminaB());
 
     //mod renderers
     ClassicBar.logger.info("Registering Mod Overlays");
@@ -92,7 +94,6 @@ public class EventHandler implements IGuiOverlay {
 
     //MinecraftForge.EVENT_BUS.register(new BetterDivingRenderer());
     //  if (ModList.get().isLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
-
   }
 
   private static final List<ResourceLocation> overlays = List.of(VanillaGuiOverlay.AIR_LEVEL.id(),VanillaGuiOverlay.ARMOR_LEVEL.id(),
@@ -100,5 +101,6 @@ public class EventHandler implements IGuiOverlay {
   public static void disableVanilla(RenderGuiOverlayEvent.Pre e) {
     NamedGuiOverlay overlay = e.getOverlay();
     if (overlays.contains(overlay.id())) e.setCanceled(true);
+    else if (overlay.id().getNamespace().equals("parcool") && StaminaB.checkConfigs()) e.setCanceled(true);
   }
 }

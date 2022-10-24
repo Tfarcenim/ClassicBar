@@ -16,7 +16,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 
 import static tfar.classicbar.util.ColorUtils.hex2Color;
@@ -72,7 +72,7 @@ public class TiaraBarRenderer {
     GlStateManager.enableBlend();
 
     //Bind our Custom bar
-    mc.getTextureManager().bindTexture(BarOverlay.ICON_BAR);
+    mc.getTextureManager().bindTexture(BarOverlayImpl.ICON_BAR);
     //Bar background
     GlStateManager.color(1, 1, 1, 1);
     //draw main background
