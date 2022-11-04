@@ -11,7 +11,9 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import tfar.classicbar.compat.Helpers;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
@@ -67,6 +69,10 @@ public class EventHandler implements IGuiOverlay {
     ClassicBarsConfig.leftorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(false)));
     ClassicBarsConfig.rightorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(true)));
     ConfigCache.bake();
+  }
+
+  public static void sendModMessage(InterModEnqueueEvent e) {
+    InterModComms.sendTo("vampirism", "disable-blood-bar", () -> true);
   }
 
   public static void setupOverlays(RegisterGuiOverlaysEvent e) {
