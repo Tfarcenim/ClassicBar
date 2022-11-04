@@ -56,7 +56,7 @@ public class Health extends BarOverlayImpl {
 
     Color.reset();
     //Bar background
-    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 0, i4, 81, 9);
+    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 0, i4, WIDTH + 4, 9);
 
     double f = xStart + (rightHandSide() ? WIDTH - barWidth : 0);
 
@@ -69,7 +69,8 @@ public class Health extends BarOverlayImpl {
         Color.reset();
         //draw interpolation
         double w = ModUtils.getWidth(displayHealth, maxHealth);
-        double off = w - barWidth;
+        double off = rightHandSide() ? w - barWidth : 0;
+        //draw interpolation
         renderPartialBar(stack,f + 2 - off, yStart + 2,w);
         //Health is increasing, IDK what to do here
       } else {/*
