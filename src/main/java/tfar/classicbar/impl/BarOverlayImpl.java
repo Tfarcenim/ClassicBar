@@ -62,6 +62,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
     public abstract void renderBar(ForgeGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset);
 
+    protected boolean shouldFlash(Player player) {
+        return false;
+    }
+
     public boolean shouldRenderText() {
         return true;
     }

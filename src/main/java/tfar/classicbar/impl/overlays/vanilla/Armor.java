@@ -14,7 +14,6 @@ import tfar.classicbar.util.ModUtils;
 
 public class Armor extends BarOverlayImpl {
 
-    private float armorAlpha = 1;
     private static final EquipmentSlot[] armorList = new EquipmentSlot[]{EquipmentSlot.HEAD,
             EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
@@ -32,8 +31,8 @@ public class Armor extends BarOverlayImpl {
         double armor = calculateArmorValue(player);
         double barWidth = getBarWidth(player);
 
-        boolean warn = ClassicBarsConfig.lowArmorWarning.get() && getDamagedAmount(player) > 0;
-        if (warn) armorAlpha = (int) (System.currentTimeMillis() / 250) % 2;
+        boolean warn = shouldFlash(player);
+        float armorAlpha = warn ? (System.currentTimeMillis() / 500) % 2 : 1;
         int xStart = screenWidth / 2 + getHOffset();
 
         if (rightHandSide()) {
@@ -56,10 +55,10 @@ public class Armor extends BarOverlayImpl {
             //we have wrapped, draw 2 bars
             //draw first bar
             //case 1: bar is not capped and is partially filled
-            if ((armor) % 20 != 0) {
+            if (armor % 20 != 0) {
                 Color secondary = getSecondaryBarColor(index - 1, player);
                 //draw complete first bar
-                secondary.color2Gl();
+                secondary.color2Gla(armorAlpha);
                 renderFullBar(stack, xStart + 2, yStart + 2);
                 //draw partial second bar
                 primary.color2Gl();
@@ -70,19 +69,21 @@ public class Armor extends BarOverlayImpl {
             //case 2, bar is a multiple of 20, or it is capped
             else {
                 //draw complete second bar
-                primary.color2Gl();
+                primary.color2Gla(armorAlpha);
                 renderFullBar(stack, xStart + 2, yStart + 2);
             }
             // now handle the low armor warning
             if (warn) {
-                //armor and armor warning on same index
-                if ((int) Math.ceil((armor) / 20) == (int) Math.ceil(armor / 20)) {
-                    //draw one bar
-                    primary.color2Gla(armorAlpha);
-                    renderPartialBar(stack, xStart + 2, yStart + 2, ModUtils.getWidth(armor - index * 20, 20));
-                }
+                //draw one bar
+                primary.color2Gla(armorAlpha);
+                renderPartialBar(stack, xStart + 2, yStart + 2, ModUtils.getWidth(armor - index * 20, 20));
             }
         }
+    }
+
+    @Override
+    protected boolean shouldFlash(Player player) {
+        return ClassicBarsConfig.lowArmorWarning.get() && getDamagedAmount(player) > 0;
     }
 
     @Override
