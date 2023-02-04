@@ -5,10 +5,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.config.ConfigCache;
-import tfar.classicbar.util.Color;
 import tfar.classicbar.config.ClassicBarsConfig;
+import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
 public class ArmorToughness extends BarOverlayImpl {

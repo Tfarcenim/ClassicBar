@@ -11,12 +11,16 @@ import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ColorUtils;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
+import tk.yongangame.mc.data.PlayerData;
+import tk.yongangame.mc.forge.forwardlib.ForwardPlayerData;
 
 public class Health extends BarOverlayImpl {
 
   private double playerHealth = 0;
   private long healthUpdateCounter = 0;
   private double lastPlayerHealth = 0;
+
+  private PlayerData playerData;
 
   public Health() {
     super("health");
@@ -29,9 +33,17 @@ public class Health extends BarOverlayImpl {
 
   @Override
   public void renderBar(ForgeIngameGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
+    ForwardPlayerData forwardPlayerData = ForwardPlayerData.getInstance();
+    if (forwardPlayerData.spigot){
+        playerData = forwardPlayerData.playerData;
+    }
+    else {
+        playerData = new PlayerData(player);
+    }
+
     int updateCounter = gui.getGuiTicks();
 
-    double health = player.getHealth();
+    double health = playerData.health;
     double barWidth = getBarWidth(player);
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
 
@@ -48,7 +60,7 @@ public class Health extends BarOverlayImpl {
 
     int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
-    double maxHealth = player.getMaxHealth();
+    double maxHealth = playerData.maxHealth;
 
     HealthEffect effect = getHealthEffect(player);
 
@@ -93,16 +105,16 @@ public class Health extends BarOverlayImpl {
 
   @Override
   public Color getPrimaryBarColor(int index, Player player) {
-    double health = player.getHealth();
-    double maxHealth = player.getMaxHealth();
+    double health = playerData.health;
+    double maxHealth = playerData.maxHealth;
     HealthEffect effect = getHealthEffect(player);
     return ColorUtils.calculateScaledColor(health,maxHealth,effect);
   }
 
   @Override
   public double getBarWidth(Player player) {
-    double health = player.getHealth();
-    double maxHealth = player.getMaxHealth();
+    double health = playerData.health;
+    double maxHealth = playerData.maxHealth;
     return Math.ceil(ModUtils.WIDTH * health / maxHealth);
   }
 
@@ -113,7 +125,7 @@ public class Health extends BarOverlayImpl {
 
   @Override
   public void renderText(PoseStack stack,Player player, int width, int height, int vOffset) {
-    double health = player.getHealth();
+    double health = playerData.health;
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     textHelper(stack,xStart,yStart,health,getPrimaryBarColor(0,player).colorToText());

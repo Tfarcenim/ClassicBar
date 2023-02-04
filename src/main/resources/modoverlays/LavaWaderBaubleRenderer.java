@@ -18,9 +18,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import tfar.classicbar.util.Color;
 
+import static tfar.classicbar.overlays.modoverlays.LavaCharmRenderer.ICON_LAVA;
 import static tfar.classicbar.util.ColorUtils.hex2Color;
 import static tfar.classicbar.util.ModUtils.*;
-import static tfar.classicbar.overlays.modoverlays.LavaCharmRenderer.ICON_LAVA;
 
 /*
     Class handles the drawing of the lava charm*/

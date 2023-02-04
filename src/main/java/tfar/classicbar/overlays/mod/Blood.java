@@ -1,20 +1,19 @@
 package tfar.classicbar.overlays.mod;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.config.ConfigCache;
-import tfar.classicbar.util.Color;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
-import static tfar.classicbar.util.ModUtils.*;
+import static tfar.classicbar.util.ModUtils.drawTexturedModalRect;
+import static tfar.classicbar.util.ModUtils.getWidth;
 
 public class Blood extends BarOverlayImpl {
 

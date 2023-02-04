@@ -7,11 +7,11 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import tfar.classicbar.EventHandler;
+import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
-import tfar.classicbar.api.BarOverlay;
 
 import static tfar.classicbar.util.ModUtils.*;
 

@@ -1,9 +1,9 @@
 package tfar.classicbar.overlays.modoverlays;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import lumien.randomthings.item.ItemLavaCharm;
 import lumien.randomthings.item.ItemLavaWader;
 import net.minecraft.client.Minecraft;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,8 +19,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import tfar.classicbar.ClassicBar;
-import tfar.classicbar.util.Color;
 import tfar.classicbar.compat.BaublesHelper;
+import tfar.classicbar.util.Color;
 
 import static tfar.classicbar.util.ColorUtils.hex2Color;
 import static tfar.classicbar.util.ModUtils.*;

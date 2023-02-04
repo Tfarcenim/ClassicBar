@@ -5,10 +5,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.ForgeIngameGui;
-import tfar.classicbar.config.ConfigCache;
-import tfar.classicbar.util.Color;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ColorUtils;
 import tfar.classicbar.util.ModUtils;
 

@@ -7,18 +7,18 @@ import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.fml.ModList;
+import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.compat.Helpers;
 import tfar.classicbar.config.ConfigCache;
-import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.overlays.mod.Blood;
 import tfar.classicbar.overlays.mod.Feathers;
 import tfar.classicbar.overlays.vanilla.*;
 
 import java.util.*;
 
-import static tfar.classicbar.util.ModUtils.mc;
 import static tfar.classicbar.config.ClassicBarsConfig.leftorder;
 import static tfar.classicbar.config.ClassicBarsConfig.rightorder;
+import static tfar.classicbar.util.ModUtils.mc;
 
 public class EventHandler implements IIngameOverlay {
 
@@ -34,10 +34,10 @@ public class EventHandler implements IIngameOverlay {
   }
 
   public void render(ForgeIngameGui gui, PoseStack matrices, float partialTick, int screenWidth, int screenHeight) {
-
     Entity entity = mc.getCameraEntity();
     if (!(entity instanceof Player player)) return;
     if (player.getAbilities().instabuild || player.isSpectator()) return;
+
     mc.getProfiler().push("classicbars_hud");
 
     int initial_right_height = gui.right_height;
@@ -45,7 +45,7 @@ public class EventHandler implements IIngameOverlay {
 
     for (BarOverlay overlay : all) {
       boolean rightHand = overlay.rightHandSide();
-        overlay.render(gui, matrices, player, screenWidth, screenHeight, getOffset(gui,rightHand));
+      overlay.render(gui, matrices, player, screenWidth, screenHeight, getOffset(gui,rightHand));
     }
 
    // mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
