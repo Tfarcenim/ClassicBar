@@ -19,3 +19,8 @@ Change colors of the bars
 Planned config options:   disable each bar individually
 
 Clientside only.
+
+## Spigot Support
+**For ClassicBar to support spigot health, you must install the [ForwardLib](https://github.com/YongAn404/ForwardLib) plugin on your server**
+
+**想让 ClassicBar 支持 spigot 的健康值，您必须在服务器上安装 [ForwardLib](https://github.com/YongAn404/ForwardLib) 插件**
