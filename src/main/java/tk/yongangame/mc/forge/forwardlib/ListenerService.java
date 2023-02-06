@@ -7,8 +7,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import tk.yongangame.mc.data.PlayerData;
 
-import java.util.UUID;
-
 @Mod.EventBusSubscriber
 public class ListenerService {
     private int id;
@@ -24,7 +22,7 @@ public class ListenerService {
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event){
         if (id == 0) {
-            ForwardPlayerData.getInstance().playerData = new PlayerData(UUID.fromString(Minecraft.getInstance().getUser().getUuid()));
+            ForwardPlayerData.getInstance().playerData = new PlayerData(Minecraft.getInstance().getUser().getName());
         }
         id++;
     }

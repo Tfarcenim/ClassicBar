@@ -10,9 +10,9 @@ public class PlayerData {
     public double maxHealth;
     public double health;
 
-    public PlayerData(UUID uuid){
-        this.uuid = uuid;
-        this.name = null;
+    public PlayerData(String name){
+        this.uuid = null;
+        this.name = name;
         this.maxHealth =0;
         this.health = 0;
     }

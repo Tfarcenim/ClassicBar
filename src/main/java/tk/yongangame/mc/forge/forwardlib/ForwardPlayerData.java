@@ -58,7 +58,7 @@ public class ForwardPlayerData {
             spigot=true;
         }
 
-        if (Objects.equals(str.uuid, playerData.uuid)){
+        if (Objects.equals(str.name, playerData.name)){
             playerData = str;
         }
         NetworkEvent.Context context = supplier.get();
