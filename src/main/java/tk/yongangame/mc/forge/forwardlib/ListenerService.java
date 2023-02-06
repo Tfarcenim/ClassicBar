@@ -13,17 +13,21 @@ public class ListenerService {
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event){
-        id--;
-        if (id == 0){
-            ForwardPlayerData.getInstance().spigot = false;
+        if (event.getWorld().isClientSide()) {
+            id--;
+            if (id == 0) {
+                ForwardPlayerData.getInstance().spigot = false;
+            }
         }
     }
 
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event){
-        if (id == 0) {
-            ForwardPlayerData.getInstance().playerData = new PlayerData(Minecraft.getInstance().getUser().getName());
+        if (event.getWorld().isClientSide()) {
+            if (id == 0) {
+                ForwardPlayerData.getInstance().playerData = new PlayerData(Minecraft.getInstance().getUser().getName());
+            }
+            id++;
         }
-        id++;
     }
 }
