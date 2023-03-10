@@ -1,16 +1,16 @@
 package tfar.classicbar.impl.overlays.mod;
 
 import com.alrex.parcool.ParCoolConfig;
-import com.alrex.parcool.client.hud.AbstractHUD;
+import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.common.capability.impl.Stamina;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
-import tfar.classicbar.util.ModUtils;
 
 public class StaminaB extends BarOverlayImpl {
 
@@ -23,8 +23,8 @@ public class StaminaB extends BarOverlayImpl {
     @Override
     public boolean shouldRender(Player player) {
         if (!checkConfigs()) return false;
-        Stamina stamina = Stamina.get(player);
-        return stamina.getMaxStamina() > stamina.getStamina();
+        IStamina stamina = IStamina.get(player);
+        return stamina.getMaxStamina() > stamina.get();
     }
 
     public static boolean checkConfigs() {
@@ -56,8 +56,8 @@ public class StaminaB extends BarOverlayImpl {
 
     @Override
     public double getBarWidth(Player player) {
-        Stamina stamina = Stamina.get(player);
-        int cStamina = stamina.getStamina();
+        IStamina stamina = IStamina.get(player);
+        int cStamina = stamina.get();
         int maxStamina = stamina.getMaxStamina();
         return Math.ceil((double) BarOverlayImpl.WIDTH * cStamina / maxStamina);
     }
@@ -70,7 +70,7 @@ public class StaminaB extends BarOverlayImpl {
     @Override
     public void renderText(PoseStack stack, Player player, int width, int height, int vOffset) {
         //draw stamina amount
-        int stamina = Stamina.get(player).getStamina();
+        int stamina = IStamina.get(player).get();
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         Color color = getPrimaryBarColor(0, player);
@@ -82,9 +82,9 @@ public class StaminaB extends BarOverlayImpl {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         //Draw stamina icon
-        Stamina stamina = Stamina.get(player);
+        IStamina stamina = IStamina.get(player);
         int textureX = stamina.isExhausted() ? 16 : 0;
-        AbstractHUD.blit(stack, xStart, yStart, textureX, 119, 8, 9, 128, 128);
+        GuiComponent.blit(stack, xStart, yStart, textureX, 119, 8, 9, 128, 128);
     }
 
     @Override

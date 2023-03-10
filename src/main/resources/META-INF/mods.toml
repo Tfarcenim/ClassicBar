@@ -37,6 +37,6 @@ Status icons are bars now
 [[dependencies.classicbar]]
     modId="forge"
     mandatory=true
-    versionRange="[28.0.45,)"
+    versionRange="[43.0.45,)"
     ordering="NONE"
     side="BOTH"

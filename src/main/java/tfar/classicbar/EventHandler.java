@@ -31,6 +31,8 @@ public class EventHandler implements IGuiOverlay {
   private static final List<BarOverlay> all = new ArrayList<>();
   private static final Map<String, BarOverlay> registry = new HashMap<>();
 
+  private static final List<BarOverlay> errored = new ArrayList<>();
+
   public static void register(BarOverlay iBarOverlay) {
     registry.put(iBarOverlay.name(), iBarOverlay);
   }
@@ -47,8 +49,15 @@ public class EventHandler implements IGuiOverlay {
     ModUtils.mc.getProfiler().push("classicbars_hud");
 
     for (BarOverlay overlay : all) {
+      if (errored.contains(overlay))continue;;
       boolean rightHand = overlay.rightHandSide();
-        overlay.render(gui, matrices, player, screenWidth, screenHeight, getOffset(gui,rightHand));
+      try {
+        overlay.render(gui, matrices, player, screenWidth, screenHeight, getOffset(gui, rightHand));
+      } catch (Error e) {
+        ClassicBar.logger.error("Removing broken overlay "+overlay.name());
+        e.printStackTrace();
+        errored.add(overlay);
+      }
     }
 
    // mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
@@ -68,6 +77,7 @@ public class EventHandler implements IGuiOverlay {
     all.clear();
     ClassicBarsConfig.leftorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(false)));
     ClassicBarsConfig.rightorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(true)));
+    all.removeAll(errored);
     ConfigCache.bake();
   }
 
