@@ -78,9 +78,8 @@ repositories{
 
 dependencies {
 
-//    implementation fg.deobf("curse.maven:parcool-482378:3969415")
-
-    implementation fg.deobf("curse.maven:parcool-482378:4426604")
+    implementation fg.deobf("curse.maven:parcool-482378:4513003")
+    implementation fg.deobf("curse.maven:tough-as-nails-246391:3871450")
 
 
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed

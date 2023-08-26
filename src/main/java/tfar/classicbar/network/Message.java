@@ -26,6 +26,17 @@ public class Message {
             MessageSaturationSync::encode,
             MessageSaturationSync::new,
             MessageSaturationSync::handle);
+
+    INSTANCE.registerMessage(ID++, MessageThirstExhaustionSync.class,
+            MessageThirstExhaustionSync::encode,
+            MessageThirstExhaustionSync::new,
+            MessageThirstExhaustionSync::handle);
+
+    INSTANCE.registerMessage(ID++, MessageHydrationSync.class,
+            MessageHydrationSync::encode,
+            MessageHydrationSync::new,
+            MessageHydrationSync::handle);
     EVENT_BUS.register(new SyncHandler());
   }
+
 }

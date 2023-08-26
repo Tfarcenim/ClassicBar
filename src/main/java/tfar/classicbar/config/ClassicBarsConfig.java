@@ -22,14 +22,18 @@ public class ClassicBarsConfig {
   public static ForgeConfigSpec.BooleanValue fullToughnessBar;
   public static ForgeConfigSpec.BooleanValue lowArmorWarning;
   public static ForgeConfigSpec.BooleanValue showSaturationBar;
+  public static ForgeConfigSpec.BooleanValue showHydrationBar;
   public static ForgeConfigSpec.BooleanValue showHeldFoodOverlay;
+  public static ForgeConfigSpec.BooleanValue showHeldDrinkOverlay;
   public static ForgeConfigSpec.BooleanValue showExhaustionOverlay;
+  public static ForgeConfigSpec.BooleanValue showThirstExhaustionOverlay;
   public static ForgeConfigSpec.BooleanValue showAbsorptionNumbers;
   public static ForgeConfigSpec.BooleanValue showAirNumbers;
   public static ForgeConfigSpec.BooleanValue showArmorNumbers;
   public static ForgeConfigSpec.BooleanValue showArmorToughnessNumbers;
   public static ForgeConfigSpec.BooleanValue showHealthNumbers;
   public static ForgeConfigSpec.BooleanValue showHungerNumbers;
+  public static ForgeConfigSpec.BooleanValue showThirstNumbers;
   public static ForgeConfigSpec.BooleanValue showMountHealthNumbers;
 
   public static ForgeConfigSpec.DoubleValue transitionSpeed;
@@ -37,6 +41,10 @@ public class ClassicBarsConfig {
   static ForgeConfigSpec.ConfigValue<String> hungerBarDebuffColor;
   static ForgeConfigSpec.ConfigValue<String> saturationBarColor;
   static ForgeConfigSpec.ConfigValue<String> saturationBarDebuffColor;
+  static ForgeConfigSpec.ConfigValue<String> thirstBarColor;
+  static ForgeConfigSpec.ConfigValue<String> thirstBarDebuffColor;
+  static ForgeConfigSpec.ConfigValue<String> hydrationBarColor;
+  static ForgeConfigSpec.ConfigValue<String> hydrationBarDebuffColor;
   static ForgeConfigSpec.ConfigValue<String> airBarColor;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> armorColors;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> armorToughnessColors;
@@ -71,18 +79,26 @@ public class ClassicBarsConfig {
     showArmorToughnessNumbers = builder.define("show_armor_toughness_numbers",true);
     showHealthNumbers = builder.define("show_health_numbers",true);
     showHungerNumbers = builder.define("show_hunger_numbers",true);
+    showThirstNumbers = builder.define("show_thirst_numbers",true);
     showMountHealthNumbers = builder.define("show_mount_health_numbers",true);
 
     showSaturationBar = builder.define("show_saturation_bar", true);
+    showHydrationBar = builder.define("show_hydration_bar", true);
     showHeldFoodOverlay = builder.define("show_held_food_overlay", true);
+    showHeldDrinkOverlay = builder.define("show_held_drink_overlay", true);
     showExhaustionOverlay = builder.define("show_exhaustion_overlay", true);
+    showThirstExhaustionOverlay = builder.define("show_thirst_exhaustion_overlay", true);
     transitionSpeed = builder.defineInRange("transition_speed", 3, 0, Double.MAX_VALUE);
 
     hungerBarColor = builder.define("hunger_bar_color","#B34D00",String.class::isInstance);
     hungerBarDebuffColor = builder.define("hunger_bar_debuff_color","#249016",String.class::isInstance);
+    thirstBarColor = builder.define("thirstr_bar_color","#1C5EE4",String.class::isInstance);
+    thirstBarDebuffColor = builder.define("thirst_bar_debuff_color","#5A891C",String.class::isInstance);
     airBarColor = builder.define("air_bar_color","#00E6E6",String.class::isInstance);
     saturationBarColor = builder.define("saturation_bar_color","#FFCC00",String.class::isInstance);
     saturationBarDebuffColor = builder.define("saturation_bar_debuff_color","#87BC00",String.class::isInstance);
+    hydrationBarColor = builder.define("hydration_bar_color","#00A3E2",String.class::isInstance);
+    hydrationBarDebuffColor = builder.define("hydration_bar_debuff_color","#85CF25",String.class::isInstance);
     lavaBarColor = builder.define("lava_bar_color","#FF8000",String.class::isInstance);
     flightBarColor = builder.define("flight_bar_color","#FFFFFF",String.class::isInstance);
 
@@ -100,7 +116,7 @@ public class ClassicBarsConfig {
     witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
 
     leftorder = builder.defineList("left_order", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2"),String.class::isInstance);
-    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","health_mount","food", StaminaB.name,"feathers","armor_toughness","thirst","air","flighttiara","decay"),String.class::isInstance);
+    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","health_mount","food","thirst","thirst_level", StaminaB.name,"feathers","armor_toughness","air","flighttiara","decay"),String.class::isInstance);
   }
 
   @SubscribeEvent
