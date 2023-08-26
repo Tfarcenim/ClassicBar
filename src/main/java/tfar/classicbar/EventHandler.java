@@ -87,7 +87,7 @@ public class EventHandler implements IGuiOverlay {
 
   public static void setupOverlays(RegisterGuiOverlaysEvent e) {
     MinecraftForge.EVENT_BUS.addListener(EventHandler::disableVanilla);
-    e.registerBelow(VanillaGuiOverlay.CHAT_PANEL.id(),ClassicBar.MODID,new EventHandler());
+    e.registerBelow(VanillaGuiOverlay.ITEM_NAME.id(),ClassicBar.MODID,new EventHandler());
 
     //Register renderers for events
     ClassicBar.logger.info("Registering Vanilla Overlays");
