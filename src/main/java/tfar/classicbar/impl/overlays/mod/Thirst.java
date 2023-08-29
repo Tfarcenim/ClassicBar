@@ -9,6 +9,7 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.network.Message;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 import toughasnails.api.potion.TANEffects;
@@ -216,7 +217,7 @@ public class Thirst extends BarOverlayImpl {
             drawHeldDrink(stack, player, thirstData, xStart, yStart, MAX_THIRST_LEVEL, MAX_HYDRATION_LEVEL);
         }
 
-        if (ClassicBarsConfig.showThirstExhaustionOverlay.get()) {
+        if (ClassicBarsConfig.showThirstExhaustionOverlay.get() && Message.presentOnServer) {
             drawExhaustion(stack, player, xStart, yStart, exhaustionLevel, maxExhaustionLevel);
         }
 
@@ -224,8 +225,8 @@ public class Thirst extends BarOverlayImpl {
 
     private void drawThirst(PoseStack stack, Player player, int x, int y, double thirstLevel, double maxLevel) {
         getSecondaryBarColor(0, player).color2Gl();
-        double barWidth = ModUtils.getWidth(thirstLevel, maxLevel);  // assignable via the context
-        double barXStart = x + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);  // assignable via the context
+        double barWidth = ModUtils.getWidth(thirstLevel, maxLevel);
+        double barXStart = x + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
         renderPartialBar(stack, barXStart + 2, y + 2, barWidth);
     }
 
@@ -312,6 +313,9 @@ public class Thirst extends BarOverlayImpl {
         ModUtils.drawTexturedModalRect(stack, xStart, yStart, texX, 32, 9, 9);
     }
 
+    /**
+     * Not used, but still impl in case.
+     */
     @Override
     public double getBarWidth(Player player) {
         IThirst thirstData = ThirstHelper.getThirst(player);
