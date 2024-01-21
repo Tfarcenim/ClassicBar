@@ -1,7 +1,6 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -102,10 +101,5 @@ public class ArmorToughness extends BarOverlayImpl {
         int yStart = height - vOffset;
         //Draw armor toughness icon
         ModUtils.drawTexturedModalRect(graphics, xStart, yStart, 83, 0, 9, 9);
-    }
-
-    @Override
-    public ResourceLocation getIconRL() {
-        return BarOverlayImpl.ICON_BAR;
     }
 }

@@ -148,8 +148,8 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return Color.BLACK;
     }
     @Override
-    public ResourceLocation getIconRL() {
-        return GUI_ICONS_LOCATION;
+    public final ResourceLocation getIconRL() {
+        return barSettings.icon;
     }
     @Override
     public boolean isFitted() {

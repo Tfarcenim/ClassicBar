@@ -1,10 +1,8 @@
 package tfar.classicbar.impl.overlays.mod;
 
 import com.elenai.feathers.api.FeathersHelper;
-import com.elenai.feathers.client.gui.FeathersHudOverlay;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -13,8 +11,6 @@ import tfar.classicbar.util.ColorUtils;
 import tfar.classicbar.util.ModUtils;
 
 public class Feathers extends BarOverlayImpl {
-
-	private static final ResourceLocation DODGE_ICONS = new ResourceLocation("elenaidodge2", "textures/gui/icons.png");
 
 	public Feathers() {
 		super("feathers");
@@ -65,9 +61,5 @@ public class Feathers extends BarOverlayImpl {
 		double feathers = FeathersHelper.getFeathers();
 		int maxFeathers = FeathersHelper.getMaxFeathers();
 		return WIDTH * feathers / maxFeathers;
-	}
-	@Override
-	public ResourceLocation getIconRL() {
-		return FeathersHudOverlay.ICONS;
 	}
 }

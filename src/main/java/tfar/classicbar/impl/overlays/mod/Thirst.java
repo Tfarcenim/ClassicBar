@@ -21,7 +21,6 @@ import toughasnails.init.ModTags;
 public class Thirst extends BarOverlayImpl {
 
     public static final String NAME = "thirst_level";
-    public static final ResourceLocation THIRST_ICON = new ResourceLocation("toughasnails", "textures/gui/icons.png");
     public static final ResourceLocation OVERLAY_ID = new ResourceLocation("toughasnails", NAME);
 
     public static final double MAX_THIRST_LEVEL = 20;
@@ -334,11 +333,6 @@ public class Thirst extends BarOverlayImpl {
     public Color getSecondaryBarColor(int index, Player player) {
         if (player.hasEffect(TANEffects.THIRST.get())) return ConfigCache.thirstDebuff;
         return ConfigCache.thirst;
-    }
-
-    @Override
-    public ResourceLocation getIconRL() {
-        return THIRST_ICON;
     }
 
     public static boolean isEnabled() {

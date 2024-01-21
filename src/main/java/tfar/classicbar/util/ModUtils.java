@@ -8,7 +8,10 @@ import tfar.classicbar.impl.BarOverlayImpl;
 
 public class ModUtils {
   public static final Minecraft mc = Minecraft.getInstance();
+    public static final ResourceLocation VAMPIRISM_ICONS = new ResourceLocation("vampirism:textures/gui/icons.png");
+  public static final ResourceLocation THIRST_ICON = new ResourceLocation("toughasnails", "textures/gui/icons.png");
   private static final Font fontRenderer = mc.font;
+  public static final ResourceLocation ICONS = new ResourceLocation("parcool:textures/gui/stamina_bar.png");
   public static ResourceLocation CURRENT_TEXTURE = BarOverlayImpl.GUI_ICONS_LOCATION;
 
   public static void drawTexturedModalRect(GuiGraphics stack, double x, int y, int textureX, int textureY, double width, int height) {

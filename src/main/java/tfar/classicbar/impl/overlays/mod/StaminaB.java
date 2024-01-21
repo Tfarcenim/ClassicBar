@@ -3,7 +3,6 @@ package tfar.classicbar.impl.overlays.mod;
 import com.alrex.parcool.ParCoolConfig;
 import com.alrex.parcool.common.capability.IStamina;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -12,7 +11,7 @@ import tfar.classicbar.util.Color;
 public class StaminaB extends BarOverlayImpl {
 
     public static final String name = "parcool:stamina";
-    private static final ResourceLocation ICONS = new ResourceLocation("parcool:textures/gui/stamina_bar.png");
+
     public StaminaB() {
         super(name);
     }
@@ -77,10 +76,5 @@ public class StaminaB extends BarOverlayImpl {
         IStamina stamina = IStamina.get(player);
         int textureX = stamina.isExhausted() ? 16 : 0;
         graphics.blit(getIconRL(),xStart, yStart, textureX, 119, 8, 9, 128, 128);
-    }
-
-    @Override
-    public ResourceLocation getIconRL() {
-        return ICONS;
     }
 }

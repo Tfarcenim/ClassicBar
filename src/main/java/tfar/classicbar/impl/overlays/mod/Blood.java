@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -15,7 +14,6 @@ import static tfar.classicbar.util.ModUtils.drawTexturedModalRect;
 
 public class Blood extends BarOverlayImpl {
 
-    private static final ResourceLocation VAMPIRISM_ICONS = new ResourceLocation("vampirism:textures/gui/icons.png");
     public Blood() {
         super("blood");
     }
@@ -74,9 +72,4 @@ public class Blood extends BarOverlayImpl {
         drawTexturedModalRect(graphics, xStart, yStart, 0, 0, 9, 9);
         drawTexturedModalRect(graphics, xStart, yStart, 9, 0, 9, 9);
     }
-    @Override
-    public ResourceLocation getIconRL() {
-        return VAMPIRISM_ICONS;
-    }
-
 }

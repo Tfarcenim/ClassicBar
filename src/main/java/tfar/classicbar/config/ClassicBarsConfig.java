@@ -2,9 +2,10 @@ package tfar.classicbar.config;
 
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,13 +16,17 @@ import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.mod.StaminaB;
+import tfar.classicbar.util.ModUtils;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = ClassicBar.MODID, bus = Mod.EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
 public class ClassicBarsConfig {
@@ -38,14 +43,6 @@ public class ClassicBarsConfig {
   public static ForgeConfigSpec.BooleanValue showHeldDrinkOverlay;
   public static ForgeConfigSpec.BooleanValue showExhaustionOverlay;
   public static ForgeConfigSpec.BooleanValue showThirstExhaustionOverlay;
-  public static ForgeConfigSpec.BooleanValue showAbsorptionNumbers;
-  public static ForgeConfigSpec.BooleanValue showAirNumbers;
-  public static ForgeConfigSpec.BooleanValue showArmorNumbers;
-  public static ForgeConfigSpec.BooleanValue showArmorToughnessNumbers;
-  public static ForgeConfigSpec.BooleanValue showHealthNumbers;
-  public static ForgeConfigSpec.BooleanValue showHungerNumbers;
-  public static ForgeConfigSpec.BooleanValue showThirstNumbers;
-  public static ForgeConfigSpec.BooleanValue showMountHealthNumbers;
 
   public static ForgeConfigSpec.DoubleValue transitionSpeed;
   static ForgeConfigSpec.ConfigValue<String> hungerBarColor;
@@ -83,15 +80,6 @@ public class ClassicBarsConfig {
     fullArmorBar = builder.define("full_armor_bar", false);
     fullToughnessBar = builder.define("full_toughness_bar", false);
     lowArmorWarning = builder.define("display_low_armor_warning", true);
-
-    showAbsorptionNumbers = builder.define("show_absorption_numbers",true);
-    showAirNumbers = builder.define("show_air_numbers",true);
-    showArmorNumbers = builder.define("show_armor_numbers",true);
-    showArmorToughnessNumbers = builder.define("show_armor_toughness_numbers",true);
-    showHealthNumbers = builder.define("show_health_numbers",true);
-    showHungerNumbers = builder.define("show_hunger_numbers",true);
-    showThirstNumbers = builder.define("show_thirst_numbers",true);
-    showMountHealthNumbers = builder.define("show_mount_health_numbers",true);
 
     showSaturationBar = builder.define("show_saturation_bar", true);
     showHydrationBar = builder.define("show_hydration_bar", true);
@@ -145,7 +133,7 @@ public class ClassicBarsConfig {
     if (settingsPath.exists()) {
     } else {
       settingsPath.mkdir();
-      write();
+      writeDefault();
     }
 
     File[] files = settingsPath.listFiles();
@@ -158,9 +146,7 @@ public class ClassicBarsConfig {
 
         JsonReader jsonReader = new JsonReader(reader);
 
-        Gson gson = new Gson();
-
-        ;
+        Gson gson = new GsonBuilder().registerTypeAdapter(ResourceLocation.class,new ResourceLocation.Serializer()).create();
 
         BarSettings barSettings = gson.fromJson(jsonReader, BarSettings.class);
         String fileName = file.getName();
@@ -177,9 +163,22 @@ public class ClassicBarsConfig {
     }
   }
 
-  public static void write() {
-    Gson gson = new Gson();
+  /*public static class BarSettingsDeserializer implements JsonDeserializer<BarSettings> {
 
+    @Override
+    public BarSettings deserialize
+            (JsonElement jElement, Type typeOfT, JsonDeserializationContext context)
+            throws JsonParseException {
+      JsonObject jObject = jElement.getAsJsonObject();
+      int intValue = jObject.get("valueInt").getAsInt();
+      String stringValue = jObject.get("valueString").getAsString();
+      return new BarSettings(intValue, stringValue);
+    }
+  }*/
+
+  public static void writeDefault() {
+    Gson gson = new Gson();
+    makeDefaultBarSettings();
     for (BarOverlay barOverlay : EventHandler.registry.values()) {
       File file = new File("config/" + ClassicBar.MODID + "/"+ barOverlay.name()+".json");
       JsonWriter writer = null;
@@ -187,11 +186,9 @@ public class ClassicBarsConfig {
         writer = gson.newJsonWriter(new FileWriter(file));
         writer.setIndent("    ");
 
-        JsonObject object = new JsonObject();
+        BarSettings barSettings = defaults.getOrDefault(barOverlay.name(),nullSettings);
+        gson.toJson(barSettings.toJson(), writer);
 
-        object.addProperty("show_text",true);
-
-        gson.toJson(object, writer);
       } catch (Exception e) {
         ClassicBar.logger.error("Couldn't save config");
         e.printStackTrace();
@@ -201,4 +198,43 @@ public class ClassicBarsConfig {
       }
     }
   }
+
+  private static final BarSettings nullSettings = new BarSettings();
+
+  static void makeDefaultBarSettings() {
+
+    nullSettings.show_text = true;
+    nullSettings.icon = BarOverlayImpl.GUI_ICONS_LOCATION;
+
+    BarSettings absorbSettings = nullSettings.copy();
+    defaults.put("absorption",absorbSettings);
+
+    BarSettings airSettings = nullSettings.copy();
+    defaults.put("air",airSettings);
+
+    BarSettings armorSettings = nullSettings.copy();
+    defaults.put("armor",armorSettings);
+
+    BarSettings armorToughnessSettings = nullSettings.copy();
+    armorToughnessSettings.icon = BarOverlayImpl.ICON_BAR;
+    defaults.put("armor_toughness",armorToughnessSettings);
+
+    BarSettings bloodSettings = nullSettings.copy();
+    bloodSettings.icon = ModUtils.VAMPIRISM_ICONS;
+    defaults.put("blood",bloodSettings);
+
+    BarSettings foodSettings = nullSettings.copy();
+    defaults.put("food",foodSettings);
+
+    BarSettings healthSettings = nullSettings.copy();
+    defaults.put("health",healthSettings);
+
+    BarSettings healthMountSettings = nullSettings.copy();
+    defaults.put("health_mount",healthMountSettings);
+  }
+
+
+
+  private static final Map<String,BarSettings> defaults = new HashMap<>();
+
 }
