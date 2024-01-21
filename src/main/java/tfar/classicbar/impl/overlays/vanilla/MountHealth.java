@@ -4,7 +4,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.ColorUtils;
 import tfar.classicbar.util.HealthEffect;
@@ -64,10 +63,6 @@ public class MountHealth extends BarOverlayImpl {
     double mounthHealth = mount.getHealth();
     double maxHealth = mount.getMaxHealth();
     return (int) Math.ceil(BarOverlayImpl.WIDTH * Math.min(maxHealth,mounthHealth) / mounthHealth);
-  }
-  @Override
-  public boolean shouldRenderText() {
-    return ClassicBarsConfig.showMountHealthNumbers.get();
   }
 
   @Override

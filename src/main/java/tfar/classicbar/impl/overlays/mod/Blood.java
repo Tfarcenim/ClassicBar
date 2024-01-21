@@ -8,7 +8,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 
@@ -54,11 +53,6 @@ public class Blood extends BarOverlayImpl {
             return Math.ceil((double) WIDTH * blood / maxBlood);
         }
         return 0;
-    }
-
-    @Override
-    public boolean shouldRenderText() {
-        return ClassicBarsConfig.showHungerNumbers.get();
     }
 
     @Override

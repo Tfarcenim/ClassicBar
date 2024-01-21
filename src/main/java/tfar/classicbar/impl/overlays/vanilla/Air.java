@@ -3,7 +3,6 @@ package tfar.classicbar.impl.overlays.vanilla;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
@@ -32,10 +31,6 @@ public class Air extends BarOverlayImpl {
     Color color = getPrimaryBarColor(0,player);
     color.color2Gl();
     renderPartialBar(graphics,f + 2, yStart + 2,barWidth);
-  }
-  @Override
-  public boolean shouldRenderText() {
-    return ClassicBarsConfig.showAirNumbers.get();
   }
 
   @Override

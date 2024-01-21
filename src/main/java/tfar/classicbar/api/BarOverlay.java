@@ -10,6 +10,7 @@ import tfar.classicbar.util.ModUtils;
 
 public interface BarOverlay {
 
+  void setBarSettings(BarSettings barSettings);
   boolean rightHandSide();
   BarOverlay setSide(boolean right);
 

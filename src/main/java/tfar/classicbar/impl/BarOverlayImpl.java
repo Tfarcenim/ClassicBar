@@ -8,6 +8,7 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
 import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
@@ -25,6 +26,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
     protected String name;
     protected boolean side;
+    protected BarSettings barSettings;
 
     public BarOverlayImpl(String name) {
         this.name = name;
@@ -32,6 +34,11 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
     public boolean shouldRender(Player player) {
         return true;
+    }
+
+    @Override
+    public void setBarSettings(BarSettings barSettings) {
+        this.barSettings = barSettings;
     }
 
     @Override
@@ -68,8 +75,8 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return false;
     }
 
-    public boolean shouldRenderText() {
-        return true;
+    public final boolean shouldRenderText() {
+        return barSettings.show_text;
     }
 
     public abstract void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset);

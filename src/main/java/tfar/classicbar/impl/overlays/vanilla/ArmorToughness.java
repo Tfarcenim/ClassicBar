@@ -76,11 +76,6 @@ public class ArmorToughness extends BarOverlayImpl {
     }
 
     @Override
-    public boolean shouldRenderText() {
-        return ClassicBarsConfig.showArmorToughnessNumbers.get();
-    }
-
-    @Override
     public Color getPrimaryBarColor(int index, Player player) {
         return ConfigCache.armor_toughness.get(index);
     }

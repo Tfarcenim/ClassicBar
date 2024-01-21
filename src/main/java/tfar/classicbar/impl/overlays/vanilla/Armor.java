@@ -107,10 +107,6 @@ public class Armor extends BarOverlayImpl {
         return !ClassicBarsConfig.fullArmorBar.get();
     }
 
-    @Override
-    public boolean shouldRenderText() {
-        return ClassicBarsConfig.showArmorNumbers.get();
-    }
 
     public static int getDamagedAmount(Player player) {
         int warningAmount = 0;

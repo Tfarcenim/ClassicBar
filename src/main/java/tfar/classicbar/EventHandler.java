@@ -28,7 +28,7 @@ import java.util.*;
 public class EventHandler implements IGuiOverlay {
 
   private static final List<BarOverlay> all = new ArrayList<>();
-  private static final Map<String, BarOverlay> registry = new HashMap<>();
+  public static final Map<String, BarOverlay> registry = new HashMap<>();
 
   private static final List<BarOverlay> errored = new ArrayList<>();
 
@@ -52,7 +52,6 @@ public class EventHandler implements IGuiOverlay {
     ModUtils.mc.getProfiler().push("classicbars_hud");
 
     for (BarOverlay overlay : all) {
-      if (errored.contains(overlay))continue;
       boolean rightHand = overlay.rightHandSide();
       try {
         overlay.render(gui, matrices, player, screenWidth, screenHeight, getOffset(gui, rightHand));
@@ -62,8 +61,9 @@ public class EventHandler implements IGuiOverlay {
         errored.add(overlay);
       }
     }
+    if (!errored.isEmpty()) all.removeAll(errored);
 
-   // mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
+    // mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
     ModUtils.mc.getProfiler().pop();
   }
 

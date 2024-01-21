@@ -143,11 +143,6 @@ public class Hunger extends BarOverlayImpl {
   }
 
   @Override
-  public boolean shouldRenderText() {
-    return ClassicBarsConfig.showHungerNumbers.get();
-  }
-
-  @Override
   public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
@@ -173,7 +168,6 @@ public class Hunger extends BarOverlayImpl {
     //Draw hunger icon
     //hunger background
     ModUtils.drawTexturedModalRect(graphics,xStart, yStart, k6, 27, 9, 9);
-
     //hunger
     ModUtils.drawTexturedModalRect(graphics,xStart, yStart, k5, 27, 9, 9);
 

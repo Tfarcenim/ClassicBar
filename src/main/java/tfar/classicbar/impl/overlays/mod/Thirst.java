@@ -281,11 +281,6 @@ public class Thirst extends BarOverlayImpl {
     }
 
     @Override
-    public boolean shouldRenderText() {
-        return ClassicBarsConfig.showThirstNumbers.get();
-    }
-
-    @Override
     public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;

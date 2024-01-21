@@ -7,7 +7,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ColorUtils;
@@ -45,10 +44,6 @@ public class Feathers extends BarOverlayImpl {
 
 	}
 
-	@Override
-	public boolean shouldRenderText() {
-		return ClassicBarsConfig.showHungerNumbers.get();
-	}
 	@Override
 	public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
 		//draw feathers amount

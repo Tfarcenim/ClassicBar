@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ColorUtils;
@@ -103,11 +102,6 @@ public class Health extends BarOverlayImpl {
     double health = player.getHealth();
     double maxHealth = player.getMaxHealth();
     return WIDTH * health / maxHealth;
-  }
-
-  @Override
-  public boolean shouldRenderText() {
-    return ClassicBarsConfig.showHealthNumbers.get();
   }
 
   @Override
