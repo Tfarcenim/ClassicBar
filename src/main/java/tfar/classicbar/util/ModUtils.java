@@ -1,16 +1,18 @@
 package tfar.classicbar.util;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import tfar.classicbar.impl.BarOverlayImpl;
 
 public class ModUtils {
   public static final Minecraft mc = Minecraft.getInstance();
   private static final Font fontRenderer = mc.font;
+  public static ResourceLocation CURRENT_TEXTURE = BarOverlayImpl.GUI_ICONS_LOCATION;
 
-  public static void drawTexturedModalRect(PoseStack stack, double x, int y, int textureX, int textureY, double width, int height) {
-    mc.gui.blit(stack, (int) x, y, textureX, textureY, (int) width, height);
+  public static void drawTexturedModalRect(GuiGraphics stack, double x, int y, int textureX, int textureY, double width, int height) {
+    stack.blit(CURRENT_TEXTURE, (int) x, y, textureX, textureY, (int) width, height);
   }
 
   public static double getWidth(double d1, double d2) {
@@ -22,7 +24,7 @@ public class ModUtils {
     return fontRenderer.width(s);
   }
 
-  public static void drawStringOnHUD(PoseStack stack,String string, int xOffset, int yOffset, int color) {
+  public static void drawStringOnHUD(GuiGraphics stack, String string, int xOffset, int yOffset, int color) {
    /* double scale = numbers.numberScale;
     GlStateManager.pushMatrix();
     GlStateManager.scale(scale, scale, 1);
@@ -35,6 +37,6 @@ public class ModUtils {
     xOffset += 2;
     yOffset += 2;
 
-    fontRenderer.drawShadow(stack,string, xOffset, yOffset, color);
+    stack.drawString(Minecraft.getInstance().font,string, xOffset, yOffset, color,true);
   }
 }

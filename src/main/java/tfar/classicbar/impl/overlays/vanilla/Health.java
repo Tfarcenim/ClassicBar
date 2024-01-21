@@ -2,7 +2,7 @@ package tfar.classicbar.impl.overlays.vanilla;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.config.ClassicBarsConfig;
@@ -28,7 +28,7 @@ public class Health extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(ForgeGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
     int updateCounter = gui.getGuiTicks();
 
     double health = player.getHealth();
@@ -56,7 +56,7 @@ public class Health extends BarOverlayImpl {
 
     Color.reset();
     //Bar background
-    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 0, i4, WIDTH + 4, 9);
+    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 0, i4, WIDTH + 4, 9);
 
     double f = xStart + (rightHandSide() ? WIDTH - barWidth : 0);
 
@@ -71,7 +71,7 @@ public class Health extends BarOverlayImpl {
         double w = ModUtils.getWidth(displayHealth, maxHealth);
         double off = rightHandSide() ? w - barWidth : 0;
         //draw interpolation
-        renderPartialBar(stack,f + 2 - off, yStart + 2,w);
+        renderPartialBar(graphics,f + 2 - off, yStart + 2,w);
         //Health is increasing, IDK what to do here
       } else {/*
                   f = xStart + getWidth(health, maxHealth);
@@ -82,11 +82,11 @@ public class Health extends BarOverlayImpl {
     Color primary = getPrimaryBarColor(0,player);
     primary.color2Gl();
     //draw portion of bar based on health remaining
-    renderPartialBar(stack,f + 2, yStart + 2, barWidth);
+    renderPartialBar(graphics,f + 2, yStart + 2, barWidth);
     if (effect == HealthEffect.POISON) {
       //draw poison overlay
       RenderSystem.setShaderColor(0, .5f, 0, .5f);
-      ModUtils.drawTexturedModalRect(stack,f + 1, yStart + 1, 1, 36, barWidth, 7);
+      ModUtils.drawTexturedModalRect(graphics,f + 1, yStart + 1, 1, 36, barWidth, 7);
     }
   }
 
@@ -111,25 +111,25 @@ public class Health extends BarOverlayImpl {
   }
 
   @Override
-  public void renderText(PoseStack stack,Player player, int width, int height, int vOffset) {
+  public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
     double health = player.getHealth();
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
-    textHelper(stack,xStart,yStart,health,getPrimaryBarColor(0,player).colorToText());
+    textHelper(graphics,xStart,yStart,health,getPrimaryBarColor(0,player).colorToText());
   }
 
   @Override
-  public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
+  public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
     HealthEffect effect = getHealthEffect(player);
 
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
-    int i5 = (player.level.getLevelData().isHardcore()) ? 5 : 0;
+    int i5 = (player.level().getLevelData().isHardcore()) ? 5 : 0;
     //Draw health icon
     //heart background
     Color.reset();
-    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 16, 9 * i5, 9, 9);
+    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 16, 9 * i5, 9, 9);
     //heart
-    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 36 + effect.i, 9 * i5, 9, 9);
+    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 36 + effect.i, 9 * i5, 9, 9);
   }
 }

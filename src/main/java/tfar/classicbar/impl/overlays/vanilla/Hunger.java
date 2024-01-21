@@ -1,7 +1,7 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -28,7 +28,7 @@ public class Hunger extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(ForgeGui gui, PoseStack matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(ForgeGui gui, GuiGraphics matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
     double hunger = player.getFoodData().getFoodLevel();
     double maxHunger = 20;//HungerHelper.getMaxHunger(player);
     
@@ -148,17 +148,17 @@ public class Hunger extends BarOverlayImpl {
   }
 
   @Override
-  public void renderText(PoseStack stack,Player player, int width, int height,int vOffset) {
+  public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     //draw hunger amount
     double hunger = player.getFoodData().getFoodLevel();
     int c = getSecondaryBarColor(0,player).colorToText();
-    textHelper(stack,xStart,yStart,hunger,c);
+    textHelper(graphics,xStart,yStart,hunger,c);
   }
 
   @Override
-  public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
+  public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
 
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
@@ -172,10 +172,10 @@ public class Hunger extends BarOverlayImpl {
     }
     //Draw hunger icon
     //hunger background
-    ModUtils.drawTexturedModalRect(stack,xStart, yStart, k6, 27, 9, 9);
+    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, k6, 27, 9, 9);
 
     //hunger
-    ModUtils.drawTexturedModalRect(stack,xStart, yStart, k5, 27, 9, 9);
+    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, k5, 27, 9, 9);
 
   }
 }

@@ -1,6 +1,6 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -26,7 +26,7 @@ public class MountHealth extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(ForgeGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
     //Push to avoid lasting changes
     int updateCounter = gui.getGuiTicks();
 
@@ -49,14 +49,14 @@ public class MountHealth extends BarOverlayImpl {
     double maxHealth = mount.getMaxHealth();
     int i4 = (highlight) ? 18 : 0;
     //Bar background
-    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 0, i4, 81, 9);
+    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 0, i4, 81, 9);
     //is the bar changing
     //Pass 1, draw bar portion
     //calculate bar color
     ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).color2Gl();
     double f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
     //draw portion of bar based on mountHealth remaining
-    renderPartialBar(stack,f + 2, yStart + 2, barWidth);
+    renderPartialBar(graphics,f + 2, yStart + 2, barWidth);
   }
   @Override
   public double getBarWidth(Player player) {
@@ -71,21 +71,21 @@ public class MountHealth extends BarOverlayImpl {
   }
 
   @Override
-  public void renderText(PoseStack stack,Player player, int width, int height,int vOffset) {
+  public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     LivingEntity mount = (LivingEntity) player.getVehicle();
     double maxHealth = mount.getMaxHealth();
-    textHelper(stack,xStart,yStart,mountHealth, ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).colorToText());
+    textHelper(graphics,xStart,yStart,mountHealth, ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).colorToText());
   }
 
   @Override
-  public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
+  public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     //heart background
-    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 16, 0, 9, 9);
+    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 16, 0, 9, 9);
     //heart
-    ModUtils.drawTexturedModalRect(stack,xStart, yStart, 88, 9, 9, 9);
+    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 88, 9, 9, 9);
   }
 }

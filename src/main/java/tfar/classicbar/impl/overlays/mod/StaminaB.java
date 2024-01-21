@@ -2,9 +2,7 @@ package tfar.classicbar.impl.overlays.mod;
 
 import com.alrex.parcool.ParCoolConfig;
 import com.alrex.parcool.common.capability.IStamina;
-import com.alrex.parcool.common.capability.impl.Stamina;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -35,18 +33,18 @@ public class StaminaB extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(ForgeGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         int xStart = screenWidth / 2 + getHOffset();
         int yStart = screenHeight - vOffset;
         double barWidth = getBarWidth(player);
         Color.reset();
         //Bar background
-        renderFullBarBackground(stack, xStart, yStart);
+        renderFullBarBackground(graphics, xStart, yStart);
         //draw portion of bar based on air amount
         double f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
         Color color = getPrimaryBarColor(0, player);
         color.color2Gl();
-        renderPartialBar(stack, f + 2, yStart + 2, barWidth);
+        renderPartialBar(graphics, f + 2, yStart + 2, barWidth);
     }
 
     @Override
@@ -68,23 +66,23 @@ public class StaminaB extends BarOverlayImpl {
     }
 
     @Override
-    public void renderText(PoseStack stack, Player player, int width, int height, int vOffset) {
+    public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
         //draw stamina amount
         int stamina = IStamina.get(player).get();
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         Color color = getPrimaryBarColor(0, player);
-        textHelper(stack, xStart, yStart, stamina/20, color.colorToText());
+        textHelper(graphics, xStart, yStart, stamina/20, color.colorToText());
     }
 
     @Override
-    public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
+    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         //Draw stamina icon
         IStamina stamina = IStamina.get(player);
         int textureX = stamina.isExhausted() ? 16 : 0;
-        GuiComponent.blit(stack, xStart, yStart, textureX, 119, 8, 9, 128, 128);
+        graphics.blit(getIconRL(),xStart, yStart, textureX, 119, 8, 9, 128, 128);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
@@ -27,7 +27,7 @@ public class Armor extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(ForgeGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         double armor = calculateArmorValue(player);
         double barWidth = getBarWidth(player);
 
@@ -41,7 +41,7 @@ public class Armor extends BarOverlayImpl {
 
         int yStart = screenHeight - vOffset;
         //bar background
-        renderBarBackground(stack, player, screenWidth, screenHeight, vOffset);
+        renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
         //how many layers are there? remember to start at 0
         int index = (int) Math.min(Math.ceil(armor / 20), ConfigCache.armor.size()) - 1;
         Color primary = getPrimaryBarColor(index, player);
@@ -50,7 +50,7 @@ public class Armor extends BarOverlayImpl {
             //calculate bar color
             primary.color2Gla(armorAlpha);
             //draw portion of bar based on armor
-            renderPartialBar(stack, xStart + 2, yStart + 2, barWidth);
+            renderPartialBar(graphics, xStart + 2, yStart + 2, barWidth);
         } else {
             //we have wrapped, draw 2 bars
             //draw first bar
@@ -59,24 +59,24 @@ public class Armor extends BarOverlayImpl {
                 Color secondary = getSecondaryBarColor(index - 1, player);
                 //draw complete first bar
                 secondary.color2Gla(armorAlpha);
-                renderFullBar(stack, xStart + 2, yStart + 2);
+                renderFullBar(graphics, xStart + 2, yStart + 2);
                 //draw partial second bar
                 primary.color2Gl();
                 double w = ModUtils.getWidth(armor % 20, 20);
                 double f = xStart + (rightHandSide() ? WIDTH - w : 0);
-                renderPartialBar(stack, f + 2, yStart + 2, w);
+                renderPartialBar(graphics, f + 2, yStart + 2, w);
             }
             //case 2, bar is a multiple of 20, or it is capped
             else {
                 //draw complete second bar
                 primary.color2Gla(armorAlpha);
-                renderFullBar(stack, xStart + 2, yStart + 2);
+                renderFullBar(graphics, xStart + 2, yStart + 2);
             }
             // now handle the low armor warning
             if (warn) {
                 //draw one bar
                 primary.color2Gla(armorAlpha);
-                renderPartialBar(stack, xStart + 2, yStart + 2, ModUtils.getWidth(armor - index * 20, 20));
+                renderPartialBar(graphics, xStart + 2, yStart + 2, ModUtils.getWidth(armor - index * 20, 20));
             }
         }
     }
@@ -122,40 +122,32 @@ public class Armor extends BarOverlayImpl {
             int percentage = 100;
             if (max != 0) percentage = 100 * (max - current) / (max);
             if (percentage < 5) {
-                warningAmount += ((ArmorItem) stack.getItem()).getMaterial().getDefenseForSlot(slot);
+                warningAmount += ((ArmorItem) stack.getItem()).getDefense();
             }
         }
         return warningAmount;
     }
 
     @Override
-    public void renderText(PoseStack stack, Player player, int width, int height, int vOffset) {
+    public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         double armor = calculateArmorValue(player);
         //draw armor amount
         int index = (int) Math.min(Math.ceil(armor / 20), ConfigCache.armor.size()) - 1;
         int c = getPrimaryBarColor(index, player).colorToText();
-        textHelper(stack, xStart, yStart, armor, c);
+        textHelper(graphics, xStart, yStart, armor, c);
     }
 
     @Override
-    public void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset) {
+    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         //Draw armor icon
-        ModUtils.drawTexturedModalRect(stack, xStart, yStart, 43, 9, 9, 9);
+        ModUtils.drawTexturedModalRect(graphics, xStart, yStart, 43, 9, 9, 9);
     }
 
     private static int calculateArmorValue(Player player) {
-        int currentArmorValue = player.getArmorValue();
-
-   /* for (ItemStack itemStack : mc.player.getArmorInventoryList()) {
-      if (itemStack.getItem() instanceof ISpecialArmor) {
-        ISpecialArmor specialArmor = (ISpecialArmor) itemStack.getItem();
-        currentArmorValue += specialArmor.getArmorDisplay(mc.player, itemStack, 0);
-      }
-    }*/
-        return currentArmorValue;
+        return player.getArmorValue();
     }
 }

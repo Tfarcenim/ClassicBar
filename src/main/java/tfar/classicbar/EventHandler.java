@@ -1,6 +1,6 @@
 package tfar.classicbar;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -37,10 +37,14 @@ public class EventHandler implements IGuiOverlay {
   }
 
   public static void registerAll(BarOverlay... iBarOverlay) {
-    Arrays.stream(iBarOverlay).forEach(overlay -> registry.put(overlay.name(), overlay));
+    Arrays.stream(iBarOverlay).forEach(overlay -> {
+      if (overlay != null) {
+      registry.put(overlay.name(), overlay);
+      }
+    });
   }
 
-  public void render(ForgeGui gui, PoseStack matrices, float partialTick, int screenWidth, int screenHeight) {
+  public void render(ForgeGui gui, GuiGraphics matrices, float partialTick, int screenWidth, int screenHeight) {
 
     Entity entity = ModUtils.mc.getCameraEntity();
     if (!(entity instanceof Player player)) return;

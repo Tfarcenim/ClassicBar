@@ -1,7 +1,6 @@
 package tfar.classicbar.impl;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -22,6 +21,8 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public static final int BAR_U = 2;
     public static final int BAR_V = 11;
     public static final ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
+
+    public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
     protected String name;
     protected boolean side;
 
@@ -45,22 +46,23 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     @Override
-    public void render(ForgeGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         if (shouldRender(player)) {
-            gui.setupOverlayRenderState(true, false, ICON_BAR);
-            renderBar(gui, stack, player, screenWidth, screenHeight, vOffset);
+            gui.setupOverlayRenderState(true, false);
+            bindBarTexture();
+            renderBar(gui, graphics, player, screenWidth, screenHeight, vOffset);
             if (shouldRenderText()) {
-                renderText(stack, player, screenWidth, screenHeight, vOffset);
+                renderText(graphics, player, screenWidth, screenHeight, vOffset);
             }
             if (ConfigCache.icons) {
                 bindIconTexture();
-                renderIcon(stack, player, screenWidth, screenHeight, vOffset);
+                renderIcon(graphics, player, screenWidth, screenHeight, vOffset);
             }
             EventHandler.increment(gui, rightHandSide(), 10);
         }
     }
 
-    public abstract void renderBar(ForgeGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset);
+    public abstract void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
 
     protected boolean shouldFlash(Player player) {
         return false;
@@ -70,9 +72,9 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return true;
     }
 
-    public abstract void renderText(PoseStack stack, Player player, int width, int height, int vOffset);
+    public abstract void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset);
 
-    public abstract void renderIcon(PoseStack stack, Player player, int width, int height, int vOffset);
+    public abstract void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset);
 
     public int getHOffset() {
         return rightHandSide() ? 10 : -91;
@@ -89,7 +91,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return effects;
     }
 
-    public void renderBarBackground(PoseStack matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBarBackground(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         double barWidth = getBarWidth(player);
         int xStart = screenWidth / 2 + getHOffset();
         if (isFitted() && rightHandSide()) {
@@ -98,10 +100,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
         int yStart = screenHeight - vOffset;
 
         if (isFitted()) {
-            drawScaledBarBackground(matrices, barWidth, xStart, yStart + 1);
-        } else renderFullBarBackground(matrices, xStart, yStart);
+            drawScaledBarBackground(graphics, barWidth, xStart, yStart + 1);
+        } else renderFullBarBackground(graphics, xStart, yStart);
     }
-    public void drawScaledBarBackground(PoseStack stack, double barWidth, int x, int y) {
+    public void drawScaledBarBackground(GuiGraphics stack, double barWidth, int x, int y) {
         if (rightHandSide()) {
             ModUtils.drawTexturedModalRect(stack,x, y - 1, 0, 0, barWidth + 2, 9);
             ModUtils.drawTexturedModalRect(stack,x + barWidth + 2, y-1, WIDTH + 2, 0, 2, 9);
@@ -110,24 +112,24 @@ public abstract class BarOverlayImpl implements BarOverlay {
             ModUtils.drawTexturedModalRect(stack, (int) (x + barWidth + 2), y - 1, WIDTH + 2, 0, 2, 9);
         }
     }
-    public void textHelper(PoseStack stack,int xStart,int yStart,double stat, int color) {
+    public void textHelper(GuiGraphics graphics,int xStart,int yStart,double stat, int color) {
         int i1 = (int) Math.floor(stat);
         int i2 = ConfigCache.icons ? 1 : 0;
 
         if (rightHandSide()) {
-            ModUtils.drawStringOnHUD(stack, i1 + "", xStart + 9 * i2, yStart - 1, color);
+            ModUtils.drawStringOnHUD(graphics, i1 + "", xStart + 9 * i2, yStart - 1, color);
         } else {
             int i3 = ModUtils.getStringLength(i1 + "");
-            ModUtils.drawStringOnHUD(stack, i1 + "", xStart - 9 * i2 - i3 + 5, yStart - 1, color);
+            ModUtils.drawStringOnHUD(graphics, i1 + "", xStart - 9 * i2 - i3 + 5, yStart - 1, color);
         }
     }
-    public void renderFullBarBackground(PoseStack matrices, int xStart, int yStart) {
+    public void renderFullBarBackground(GuiGraphics matrices, int xStart, int yStart) {
         ModUtils.drawTexturedModalRect(matrices, xStart, yStart, 0, 0, WIDTH + 4, 9);
     }
-    public void renderFullBar(PoseStack matrices, int xStart, int yStart) {
+    public void renderFullBar(GuiGraphics matrices, int xStart, int yStart) {
         renderPartialBar(matrices,xStart,yStart,WIDTH);
     }
-    public void renderPartialBar(PoseStack matrices, double xStart, int yStart,double barWidth) {
+    public void renderPartialBar(GuiGraphics matrices, double xStart, int yStart,double barWidth) {
         ModUtils.drawTexturedModalRect(matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
     }
     @Override
@@ -140,7 +142,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
     @Override
     public ResourceLocation getIconRL() {
-        return GuiComponent.GUI_ICONS_LOCATION;
+        return GUI_ICONS_LOCATION;
     }
     @Override
     public boolean isFitted() {

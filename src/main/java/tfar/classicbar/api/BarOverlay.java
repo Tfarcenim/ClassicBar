@@ -1,22 +1,27 @@
 package tfar.classicbar.api;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
+import tfar.classicbar.util.ModUtils;
 
 public interface BarOverlay {
 
   boolean rightHandSide();
   BarOverlay setSide(boolean right);
 
-  void render(ForgeGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset);
+  void render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
 
   ResourceLocation getIconRL();
   default void bindIconTexture() {
-    RenderSystem.setShaderTexture(0,getIconRL());
+    ModUtils.CURRENT_TEXTURE = getIconRL();
+  }
+
+  default void bindBarTexture() {
+    ModUtils.CURRENT_TEXTURE = BarOverlayImpl.ICON_BAR;
   }
 
   double getBarWidth(Player player);
