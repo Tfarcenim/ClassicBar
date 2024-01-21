@@ -7,7 +7,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.compat.Helpers;
+import tfar.classicbar.compat.ModCompat;
+import tfar.classicbar.compat.VampirismHelper;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -23,7 +24,7 @@ public class Hunger extends BarOverlayImpl {
 
   @Override
   public boolean shouldRender(Player player) {
-    return !Helpers.vampirismloaded || !Helpers.isVampire(player);
+    return !ModCompat.vampirism.loaded || !VampirismHelper.isVampire(player);
   }
 
   @Override

@@ -88,8 +88,6 @@ public abstract class BarOverlayImpl implements BarOverlay {
         else if (player.hasEffect(MobEffects.WITHER)) effects = HealthEffect.WITHER;//evaluates to 88
         return effects;
     }
-    @Override
-    public abstract double getBarWidth(Player player);
 
     public void renderBarBackground(PoseStack matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
         double barWidth = getBarWidth(player);

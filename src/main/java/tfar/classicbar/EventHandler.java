@@ -13,12 +13,11 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import tfar.classicbar.compat.Helpers;
+import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
-import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.impl.overlays.mod.Blood;
-import tfar.classicbar.impl.overlays.mod.Feathers;
 import tfar.classicbar.impl.overlays.mod.StaminaB;
 import tfar.classicbar.impl.overlays.mod.Thirst;
 import tfar.classicbar.impl.overlays.vanilla.*;
@@ -86,7 +85,7 @@ public class EventHandler implements IGuiOverlay {
   }
 
   public static void setupOverlays(RegisterGuiOverlaysEvent e) {
-    MinecraftForge.EVENT_BUS.addListener(EventHandler::disableVanilla);
+    MinecraftForge.EVENT_BUS.addListener(EventHandler::disableOtherOverlays);
     e.registerBelow(VanillaGuiOverlay.ITEM_NAME.id(),ClassicBar.MODID,new EventHandler());
 
     //Register renderers for events
@@ -97,10 +96,10 @@ public class EventHandler implements IGuiOverlay {
 
     //mod renderers
     ClassicBar.logger.info("Registering Mod Overlays");
-    if (Helpers.vampirismloaded)EventHandler.register(new Blood());
-    if (Helpers.elenaiDodgeLoaded)EventHandler.register(new Feathers());
-    if (Helpers.parcoolLoaded)EventHandler.register(new StaminaB());
-    if (Helpers.toughasnailsLoaded)EventHandler.register(new Thirst());
+    if (ModCompat.vampirism.loaded)EventHandler.register(new Blood());
+  //  if (ModCompat.feathers.loaded)EventHandler.register(new Feathers());
+    if (ModCompat.parcool.loaded)EventHandler.register(new StaminaB());
+    if (ModCompat.toughasnails.loaded)EventHandler.register(new Thirst());
     // if (ModList.get().isLoaded("randomthings")) MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
     // if (ModList.get().isLoaded("lavawaderbauble")) {
     //    MinecraftForge.EVENT_BUS.register(new LavaWaderBaubleRenderer());
@@ -113,12 +112,12 @@ public class EventHandler implements IGuiOverlay {
     //  if (ModList.get().isLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
   }
 
-  private static final List<ResourceLocation> overlays = List.of(VanillaGuiOverlay.AIR_LEVEL.id(),VanillaGuiOverlay.ARMOR_LEVEL.id(),
+  private static final List<ResourceLocation> vanilla_overlays = List.of(VanillaGuiOverlay.AIR_LEVEL.id(),VanillaGuiOverlay.ARMOR_LEVEL.id(),
           VanillaGuiOverlay.PLAYER_HEALTH.id(),VanillaGuiOverlay.MOUNT_HEALTH.id(),VanillaGuiOverlay.FOOD_LEVEL.id());
-  public static void disableVanilla(RenderGuiOverlayEvent.Pre e) {
+  public static void disableOtherOverlays(RenderGuiOverlayEvent.Pre e) {
     NamedGuiOverlay overlay = e.getOverlay();
-    if (overlays.contains(overlay.id())) e.setCanceled(true);
+    if (vanilla_overlays.contains(overlay.id())) e.setCanceled(true);
     else if (overlay.id().getNamespace().equals("parcool") && StaminaB.checkConfigs()) e.setCanceled(true);
-    else if (Helpers.toughasnailsLoaded && Thirst.isEnabled() && Thirst.OVERLAY_ID.equals(overlay.id())) e.setCanceled(true);
+    else if (ModCompat.toughasnails.loaded && Thirst.isEnabled() && Thirst.OVERLAY_ID.equals(overlay.id())) e.setCanceled(true);
   }
 }

@@ -1,5 +1,7 @@
 package tfar.classicbar.impl.overlays.mod;
 
+import com.elenai.feathers.api.FeathersHelper;
+import com.elenai.feathers.client.gui.FeathersHudOverlay;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.ResourceLocation;
@@ -26,8 +28,8 @@ public class Feathers extends BarOverlayImpl {
 
 	@Override
 	public void renderBar(ForgeGui gui, PoseStack stack, Player player, int screenWidth, int screenHeight, int vOffset) {
-		double feathers = 0;//FeathersHelper.getFeatherLevel(Minecraft.getInstance().player);
-		int maxFeathers = 20;
+		double feathers = FeathersHelper.getFeathers();
+		int maxFeathers = FeathersHelper.getMaxFeathers();
 		
 		int xStart = screenWidth / 2 + 10;
 		int yStart = screenHeight - vOffset;
@@ -42,6 +44,7 @@ public class Feathers extends BarOverlayImpl {
 		ModUtils.drawTexturedModalRect(stack,f, yStart + 1, 1, 10, ModUtils.getWidth(feathers, maxFeathers), 7);
 
 	}
+
 	@Override
 	public boolean shouldRenderText() {
 		return ClassicBarsConfig.showHungerNumbers.get();
@@ -64,10 +67,12 @@ public class Feathers extends BarOverlayImpl {
 	}
 	@Override
 	public double getBarWidth(Player player) {
-		throw new RuntimeException("not implemented");
+		double feathers = FeathersHelper.getFeathers();
+		int maxFeathers = FeathersHelper.getMaxFeathers();
+		return WIDTH * feathers / maxFeathers;
 	}
 	@Override
 	public ResourceLocation getIconRL() {
-		return DODGE_ICONS;
+		return FeathersHudOverlay.ICONS;
 	}
 }

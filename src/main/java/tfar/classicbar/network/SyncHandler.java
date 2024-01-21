@@ -9,7 +9,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.NetworkDirection;
-import tfar.classicbar.compat.Helpers;
+import tfar.classicbar.compat.ModCompat;
 import toughasnails.api.thirst.IThirst;
 import toughasnails.api.thirst.ThirstHelper;
 
@@ -51,7 +51,7 @@ public final class SyncHandler {
 
     syncVanillaData(player);
 
-    if (Helpers.toughasnailsLoaded) {
+    if (ModCompat.toughasnails.loaded) {
       syncToughAsNailsData(player);
     }
 
@@ -118,7 +118,7 @@ public final class SyncHandler {
 
     lastSaturationLevels.remove(uuid);
     lastExhaustionLevels.remove(uuid);
-    if (Helpers.toughasnailsLoaded) {
+    if (ModCompat.toughasnails.loaded) {
       lastHydrationLevels.remove(uuid);
       lastThirstExhaustionLevels.remove(uuid);
     }
