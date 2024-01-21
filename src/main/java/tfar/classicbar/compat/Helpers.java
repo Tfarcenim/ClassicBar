@@ -14,6 +14,7 @@ public class Helpers {
 	public static final boolean vampirismloaded = loaded("vampirism");
 	public static final boolean elenaiDodgeLoaded = loaded("elenaidodge2");
 	public static final boolean parcoolLoaded = loaded("parcool") ;
+	public static final boolean toughasnailsLoaded = loaded("toughasnails");
 	private static boolean loaded(String modid) {
 		return ModList.get().isLoaded(modid);
 	}

@@ -3,31 +3,32 @@ package tfar.classicbar.network;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
+import tfar.classicbar.compat.Helpers;
+import toughasnails.api.thirst.ThirstHelper;
 
 import java.util.function.Supplier;
 
-public class MessageExhaustionSync {
+public class MessageHydrationSync {
 
-    private final float exhaustionLevel;
+    private final float hydrationLevel;
 
-    public MessageExhaustionSync(float exhaustionLevel) {
-        this.exhaustionLevel = exhaustionLevel;
+    public MessageHydrationSync(float hydrationLevel) {
+        this.hydrationLevel = hydrationLevel;
     }
 
-    public MessageExhaustionSync(FriendlyByteBuf buf) {
-        this.exhaustionLevel = buf.readFloat();
+    public MessageHydrationSync(FriendlyByteBuf buf) {
+        this.hydrationLevel = buf.readFloat();
     }
 
     public void encode(FriendlyByteBuf buf) {
-        buf.writeFloat(exhaustionLevel);
+        buf.writeFloat(hydrationLevel);
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        {
-            // defer to the next game loop; we can't guarantee that Minecraft.thePlayer is initialized yet
+        if (Helpers.toughasnailsLoaded) {
             ctx.get().enqueueWork(() -> {
                 Player player = NetworkHelper.getSidedPlayer(ctx.get());
-                player.getFoodData().setExhaustion(exhaustionLevel);
+                ThirstHelper.getThirst(player).setHydration(hydrationLevel);
             });
         }
         ctx.get().setPacketHandled(true);

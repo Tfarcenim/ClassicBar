@@ -6,9 +6,8 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class MessageSaturationSync {
-    private float saturationLevel;
 
-    public MessageSaturationSync(){}
+    private final float saturationLevel;
 
     public MessageSaturationSync(float saturationLevel)
     {
@@ -29,4 +28,5 @@ public class MessageSaturationSync {
         ctx.get().enqueueWork(() -> NetworkHelper.getSidedPlayer(ctx.get()).getFoodData().setSaturation(saturationLevel));
         ctx.get().setPacketHandled(true);
     }
+
 }

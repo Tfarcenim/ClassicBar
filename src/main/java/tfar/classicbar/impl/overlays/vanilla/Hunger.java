@@ -11,6 +11,7 @@ import tfar.classicbar.compat.Helpers;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.network.Message;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
@@ -105,7 +106,7 @@ public class Hunger extends BarOverlayImpl {
       }
     }
 
-    if (ClassicBarsConfig.showExhaustionOverlay.get()) {
+    if (ClassicBarsConfig.showExhaustionOverlay.get() && Message.presentOnServer) {
       exhaustion = Math.min(exhaustion, 4);
       f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
       //draw exhaustion

@@ -1,81 +1,127 @@
 package tfar.classicbar.network;
 
+import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.NetworkDirection;
+import tfar.classicbar.compat.Helpers;
+import toughasnails.api.thirst.IThirst;
+import toughasnails.api.thirst.ThirstHelper;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class SyncHandler {
+/**
+ * Sync saturation (vanilla MC only syncs when it hits 0).
+ * Sync exhaustion (vanilla MC does not sync it at all).
+ * Also sync counterparts of thirst data since it's copied from the vanilla hunger system.
+ */
+public final class SyncHandler {
 
-  public SyncHandler() {}
+  private static SyncHandler INSTANCE;
 
-  /*
-   * Sync saturation (vanilla MC only syncs when it hits 0)
-   * Sync exhaustion (vanilla MC does not sync it at all)
-   */
-  private static final Map<UUID, Float> lastSaturationLevels = new HashMap<>();
-  private static final Map<UUID, Float> lastExhaustionLevels = new HashMap<>();
-  //private static final Map<UUID, Float> lastHydrationLevels = new HashMap<>();
-  //private static final Map<UUID, Float> lastThirstExhaustionLevels = new HashMap<>();
+  public static SyncHandler instance() {
+    if (INSTANCE == null) {
+      INSTANCE = new SyncHandler();
+    }
+    return INSTANCE;
+  }
 
+  private SyncHandler() {}
+
+  // Vanilla MC
+  private final Map<UUID, Float> lastSaturationLevels = new HashMap<>();
+  private final Map<UUID, Float> lastExhaustionLevels = new HashMap<>();
+
+  // Tough as Nails
+  private final Map<UUID, Float> lastHydrationLevels = new HashMap<>();
+  private final Map<UUID, Float> lastThirstExhaustionLevels = new HashMap<>();
 
   @SubscribeEvent
   public void onLivingUpdateEvent(TickEvent.PlayerTickEvent event) {
-    if (!(event.phase == TickEvent.Phase.END) || !(event.player instanceof ServerPlayer player))
+    if (event.phase != TickEvent.Phase.END || !(event.player instanceof ServerPlayer player)) {
       return;
+    }
 
-    Float lastSaturationLevel = lastSaturationLevels.get(player.getUUID());
-    //Float lastHydrationLevel = lastHydrationLevels.get(player.getUniqueID());
-    Float lastExhaustionLevel = lastExhaustionLevels.get(player.getUUID());
-    //Float lastThirstExhaustionLevel = lastThirstExhaustionLevels.get(player.getUniqueID());
+    syncVanillaData(player);
 
+    if (Helpers.toughasnailsLoaded) {
+      syncToughAsNailsData(player);
+    }
 
-    if (lastSaturationLevel == null || lastSaturationLevel != player.getFoodData().getSaturationLevel()) {
+  }
 
-      Object msg = new MessageSaturationSync(player.getFoodData().getSaturationLevel());
-      Message.INSTANCE.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
-      lastSaturationLevels.put(player.getUUID(), player.getFoodData().getSaturationLevel());
+  private void syncVanillaData(ServerPlayer player) {
+    UUID uuid = player.getUUID();
+    Float lastSaturationLevel = lastSaturationLevels.get(uuid);
+    Float lastExhaustionLevel = lastExhaustionLevels.get(uuid);
+
+    float saturationLevel = player.getFoodData().getSaturationLevel();
+    if (lastSaturationLevel == null || lastSaturationLevel != saturationLevel) {
+      MessageSaturationSync msg = new MessageSaturationSync(saturationLevel);
+      Message.channel().sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+      lastSaturationLevels.put(uuid, saturationLevel);
     }
 
     float exhaustionLevel = player.getFoodData().getExhaustionLevel();
     if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
-      Object msg = new MessageExhaustionSync(player.getFoodData().getExhaustionLevel());
-      Message.INSTANCE.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
-      lastExhaustionLevels.put(player.getUUID(), exhaustionLevel);
+      MessageExhaustionSync msg = new MessageExhaustionSync(exhaustionLevel);
+      Message.channel().sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+      lastExhaustionLevels.put(uuid, exhaustionLevel);
+    }
+  }
+
+  /**
+   * Whether the mod has been loaded should be ensured via the context.
+   */
+  private void syncToughAsNailsData(ServerPlayer player) {
+    if (!ThirstHelper.isThirstEnabled()) return;
+
+    UUID uuid = player.getUUID();
+    Float lastHydrationLevel = lastHydrationLevels.get(uuid);
+    Float lastExhaustionLevel = lastThirstExhaustionLevels.get(uuid);
+
+    IThirst thirstData = ThirstHelper.getThirst(player);
+
+    float hydrationLevel = thirstData.getHydration();
+    if (lastHydrationLevel == null || lastHydrationLevel != hydrationLevel) {
+      MessageHydrationSync msg = new MessageHydrationSync(hydrationLevel);
+      Message.channel().sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+      lastHydrationLevels.put(uuid, hydrationLevel);
     }
 
-    /*if (ClassicBar.TOUGHASNAILS) {
-      if (lastHydrationLevel == null ||
-              lastHydrationLevel != ToughAsNailsHelper.getHandler(player).getHydration()) {
-        CHANNEL.sendTo(new MessageHydrationSync(ToughAsNailsHelper.getHandler(player).getHydration()), player);
-        lastHydrationLevels.put(player.getUniqueID(), ToughAsNailsHelper.getHandler(player).getHydration());
-      }
+    float exhaustionLevel = thirstData.getExhaustion();
+    if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
+      MessageThirstExhaustionSync msg = new MessageThirstExhaustionSync(exhaustionLevel);
+      Message.channel().sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+      lastThirstExhaustionLevels.put(uuid, exhaustionLevel);
+    }
+  }
 
-      if (lastThirstExhaustionLevel == null ||
-              lastThirstExhaustionLevel != ToughAsNailsHelper.getHandler(player).getExhaustion()) {
-        CHANNEL.sendTo(new MessageThirstExhaustionSync(ToughAsNailsHelper.getHandler(player).getExhaustion()), player);
-        lastThirstExhaustionLevels.put(player.getUniqueID(), ToughAsNailsHelper.getHandler(player).getExhaustion());
-      }
-    }*/
+  @OnlyIn(Dist.CLIENT)
+  @SubscribeEvent
+  public void onClientPlayerLoggedIn(ClientPlayerNetworkEvent.LoggingIn event) {
+    Connection conn = event.getConnection();
+    Message.presentOnServer = Message.channel().isRemotePresent(conn);
   }
 
   @SubscribeEvent
-  public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-    if (!(event.getEntity() instanceof ServerPlayer))
-      return;
+  public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
+    if (!(event.getEntity() instanceof ServerPlayer)) return;
+    UUID uuid = event.getEntity().getUUID();
 
-    lastSaturationLevels.remove(event.getEntity().getUUID());
-    lastExhaustionLevels.remove(event.getEntity().getUUID());
-    /*if (ClassicBar.TOUGHASNAILS) {
-      lastHydrationLevels.remove(event.player.getUniqueID());
-      lastThirstExhaustionLevels.remove(event.player.getUniqueID());
-    }*/
+    lastSaturationLevels.remove(uuid);
+    lastExhaustionLevels.remove(uuid);
+    if (Helpers.toughasnailsLoaded) {
+      lastHydrationLevels.remove(uuid);
+      lastThirstExhaustionLevels.remove(uuid);
+    }
   }
+
 }
