@@ -27,6 +27,7 @@ public class ConfigCache {
     public static List<Color> poison = new ArrayList<>();
     //public static ForgeConfigSpec.ConfigValue<List<? extends Double>> witheredFractions;
     public static List<Color> wither = new ArrayList<>();
+    public static List<Color> frozen = new ArrayList<>();
     public static List<Color> absorption = new ArrayList<>();
     public static List<Color> absorptionPoison = new ArrayList<>();
     public static List<Color> absorptionWither = new ArrayList<>();
@@ -36,6 +37,7 @@ public class ConfigCache {
         normal.clear();
         poison.clear();
         wither.clear();
+        frozen.clear();
         absorption.clear();
         absorptionPoison.clear();
         absorptionWither.clear();
@@ -49,6 +51,7 @@ public class ConfigCache {
         cacheList(ClassicBarsConfig.normalColors,normal);
         cacheList(ClassicBarsConfig.poisonedColors,poison);
         cacheList(ClassicBarsConfig.witheredColors,wither);
+        cacheList(ClassicBarsConfig.frozenColors,frozen);
         cacheList(ClassicBarsConfig.absorptionColors,absorption);
         cacheList(ClassicBarsConfig.absorptionPoisonColors,absorptionPoison);
         cacheList(ClassicBarsConfig.absorptionWitherColors,absorptionWither);

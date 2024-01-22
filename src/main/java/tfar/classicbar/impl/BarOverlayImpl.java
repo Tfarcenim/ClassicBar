@@ -52,6 +52,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
             bindBarTexture();
             renderBar(gui, graphics, player, screenWidth, screenHeight, vOffset);
             if (shouldRenderText()) {
+                Color.reset();
                 renderText(graphics, player, screenWidth, screenHeight, vOffset);
             }
             if (ConfigCache.icons) {
@@ -85,9 +86,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     protected HealthEffect getHealthEffect(Player player) {
-        HealthEffect effects = HealthEffect.NONE;//16
-        if (player.hasEffect(MobEffects.POISON)) effects = HealthEffect.POISON;//evaluates to 52
-        else if (player.hasEffect(MobEffects.WITHER)) effects = HealthEffect.WITHER;//evaluates to 88
+        HealthEffect effects = HealthEffect.NONE;
+        if (player.hasEffect(MobEffects.POISON)) effects = HealthEffect.POISON;
+        else if (player.hasEffect(MobEffects.WITHER)) effects = HealthEffect.WITHER;
+        else if (player.isFullyFrozen()) effects = HealthEffect.FROZEN;
         return effects;
     }
 

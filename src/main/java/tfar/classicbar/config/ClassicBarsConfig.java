@@ -57,6 +57,9 @@ public class ClassicBarsConfig {
   static ForgeConfigSpec.ConfigValue<List<? extends String>> poisonedColors;
   public static ForgeConfigSpec.ConfigValue<List<? extends Double>> witheredFractions;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> witheredColors;
+
+  public static ForgeConfigSpec.ConfigValue<List<? extends Double>> frozenFractions;
+  static ForgeConfigSpec.ConfigValue<List<? extends String>> frozenColors;
   public static ForgeConfigSpec.ConfigValue<String> lavaBarColor;
   public static ForgeConfigSpec.ConfigValue<String> flightBarColor;
 
@@ -114,6 +117,8 @@ public class ClassicBarsConfig {
     poisonedFractions = builder.defineList("poisoned_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
     witheredColors = builder.defineList("withered_colors", Lists.newArrayList("#555555", "#AAAAAA", "#555555"),String.class::isInstance);
     witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
+    frozenColors = builder.defineList("frozen_colors", Lists.newArrayList("#6666FF", "#9999FF", "#6666FF"),String.class::isInstance);
+    frozenFractions = builder.defineList("frozen_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
 
     leftorder = builder.defineList("left_order", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2"),String.class::isInstance);
     rightorder = builder.defineList("right_order", Lists.newArrayList("blood","health_mount","food","thirst_level", StaminaB.name,"feathers","armor_toughness","air","flighttiara","decay"),String.class::isInstance);

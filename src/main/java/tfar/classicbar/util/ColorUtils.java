@@ -28,6 +28,8 @@ public class ColorUtils {
                 colorFractions = ClassicBarsConfig.poisonedFractions.get(); break;
             case WITHER: colorCodes = ConfigCache.wither;
                 colorFractions = ClassicBarsConfig.witheredFractions.get(); break;
+            case FROZEN: colorCodes = ConfigCache.frozen;
+                colorFractions = ClassicBarsConfig.frozenFractions.get(); break;
             default: return Color.BLACK;
         }
 

@@ -130,6 +130,6 @@ public class Health extends BarOverlayImpl {
     Color.reset();
     ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 16, 9 * i5, 9, 9);
     //heart
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 36 + effect.i, 9 * i5, 9, 9);
+    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, effect.getX(), 9 * i5, 9, 9);
   }
 }
