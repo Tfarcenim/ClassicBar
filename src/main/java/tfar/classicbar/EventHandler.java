@@ -117,7 +117,7 @@ public class EventHandler implements IGuiOverlay {
   public static void disableOtherOverlays(RenderGuiOverlayEvent.Pre e) {
     NamedGuiOverlay overlay = e.getOverlay();
     if (vanilla_overlays.contains(overlay.id())) e.setCanceled(true);
-    else if (overlay.id().getNamespace().equals("parcool") && StaminaB.checkConfigs()) e.setCanceled(true);
+    else if (overlay.id().getNamespace().equals(ModCompat.parcool.name()) && StaminaB.checkConfigs()) e.setCanceled(true);
     else if (ModCompat.toughasnails.loaded && Thirst.isEnabled() && Thirst.OVERLAY_ID.equals(overlay.id())) e.setCanceled(true);
   }
 }
