@@ -78,7 +78,7 @@ repositories{
 
 dependencies {
 
-    compileOnly fg.deobf("curse.maven:parcool-482378:4513003")
+    compileOnly fg.deobf("curse.maven:parcool-482378:${parcool}")
     compileOnly fg.deobf("curse.maven:tough-as-nails-246391:3871450")
     compileOnly fg.deobf("curse.maven:feathers-699933:4573576")
 

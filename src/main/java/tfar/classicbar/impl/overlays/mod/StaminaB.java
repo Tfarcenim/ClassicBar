@@ -1,7 +1,9 @@
 package tfar.classicbar.impl.overlays.mod;
 
-import com.alrex.parcool.ParCoolConfig;
+
+import com.alrex.parcool.client.hud.impl.HUDType;
 import com.alrex.parcool.common.capability.IStamina;
+import com.alrex.parcool.config.ParCoolConfig;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -24,10 +26,7 @@ public class StaminaB extends BarOverlayImpl {
     }
 
     public static boolean checkConfigs() {
-        return ParCoolConfig.CONFIG_CLIENT.useLightHUD.get()
-                && !ParCoolConfig.CONFIG_CLIENT.hideStaminaHUD.get()
-                && !ParCoolConfig.CONFIG_CLIENT.infiniteStamina.get()
-                && !ParCoolConfig.CONFIG_CLIENT.useHungerBarInsteadOfStamina.get();
+        return ParCoolConfig.Client.StaminaHUDType.get() == HUDType.Light;
     }
 
     @Override

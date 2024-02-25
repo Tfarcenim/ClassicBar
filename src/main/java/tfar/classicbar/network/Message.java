@@ -26,8 +26,8 @@ public final class Message {
     channel = NetworkRegistry.newSimpleChannel(
             new ResourceLocation(ClassicBar.MODID, channelName),
             () -> NETWORK_VERSION,
-            serverVersion -> NetworkRegistry.ABSENT.equals(serverVersion) || NETWORK_VERSION.equals(serverVersion),
-            clientVersion -> NetworkRegistry.ABSENT.equals(clientVersion) || NETWORK_VERSION.equals(clientVersion)
+            serverVersion -> NetworkRegistry.ABSENT.version().equals(serverVersion) || NETWORK_VERSION.equals(serverVersion),
+            clientVersion -> NetworkRegistry.ABSENT.version().equals(clientVersion) || NETWORK_VERSION.equals(clientVersion)
     );
     channel.registerMessage(id++, MessageExhaustionSync.class,
             MessageExhaustionSync::encode,
