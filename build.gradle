@@ -59,7 +59,7 @@ minecraft {
 
 repositories{
     maven {
-        url = "https://maven.maxanier.de"
+        url = "https://maven.maxanier.de/releases"
     }
 
     maven {
@@ -86,7 +86,8 @@ dependencies {
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}" //21
     //compile against the Vampirism API
-    compileOnly fg.deobf("de.teamlapen.vampirism:Vampirism:1.19.2-1.8.1:api")
+    compileOnly "de.teamlapen.vampirism:Vampirism:1.20.1-1.10.11"
+
     //Alternative using the full jar from CurseForge
     //runtimeOnly fg.deobf("curse.maven:vampirism-become-a-vampire-233029:4649951")
     // compile against the JEI API but do not include it at runtime
