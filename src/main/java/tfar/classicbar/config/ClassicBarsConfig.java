@@ -1,5 +1,6 @@
 package tfar.classicbar.config;
 
+import com.electronwill.nightconfig.core.ConfigSpec;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -65,6 +66,7 @@ public class ClassicBarsConfig {
   static ForgeConfigSpec.ConfigValue<List<? extends String>> poisonedColors;
   public static ForgeConfigSpec.ConfigValue<List<? extends Double>> witheredFractions;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> witheredColors;
+  public static ForgeConfigSpec.ConfigValue<String> frozenHealthColor;
   public static ForgeConfigSpec.ConfigValue<String> lavaBarColor;
   public static ForgeConfigSpec.ConfigValue<String> flightBarColor;
 
@@ -113,6 +115,7 @@ public class ClassicBarsConfig {
     poisonedFractions = builder.defineList("poisoned_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
     witheredColors = builder.defineList("withered_colors", Lists.newArrayList("#555555", "#AAAAAA", "#555555"),String.class::isInstance);
     witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
+    frozenHealthColor = builder.define("frozen_health_color", "#7fafff");
 
     leftorder = builder.defineList("left_order", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2"),String.class::isInstance);
     rightorder = builder.defineList("right_order", Lists.newArrayList("blood","health_mount","food","thirst_level", StaminaB.name,"feathers","armor_toughness","air","flighttiara","decay"),String.class::isInstance);

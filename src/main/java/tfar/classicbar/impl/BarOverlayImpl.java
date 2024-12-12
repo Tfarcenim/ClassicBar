@@ -95,6 +95,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         HealthEffect effects = HealthEffect.NONE;//16
         if (player.hasEffect(MobEffects.POISON)) effects = HealthEffect.POISON;//evaluates to 52
         else if (player.hasEffect(MobEffects.WITHER)) effects = HealthEffect.WITHER;//evaluates to 88
+        else if (player.isFullyFrozen()) effects = HealthEffect.FROZEN;
         return effects;
     }
 

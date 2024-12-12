@@ -113,6 +113,7 @@ public class Hunger extends BarOverlayImpl {
       //draw exhaustion
       RenderSystem.setShaderColor(1, 1, 1, .25f);
       ModUtils.drawTexturedModalRect(matrices,f + 2, yStart + 1, 1, 28, ModUtils.getWidth(exhaustion, 4f), 9);
+      RenderSystem.setShaderColor(1, 1, 1, 1);
     }
   }
 

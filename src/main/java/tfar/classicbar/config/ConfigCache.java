@@ -30,6 +30,7 @@ public class ConfigCache {
     public static List<Color> absorption = new ArrayList<>();
     public static List<Color> absorptionPoison = new ArrayList<>();
     public static List<Color> absorptionWither = new ArrayList<>();
+    public static Color frozenHealth;
     private static void clear() {
         armor.clear();
         armor_toughness.clear();
@@ -61,6 +62,7 @@ public class ConfigCache {
         hydration = ColorUtils.hex2Color(ClassicBarsConfig.hydrationBarColor.get());
         hydrationDebuff = ColorUtils.hex2Color(ClassicBarsConfig.hydrationBarDebuffColor.get());
         air = ColorUtils.hex2Color(ClassicBarsConfig.airBarColor.get());
+        frozenHealth = ColorUtils.hex2Color(ClassicBarsConfig.frozenHealthColor.get());
     }
 
     private static void cacheList(ForgeConfigSpec.ConfigValue<List<? extends String>> config, List<Color> cache) {
