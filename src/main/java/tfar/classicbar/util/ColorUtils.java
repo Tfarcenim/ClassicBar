@@ -1,5 +1,6 @@
 package tfar.classicbar.util;
 
+import net.minecraft.util.Mth;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 
@@ -49,7 +50,7 @@ public class ColorUtils {
         Color c1 = colorCodes.get(i3 - 1);
         Color c2 = colorCodes.get(i3);
 
-        double d4 = d3 - colorFractions.get(i3 - 1) / (colorFractions.get(i3) - colorFractions.get(i3 - 1));
-        return c1.colorBlend(c2, d4);
+        double d4 = Mth.inverseLerp(d3,colorFractions.get(i3-1),colorFractions.get(i3));
+        return c1.colorBlend(c2, (float) d4);
     }
 }

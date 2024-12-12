@@ -1,18 +1,12 @@
 package tfar.classicbar.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.util.Mth;
 
-public class Color {
-    public final int r, g, b;
+public record Color(int r,int g,int b) {
     public static final Color BLACK = Color.from(0,0,0);
     public static final Color RED = Color.from(0xff,0,0);
     public static final Color YELLOW = Color.from(0xff,0xff,0);
-
-    protected Color(int red, int green, int blue) {
-        this.r = red;
-        this.g = green;
-        this.b = blue;
-    }
 
     public static Color from(int red, int green, int blue) {
         return new Color(red, green, blue);
@@ -25,14 +19,14 @@ public class Color {
     public void color2Gl() {
         color2Gla(1);
     }
-    public Color colorBlend(Color c2, double d) {
-        int r = (int) Math.floor(this.r * (1 - d) + c2.r * d);
-        int g = (int) Math.floor(this.g * (1 - d) + c2.g * d);
-        int b = (int) Math.floor(this.b * (1 - d) + c2.b * d);
+    public Color colorBlend(Color c2, float d) {
+        int r = Mth.lerpInt(d,this.r,c2.r);
+        int g = Mth.lerpInt(d,this.g,c2.g);
+        int b = Mth.lerpInt(d,this.b,c2.b);
         return Color.from(r, g, b);
     }
     public int colorToText(){
-        return (this.r << 16)+(this.g << 8) + this.b;
+        return this.r << 16 | this.g << 8 | this.b;
     }
 
     public void color2Gla(float a) {
