@@ -7,6 +7,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.ModList; // Added: used to check at config-build time whether mod-specific sections should be registered
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -41,10 +42,13 @@ public class ClassicBarsConfig {
   public static ModConfigSpec.BooleanValue fullToughnessBar;
   public static ModConfigSpec.BooleanValue lowArmorWarning;
   public static ModConfigSpec.BooleanValue showSaturationBar;
+  // Added: null when neither toughasnails nor homeostatic is loaded — always check before calling .get()
   public static ModConfigSpec.BooleanValue showHydrationBar;
   public static ModConfigSpec.BooleanValue showHeldFoodOverlay;
+  // Added: null when toughasnails is not loaded — only registered inside the toughasnails config section
   public static ModConfigSpec.BooleanValue showHeldDrinkOverlay;
   public static ModConfigSpec.BooleanValue showExhaustionOverlay;
+  // Added: null when toughasnails is not loaded — only registered inside the toughasnails config section
   public static ModConfigSpec.BooleanValue showThirstExhaustionOverlay;
 
   public static ModConfigSpec.DoubleValue transitionSpeed;
@@ -52,12 +56,15 @@ public class ClassicBarsConfig {
   static ModConfigSpec.ConfigValue<String> hungerBarDebuffColor;
   static ModConfigSpec.ConfigValue<String> saturationBarColor;
   static ModConfigSpec.ConfigValue<String> saturationBarDebuffColor;
+  // Added: null when toughasnails is not loaded — registered only inside the toughasnails config section
   static ModConfigSpec.ConfigValue<String> thirstBarColor;
   static ModConfigSpec.ConfigValue<String> thirstBarDebuffColor;
   static ModConfigSpec.ConfigValue<String> hydrationBarColor;
   static ModConfigSpec.ConfigValue<String> hydrationBarDebuffColor;
+  // Added: null when the "thirst" (Thirst Was Taken) mod is not loaded — registered only inside the thirst_was_taken section
   static ModConfigSpec.ConfigValue<String> thirstWasTakenBarColor;
   static ModConfigSpec.ConfigValue<String> thirstWasTakenQuenchedBarColor;
+  // Added: null when homeostatic is not loaded — registered only inside the homeostatic config section
   static ModConfigSpec.ConfigValue<String> homeostaticWaterBarColor;
   static ModConfigSpec.ConfigValue<String> homeostaticHydrationBarColor;
   static ModConfigSpec.ConfigValue<String> airBarColor;
@@ -80,55 +87,86 @@ public class ClassicBarsConfig {
   public static ModConfigSpec.ConfigValue<List<? extends String>> rightorder;
 
   public ClassicBarsConfig(ModConfigSpec.Builder builder) {
-    builder.push("general");
-    displayIcons = builder.define("display_icons", true);
+    // Added: capture mod presence at config-build time to gate which TOML sections are registered;
+    // config sections for absent mods are skipped entirely so they don't appear in the config screen
+    boolean tanLoaded = ModList.get().isLoaded("toughasnails"); // Tough as Nails mod id
+    boolean thirstLoaded = ModList.get().isLoaded("thirst");    // Thirst Was Taken mod id
+    boolean homeostaticLoaded = ModList.get().isLoaded("homeostatic"); // Homeostatic mod id
 
-    displayToughnessBar = builder.comment("Whether to show icons next to the bars").define("display_icons", true);
-    fullAbsorptionBar = builder.define("full_absorption_bar", false);
-    fullArmorBar = builder.define("full_armor_bar", false);
-    fullToughnessBar = builder.define("full_toughness_bar", false);
-    lowArmorWarning = builder.define("display_low_armor_warning", true);
+    builder.push("general"); // Added: explicit section push — must be paired with builder.pop() below so mod sections can be pushed at the same level
+    // Added: .translation() calls on each value link the config key to en_us.json strings so NeoForge's ConfigurationScreen shows localized labels
+    displayIcons = builder.comment("Whether to show icons next to the bars").translation("classicbar.config.general.display_icons").define("display_icons", true);
 
-    showSaturationBar = builder.define("show_saturation_bar", true);
-    showHydrationBar = builder.define("show_hydration_bar", true);
-    showHeldFoodOverlay = builder.define("show_held_food_overlay", true);
-    showHeldDrinkOverlay = builder.define("show_held_drink_overlay", true);
-    showExhaustionOverlay = builder.define("show_exhaustion_overlay", true);
-    showThirstExhaustionOverlay = builder.define("show_thirst_exhaustion_overlay", true);
-    transitionSpeed = builder.defineInRange("transition_speed", 3, 0, Double.MAX_VALUE);
+    displayToughnessBar = builder.comment("Whether to display the armor toughness bar").translation("classicbar.config.general.display_toughness_bar").define("display_toughness_bar", true);
+    fullAbsorptionBar = builder.translation("classicbar.config.general.full_absorption_bar").define("full_absorption_bar", false);
+    fullArmorBar = builder.translation("classicbar.config.general.full_armor_bar").define("full_armor_bar", false);
+    fullToughnessBar = builder.translation("classicbar.config.general.full_toughness_bar").define("full_toughness_bar", false);
+    lowArmorWarning = builder.translation("classicbar.config.general.display_low_armor_warning").define("display_low_armor_warning", true);
 
-    hungerBarColor = builder.define("hunger_bar_color","#B34D00",String.class::isInstance);
-    hungerBarDebuffColor = builder.define("hunger_bar_debuff_color","#249016",String.class::isInstance);
-    thirstBarColor = builder.define("thirst_bar_color","#1C5EE4",String.class::isInstance);
-    thirstBarDebuffColor = builder.define("thirst_bar_debuff_color","#5A891C",String.class::isInstance);
-    airBarColor = builder.define("air_bar_color","#00E6E6",String.class::isInstance);
-    saturationBarColor = builder.define("saturation_bar_color","#FFCC00",String.class::isInstance);
-    saturationBarDebuffColor = builder.define("saturation_bar_debuff_color","#87BC00",String.class::isInstance);
-    hydrationBarColor = builder.define("hydration_bar_color","#00A3E2",String.class::isInstance);
-    hydrationBarDebuffColor = builder.define("hydration_bar_debuff_color","#85CF25",String.class::isInstance);
-    lavaBarColor = builder.define("lava_bar_color","#FF8000",String.class::isInstance);
-    flightBarColor = builder.define("flight_bar_color","#FFFFFF",String.class::isInstance);
-    thirstWasTakenBarColor = builder.define("thirst_was_taken_bar_color","#1C5EE4",String.class::isInstance);
-    thirstWasTakenQuenchedBarColor = builder.define("thirst_was_taken_quenched_bar_color","#00A3E2",String.class::isInstance);
-    homeostaticWaterBarColor = builder.define("homeostatic_water_bar_color","#1C5EE4",String.class::isInstance);
-    homeostaticHydrationBarColor = builder.define("homeostatic_hydration_bar_color","#00A3E2",String.class::isInstance);
+    showSaturationBar = builder.translation("classicbar.config.general.show_saturation_bar").define("show_saturation_bar", true);
+    showHeldFoodOverlay = builder.translation("classicbar.config.general.show_held_food_overlay").define("show_held_food_overlay", true);
+    showExhaustionOverlay = builder.translation("classicbar.config.general.show_exhaustion_overlay").define("show_exhaustion_overlay", true);
+    transitionSpeed = builder.translation("classicbar.config.general.transition_speed").defineInRange("transition_speed", 3, 0, Double.MAX_VALUE);
 
-    armorColors = builder.defineList("armor_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"), () -> "", String.class::isInstance);
-    armorToughnessColors = builder.defineList("armor_toughness_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"), () -> "", String.class::isInstance);
-    absorptionColors = builder.defineList("absorption_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"), () -> "", String.class::isInstance);
-    absorptionPoisonColors = builder.defineList("absorption_poison_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"), () -> "", String.class::isInstance);
-    absorptionWitherColors = builder.defineList("absorption_wither_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"), () -> "", String.class::isInstance);
+    hungerBarColor = builder.translation("classicbar.config.general.hunger_bar_color").define("hunger_bar_color","#B34D00",String.class::isInstance);
+    hungerBarDebuffColor = builder.translation("classicbar.config.general.hunger_bar_debuff_color").define("hunger_bar_debuff_color","#249016",String.class::isInstance);
+    airBarColor = builder.translation("classicbar.config.general.air_bar_color").define("air_bar_color","#00E6E6",String.class::isInstance);
+    saturationBarColor = builder.translation("classicbar.config.general.saturation_bar_color").define("saturation_bar_color","#FFCC00",String.class::isInstance);
+    saturationBarDebuffColor = builder.translation("classicbar.config.general.saturation_bar_debuff_color").define("saturation_bar_debuff_color","#87BC00",String.class::isInstance);
+    lavaBarColor = builder.translation("classicbar.config.general.lava_bar_color").define("lava_bar_color","#FF8000",String.class::isInstance);
+    flightBarColor = builder.translation("classicbar.config.general.flight_bar_color").define("flight_bar_color","#FFFFFF",String.class::isInstance);
 
-    normalColors = builder.defineList("normal_colors", Lists.newArrayList("#FF0000", "#FFFF00", "#00FF00"), () -> "", String.class::isInstance);
-    normalFractions = builder.defineList("normal_fractions", Lists.newArrayList(.25, .5, .75), () -> 0.0, Double.class::isInstance);
-    poisonedColors = builder.defineList("poisoned_colors", Lists.newArrayList("#00FF00", "#55FF55", "#00FF00"), () -> "", String.class::isInstance);
-    poisonedFractions = builder.defineList("poisoned_fractions", Lists.newArrayList(.25, .5, .75), () -> 0.0, Double.class::isInstance);
-    witheredColors = builder.defineList("withered_colors", Lists.newArrayList("#555555", "#AAAAAA", "#555555"), () -> "", String.class::isInstance);
-    witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75), () -> 0.0, Double.class::isInstance);
-    frozenHealthColor = builder.define("frozen_health_color", "#7fafff"); // Changed: was frozenColors list + frozenFractions list
+    armorColors = builder.translation("classicbar.config.general.armor_color_values").defineList("armor_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"), () -> "", String.class::isInstance);
+    armorToughnessColors = builder.translation("classicbar.config.general.armor_toughness_color_values").defineList("armor_toughness_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"), () -> "", String.class::isInstance);
+    absorptionColors = builder.translation("classicbar.config.general.absorption_color_values").defineList("absorption_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"), () -> "", String.class::isInstance);
+    absorptionPoisonColors = builder.translation("classicbar.config.general.absorption_poison_color_values").defineList("absorption_poison_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"), () -> "", String.class::isInstance);
+    absorptionWitherColors = builder.translation("classicbar.config.general.absorption_wither_color_values").defineList("absorption_wither_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"), () -> "", String.class::isInstance);
 
-    leftorder = builder.defineList("left_order", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2"), () -> "", String.class::isInstance);
-    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","health_mount","food","thirst_level", StaminaB.name,"feathers","armor_toughness","air","flighttiara","decay"), () -> "", String.class::isInstance);
+    normalColors = builder.translation("classicbar.config.general.normal_colors").defineList("normal_colors", Lists.newArrayList("#FF0000", "#FFFF00", "#00FF00"), () -> "", String.class::isInstance);
+    normalFractions = builder.translation("classicbar.config.general.normal_fractions").defineList("normal_fractions", Lists.newArrayList(.25, .5, .75), () -> 0.0, Double.class::isInstance);
+    poisonedColors = builder.translation("classicbar.config.general.poisoned_colors").defineList("poisoned_colors", Lists.newArrayList("#00FF00", "#55FF55", "#00FF00"), () -> "", String.class::isInstance);
+    poisonedFractions = builder.translation("classicbar.config.general.poisoned_fractions").defineList("poisoned_fractions", Lists.newArrayList(.25, .5, .75), () -> 0.0, Double.class::isInstance);
+    witheredColors = builder.translation("classicbar.config.general.withered_colors").defineList("withered_colors", Lists.newArrayList("#555555", "#AAAAAA", "#555555"), () -> "", String.class::isInstance);
+    witheredFractions = builder.translation("classicbar.config.general.withered_fractions").defineList("withered_fractions", Lists.newArrayList(.25, .5, .75), () -> 0.0, Double.class::isInstance);
+    frozenHealthColor = builder.translation("classicbar.config.general.frozen_health_color").define("frozen_health_color", "#7fafff"); // Changed: was frozenColors list + frozenFractions list
+
+    leftorder = builder.translation("classicbar.config.general.left_order").defineList("left_order", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2"), () -> "", String.class::isInstance);
+    rightorder = builder.translation("classicbar.config.general.right_order").defineList("right_order", Lists.newArrayList("blood","health_mount","food","thirst_level", StaminaB.name,"feathers","armor_toughness","air","flighttiara","decay"), () -> "", String.class::isInstance);
+    builder.pop(); // Added: closes the "general" push above; required before pushing mod-specific sections at the top level
+
+    // Tough as Nails section: only registered when toughasnails is loaded
+    if (tanLoaded) {
+      builder.push("toughasnails");
+      // showHydrationBar is shared with Homeostatic; defined here when TAN is present
+      showHydrationBar = builder.translation("classicbar.config.toughasnails.show_hydration_bar").define("show_hydration_bar", true);
+      showHeldDrinkOverlay = builder.translation("classicbar.config.toughasnails.show_held_drink_overlay").define("show_held_drink_overlay", true);
+      showThirstExhaustionOverlay = builder.translation("classicbar.config.toughasnails.show_thirst_exhaustion_overlay").define("show_thirst_exhaustion_overlay", true);
+      thirstBarColor = builder.translation("classicbar.config.toughasnails.thirst_bar_color").define("thirst_bar_color","#1C5EE4",String.class::isInstance);
+      thirstBarDebuffColor = builder.translation("classicbar.config.toughasnails.thirst_bar_debuff_color").define("thirst_bar_debuff_color","#5A891C",String.class::isInstance);
+      hydrationBarColor = builder.translation("classicbar.config.toughasnails.hydration_bar_color").define("hydration_bar_color","#00A3E2",String.class::isInstance);
+      hydrationBarDebuffColor = builder.translation("classicbar.config.toughasnails.hydration_bar_debuff_color").define("hydration_bar_debuff_color","#85CF25",String.class::isInstance);
+      builder.pop(); // End toughasnails section
+    }
+
+    // Thirst Was Taken section: only registered when the "thirst" mod is loaded
+    if (thirstLoaded) {
+      builder.push("thirst_was_taken");
+      thirstWasTakenBarColor = builder.translation("classicbar.config.thirst_was_taken.thirst_was_taken_bar_color").define("thirst_was_taken_bar_color","#1C5EE4",String.class::isInstance);
+      thirstWasTakenQuenchedBarColor = builder.translation("classicbar.config.thirst_was_taken.thirst_was_taken_quenched_bar_color").define("thirst_was_taken_quenched_bar_color","#00A3E2",String.class::isInstance);
+      builder.pop(); // End thirst_was_taken section
+    }
+
+    // Homeostatic section: only registered when homeostatic is loaded
+    if (homeostaticLoaded) {
+      builder.push("homeostatic");
+      homeostaticWaterBarColor = builder.translation("classicbar.config.homeostatic.homeostatic_water_bar_color").define("homeostatic_water_bar_color","#1C5EE4",String.class::isInstance);
+      homeostaticHydrationBarColor = builder.translation("classicbar.config.homeostatic.homeostatic_hydration_bar_color").define("homeostatic_hydration_bar_color","#00A3E2",String.class::isInstance);
+      if (!tanLoaded) {
+        // showHydrationBar shared with TAN; define here only when TAN is absent
+        showHydrationBar = builder.translation("classicbar.config.homeostatic.show_hydration_bar").define("show_hydration_bar", true);
+      }
+      builder.pop(); // End homeostatic section
+    }
   }
 
   @SubscribeEvent

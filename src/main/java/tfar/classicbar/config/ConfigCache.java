@@ -64,14 +64,21 @@ public class ConfigCache {
         hungerDebuff = ColorUtils.hex2Color(ClassicBarsConfig.hungerBarDebuffColor.get());
         saturation = ColorUtils.hex2Color(ClassicBarsConfig.saturationBarColor.get());
         saturationDebuff = ColorUtils.hex2Color(ClassicBarsConfig.saturationBarDebuffColor.get());
-        thirst = ColorUtils.hex2Color(ClassicBarsConfig.thirstBarColor.get());
-        thirstDebuff = ColorUtils.hex2Color(ClassicBarsConfig.thirstBarDebuffColor.get());
-        hydration = ColorUtils.hex2Color(ClassicBarsConfig.hydrationBarColor.get());
-        hydrationDebuff = ColorUtils.hex2Color(ClassicBarsConfig.hydrationBarDebuffColor.get());
-        thirstWasTaken = ColorUtils.hex2Color(ClassicBarsConfig.thirstWasTakenBarColor.get());
-        thirstWasTakenQuenched = ColorUtils.hex2Color(ClassicBarsConfig.thirstWasTakenQuenchedBarColor.get());
-        homeostaticWater = ColorUtils.hex2Color(ClassicBarsConfig.homeostaticWaterBarColor.get());
-        homeostaticHydration = ColorUtils.hex2Color(ClassicBarsConfig.homeostaticHydrationBarColor.get());
+        // Added: guard against null — these config fields are only registered (non-null) when their mod is present at launch
+        if (ClassicBarsConfig.thirstBarColor != null) { // toughasnails section was registered
+            thirst = ColorUtils.hex2Color(ClassicBarsConfig.thirstBarColor.get());
+            thirstDebuff = ColorUtils.hex2Color(ClassicBarsConfig.thirstBarDebuffColor.get());
+            hydration = ColorUtils.hex2Color(ClassicBarsConfig.hydrationBarColor.get());
+            hydrationDebuff = ColorUtils.hex2Color(ClassicBarsConfig.hydrationBarDebuffColor.get());
+        }
+        if (ClassicBarsConfig.thirstWasTakenBarColor != null) { // thirst_was_taken section was registered
+            thirstWasTaken = ColorUtils.hex2Color(ClassicBarsConfig.thirstWasTakenBarColor.get());
+            thirstWasTakenQuenched = ColorUtils.hex2Color(ClassicBarsConfig.thirstWasTakenQuenchedBarColor.get());
+        }
+        if (ClassicBarsConfig.homeostaticWaterBarColor != null) { // homeostatic section was registered
+            homeostaticWater = ColorUtils.hex2Color(ClassicBarsConfig.homeostaticWaterBarColor.get());
+            homeostaticHydration = ColorUtils.hex2Color(ClassicBarsConfig.homeostaticHydrationBarColor.get());
+        }
         air = ColorUtils.hex2Color(ClassicBarsConfig.airBarColor.get());
         frozenHealth = ColorUtils.hex2Color(ClassicBarsConfig.frozenHealthColor.get()); // Changed: was cacheList(frozenColors, frozen); simplified to one hex color
     }
