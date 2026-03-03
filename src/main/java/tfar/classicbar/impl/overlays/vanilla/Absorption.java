@@ -11,6 +11,10 @@ import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 
+// Changed: removed shouldRenderText() override (was ClassicBarsConfig.showAbsorptionNumbers.get())
+// and removed getIconRL() override (was returning GUI_ICONS_LOCATION directly).
+// Both are now handled via barSettings: show_text and icon from per-bar JSON.
+// renderBar parameter changed from ForgeGui to Gui; renderIcon rewritten to use blitSprite.
 public class Absorption extends BarOverlayImpl {
 
     public Absorption() {
@@ -111,6 +115,9 @@ public class Absorption extends BarOverlayImpl {
     private static final ResourceLocation HEART_ABSORBING_FULL = ResourceLocation.withDefaultNamespace("hud/heart/absorbing_full");
     private static final ResourceLocation HEART_ABSORBING_HARDCORE_FULL = ResourceLocation.withDefaultNamespace("hud/heart/absorbing_hardcore_full");
 
+    // Changed: rewritten to use blitSprite with named sprite ResourceLocations instead of
+    // drawTexturedModalRect with raw atlas offsets (was (16,0) for container, (160,0) for fill).
+    // Added hardcore variant support — was missing in the old atlas-offset approach.
     @Override
     public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();

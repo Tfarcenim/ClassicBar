@@ -16,6 +16,8 @@ public class ModUtils {
   public static final ResourceLocation VAMPIRISM_ICONS = ResourceLocation.parse("vampirism:textures/gui/icons.png");
   public static final ResourceLocation THIRST_ICON = ResourceLocation.fromNamespaceAndPath("toughasnails", "textures/gui/icons.png");
   public static final ResourceLocation ICONS = ResourceLocation.parse("parcool:textures/gui/stamina_bar.png");
+  public static final ResourceLocation THIRST_WAS_TAKEN_ICONS = ResourceLocation.fromNamespaceAndPath("thirst", "textures/gui/thirst_icons.png"); // Thirst Was Taken mod icon texture
+  public static final ResourceLocation HOMEOSTATIC_ICONS = ResourceLocation.fromNamespaceAndPath("homeostatic", "textures/gui/icons.png"); // Homeostatic mod icon texture (if exists)
   public static ResourceLocation CURRENT_TEXTURE = BarOverlayImpl.GUI_ICONS_LOCATION;
 
   public static void drawTexturedModalRect(GuiGraphics stack, double x, int y, int textureX, int textureY, double width, int height) {

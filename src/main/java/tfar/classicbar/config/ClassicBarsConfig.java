@@ -17,7 +17,9 @@ import tfar.classicbar.EventHandler;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.impl.overlays.mod.HomeostaticWater;
 import tfar.classicbar.impl.overlays.mod.StaminaB;
+import tfar.classicbar.impl.overlays.mod.ThirstWasTaken;
 import tfar.classicbar.util.ModUtils;
 
 import java.io.File;
@@ -54,6 +56,10 @@ public class ClassicBarsConfig {
   static ModConfigSpec.ConfigValue<String> thirstBarDebuffColor;
   static ModConfigSpec.ConfigValue<String> hydrationBarColor;
   static ModConfigSpec.ConfigValue<String> hydrationBarDebuffColor;
+  static ModConfigSpec.ConfigValue<String> thirstWasTakenBarColor;
+  static ModConfigSpec.ConfigValue<String> thirstWasTakenQuenchedBarColor;
+  static ModConfigSpec.ConfigValue<String> homeostaticWaterBarColor;
+  static ModConfigSpec.ConfigValue<String> homeostaticHydrationBarColor;
   static ModConfigSpec.ConfigValue<String> airBarColor;
   static ModConfigSpec.ConfigValue<List<? extends String>> armorColors;
   static ModConfigSpec.ConfigValue<List<? extends String>> armorToughnessColors;
@@ -66,8 +72,6 @@ public class ClassicBarsConfig {
   static ModConfigSpec.ConfigValue<List<? extends String>> poisonedColors;
   public static ModConfigSpec.ConfigValue<List<? extends Double>> witheredFractions;
   static ModConfigSpec.ConfigValue<List<? extends String>> witheredColors;
-  // Changed: replaced frozenColors (List<String>) + frozenFractions (List<Double>) with a single
-  // frozenHealthColor string. Frozen state was simplified from a gradient to one flat color.
   public static ModConfigSpec.ConfigValue<String> frozenHealthColor;
   public static ModConfigSpec.ConfigValue<String> lavaBarColor;
   public static ModConfigSpec.ConfigValue<String> flightBarColor;
@@ -95,7 +99,7 @@ public class ClassicBarsConfig {
 
     hungerBarColor = builder.define("hunger_bar_color","#B34D00",String.class::isInstance);
     hungerBarDebuffColor = builder.define("hunger_bar_debuff_color","#249016",String.class::isInstance);
-    thirstBarColor = builder.define("thirstr_bar_color","#1C5EE4",String.class::isInstance);
+    thirstBarColor = builder.define("thirst_bar_color","#1C5EE4",String.class::isInstance);
     thirstBarDebuffColor = builder.define("thirst_bar_debuff_color","#5A891C",String.class::isInstance);
     airBarColor = builder.define("air_bar_color","#00E6E6",String.class::isInstance);
     saturationBarColor = builder.define("saturation_bar_color","#FFCC00",String.class::isInstance);
@@ -104,6 +108,10 @@ public class ClassicBarsConfig {
     hydrationBarDebuffColor = builder.define("hydration_bar_debuff_color","#85CF25",String.class::isInstance);
     lavaBarColor = builder.define("lava_bar_color","#FF8000",String.class::isInstance);
     flightBarColor = builder.define("flight_bar_color","#FFFFFF",String.class::isInstance);
+    thirstWasTakenBarColor = builder.define("thirst_was_taken_bar_color","#1C5EE4",String.class::isInstance);
+    thirstWasTakenQuenchedBarColor = builder.define("thirst_was_taken_quenched_bar_color","#00A3E2",String.class::isInstance);
+    homeostaticWaterBarColor = builder.define("homeostatic_water_bar_color","#1C5EE4",String.class::isInstance);
+    homeostaticHydrationBarColor = builder.define("homeostatic_hydration_bar_color","#00A3E2",String.class::isInstance);
 
     armorColors = builder.defineList("armor_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"), () -> "", String.class::isInstance);
     armorToughnessColors = builder.defineList("armor_toughness_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"), () -> "", String.class::isInstance);
@@ -135,6 +143,7 @@ public class ClassicBarsConfig {
   // Changed: new method; reads per-bar JSON files from config/classicbar/ and applies
   // BarSettings (show_text, icon) to each registered overlay. Replaces the old approach
   // where each overlay class hardcoded its shouldRenderText() and getIconRL() overrides.
+  // Now icon and show_text defaults are centralized here and written to JSON on first load.
   public static void readBarSettings() {
 
     if (!settingsPath.exists()) {
@@ -259,6 +268,14 @@ public class ClassicBarsConfig {
     BarSettings staminaSettings = nullSettings.copy();
     staminaSettings.icon = ModUtils.ICONS;
     defaults.put(StaminaB.name,staminaSettings);
+
+    BarSettings thirstWasTakenSettings = nullSettings.copy();
+    thirstWasTakenSettings.icon = ModUtils.THIRST_WAS_TAKEN_ICONS;
+    defaults.put(ThirstWasTaken.NAME, thirstWasTakenSettings);
+
+    BarSettings homeostaticWaterSettings = nullSettings.copy();
+    homeostaticWaterSettings.icon = ModUtils.HOMEOSTATIC_ICONS;
+    defaults.put(HomeostaticWater.NAME, homeostaticWaterSettings);
   }
 
 

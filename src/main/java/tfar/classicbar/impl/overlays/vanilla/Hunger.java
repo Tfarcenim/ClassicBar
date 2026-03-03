@@ -122,7 +122,7 @@ public class Hunger extends BarOverlayImpl {
   }
   
   public int getSatBarWidth(Player player) {
-    double saturation = player.getFoodData().getSaturationLevel();
+    double saturation = Math.min(player.getFoodData().getSaturationLevel(), 20);
     double maxSat = 20;
     return (int) Math.ceil(BarOverlayImpl.WIDTH * saturation / maxSat);
   }

@@ -20,6 +20,10 @@ public class ConfigCache {
     public static Color thirstDebuff;
     public static Color hydration;
     public static Color hydrationDebuff;
+    public static Color thirstWasTaken;
+    public static Color thirstWasTakenQuenched;
+    public static Color homeostaticWater;
+    public static Color homeostaticHydration;
     public static Color air;
     //public static ForgeConfigSpec.ConfigValue<List<? extends Double>> normalFractions;
     public static List<Color> normal = new ArrayList<>();
@@ -64,6 +68,10 @@ public class ConfigCache {
         thirstDebuff = ColorUtils.hex2Color(ClassicBarsConfig.thirstBarDebuffColor.get());
         hydration = ColorUtils.hex2Color(ClassicBarsConfig.hydrationBarColor.get());
         hydrationDebuff = ColorUtils.hex2Color(ClassicBarsConfig.hydrationBarDebuffColor.get());
+        thirstWasTaken = ColorUtils.hex2Color(ClassicBarsConfig.thirstWasTakenBarColor.get());
+        thirstWasTakenQuenched = ColorUtils.hex2Color(ClassicBarsConfig.thirstWasTakenQuenchedBarColor.get());
+        homeostaticWater = ColorUtils.hex2Color(ClassicBarsConfig.homeostaticWaterBarColor.get());
+        homeostaticHydration = ColorUtils.hex2Color(ClassicBarsConfig.homeostaticHydrationBarColor.get());
         air = ColorUtils.hex2Color(ClassicBarsConfig.airBarColor.get());
         frozenHealth = ColorUtils.hex2Color(ClassicBarsConfig.frozenHealthColor.get()); // Changed: was cacheList(frozenColors, frozen); simplified to one hex color
     }

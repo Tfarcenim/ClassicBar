@@ -49,6 +49,8 @@ dependencies {
     compileOnly "curse.maven:tough-as-nails-246391:5833252"
     compileOnly "de.teamlapen.vampirism:Vampirism:1.21-1.10.7:api"
     compileOnly "curse.maven:vampirism-become-a-vampire-233029:6544569"
+    compileOnly "curse.maven:thirst-was-taken-679270:${thirst_was_taken}"
+    compileOnly "curse.maven:homeostatic-634466:${homeostatic}"
 }
 
 tasks.withType(ProcessResources).configureEach {

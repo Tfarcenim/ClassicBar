@@ -18,21 +18,28 @@ public class ClassicBar {
 
   public static final String MODID = "classicbar";
 
+  // Changed: switched from Log4j (LogManager.getLogger()) to SLF4J (LoggerFactory) per NeoForge 1.21.1 convention
   public static final Logger logger = LoggerFactory.getLogger(ClassicBar.MODID);
 
   public static final ClassicBarsConfig CLIENT;
+  // Changed: ForgeConfigSpec -> ModConfigSpec (NeoForge renamed the class)
   public static final ModConfigSpec CLIENT_SPEC;
 
   static {
+    // Changed: ForgeConfigSpec.Builder -> ModConfigSpec.Builder (class rename in NeoForge)
     final Pair<ClassicBarsConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(ClassicBarsConfig::new);
     CLIENT_SPEC = specPair.getRight();
     CLIENT = specPair.getLeft();
   }
 
+  // Changed: constructor now receives IEventBus and ModContainer via injection instead of
+  // calling FMLJavaModLoadingContext.get().getModEventBus() internally. NeoForge 1.21+
+  // passes these as constructor parameters. IExtensionPoint.DisplayTest removed — NeoForge
+  // no longer requires mods to declare client-only status this way.
   public ClassicBar(IEventBus modEventBus, ModContainer container) {
-    container.registerConfig(ModConfig.Type.CLIENT, CLIENT_SPEC);
+    container.registerConfig(ModConfig.Type.CLIENT, CLIENT_SPEC); // Changed: was ModLoadingContext.get().registerConfig()
 
-    Message.registerMessages(modEventBus);
+    Message.registerMessages(modEventBus); // Changed: now passes the mod event bus; old API used a channel name string
     if (FMLEnvironment.dist.isClient()) {
       modEventBus.addListener(this::postInit);
       modEventBus.addListener(EventHandler::setupOverlays);

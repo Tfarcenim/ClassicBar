@@ -42,9 +42,11 @@ public final class SyncHandler {
   private final Map<UUID, Float> lastHydrationLevels = new HashMap<>();
   private final Map<UUID, Float> lastThirstExhaustionLevels = new HashMap<>();
 
+  // Changed: was TickEvent.PlayerTickEvent with phase == Phase.END guard.
+  // PlayerTickEvent.Post fires only at end-of-tick so no phase check is needed.
   @SubscribeEvent
   public void onPlayerTick(PlayerTickEvent.Post event) {
-    if (!(event.getEntity() instanceof ServerPlayer player)) return;
+    if (!(event.getEntity() instanceof ServerPlayer player)) return; // Changed: getEntity() replaces event.player
 
     syncVanillaData(player);
 
@@ -60,13 +62,13 @@ public final class SyncHandler {
 
     float saturationLevel = player.getFoodData().getSaturationLevel();
     if (lastSaturationLevel == null || lastSaturationLevel != saturationLevel) {
-      PacketDistributor.sendToPlayer(player, new MessageSaturationSync(saturationLevel));
+      PacketDistributor.sendToPlayer(player, new MessageSaturationSync(saturationLevel)); // Changed: was Message.channel().sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT)
       lastSaturationLevels.put(uuid, saturationLevel);
     }
 
     float exhaustionLevel = player.getFoodData().getExhaustionLevel();
     if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
-      PacketDistributor.sendToPlayer(player, new MessageExhaustionSync(exhaustionLevel));
+      PacketDistributor.sendToPlayer(player, new MessageExhaustionSync(exhaustionLevel)); // Changed: was Message.channel().sendTo(msg, connection, NetworkDirection.PLAY_TO_CLIENT)
       lastExhaustionLevels.put(uuid, exhaustionLevel);
     }
   }
@@ -85,13 +87,13 @@ public final class SyncHandler {
 
     float hydrationLevel = thirstData.getHydration();
     if (lastHydrationLevel == null || lastHydrationLevel != hydrationLevel) {
-      PacketDistributor.sendToPlayer(player, new MessageHydrationSync(hydrationLevel));
+      PacketDistributor.sendToPlayer(player, new MessageHydrationSync(hydrationLevel)); // Changed: was Message.channel().sendTo(msg, connection, NetworkDirection.PLAY_TO_CLIENT)
       lastHydrationLevels.put(uuid, hydrationLevel);
     }
 
     float exhaustionLevel = thirstData.getExhaustion();
     if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
-      PacketDistributor.sendToPlayer(player, new MessageThirstExhaustionSync(exhaustionLevel));
+      PacketDistributor.sendToPlayer(player, new MessageThirstExhaustionSync(exhaustionLevel)); // Changed: was Message.channel().sendTo(msg, connection, NetworkDirection.PLAY_TO_CLIENT)
       lastThirstExhaustionLevels.put(uuid, exhaustionLevel);
     }
   }
@@ -99,7 +101,7 @@ public final class SyncHandler {
   @OnlyIn(Dist.CLIENT)
   @SubscribeEvent
   public void onClientPlayerLoggedIn(ClientPlayerNetworkEvent.LoggingIn event) {
-    Message.presentOnServer = true;
+    Message.presentOnServer = true; // Changed: was Message.channel().isRemotePresent(conn); NeoForge payload system guarantees the server has the mod if the connection was established, so always true
   }
 
   @SubscribeEvent

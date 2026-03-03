@@ -20,8 +20,10 @@ import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.overlays.mod.Blood;
+import tfar.classicbar.impl.overlays.mod.HomeostaticWater;
 import tfar.classicbar.impl.overlays.mod.StaminaB;
 import tfar.classicbar.impl.overlays.mod.Thirst;
+import tfar.classicbar.impl.overlays.mod.ThirstWasTaken;
 import tfar.classicbar.impl.overlays.vanilla.*;
 import tfar.classicbar.util.ModUtils;
 
@@ -115,6 +117,8 @@ public class EventHandler implements LayeredDraw.Layer {
     if (ModCompat.vampirism.loaded) EventHandler.register(new Blood());
     if (ModCompat.parcool.loaded) EventHandler.register(new StaminaB());
     if (ModCompat.toughasnails.loaded) EventHandler.register(new Thirst());
+    if (ModCompat.thirstWasTaken.loaded) EventHandler.register(new ThirstWasTaken());
+    if (ModCompat.homeostatic.loaded) EventHandler.register(new HomeostaticWater());
 
     cacheConfigs();
     ClassicBarsConfig.readBarSettings();
