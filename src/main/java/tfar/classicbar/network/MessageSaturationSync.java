@@ -1,32 +1,34 @@
 package tfar.classicbar.network;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import tfar.classicbar.ClassicBar;
 
-import java.util.function.Supplier;
+public record MessageSaturationSync(float saturation) implements CustomPacketPayload {
 
-public class MessageSaturationSync {
+    public static final Type<MessageSaturationSync> TYPE =
+            new Type<>(ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "saturation_sync"));
 
-    private final float saturationLevel;
+    public static final StreamCodec<FriendlyByteBuf, MessageSaturationSync> STREAM_CODEC =
+            StreamCodec.of(
+                    (buf, msg) -> buf.writeFloat(msg.saturation),
+                    buf -> new MessageSaturationSync(buf.readFloat())
+            );
 
-    public MessageSaturationSync(float saturationLevel)
-    {
-        this.saturationLevel = saturationLevel;
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public MessageSaturationSync(FriendlyByteBuf buf)
-    {
-        this.saturationLevel = buf.readFloat();
+    public static void handle(MessageSaturationSync msg, IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.getFoodData().setSaturation(msg.saturation);
+            }
+        });
     }
-
-    public void encode(FriendlyByteBuf buf)
-    {
-        buf.writeFloat(saturationLevel);
-    }
-
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> NetworkHelper.getSidedPlayer(ctx.get()).getFoodData().setSaturation(saturationLevel));
-        ctx.get().setPacketHandled(true);
-    }
-
 }

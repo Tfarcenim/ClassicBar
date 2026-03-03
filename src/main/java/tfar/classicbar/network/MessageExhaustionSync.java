@@ -1,36 +1,34 @@
 package tfar.classicbar.network;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import tfar.classicbar.ClassicBar;
 
-import java.util.function.Supplier;
+public record MessageExhaustionSync(float exhaustion) implements CustomPacketPayload {
 
-public class MessageExhaustionSync {
+    public static final Type<MessageExhaustionSync> TYPE =
+            new Type<>(ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "exhaustion_sync"));
 
-    private final float exhaustionLevel;
+    public static final StreamCodec<FriendlyByteBuf, MessageExhaustionSync> STREAM_CODEC =
+            StreamCodec.of(
+                    (buf, msg) -> buf.writeFloat(msg.exhaustion),
+                    buf -> new MessageExhaustionSync(buf.readFloat())
+            );
 
-    public MessageExhaustionSync(float exhaustionLevel) {
-        this.exhaustionLevel = exhaustionLevel;
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public MessageExhaustionSync(FriendlyByteBuf buf) {
-        this.exhaustionLevel = buf.readFloat();
+    public static void handle(MessageExhaustionSync msg, IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
+            if (Minecraft.getInstance().player != null) {
+                Minecraft.getInstance().player.getFoodData().setExhaustion(msg.exhaustion);
+            }
+        });
     }
-
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeFloat(exhaustionLevel);
-    }
-
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        {
-            // defer to the next game loop; we can't guarantee that Minecraft.thePlayer is initialized yet
-            ctx.get().enqueueWork(() -> {
-                Player player = NetworkHelper.getSidedPlayer(ctx.get());
-                player.getFoodData().setExhaustion(exhaustionLevel);
-            });
-        }
-        ctx.get().setPacketHandled(true);
-    }
-
 }

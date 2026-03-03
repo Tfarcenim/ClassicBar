@@ -1,10 +1,10 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraft.client.gui.Gui;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ColorUtils;
@@ -27,7 +27,7 @@ public class Health extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
     int updateCounter = gui.getGuiTicks();
 
     double health = player.getHealth();
@@ -112,18 +112,36 @@ public class Health extends BarOverlayImpl {
     textHelper(graphics,xStart,yStart,health,getPrimaryBarColor(0,player).colorToText());
   }
 
+  private static final ResourceLocation HEART_CONTAINER = ResourceLocation.withDefaultNamespace("hud/heart/container");
+  private static final ResourceLocation HEART_CONTAINER_HARDCORE = ResourceLocation.withDefaultNamespace("hud/heart/container_hardcore");
+  private static final ResourceLocation HEART_FULL = ResourceLocation.withDefaultNamespace("hud/heart/full");
+  private static final ResourceLocation HEART_HARDCORE_FULL = ResourceLocation.withDefaultNamespace("hud/heart/hardcore_full");
+  private static final ResourceLocation HEART_POISONED_FULL = ResourceLocation.withDefaultNamespace("hud/heart/poisoned_full");
+  private static final ResourceLocation HEART_WITHERED_FULL = ResourceLocation.withDefaultNamespace("hud/heart/withered_full");
+  private static final ResourceLocation HEART_FROZEN_FULL = ResourceLocation.withDefaultNamespace("hud/heart/frozen_full");
+
+  // Changed: renderIcon rewritten to use blitSprite with named sprite ResourceLocations
+  // instead of drawTexturedModalRect with raw texture atlas offsets (previously effect.getX()).
+  // The named sprite system (MC 1.20+) is the correct API and adds FROZEN heart support.
+  // Also removed: shouldRenderText() override that returned ClassicBarsConfig.showHealthNumbers.get();
+  // text visibility is now driven by barSettings.show_text (see BarOverlayImpl).
   @Override
   public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
     HealthEffect effect = getHealthEffect(player);
 
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
-    int i5 = (player.level().getLevelData().isHardcore()) ? 5 : 0;
+    boolean hardcore = player.level().getLevelData().isHardcore();
     //Draw health icon
     //heart background
-    Color.reset();
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 16, 9 * i5, 9, 9);
+    graphics.blitSprite(hardcore ? HEART_CONTAINER_HARDCORE : HEART_CONTAINER, xStart, yStart, 9, 9);
     //heart
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 36 + effect.i, 9 * i5, 9, 9);
+    ResourceLocation heartSprite = switch (effect) {
+      case NONE -> hardcore ? HEART_HARDCORE_FULL : HEART_FULL;
+      case POISON -> HEART_POISONED_FULL;
+      case WITHER -> HEART_WITHERED_FULL;
+      case FROZEN -> HEART_FROZEN_FULL;
+    };
+    graphics.blitSprite(heartSprite, xStart, yStart, 9, 9);
   }
 }

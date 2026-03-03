@@ -1,16 +1,15 @@
 package tfar.classicbar;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.IExtensionPoint;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.network.Message;
 
@@ -19,26 +18,25 @@ public class ClassicBar {
 
   public static final String MODID = "classicbar";
 
-  public static final Logger logger = LogManager.getLogger();
+  public static final Logger logger = LoggerFactory.getLogger(ClassicBar.MODID);
 
   public static final ClassicBarsConfig CLIENT;
-  public static final ForgeConfigSpec CLIENT_SPEC;
+  public static final ModConfigSpec CLIENT_SPEC;
 
   static {
-    final Pair<ClassicBarsConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ClassicBarsConfig::new);
+    final Pair<ClassicBarsConfig, ModConfigSpec> specPair = new ModConfigSpec.Builder().configure(ClassicBarsConfig::new);
     CLIENT_SPEC = specPair.getRight();
     CLIENT = specPair.getLeft();
   }
 
-  public ClassicBar() {
-    ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(()->"ANY", (remote, isServer)-> true));
-    ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, CLIENT_SPEC);
+  public ClassicBar(IEventBus modEventBus, ModContainer container) {
+    container.registerConfig(ModConfig.Type.CLIENT, CLIENT_SPEC);
 
-    Message.registerMessages(MODID);
+    Message.registerMessages(modEventBus);
     if (FMLEnvironment.dist.isClient()) {
-      FMLJavaModLoadingContext.get().getModEventBus().addListener(this::postInit);
-      FMLJavaModLoadingContext.get().getModEventBus().addListener(EventHandler::setupOverlays);
-      FMLJavaModLoadingContext.get().getModEventBus().addListener(EventHandler::sendModMessage);
+      modEventBus.addListener(this::postInit);
+      modEventBus.addListener(EventHandler::setupOverlays);
+      modEventBus.addListener(EventHandler::sendModMessage);
     }
   }
 

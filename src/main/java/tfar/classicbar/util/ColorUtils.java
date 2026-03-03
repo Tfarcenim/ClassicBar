@@ -29,6 +29,8 @@ public class ColorUtils {
                 colorFractions = ClassicBarsConfig.poisonedFractions.get(); break;
             case WITHER: colorCodes = ConfigCache.wither;
                 colorFractions = ClassicBarsConfig.witheredFractions.get(); break;
+            // Changed: FROZEN no longer uses a multi-stop gradient (list + fractions).
+            // Simplified to a single flat color from config to avoid config complexity.
             case FROZEN:return ConfigCache.frozenHealth;
             default: return Color.BLACK;
         }
@@ -51,6 +53,10 @@ public class ColorUtils {
         Color c1 = colorCodes.get(i3 - 1);
         Color c2 = colorCodes.get(i3);
 
+        // Changed: old formula was: d3 - colorFractions.get(i3-1) / (colorFractions.get(i3) - colorFractions.get(i3-1))
+        // That was a bug - missing parentheses around the numerator subtraction, so division
+        // bound to only the second term. Mth.inverseLerp is the correct equivalent:
+        // (d3 - start) / (end - start), properly computing the blend factor in [0,1].
         double d4 = Mth.inverseLerp(d3,colorFractions.get(i3-1),colorFractions.get(i3));
         return c1.colorBlend(c2, (float) d4);
     }

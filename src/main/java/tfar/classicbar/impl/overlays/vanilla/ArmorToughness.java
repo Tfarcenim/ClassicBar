@@ -3,13 +3,17 @@ package tfar.classicbar.impl.overlays.vanilla;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraft.client.gui.Gui;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
+// Changed: removed shouldRenderText() override (was ClassicBarsConfig.showArmorToughnessNumbers.get())
+// and removed getIconRL() override (was returning BarOverlayImpl.ICON_BAR directly).
+// Both are now handled via barSettings: show_text from JSON, icon defaulted to ICON_BAR in
+// ClassicBarsConfig.makeDefaultBarSettings(). ResourceLocation import also removed.
 public class ArmorToughness extends BarOverlayImpl {
 
     public ArmorToughness() {
@@ -22,7 +26,7 @@ public class ArmorToughness extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         //armor toughness stuff
         double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
         double barWidth = getBarWidth(player);

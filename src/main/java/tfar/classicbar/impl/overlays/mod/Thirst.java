@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraft.client.gui.Gui;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -15,13 +15,15 @@ import tfar.classicbar.util.ModUtils;
 import toughasnails.api.potion.TANEffects;
 import toughasnails.api.thirst.IThirst;
 import toughasnails.api.thirst.ThirstHelper;
-import toughasnails.config.ThirstConfig;
 import toughasnails.init.ModTags;
 
+// Changed: removed THIRST_ICON constant (moved to ModUtils.THIRST_ICON for centralization),
+// removed shouldRenderText() override (was ClassicBarsConfig.showThirstNumbers.get()),
+// and removed getIconRL() override (was returning THIRST_ICON). Both now handled via barSettings.
 public class Thirst extends BarOverlayImpl {
 
     public static final String NAME = "thirst_level";
-    public static final ResourceLocation OVERLAY_ID = new ResourceLocation("toughasnails", NAME);
+    public static final ResourceLocation OVERLAY_ID = ResourceLocation.fromNamespaceAndPath("toughasnails", NAME);
 
     public static final double MAX_THIRST_LEVEL = 20;
     public static final double MAX_HYDRATION_LEVEL = 1.0;
@@ -192,8 +194,8 @@ public class Thirst extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        Double maxExhaustionLevel = ThirstConfig.thirstExhaustionThreshold.get();
+    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+        double maxExhaustionLevel = toughasnails.init.ModConfig.thirst.thirstExhaustionThreshold;
 
         IThirst thirstData = ThirstHelper.getThirst(player);
         int thirstLevel = thirstData.getThirst();
@@ -296,7 +298,7 @@ public class Thirst extends BarOverlayImpl {
 
         int texX = 36;
         int texBgX = 0;
-        if (player.hasEffect(TANEffects.THIRST.get())) {
+        if (player.hasEffect(TANEffects.THIRST)) {
             texX += 36;  // i.e texX = 72
             texBgX = texX + 45; // i.e texBg += 117
         }
@@ -322,7 +324,7 @@ public class Thirst extends BarOverlayImpl {
      */
     @Override
     public Color getPrimaryBarColor(int index, Player player) {
-        if (player.hasEffect(TANEffects.THIRST.get())) return ConfigCache.hydrationDebuff;
+        if (player.hasEffect(TANEffects.THIRST)) return ConfigCache.hydrationDebuff;
         return ConfigCache.hydration;
     }
 
@@ -331,7 +333,7 @@ public class Thirst extends BarOverlayImpl {
      */
     @Override
     public Color getSecondaryBarColor(int index, Player player) {
-        if (player.hasEffect(TANEffects.THIRST.get())) return ConfigCache.thirstDebuff;
+        if (player.hasEffect(TANEffects.THIRST)) return ConfigCache.thirstDebuff;
         return ConfigCache.thirst;
     }
 

@@ -1,12 +1,14 @@
 package tfar.classicbar.compat;
 
-import net.minecraftforge.fml.ModList;
+import net.neoforged.fml.ModList;
 
 public enum ModCompat {
-    vampirism, feathers,parcool,toughasnails;
+    vampirism("vampirism"), parcool("parcool"), toughasnails("toughasnails");
     public final boolean loaded;
-    ModCompat() {
-        loaded = ModList.get().isLoaded(name());
+    final String modid;
+    ModCompat(String modid) {
+        this.modid = modid;
+        loaded = ModList.get().isLoaded(modid);
     }
     
 }

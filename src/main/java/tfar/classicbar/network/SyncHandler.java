@@ -1,14 +1,13 @@
 package tfar.classicbar.network;
 
-import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.network.NetworkDirection;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import tfar.classicbar.compat.ModCompat;
 import toughasnails.api.thirst.IThirst;
 import toughasnails.api.thirst.ThirstHelper;
@@ -20,7 +19,7 @@ import java.util.UUID;
 /**
  * Sync saturation (vanilla MC only syncs when it hits 0).
  * Sync exhaustion (vanilla MC does not sync it at all).
- * Also sync counterparts of thirst data since it's copied from the vanilla hunger system.
+ * Also sync counterparts of thirst data since copied from the vanilla hunger system.
  */
 public final class SyncHandler {
 
@@ -44,17 +43,14 @@ public final class SyncHandler {
   private final Map<UUID, Float> lastThirstExhaustionLevels = new HashMap<>();
 
   @SubscribeEvent
-  public void onLivingUpdateEvent(TickEvent.PlayerTickEvent event) {
-    if (event.phase != TickEvent.Phase.END || !(event.player instanceof ServerPlayer player)) {
-      return;
-    }
+  public void onPlayerTick(PlayerTickEvent.Post event) {
+    if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
     syncVanillaData(player);
 
     if (ModCompat.toughasnails.loaded) {
       syncToughAsNailsData(player);
     }
-
   }
 
   private void syncVanillaData(ServerPlayer player) {
@@ -64,15 +60,13 @@ public final class SyncHandler {
 
     float saturationLevel = player.getFoodData().getSaturationLevel();
     if (lastSaturationLevel == null || lastSaturationLevel != saturationLevel) {
-      MessageSaturationSync msg = new MessageSaturationSync(saturationLevel);
-      Message.channel().sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+      PacketDistributor.sendToPlayer(player, new MessageSaturationSync(saturationLevel));
       lastSaturationLevels.put(uuid, saturationLevel);
     }
 
     float exhaustionLevel = player.getFoodData().getExhaustionLevel();
     if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
-      MessageExhaustionSync msg = new MessageExhaustionSync(exhaustionLevel);
-      Message.channel().sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+      PacketDistributor.sendToPlayer(player, new MessageExhaustionSync(exhaustionLevel));
       lastExhaustionLevels.put(uuid, exhaustionLevel);
     }
   }
@@ -91,15 +85,13 @@ public final class SyncHandler {
 
     float hydrationLevel = thirstData.getHydration();
     if (lastHydrationLevel == null || lastHydrationLevel != hydrationLevel) {
-      MessageHydrationSync msg = new MessageHydrationSync(hydrationLevel);
-      Message.channel().sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+      PacketDistributor.sendToPlayer(player, new MessageHydrationSync(hydrationLevel));
       lastHydrationLevels.put(uuid, hydrationLevel);
     }
 
     float exhaustionLevel = thirstData.getExhaustion();
     if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
-      MessageThirstExhaustionSync msg = new MessageThirstExhaustionSync(exhaustionLevel);
-      Message.channel().sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
+      PacketDistributor.sendToPlayer(player, new MessageThirstExhaustionSync(exhaustionLevel));
       lastThirstExhaustionLevels.put(uuid, exhaustionLevel);
     }
   }
@@ -107,8 +99,7 @@ public final class SyncHandler {
   @OnlyIn(Dist.CLIENT)
   @SubscribeEvent
   public void onClientPlayerLoggedIn(ClientPlayerNetworkEvent.LoggingIn event) {
-    Connection conn = event.getConnection();
-    Message.presentOnServer = Message.channel().isRemotePresent(conn);
+    Message.presentOnServer = true;
   }
 
   @SubscribeEvent
@@ -123,5 +114,4 @@ public final class SyncHandler {
       lastThirstExhaustionLevels.remove(uuid);
     }
   }
-
 }

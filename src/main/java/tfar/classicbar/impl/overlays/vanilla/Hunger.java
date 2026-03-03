@@ -5,17 +5,19 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraft.client.gui.Gui;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.compat.VampirismHelper;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.network.Message;
+import net.minecraft.resources.ResourceLocation;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
+// Changed: removed shouldRenderText() override that returned ClassicBarsConfig.showHungerNumbers.get().
+// Text visibility is now driven by barSettings.show_text via BarOverlayImpl.
 public class Hunger extends BarOverlayImpl {
 
   public Hunger() {
@@ -28,7 +30,7 @@ public class Hunger extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(ForgeGui gui, GuiGraphics matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(Gui gui, GuiGraphics matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
     double hunger = player.getFoodData().getFoodLevel();
     double maxHunger = 20;//HungerHelper.getMaxHunger(player);
     
@@ -60,15 +62,13 @@ public class Hunger extends BarOverlayImpl {
       renderPartialBar(matrices,f + 2, yStart + 2, barWidthS);
     }
     //render held hunger overlay
-    if (ClassicBarsConfig.showHeldFoodOverlay.get() &&
-            player.getMainHandItem().getItem().isEdible()) {
-      ItemStack stack = player.getMainHandItem();
+    FoodProperties heldFood = player.getMainHandItem().get(net.minecraft.core.component.DataComponents.FOOD);
+    if (ClassicBarsConfig.showHeldFoodOverlay.get() && heldFood != null) {
       double time = System.currentTimeMillis()/1000d * ClassicBarsConfig.transitionSpeed.get();
       double foodAlpha = Math.sin(time)/2 + .5;
 
-      FoodProperties food = stack.getItem().getFoodProperties(stack,player);
-      double hungerOverlay = food.getNutrition();
-      double saturationMultiplier = food.getSaturationModifier();
+      double hungerOverlay = heldFood.nutrition();
+      double saturationMultiplier = heldFood.saturation();
       double potentialSat = 2 * hungerOverlay * saturationMultiplier;
 
       //Draw Potential hunger
@@ -100,10 +100,7 @@ public class Hunger extends BarOverlayImpl {
         //offset used to decide where to place the bar
         f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - w : 0);
         satColor.color2Gla((float)foodAlpha);
-        if (true)//currentSat > 0)
-          renderPartialBar(matrices,f + 2, yStart + 2,w);
-        else ;//drawTexturedModalRect(f, yStart+1, 1, 10, getWidthfloor(saturationWidth,20), 7);
-
+        renderPartialBar(matrices,f + 2, yStart + 2,w);
       }
     }
 
@@ -113,7 +110,7 @@ public class Hunger extends BarOverlayImpl {
       //draw exhaustion
       RenderSystem.setShaderColor(1, 1, 1, .25f);
       ModUtils.drawTexturedModalRect(matrices,f + 2, yStart + 1, 1, 28, ModUtils.getWidth(exhaustion, 4f), 9);
-      RenderSystem.setShaderColor(1, 1, 1, 1);
+      RenderSystem.setShaderColor(1, 1, 1, 1); // Changed: added reset after exhaustion overlay; the 0.25f alpha was leaking into subsequent render calls
     }
   }
 
@@ -153,6 +150,11 @@ public class Hunger extends BarOverlayImpl {
     textHelper(graphics,xStart,yStart,hunger,c);
   }
 
+  private static final ResourceLocation FOOD_EMPTY = ResourceLocation.withDefaultNamespace("hud/food_empty");
+  private static final ResourceLocation FOOD_EMPTY_HUNGER = ResourceLocation.withDefaultNamespace("hud/food_empty_hunger");
+  private static final ResourceLocation FOOD_FULL = ResourceLocation.withDefaultNamespace("hud/food_full");
+  private static final ResourceLocation FOOD_FULL_HUNGER = ResourceLocation.withDefaultNamespace("hud/food_full_hunger");
+
   @Override
   public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
 
@@ -160,17 +162,11 @@ public class Hunger extends BarOverlayImpl {
     int yStart = height - vOffset;
     boolean hungerActive = player.hasEffect(MobEffects.HUNGER);
 
-    int k5 = 52;
-    int k6 = 16;
-    if (hungerActive) {
-      k5 += 36;
-      k6 = k5 + 45;
-    }
     //Draw hunger icon
     //hunger background
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, k6, 27, 9, 9);
+    graphics.blitSprite(hungerActive ? FOOD_EMPTY_HUNGER : FOOD_EMPTY, xStart, yStart, 9, 9);
     //hunger
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, k5, 27, 9, 9);
+    graphics.blitSprite(hungerActive ? FOOD_FULL_HUNGER : FOOD_FULL, xStart, yStart, 9, 9);
 
   }
 }

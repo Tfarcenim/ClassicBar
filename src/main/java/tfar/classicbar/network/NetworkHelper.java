@@ -1,12 +1,18 @@
 package tfar.classicbar.network;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class NetworkHelper {
-  public static Player getSidedPlayer(NetworkEvent.Context ctx) {
-    return ctx.getDirection() == NetworkDirection.PLAY_TO_SERVER ? ctx.getSender() : Minecraft.getInstance().player;
-  }
+
+    public static Player getPlayer(IPayloadContext ctx) {
+        return ctx.player();
+    }
+
+    public static ServerPlayer getServerPlayer(IPayloadContext ctx) {
+        Player player = ctx.player();
+        if (player instanceof ServerPlayer sp) return sp;
+        return null;
+    }
 }

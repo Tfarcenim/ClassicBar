@@ -1,8 +1,9 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraft.client.gui.Gui;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -22,7 +23,7 @@ public class Absorption extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
 
         double absorb = player.getAbsorptionAmount();
         double barWidth = getBarWidth(player);
@@ -80,6 +81,9 @@ public class Absorption extends BarOverlayImpl {
             case WITHER -> {
                 return ConfigCache.absorptionWither.get(index);
             }
+            case FROZEN -> {
+                return ConfigCache.absorption.get(index);
+            }
         }
         return super.getPrimaryBarColor(index, player);
     }
@@ -102,14 +106,19 @@ public class Absorption extends BarOverlayImpl {
         textHelper(graphics, xStart, yStart, absorb, c.colorToText());
     }
 
+    private static final ResourceLocation HEART_CONTAINER = ResourceLocation.withDefaultNamespace("hud/heart/container");
+    private static final ResourceLocation HEART_CONTAINER_HARDCORE = ResourceLocation.withDefaultNamespace("hud/heart/container_hardcore");
+    private static final ResourceLocation HEART_ABSORBING_FULL = ResourceLocation.withDefaultNamespace("hud/heart/absorbing_full");
+    private static final ResourceLocation HEART_ABSORBING_HARDCORE_FULL = ResourceLocation.withDefaultNamespace("hud/heart/absorbing_hardcore_full");
+
     @Override
     public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
 
-        int i5 = (player.level().getLevelData().isHardcore()) ? 5 : 0;
+        boolean hardcore = player.level().getLevelData().isHardcore();
         //draw absorption icon
-        ModUtils.drawTexturedModalRect(graphics, xStart, yStart, 16, 9 * i5, 9, 9);
-        ModUtils.drawTexturedModalRect(graphics, xStart, yStart, 160, 0, 9, 9);
+        graphics.blitSprite(hardcore ? HEART_CONTAINER_HARDCORE : HEART_CONTAINER, xStart, yStart, 9, 9);
+        graphics.blitSprite(hardcore ? HEART_ABSORBING_HARDCORE_FULL : HEART_ABSORBING_FULL, xStart, yStart, 9, 9);
     }
 }

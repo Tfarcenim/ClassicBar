@@ -1,14 +1,18 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraft.client.gui.Gui;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.ColorUtils;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 
+// Changed: removed shouldRenderText() override that returned ClassicBarsConfig.showMountHealthNumbers.get().
+// Also removed the ClassicBarsConfig import. Text visibility is now driven by barSettings.show_text.
 public class MountHealth extends BarOverlayImpl {
 
   private long healthUpdateCounter = 0;
@@ -25,9 +29,9 @@ public class MountHealth extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
     //Push to avoid lasting changes
-    int updateCounter = gui.getGuiTicks();
+    long updateCounter = Minecraft.getInstance().level != null ? Minecraft.getInstance().level.getGameTime() : 0;
 
     LivingEntity mount = (LivingEntity) player.getVehicle();
     if (!mount.isAlive()) return;
@@ -74,13 +78,16 @@ public class MountHealth extends BarOverlayImpl {
     textHelper(graphics,xStart,yStart,mountHealth, ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).colorToText());
   }
 
+  private static final ResourceLocation HEART_VEHICLE_CONTAINER = ResourceLocation.withDefaultNamespace("hud/heart/vehicle_container");
+  private static final ResourceLocation HEART_VEHICLE_FULL = ResourceLocation.withDefaultNamespace("hud/heart/vehicle_full");
+
   @Override
   public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     //heart background
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 16, 0, 9, 9);
+    graphics.blitSprite(HEART_VEHICLE_CONTAINER, xStart, yStart, 9, 9);
     //heart
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 88, 9, 9, 9);
+    graphics.blitSprite(HEART_VEHICLE_FULL, xStart, yStart, 9, 9);
   }
 }

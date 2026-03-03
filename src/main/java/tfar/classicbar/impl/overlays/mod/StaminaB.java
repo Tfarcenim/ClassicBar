@@ -1,15 +1,17 @@
 package tfar.classicbar.impl.overlays.mod;
 
-
-import com.alrex.parcool.client.hud.impl.HUDType;
-import com.alrex.parcool.common.capability.IStamina;
+import com.alrex.parcool.api.Stamina;
 import com.alrex.parcool.config.ParCoolConfig;
+import com.alrex.parcool.client.hud.impl.HUDType;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 
+// Changed: removed shouldRenderText() override (was ClassicBarsConfig.showAirNumbers.get()) and
+// removed getIconRL() override (was returning ICONS directly). Both now handled via barSettings.
+// Also updated to use the new Stamina API (IStamina -> Stamina).
 public class StaminaB extends BarOverlayImpl {
 
     public static final String name = "parcool:stamina";
@@ -21,23 +23,25 @@ public class StaminaB extends BarOverlayImpl {
     @Override
     public boolean shouldRender(Player player) {
         if (!checkConfigs()) return false;
-        IStamina stamina = IStamina.get(player);
-        return stamina.getMaxStamina() > stamina.get();
+        Stamina stamina = Stamina.get(player);
+        return stamina != null && stamina.getMaxValue() > stamina.getValue();
     }
 
+    // Changed: old check was four separate boolean config flags:
+    //   useLightHUD.get() && !hideStaminaHUD.get() && !infiniteStamina.get() && !useHungerBarInsteadOfStamina.get()
+    // New ParCool API consolidates this into a single HUDType enum; Light type means the
+    // external/classic-bar-style HUD should be shown.
     public static boolean checkConfigs() {
         return ParCoolConfig.Client.StaminaHUDType.get() == HUDType.Light;
     }
 
     @Override
-    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         int xStart = screenWidth / 2 + getHOffset();
         int yStart = screenHeight - vOffset;
         double barWidth = getBarWidth(player);
         Color.reset();
-        //Bar background
         renderFullBarBackground(graphics, xStart, yStart);
-        //draw portion of bar based on air amount
         double f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
         Color color = getPrimaryBarColor(0, player);
         color.color2Gl();
@@ -46,10 +50,12 @@ public class StaminaB extends BarOverlayImpl {
 
     @Override
     public double getBarWidth(Player player) {
-        IStamina stamina = IStamina.get(player);
-        int cStamina = stamina.get();
-        int maxStamina = stamina.getMaxStamina();
-        return Math.ceil((double) BarOverlayImpl.WIDTH * cStamina / maxStamina);
+        Stamina stamina = Stamina.get(player);
+        if (stamina == null) return 0;
+        int cur = stamina.getValue();
+        int max = stamina.getMaxValue();
+        if (max == 0) return 0;
+        return Math.ceil((double) BarOverlayImpl.WIDTH * cur / max);
     }
 
     @Override
@@ -59,21 +65,20 @@ public class StaminaB extends BarOverlayImpl {
 
     @Override
     public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        //draw stamina amount
-        int stamina = IStamina.get(player).get();
+        Stamina stamina = Stamina.get(player);
+        if (stamina == null) return;
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         Color color = getPrimaryBarColor(0, player);
-        textHelper(graphics, xStart, yStart, stamina/20, color.colorToText());
+        textHelper(graphics, xStart, yStart, stamina.getValue() / 20, color.colorToText());
     }
 
     @Override
     public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
-        //Draw stamina icon
-        IStamina stamina = IStamina.get(player);
-        int textureX = stamina.isExhausted() ? 16 : 0;
-        graphics.blit(getIconRL(),xStart, yStart, textureX, 119, 8, 9, 128, 128);
+        Stamina stamina = Stamina.get(player);
+        int textureX = (stamina != null && stamina.isExhausted()) ? 16 : 0;
+        graphics.blit(getIconRL(), xStart, yStart, textureX, 119, 8, 9, 128, 128);
     }
 }

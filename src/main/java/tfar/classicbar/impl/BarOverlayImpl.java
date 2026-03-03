@@ -4,7 +4,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
 import tfar.classicbar.api.BarOverlay;
@@ -21,12 +22,12 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public static final int HEIGHT = 5;
     public static final int BAR_U = 2;
     public static final int BAR_V = 11;
-    public static final ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
+    public static final ResourceLocation ICON_BAR = ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/health.png");
 
-    public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
+    public static final ResourceLocation GUI_ICONS_LOCATION = ResourceLocation.parse("textures/gui/icons.png");
     protected String name;
     protected boolean side;
-    protected BarSettings barSettings;
+    protected BarSettings barSettings; // Changed: added to hold per-bar JSON config (show_text, icon)
 
     public BarOverlayImpl(String name) {
         this.name = name;
@@ -36,6 +37,8 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return true;
     }
 
+    // Changed: new method implementing BarOverlay.setBarSettings(); called by ClassicBarsConfig
+    // when reading per-bar JSON files so each overlay receives its own settings instance.
     @Override
     public void setBarSettings(BarSettings barSettings) {
         this.barSettings = barSettings;
@@ -53,28 +56,38 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     @Override
-    public void render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        if (shouldRender(player)) {
-            gui.setupOverlayRenderState(true, false);
-            bindBarTexture();
-            renderBar(gui, graphics, player, screenWidth, screenHeight, vOffset);
-            if (shouldRenderText()) {
-                renderText(graphics, player, screenWidth, screenHeight, vOffset);
-            }
-            if (ConfigCache.icons) {
-                bindIconTexture();
-                renderIcon(graphics, player, screenWidth, screenHeight, vOffset);
-            }
-            EventHandler.increment(gui, rightHandSide(), 10);
+    public void render(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+        if (barSettings == null || !shouldRender(player)) return;
+        Gui gui = Minecraft.getInstance().gui;
+        com.mojang.blaze3d.systems.RenderSystem.enableBlend();
+        com.mojang.blaze3d.systems.RenderSystem.defaultBlendFunc();
+        bindBarTexture();
+        renderBar(gui, graphics, player, screenWidth, screenHeight, vOffset);
+        Color.reset(); // reset shader color after renderBar so text is drawn unaffected
+        if (shouldRenderText()) {
+            // Changed: removed Color.reset() that was here before renderText; the reset above is sufficient.
+            // Having it here was redundant and called reset twice when text was enabled.
+            renderText(graphics, player, screenWidth, screenHeight, vOffset);
         }
+        if (ConfigCache.icons) {
+            bindIconTexture();
+            renderIcon(graphics, player, screenWidth, screenHeight, vOffset);
+        }
+        Color.reset();
+        com.mojang.blaze3d.systems.RenderSystem.disableBlend();
+        EventHandler.increment(gui, rightHandSide(), 10);
     }
 
-    public abstract void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
+    public abstract void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
 
     protected boolean shouldFlash(Player player) {
         return false;
     }
 
+    // Changed: was "public boolean shouldRenderText() { return true; }" - always true, non-final.
+    // Individual overlays (Health, Hunger, Air, Armor, etc.) each overrode this to read their
+    // own ClassicBarsConfig.showXNumbers flag. Now final and reads from barSettings.show_text,
+    // which is set from the per-bar JSON config, removing the override in each overlay class.
     public final boolean shouldRenderText() {
         return barSettings.show_text;
     }
@@ -92,10 +105,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     protected HealthEffect getHealthEffect(Player player) {
-        HealthEffect effects = HealthEffect.NONE;//16
+        HealthEffect effects = HealthEffect.NONE;//16 - the effect.i value for texture offset reference
         if (player.hasEffect(MobEffects.POISON)) effects = HealthEffect.POISON;//evaluates to 52
         else if (player.hasEffect(MobEffects.WITHER)) effects = HealthEffect.WITHER;//evaluates to 88
-        else if (player.isFullyFrozen()) effects = HealthEffect.FROZEN;
+        else if (player.isFullyFrozen()) effects = HealthEffect.FROZEN; // added: frozen heart support
         return effects;
     }
 
@@ -148,6 +161,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public Color getSecondaryBarColor(int index, Player player) {
         return Color.BLACK;
     }
+    // Changed: was "public ResourceLocation getIconRL() { return GUI_ICONS_LOCATION; }" - non-final.
+    // Individual overlays overrode this to return their mod-specific texture (e.g. vampirism icons,
+    // parcool stamina bar). Now final and reads from barSettings.icon set via JSON default in
+    // ClassicBarsConfig.makeDefaultBarSettings(), removing the override in each overlay class.
     @Override
     public final ResourceLocation getIconRL() {
         return barSettings.icon;

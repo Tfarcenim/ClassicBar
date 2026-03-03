@@ -1,73 +1,38 @@
 plugins {
-    id 'eclipse'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'net.neoforged.gradle.userdev' version '7.1.20'
 }
 
-version = "${mc_version}-${mod_version}"
-group = "com.tfar.${modid}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "${modid}"
+version = "${mod_version}"
+group = "${mod_group_id}"
 
-// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-minecraft {
-    // The mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   Snapshot are built nightly.
-    // stable_#            Stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'parchment', version: parch_mapping+"-"+mc_version
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+base {
+    archivesName = "${modid}"
+}
 
-    //accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
-    runs {
-        client {
-            workingDirectory project.file('run')
+runs {
+    configureEach {
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
+        systemProperty 'forge.logging.console.level', 'debug'
+        modSource project.sourceSets.main
+    }
 
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-            //When running Vampirism in deobf environment this is required for Vampirism's mixins to be remapped
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
-        }
+    client {
+        systemProperty 'neoforge.enabledGameTestNamespaces', project.modid
+    }
 
-        server {
-            workingDirectory project.file('run')
-            //When running Vampirism in deobf environment this is required for Vampirism's mixins to be remapped
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            // Recommended logging level for the console
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                examplemod {
-                    source sourceSets.main
-                }
-            }
-        }
+    server {
+        systemProperty 'neoforge.enabledGameTestNamespaces', project.modid
+        argument '--nogui'
     }
 }
 
-repositories{
+repositories {
     maven {
         url = "https://maven.maxanier.de/releases"
     }
-
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-
     maven {
         url "https://cursemaven.com"
         content {
@@ -77,79 +42,44 @@ repositories{
 }
 
 dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
 
-    compileOnly fg.deobf("curse.maven:parcool-482378:${parcool}")
-    compileOnly fg.deobf("curse.maven:tough-as-nails-246391:3871450")
-    compileOnly fg.deobf("curse.maven:feathers-699933:4573576")
-
-    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
-    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}" //21
-    //compile against the Vampirism API
-    compileOnly "de.teamlapen.vampirism:Vampirism:1.20.1-1.10.11"
-
-    //Alternative using the full jar from CurseForge
-    //runtimeOnly fg.deobf("curse.maven:vampirism-become-a-vampire-233029:4649951")
-    // compile against the JEI API but do not include it at runtime
-//    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
-    // at runtime, use the full JEI jar
-//    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
-
-    //compile fileTree(dir: 'libs', include: '*.jar')
-
-    // You may put jars on which you depend on in ./libs or you may define them like so..
-    // compile "some.group:artifact:version:classifier"
-    // compile "some.group:artifact:version"
-
-    // Real examples
-    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // These dependencies get remapped to your current MCP mappings
-    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
+    compileOnly "curse.maven:parcool-482378:${parcool}"
+    compileOnly "curse.maven:glitchcore-955399:5660740"
+    compileOnly "curse.maven:tough-as-nails-246391:5833252"
+    compileOnly "de.teamlapen.vampirism:Vampirism:1.21-1.10.7:api"
+    compileOnly "curse.maven:vampirism-become-a-vampire-233029:6544569"
 }
 
-// Example for how to get properties into the manifest for reading by the runtime..
-jar {
-    manifest {
-        attributes([
-                "Specification-Title": "craftingstation",
-                "Specification-Vendor": "examplemodsareus",
-                "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": project.name,
-                "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"examplemodsareus",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            loader_version_range   : loader_version_range,
+            modid                  : modid,
+            mod_version            : mod_version,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties
     }
 }
 
-// Example configuration to allow publishing using the maven-publish task
-// we define a custom artifact that is sourced from the reobfJar output task
-// and then declare that to be published
-// Note you'll need to add a repository here
-def reobfFile = file("$buildDir/reobfJar/output.jar")
-def reobfArtifact = artifacts.add('default', reobfFile) {
-    type 'jar'
-    builtBy 'reobfJar'
-}
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            artifact reobfArtifact
+        register('mavenJava', MavenPublication) {
+            from components.java
         }
     }
     repositories {
         maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
+            url "file://${project.projectDir}/mcmodsrepo"
         }
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }

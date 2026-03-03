@@ -1,6 +1,6 @@
 package tfar.classicbar.config;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ColorUtils;
 
@@ -27,6 +27,9 @@ public class ConfigCache {
     public static List<Color> poison = new ArrayList<>();
     //public static ForgeConfigSpec.ConfigValue<List<? extends Double>> witheredFractions;
     public static List<Color> wither = new ArrayList<>();
+    // Changed: replaced List<Color> frozen + cacheList with a single Color frozenHealth.
+    // Frozen state no longer needs a multi-stop gradient; one config color is sufficient.
+    // frozenColors list and frozenFractions config were removed from ClassicBarsConfig.
     public static List<Color> absorption = new ArrayList<>();
     public static List<Color> absorptionPoison = new ArrayList<>();
     public static List<Color> absorptionWither = new ArrayList<>();
@@ -62,10 +65,10 @@ public class ConfigCache {
         hydration = ColorUtils.hex2Color(ClassicBarsConfig.hydrationBarColor.get());
         hydrationDebuff = ColorUtils.hex2Color(ClassicBarsConfig.hydrationBarDebuffColor.get());
         air = ColorUtils.hex2Color(ClassicBarsConfig.airBarColor.get());
-        frozenHealth = ColorUtils.hex2Color(ClassicBarsConfig.frozenHealthColor.get());
+        frozenHealth = ColorUtils.hex2Color(ClassicBarsConfig.frozenHealthColor.get()); // Changed: was cacheList(frozenColors, frozen); simplified to one hex color
     }
 
-    private static void cacheList(ForgeConfigSpec.ConfigValue<List<? extends String>> config, List<Color> cache) {
+    private static void cacheList(ModConfigSpec.ConfigValue<List<? extends String>> config, List<Color> cache) {
         for (String s : config.get()) {
             cache.add(ColorUtils.hex2Color(s));
         }

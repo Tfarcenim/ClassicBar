@@ -1,56 +1,38 @@
 package tfar.classicbar.network;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
-import tfar.classicbar.ClassicBar;
-
-import static net.minecraftforge.common.MinecraftForge.EVENT_BUS;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.common.NeoForge;
 
 public final class Message {
 
-  private static final String NETWORK_VERSION = "1.0";
-
-  private static SimpleChannel channel;
-
-  private static int id;
-
   public static boolean presentOnServer;
 
-  public static SimpleChannel channel() {
-    return channel;
+  public static void registerMessages(IEventBus modEventBus) {
+    modEventBus.addListener(Message::onRegisterPayloads);
+    NeoForge.EVENT_BUS.register(SyncHandler.instance());
   }
 
-  public static void registerMessages(String channelName) {
-    if (channel != null) return;
-    channel = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation(ClassicBar.MODID, channelName),
-            () -> NETWORK_VERSION,
-            serverVersion -> NetworkRegistry.ABSENT.version().equals(serverVersion) || NETWORK_VERSION.equals(serverVersion),
-            clientVersion -> NetworkRegistry.ABSENT.version().equals(clientVersion) || NETWORK_VERSION.equals(clientVersion)
-    );
-    channel.registerMessage(id++, MessageExhaustionSync.class,
-            MessageExhaustionSync::encode,
-            MessageExhaustionSync::new,
+  private static void onRegisterPayloads(RegisterPayloadHandlersEvent event) {
+    PayloadRegistrar registrar = event.registrar("1");
+    registrar.playToClient(
+            MessageExhaustionSync.TYPE,
+            MessageExhaustionSync.STREAM_CODEC,
             MessageExhaustionSync::handle);
-
-    channel.registerMessage(id++, MessageSaturationSync.class,
-            MessageSaturationSync::encode,
-            MessageSaturationSync::new,
+    registrar.playToClient(
+            MessageSaturationSync.TYPE,
+            MessageSaturationSync.STREAM_CODEC,
             MessageSaturationSync::handle);
-
-    channel.registerMessage(id++, MessageThirstExhaustionSync.class,
-            MessageThirstExhaustionSync::encode,
-            MessageThirstExhaustionSync::new,
+    registrar.playToClient(
+            MessageThirstExhaustionSync.TYPE,
+            MessageThirstExhaustionSync.STREAM_CODEC,
             MessageThirstExhaustionSync::handle);
-
-    channel.registerMessage(id++, MessageHydrationSync.class,
-            MessageHydrationSync::encode,
-            MessageHydrationSync::new,
+    registrar.playToClient(
+            MessageHydrationSync.TYPE,
+            MessageHydrationSync.STREAM_CODEC,
             MessageHydrationSync::handle);
-    EVENT_BUS.register(SyncHandler.instance());
   }
 
   private Message() {}
-
 }

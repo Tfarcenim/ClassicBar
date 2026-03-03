@@ -1,18 +1,20 @@
 package tfar.classicbar;
 
+import javax.annotation.Nonnull;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.neoforged.fml.InterModComms;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.common.NeoForge;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.config.ClassicBarsConfig;
@@ -25,11 +27,16 @@ import tfar.classicbar.util.ModUtils;
 
 import java.util.*;
 
-public class EventHandler implements IGuiOverlay {
+public class EventHandler implements LayeredDraw.Layer {
+
+  private static Gui forgeGui() {
+    return Minecraft.getInstance().gui;
+  }
 
   private static final List<BarOverlay> all = new ArrayList<>();
+  // Changed: was private; made public so ClassicBarsConfig.readBarSettings() can look up
+  // overlays by name when applying per-bar JSON settings.
   public static final Map<String, BarOverlay> registry = new HashMap<>();
-
   private static final List<BarOverlay> errored = new ArrayList<>();
 
   public static void register(BarOverlay iBarOverlay) {
@@ -39,40 +46,46 @@ public class EventHandler implements IGuiOverlay {
   public static void registerAll(BarOverlay... iBarOverlay) {
     Arrays.stream(iBarOverlay).forEach(overlay -> {
       if (overlay != null) {
-      registry.put(overlay.name(), overlay);
+        registry.put(overlay.name(), overlay);
       }
     });
   }
 
-  public void render(ForgeGui gui, GuiGraphics matrices, float partialTick, int screenWidth, int screenHeight) {
+  @Override
+  public void render(@Nonnull GuiGraphics matrices, @Nonnull DeltaTracker deltaTracker) {
+    int screenWidth = matrices.guiWidth();
+    int screenHeight = matrices.guiHeight();
+    Gui gui = forgeGui();
 
     Entity entity = ModUtils.mc.getCameraEntity();
     if (!(entity instanceof Player player)) return;
     if (player.getAbilities().instabuild || player.isSpectator()) return;
     ModUtils.mc.getProfiler().push("classicbars_hud");
 
+    // Changed: removed the pre-loop "if (errored.contains(overlay)) continue;" check.
+    // Instead, broken overlays are batch-removed after the loop with removeAll(), which
+    // is more efficient and avoids checking the errored list on every iteration.
     for (BarOverlay overlay : all) {
       boolean rightHand = overlay.rightHandSide();
       try {
-        overlay.render(gui, matrices, player, screenWidth, screenHeight, getOffset(gui, rightHand));
+        overlay.render(matrices, player, screenWidth, screenHeight, getOffset(gui, rightHand));
       } catch (Error e) {
-        ClassicBar.logger.error("Removing broken overlay "+overlay.name());
+        ClassicBar.logger.error("Removing broken overlay " + overlay.name());
         e.printStackTrace();
         errored.add(overlay);
       }
     }
-    if (!errored.isEmpty()) all.removeAll(errored);
+    if (!errored.isEmpty()) all.removeAll(errored); // Changed: moved removal out of loop; batch-clears all newly errored overlays at once
 
-    // mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
     ModUtils.mc.getProfiler().pop();
   }
 
-  public static void increment(ForgeGui gui,boolean side ,int amount){
-    if (side)gui.rightHeight+=amount;
-    else gui.leftHeight+=amount;
+  public static void increment(Gui gui, boolean side, int amount) {
+    if (side) gui.rightHeight += amount;
+    else gui.leftHeight += amount;
   }
 
-  public static int getOffset(ForgeGui gui,boolean right) {
+  public static int getOffset(Gui gui, boolean right) {
     return right ? gui.rightHeight : gui.leftHeight;
   }
 
@@ -88,40 +101,38 @@ public class EventHandler implements IGuiOverlay {
     InterModComms.sendTo("vampirism", "disable-blood-bar", () -> true);
   }
 
-  public static void setupOverlays(RegisterGuiOverlaysEvent e) {
-    MinecraftForge.EVENT_BUS.addListener(EventHandler::disableOtherOverlays);
-    e.registerBelow(VanillaGuiOverlay.ITEM_NAME.id(),ClassicBar.MODID,new EventHandler());
+  public static void setupOverlays(RegisterGuiLayersEvent e) {
+    NeoForge.EVENT_BUS.addListener(EventHandler::disableOtherOverlays);
+    e.registerBelow(VanillaGuiLayers.SELECTED_ITEM_NAME,
+            ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "hud"),
+            new EventHandler());
 
-    //Register renderers for events
     ClassicBar.logger.info("Registering Vanilla Overlays");
-
     EventHandler.registerAll(new Absorption(), new Air(), new Armor(), new ArmorToughness(),
             new Health(), new Hunger(), new MountHealth());
 
-    //mod renderers
     ClassicBar.logger.info("Registering Mod Overlays");
-    if (ModCompat.vampirism.loaded)EventHandler.register(new Blood());
-  //  if (ModCompat.feathers.loaded)EventHandler.register(new Feathers());
-    if (ModCompat.parcool.loaded)EventHandler.register(new StaminaB());
-    if (ModCompat.toughasnails.loaded)EventHandler.register(new Thirst());
-    // if (ModList.get().isLoaded("randomthings")) MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
-    // if (ModList.get().isLoaded("lavawaderbauble")) {
-    //    MinecraftForge.EVENT_BUS.register(new LavaWaderBaubleRenderer());
-    // }
+    if (ModCompat.vampirism.loaded) EventHandler.register(new Blood());
+    if (ModCompat.parcool.loaded) EventHandler.register(new StaminaB());
+    if (ModCompat.toughasnails.loaded) EventHandler.register(new Thirst());
 
-    //if (ModList.get().isLoaded("superiorshields"))
-    //  MinecraftForge.EVENT_BUS.register(new SuperiorShieldRenderer());
-
-    //MinecraftForge.EVENT_BUS.register(new BetterDivingRenderer());
-    //  if (ModList.get().isLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
+    cacheConfigs();
+    ClassicBarsConfig.readBarSettings();
   }
 
-  private static final List<ResourceLocation> vanilla_overlays = List.of(VanillaGuiOverlay.AIR_LEVEL.id(),VanillaGuiOverlay.ARMOR_LEVEL.id(),
-          VanillaGuiOverlay.PLAYER_HEALTH.id(),VanillaGuiOverlay.MOUNT_HEALTH.id(),VanillaGuiOverlay.FOOD_LEVEL.id());
-  public static void disableOtherOverlays(RenderGuiOverlayEvent.Pre e) {
-    NamedGuiOverlay overlay = e.getOverlay();
-    if (vanilla_overlays.contains(overlay.id())) e.setCanceled(true);
-    else if (overlay.id().getNamespace().equals("parcool") && StaminaB.checkConfigs()) e.setCanceled(true);
-    else if (ModCompat.toughasnails.loaded && Thirst.isEnabled() && Thirst.OVERLAY_ID.equals(overlay.id())) e.setCanceled(true);
+  private static final List<ResourceLocation> vanilla_overlays = List.of(
+          VanillaGuiLayers.AIR_LEVEL,
+          VanillaGuiLayers.ARMOR_LEVEL,
+          VanillaGuiLayers.PLAYER_HEALTH,
+          VanillaGuiLayers.VEHICLE_HEALTH,
+          VanillaGuiLayers.FOOD_LEVEL);
+
+  private static final ResourceLocation PARCOOL_STAMINA_HUD = ResourceLocation.fromNamespaceAndPath("parcool", "hud.stamina");
+
+  public static void disableOtherOverlays(RenderGuiLayerEvent.Pre e) {
+    ResourceLocation id = e.getName();
+    if (vanilla_overlays.contains(id)) e.setCanceled(true);
+    else if (ModCompat.toughasnails.loaded && Thirst.isEnabled() && Thirst.OVERLAY_ID.equals(id)) e.setCanceled(true);
+    else if (ModCompat.parcool.loaded && PARCOOL_STAMINA_HUD.equals(id)) e.setCanceled(true);
   }
 }

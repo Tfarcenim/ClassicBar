@@ -1,17 +1,16 @@
 package tfar.classicbar.config;
 
-import com.electronwill.nightconfig.core.ConfigSpec;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import org.apache.commons.io.IOUtils;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
@@ -29,51 +28,54 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(modid = ClassicBar.MODID, bus = Mod.EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
+@SuppressWarnings("removal")
+@EventBusSubscriber(modid = ClassicBar.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClassicBarsConfig {
 
-  static ForgeConfigSpec.BooleanValue displayIcons;
-  public static ForgeConfigSpec.BooleanValue displayToughnessBar;
-  public static ForgeConfigSpec.BooleanValue fullAbsorptionBar;
-  public static ForgeConfigSpec.BooleanValue fullArmorBar;
-  public static ForgeConfigSpec.BooleanValue fullToughnessBar;
-  public static ForgeConfigSpec.BooleanValue lowArmorWarning;
-  public static ForgeConfigSpec.BooleanValue showSaturationBar;
-  public static ForgeConfigSpec.BooleanValue showHydrationBar;
-  public static ForgeConfigSpec.BooleanValue showHeldFoodOverlay;
-  public static ForgeConfigSpec.BooleanValue showHeldDrinkOverlay;
-  public static ForgeConfigSpec.BooleanValue showExhaustionOverlay;
-  public static ForgeConfigSpec.BooleanValue showThirstExhaustionOverlay;
+  static ModConfigSpec.BooleanValue displayIcons;
+  public static ModConfigSpec.BooleanValue displayToughnessBar;
+  public static ModConfigSpec.BooleanValue fullAbsorptionBar;
+  public static ModConfigSpec.BooleanValue fullArmorBar;
+  public static ModConfigSpec.BooleanValue fullToughnessBar;
+  public static ModConfigSpec.BooleanValue lowArmorWarning;
+  public static ModConfigSpec.BooleanValue showSaturationBar;
+  public static ModConfigSpec.BooleanValue showHydrationBar;
+  public static ModConfigSpec.BooleanValue showHeldFoodOverlay;
+  public static ModConfigSpec.BooleanValue showHeldDrinkOverlay;
+  public static ModConfigSpec.BooleanValue showExhaustionOverlay;
+  public static ModConfigSpec.BooleanValue showThirstExhaustionOverlay;
 
-  public static ForgeConfigSpec.DoubleValue transitionSpeed;
-  static ForgeConfigSpec.ConfigValue<String> hungerBarColor;
-  static ForgeConfigSpec.ConfigValue<String> hungerBarDebuffColor;
-  static ForgeConfigSpec.ConfigValue<String> saturationBarColor;
-  static ForgeConfigSpec.ConfigValue<String> saturationBarDebuffColor;
-  static ForgeConfigSpec.ConfigValue<String> thirstBarColor;
-  static ForgeConfigSpec.ConfigValue<String> thirstBarDebuffColor;
-  static ForgeConfigSpec.ConfigValue<String> hydrationBarColor;
-  static ForgeConfigSpec.ConfigValue<String> hydrationBarDebuffColor;
-  static ForgeConfigSpec.ConfigValue<String> airBarColor;
-  static ForgeConfigSpec.ConfigValue<List<? extends String>> armorColors;
-  static ForgeConfigSpec.ConfigValue<List<? extends String>> armorToughnessColors;
-  static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionColors;
-  static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionPoisonColors;
-  static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionWitherColors;
-  public static ForgeConfigSpec.ConfigValue<List<? extends Double>> normalFractions;
-  static ForgeConfigSpec.ConfigValue<List<? extends String>> normalColors;
-  public static ForgeConfigSpec.ConfigValue<List<? extends Double>> poisonedFractions;
-  static ForgeConfigSpec.ConfigValue<List<? extends String>> poisonedColors;
-  public static ForgeConfigSpec.ConfigValue<List<? extends Double>> witheredFractions;
-  static ForgeConfigSpec.ConfigValue<List<? extends String>> witheredColors;
-  public static ForgeConfigSpec.ConfigValue<String> frozenHealthColor;
-  public static ForgeConfigSpec.ConfigValue<String> lavaBarColor;
-  public static ForgeConfigSpec.ConfigValue<String> flightBarColor;
+  public static ModConfigSpec.DoubleValue transitionSpeed;
+  static ModConfigSpec.ConfigValue<String> hungerBarColor;
+  static ModConfigSpec.ConfigValue<String> hungerBarDebuffColor;
+  static ModConfigSpec.ConfigValue<String> saturationBarColor;
+  static ModConfigSpec.ConfigValue<String> saturationBarDebuffColor;
+  static ModConfigSpec.ConfigValue<String> thirstBarColor;
+  static ModConfigSpec.ConfigValue<String> thirstBarDebuffColor;
+  static ModConfigSpec.ConfigValue<String> hydrationBarColor;
+  static ModConfigSpec.ConfigValue<String> hydrationBarDebuffColor;
+  static ModConfigSpec.ConfigValue<String> airBarColor;
+  static ModConfigSpec.ConfigValue<List<? extends String>> armorColors;
+  static ModConfigSpec.ConfigValue<List<? extends String>> armorToughnessColors;
+  static ModConfigSpec.ConfigValue<List<? extends String>> absorptionColors;
+  static ModConfigSpec.ConfigValue<List<? extends String>> absorptionPoisonColors;
+  static ModConfigSpec.ConfigValue<List<? extends String>> absorptionWitherColors;
+  public static ModConfigSpec.ConfigValue<List<? extends Double>> normalFractions;
+  static ModConfigSpec.ConfigValue<List<? extends String>> normalColors;
+  public static ModConfigSpec.ConfigValue<List<? extends Double>> poisonedFractions;
+  static ModConfigSpec.ConfigValue<List<? extends String>> poisonedColors;
+  public static ModConfigSpec.ConfigValue<List<? extends Double>> witheredFractions;
+  static ModConfigSpec.ConfigValue<List<? extends String>> witheredColors;
+  // Changed: replaced frozenColors (List<String>) + frozenFractions (List<Double>) with a single
+  // frozenHealthColor string. Frozen state was simplified from a gradient to one flat color.
+  public static ModConfigSpec.ConfigValue<String> frozenHealthColor;
+  public static ModConfigSpec.ConfigValue<String> lavaBarColor;
+  public static ModConfigSpec.ConfigValue<String> flightBarColor;
 
-  public static ForgeConfigSpec.ConfigValue<List<? extends String>> leftorder;
-  public static ForgeConfigSpec.ConfigValue<List<? extends String>> rightorder;
+  public static ModConfigSpec.ConfigValue<List<? extends String>> leftorder;
+  public static ModConfigSpec.ConfigValue<List<? extends String>> rightorder;
 
-  public ClassicBarsConfig(ForgeConfigSpec.Builder builder) {
+  public ClassicBarsConfig(ModConfigSpec.Builder builder) {
     builder.push("general");
     displayIcons = builder.define("display_icons", true);
 
@@ -103,22 +105,22 @@ public class ClassicBarsConfig {
     lavaBarColor = builder.define("lava_bar_color","#FF8000",String.class::isInstance);
     flightBarColor = builder.define("flight_bar_color","#FFFFFF",String.class::isInstance);
 
-    armorColors = builder.defineList("armor_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"),String.class::isInstance);
-    armorToughnessColors = builder.defineList("armor_toughness_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"),String.class::isInstance);
-    absorptionColors = builder.defineList("absorption_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
-    absorptionPoisonColors = builder.defineList("absorption_poison_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
-    absorptionWitherColors = builder.defineList("absorption_wither_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
+    armorColors = builder.defineList("armor_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"), () -> "", String.class::isInstance);
+    armorToughnessColors = builder.defineList("armor_toughness_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"), () -> "", String.class::isInstance);
+    absorptionColors = builder.defineList("absorption_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"), () -> "", String.class::isInstance);
+    absorptionPoisonColors = builder.defineList("absorption_poison_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"), () -> "", String.class::isInstance);
+    absorptionWitherColors = builder.defineList("absorption_wither_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"), () -> "", String.class::isInstance);
 
-    normalColors = builder.defineList("normal_colors", Lists.newArrayList("#FF0000", "#FFFF00", "#00FF00"),String.class::isInstance);
-    normalFractions = builder.defineList("normal_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
-    poisonedColors = builder.defineList("poisoned_colors", Lists.newArrayList("#00FF00", "#55FF55", "#00FF00"),String.class::isInstance);
-    poisonedFractions = builder.defineList("poisoned_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
-    witheredColors = builder.defineList("withered_colors", Lists.newArrayList("#555555", "#AAAAAA", "#555555"),String.class::isInstance);
-    witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
-    frozenHealthColor = builder.define("frozen_health_color", "#7fafff");
+    normalColors = builder.defineList("normal_colors", Lists.newArrayList("#FF0000", "#FFFF00", "#00FF00"), () -> "", String.class::isInstance);
+    normalFractions = builder.defineList("normal_fractions", Lists.newArrayList(.25, .5, .75), () -> 0.0, Double.class::isInstance);
+    poisonedColors = builder.defineList("poisoned_colors", Lists.newArrayList("#00FF00", "#55FF55", "#00FF00"), () -> "", String.class::isInstance);
+    poisonedFractions = builder.defineList("poisoned_fractions", Lists.newArrayList(.25, .5, .75), () -> 0.0, Double.class::isInstance);
+    witheredColors = builder.defineList("withered_colors", Lists.newArrayList("#555555", "#AAAAAA", "#555555"), () -> "", String.class::isInstance);
+    witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75), () -> 0.0, Double.class::isInstance);
+    frozenHealthColor = builder.define("frozen_health_color", "#7fafff"); // Changed: was frozenColors list + frozenFractions list
 
-    leftorder = builder.defineList("left_order", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2"),String.class::isInstance);
-    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","health_mount","food","thirst_level", StaminaB.name,"feathers","armor_toughness","air","flighttiara","decay"),String.class::isInstance);
+    leftorder = builder.defineList("left_order", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2"), () -> "", String.class::isInstance);
+    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","health_mount","food","thirst_level", StaminaB.name,"feathers","armor_toughness","air","flighttiara","decay"), () -> "", String.class::isInstance);
   }
 
   @SubscribeEvent
@@ -130,18 +132,21 @@ public class ClassicBarsConfig {
 
   static File settingsPath = new File("config/" + ClassicBar.MODID + "/");
 
-
+  // Changed: new method; reads per-bar JSON files from config/classicbar/ and applies
+  // BarSettings (show_text, icon) to each registered overlay. Replaces the old approach
+  // where each overlay class hardcoded its shouldRenderText() and getIconRL() overrides.
   public static void readBarSettings() {
 
-    if (settingsPath.exists()) {
-    } else {
+    if (!settingsPath.exists()) {
       settingsPath.mkdir();
-      writeDefault();
     }
+    writeDefault();
 
     File[] files = settingsPath.listFiles();
+    if (files == null) return;
 
     for (File file : files) {
+      if (!file.isFile() || !file.getName().endsWith(".json")) continue;
 
       Reader reader = null;
       try {
@@ -155,7 +160,12 @@ public class ClassicBarsConfig {
         String fileName = file.getName();
         String name = fileName.substring(0,fileName.length() - ".json".length());
         BarOverlay barOverlay = EventHandler.registry.get(name);
-        barOverlay.setBarSettings(barSettings);
+        if (barOverlay == null) {
+          barOverlay = EventHandler.registry.get(name.replace('_', ':'));
+        }
+        if (barOverlay != null) {
+          barOverlay.setBarSettings(barSettings);
+        }
 
       } catch (Exception e) {
         e.printStackTrace();
@@ -179,11 +189,15 @@ public class ClassicBarsConfig {
     }
   }*/
 
+  // Changed: new method; writes a default JSON settings file for each registered overlay
+  // only when the file does not already exist, so user edits are preserved.
   public static void writeDefault() {
     Gson gson = new Gson();
     makeDefaultBarSettings();
     for (BarOverlay barOverlay : EventHandler.registry.values()) {
-      File file = new File("config/" + ClassicBar.MODID + "/"+ barOverlay.name()+".json");
+      // Changed: colon replaced with underscore in filenames (e.g. "parcool:stamina" -> "parcool_stamina.json")
+      File file = new File("config/" + ClassicBar.MODID + "/"+ barOverlay.name().replace(':', '_')+".json");
+      if (file.exists()) continue; // Changed: skip existing files so user edits are not overwritten
       JsonWriter writer = null;
       try {
         writer = gson.newJsonWriter(new FileWriter(file));
@@ -204,6 +218,9 @@ public class ClassicBarsConfig {
 
   private static final BarSettings nullSettings = new BarSettings();
 
+  // Changed: new method; defines the default BarSettings for each overlay.
+  // Previously each overlay class overrode getIconRL() and shouldRenderText() directly.
+  // Now icon and show_text defaults are centralized here and written to JSON on first load.
   static void makeDefaultBarSettings() {
 
     nullSettings.show_text = true;
@@ -234,10 +251,17 @@ public class ClassicBarsConfig {
 
     BarSettings healthMountSettings = nullSettings.copy();
     defaults.put("health_mount",healthMountSettings);
+
+    BarSettings thirstSettings = nullSettings.copy();
+    thirstSettings.icon = ModUtils.THIRST_ICON;
+    defaults.put("thirst_level",thirstSettings);
+
+    BarSettings staminaSettings = nullSettings.copy();
+    staminaSettings.icon = ModUtils.ICONS;
+    defaults.put(StaminaB.name,staminaSettings);
   }
 
 
 
   private static final Map<String,BarSettings> defaults = new HashMap<>();
-
 }

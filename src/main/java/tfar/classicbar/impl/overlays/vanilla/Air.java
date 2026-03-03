@@ -1,13 +1,15 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraft.client.gui.Gui;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
-import tfar.classicbar.util.ModUtils;
 
+// Changed: removed shouldRenderText() override that returned ClassicBarsConfig.showAirNumbers.get().
+// Also removed the ClassicBarsConfig import. Text visibility is now driven by barSettings.show_text.
 public class Air extends BarOverlayImpl {
 
   public Air() {
@@ -19,7 +21,7 @@ public class Air extends BarOverlayImpl {
     return player.getAirSupply() < player.getMaxAirSupply();
   }
   @Override
-  public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) { //NOSONAR Gui kept for BarOverlayImpl contract
     int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
     double barWidth = getBarWidth(player);
@@ -52,11 +54,13 @@ public class Air extends BarOverlayImpl {
     Color color = getPrimaryBarColor(0,player);
     textHelper(graphics,xStart,yStart,air/20,color.colorToText());
   }
+  private static final ResourceLocation AIR_SPRITE = ResourceLocation.withDefaultNamespace("hud/air");
+
   @Override
   public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     //Draw air icon
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 16, 18, 9, 9);
+    graphics.blitSprite(AIR_SPRITE, xStart, yStart, 9, 9);
   }
 }
