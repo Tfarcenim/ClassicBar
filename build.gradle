@@ -10,6 +10,10 @@ base {
     archivesName = "${modid}"
 }
 
+jar {
+    archiveFileName = "${modid}-${minecraft_version}-${mod_version}-neoforge.jar"
+}
+
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 runs {
