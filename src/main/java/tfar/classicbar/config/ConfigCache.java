@@ -24,6 +24,7 @@ public class ConfigCache {
     public static Color thirstWasTakenQuenched;
     public static Color homeostaticWater;
     public static Color homeostaticHydration;
+    public static Color ironsMana;
     public static Color air;
     //public static ForgeConfigSpec.ConfigValue<List<? extends Double>> normalFractions;
     public static List<Color> normal = new ArrayList<>();
@@ -78,6 +79,9 @@ public class ConfigCache {
         if (ClassicBarsConfig.homeostaticWaterBarColor != null) { // homeostatic section was registered
             homeostaticWater = ColorUtils.hex2Color(ClassicBarsConfig.homeostaticWaterBarColor.get());
             homeostaticHydration = ColorUtils.hex2Color(ClassicBarsConfig.homeostaticHydrationBarColor.get());
+        }
+        if (ClassicBarsConfig.ironsManaBarColor != null) { // irons_spellbooks section was registered
+            ironsMana = ColorUtils.hex2Color(ClassicBarsConfig.ironsManaBarColor.get());
         }
         air = ColorUtils.hex2Color(ClassicBarsConfig.airBarColor.get());
         frozenHealth = ColorUtils.hex2Color(ClassicBarsConfig.frozenHealthColor.get()); // Changed: was cacheList(frozenColors, frozen); simplified to one hex color

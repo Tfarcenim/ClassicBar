@@ -1,6 +1,5 @@
 package tfar.classicbar.impl.overlays.mod;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -8,6 +7,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import tfar.classicbar.compat.VampirismHelper;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 
@@ -24,7 +24,7 @@ public class Blood extends BarOverlayImpl {
 
     @Override
     public boolean shouldRender(Player player) {
-        return VampirismAPI.factionPlayerHandler(player).isInFaction(VReference.VAMPIRE_FACTION);
+        return VampirismHelper.isVampire(player); // Aligned: delegates to VampirismHelper like Hunger.shouldRender() instead of inlining the API call
     }
 
     @Override
@@ -34,7 +34,7 @@ public class Blood extends BarOverlayImpl {
 
     @Override
     public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        if (!shouldRender(player)) return;
+        // Removed: redundant shouldRender() guard — BarOverlayImpl.render() already checks before calling renderBar()
         IVampirePlayer vampirePlayer = VampirismAPI.vampirePlayer(player);
         if (vampirePlayer == null) return;
         IBloodStats stats = vampirePlayer.getBloodStats();

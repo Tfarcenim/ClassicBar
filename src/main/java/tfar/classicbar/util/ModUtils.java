@@ -14,11 +14,12 @@ public final class ModUtils {
   // their individual getIconRL() overrides. They are now centralized here so that
   // ClassicBarsConfig.makeDefaultBarSettings() can reference them when writing default
   // JSON settings files, enabling per-bar icon overrides via config.
-  public static final ResourceLocation VAMPIRISM_ICONS = ResourceLocation.parse("vampirism:textures/gui/icons.png");
+  public static final ResourceLocation VAMPIRISM_ICONS = ResourceLocation.fromNamespaceAndPath("vampirism", "textures/gui/icons.png"); // Aligned: was parse(); uses fromNamespaceAndPath() like all other mod ResourceLocations
   public static final ResourceLocation THIRST_ICON = ResourceLocation.fromNamespaceAndPath("toughasnails", "textures/gui/icons.png");
-  public static final ResourceLocation ICONS = ResourceLocation.parse("parcool:textures/gui/stamina_bar.png");
+  public static final ResourceLocation ICONS = ResourceLocation.fromNamespaceAndPath("parcool", "textures/gui/stamina_bar.png"); // Aligned: was parse(); uses fromNamespaceAndPath() like all other mod ResourceLocations
   public static final ResourceLocation THIRST_WAS_TAKEN_ICONS = ResourceLocation.fromNamespaceAndPath("thirst", "textures/gui/thirst_icons.png"); // Thirst Was Taken mod icon texture
   public static final ResourceLocation HOMEOSTATIC_ICONS = ResourceLocation.fromNamespaceAndPath("homeostatic", "textures/gui/icons.png"); // Homeostatic mod icon texture (if exists)
+  public static final ResourceLocation IRONS_SPELLBOOKS_ICONS = ResourceLocation.fromNamespaceAndPath("irons_spellbooks", "textures/gui/icons.png"); // Iron's Spells n Spellbooks icon texture
   public static ResourceLocation CURRENT_TEXTURE = BarOverlayImpl.GUI_ICONS_LOCATION;
 
   public static void drawTexturedModalRect(GuiGraphics stack, double x, int y, int textureX, int textureY, double width, int height) {

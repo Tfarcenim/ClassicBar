@@ -70,7 +70,7 @@ public class Absorption extends BarOverlayImpl {
     public double getBarWidth(Player player) {
         double absorb = player.getAbsorptionAmount();
         double maxHealth = player.getMaxHealth();
-        return (int) Math.ceil(BarOverlayImpl.WIDTH * Math.min(maxHealth, absorb) / maxHealth);
+        return Math.ceil(BarOverlayImpl.WIDTH * Math.min(maxHealth, absorb) / maxHealth); // Aligned: removed unnecessary (int) cast; return type is double, matches all other overlays
     }
 
     @Override

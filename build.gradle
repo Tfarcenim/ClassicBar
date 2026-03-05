@@ -49,12 +49,14 @@ dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
     compileOnly "curse.maven:parcool-482378:${parcool}"
-    compileOnly "curse.maven:glitchcore-955399:5660740"
-    compileOnly "curse.maven:tough-as-nails-246391:5833252"
+    compileOnly "curse.maven:glitchcore-955399:${glitchcore}"
+    compileOnly "curse.maven:tough-as-nails-246391:${tough_as_nails}"
     compileOnly "de.teamlapen.vampirism:Vampirism:1.21-1.10.7:api"
-    compileOnly "curse.maven:vampirism-become-a-vampire-233029:6544569"
+    compileOnly "curse.maven:vampirism-become-a-vampire-233029:${vampirism}"
     compileOnly "curse.maven:thirst-was-taken-679270:${thirst_was_taken}"
     compileOnly "curse.maven:homeostatic-634466:${homeostatic}"
+    compileOnly "curse.maven:overloaded-armor-bar-314002:${overloaded_armor_bar}"
+    compileOnly "curse.maven:irons-spells-n-spellbooks-855414:${irons_spells}"
 }
 
 tasks.withType(ProcessResources).configureEach {

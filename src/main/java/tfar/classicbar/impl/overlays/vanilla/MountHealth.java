@@ -52,7 +52,7 @@ public class MountHealth extends BarOverlayImpl {
     double maxHealth = mount.getMaxHealth();
     int i4 = (highlight) ? 18 : 0;
     //Bar background
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 0, i4, 81, 9);
+    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 0, i4, WIDTH + 4, 9); // Aligned: was 81; uses WIDTH + 4 like Health and BarOverlayImpl.renderFullBarBackground()
     //is the bar changing
     //Pass 1, draw bar portion
     //calculate bar color
@@ -66,7 +66,7 @@ public class MountHealth extends BarOverlayImpl {
     LivingEntity mount = (LivingEntity) player.getVehicle();
     double mountHealth = mount.getHealth();
     double maxHealth = mount.getMaxHealth();
-    return (int) Math.ceil(BarOverlayImpl.WIDTH * mountHealth / maxHealth);
+    return Math.ceil(BarOverlayImpl.WIDTH * mountHealth / maxHealth); // Aligned: removed unnecessary (int) cast; return type is double, matches all other overlays
   }
 
   @Override

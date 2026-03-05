@@ -210,15 +210,15 @@ public class Thirst extends BarOverlayImpl {
 
         drawThirst(graphics, player, xStart, yStart, thirstLevel, MAX_THIRST_LEVEL);
 
-        if (hydrationLevel > 0 && ClassicBarsConfig.showHydrationBar.get()) {
+        if (hydrationLevel > 0 && ClassicBarsConfig.showHydrationBar != null && ClassicBarsConfig.showHydrationBar.get()) { // Null guard: showHydrationBar is null when toughasnails is not loaded
             drawHydration(graphics, player, xStart, yStart, hydrationLevel, MAX_HYDRATION_LEVEL);
         }
 
-        if (ClassicBarsConfig.showHeldDrinkOverlay.get() && ThirstHelper.canDrink(player, true)) {
+        if (ClassicBarsConfig.showHeldDrinkOverlay != null && ClassicBarsConfig.showHeldDrinkOverlay.get() && ThirstHelper.canDrink(player, true)) { // Null guard: showHeldDrinkOverlay is null when toughasnails is not loaded
             drawHeldDrink(graphics, player, thirstData, xStart, yStart, MAX_THIRST_LEVEL, MAX_HYDRATION_LEVEL);
         }
 
-        if (ClassicBarsConfig.showThirstExhaustionOverlay.get() && Message.presentOnServer) {
+        if (ClassicBarsConfig.showThirstExhaustionOverlay != null && ClassicBarsConfig.showThirstExhaustionOverlay.get() && Message.presentOnServer) { // Null guard: showThirstExhaustionOverlay is null when toughasnails is not loaded
             drawExhaustion(graphics, player, xStart, yStart, exhaustionLevel, maxExhaustionLevel);
         }
 
@@ -254,7 +254,7 @@ public class Thirst extends BarOverlayImpl {
             renderPartialBar(stack,barXStart + 2, y + 2, barWidth);
         }
 
-        if (ClassicBarsConfig.showHydrationBar.get()) {
+        if (ClassicBarsConfig.showHydrationBar != null && ClassicBarsConfig.showHydrationBar.get()) { // Null guard: showHydrationBar is null when toughasnails is not loaded
             float hydrationLevel = thirstData.getHydration();
             float potentialHydrationLevel = getPotentialHydrationLevel(drink);
             double restoredHydrationLevel = Math.min(maxHydrationLevel - hydrationLevel, potentialHydrationLevel);

@@ -94,7 +94,7 @@ public class ArmorToughness extends BarOverlayImpl {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
-        int index = (int) Math.min(Math.ceil(armorToughness / 20) - 1, ConfigCache.armor_toughness.size() - 1);
+        int index = (int) Math.min(Math.ceil(armorToughness / 20), ConfigCache.armor_toughness.size()) - 1; // Aligned: uses same formula as renderBar() and other layered-bar overlays (Armor, Absorption)
         int c = getPrimaryBarColor(index, player).colorToText();
         //draw armor toughness amount
         textHelper(graphics, xStart, yStart, armorToughness, c);

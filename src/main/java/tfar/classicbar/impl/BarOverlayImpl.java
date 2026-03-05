@@ -25,7 +25,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public static final int BAR_V = 11;
     public static final ResourceLocation ICON_BAR = ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/health.png");
 
-    public static final ResourceLocation GUI_ICONS_LOCATION = ResourceLocation.parse("textures/gui/icons.png");
+    public static final ResourceLocation GUI_ICONS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/icons.png"); // Aligned: was parse(); uses withDefaultNamespace() like all vanilla sprite ResourceLocations
     protected String name;
     protected boolean side;
     protected BarSettings barSettings; // Changed: added to hold per-bar JSON config (show_text, icon)

@@ -48,7 +48,7 @@ public class HomeostaticWater extends BarOverlayImpl {
 
         drawWater(graphics, xStart, yStart, waterLevel);
 
-        if (hydration > 0 && ClassicBarsConfig.showHydrationBar.get()) {
+        if (hydration > 0 && ClassicBarsConfig.showHydrationBar != null && ClassicBarsConfig.showHydrationBar.get()) { // Null guard: showHydrationBar is null when neither toughasnails nor homeostatic is loaded
             drawHydration(graphics, xStart, yStart, hydration);
         }
     }

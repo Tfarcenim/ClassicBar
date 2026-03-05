@@ -21,6 +21,7 @@ import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.overlays.mod.Blood;
 import tfar.classicbar.impl.overlays.mod.HomeostaticWater;
+import tfar.classicbar.impl.overlays.mod.IronsMana;
 import tfar.classicbar.impl.overlays.mod.StaminaB;
 import tfar.classicbar.impl.overlays.mod.Thirst;
 import tfar.classicbar.impl.overlays.mod.ThirstWasTaken;
@@ -42,6 +43,7 @@ public class EventHandler implements LayeredDraw.Layer {
   private static final List<BarOverlay> errored = new ArrayList<>();
 
   public static void register(BarOverlay iBarOverlay) {
+    if (iBarOverlay == null) return; // Defensive null guard — matches the null check in registerAll()
     registry.put(iBarOverlay.name(), iBarOverlay);
   }
 
@@ -121,6 +123,7 @@ public class EventHandler implements LayeredDraw.Layer {
     if (ModCompat.toughasnails.loaded) EventHandler.register(new Thirst());
     if (ModCompat.thirstWasTaken.loaded) EventHandler.register(new ThirstWasTaken());
     if (ModCompat.homeostatic.loaded) EventHandler.register(new HomeostaticWater());
+    if (ModCompat.ironsSpellbooks.loaded) EventHandler.register(new IronsMana());
 
     cacheConfigs();
     ClassicBarsConfig.readBarSettings();
@@ -134,11 +137,17 @@ public class EventHandler implements LayeredDraw.Layer {
           VanillaGuiLayers.FOOD_LEVEL);
 
   private static final ResourceLocation PARCOOL_STAMINA_HUD = ResourceLocation.fromNamespaceAndPath("parcool", "hud.stamina");
+  // Changed: ResourceLocation for the Overloaded Armor Bar mod's GUI layer; cancelled when ClassicBar is handling armor rendering
+  private static final ResourceLocation OVERLOADED_ARMOR_BAR_HUD = ResourceLocation.fromNamespaceAndPath("overloadedarmorbar", "overloadedarmorbar");
+  // Changed: ResourceLocation for Iron's Spells n Spellbooks mana overlay; cancelled when ClassicBar renders mana as a horizontal bar
+  private static final ResourceLocation IRONS_MANA_OVERLAY = ResourceLocation.fromNamespaceAndPath("irons_spellbooks", "mana_overlay");
 
   public static void disableOtherOverlays(RenderGuiLayerEvent.Pre e) {
     ResourceLocation id = e.getName();
     if (vanilla_overlays.contains(id)) e.setCanceled(true);
     else if (ModCompat.toughasnails.loaded && Thirst.isEnabled() && Thirst.OVERLAY_ID.equals(id)) e.setCanceled(true);
     else if (ModCompat.parcool.loaded && PARCOOL_STAMINA_HUD.equals(id)) e.setCanceled(true);
+    else if (ModCompat.overloadedArmorBar.loaded && OVERLOADED_ARMOR_BAR_HUD.equals(id)) e.setCanceled(true); // Suppress Overloaded Armor Bar — ClassicBar already renders layered armor colors
+    else if (ModCompat.ironsSpellbooks.loaded && IRONS_MANA_OVERLAY.equals(id)) e.setCanceled(true); // Suppress Iron's Spells mana bar — ClassicBar renders mana as a horizontal bar
   }
 }

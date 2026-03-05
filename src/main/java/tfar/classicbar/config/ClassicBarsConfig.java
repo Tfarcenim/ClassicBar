@@ -18,6 +18,7 @@ import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.mod.HomeostaticWater;
+import tfar.classicbar.impl.overlays.mod.IronsMana;
 import tfar.classicbar.impl.overlays.mod.StaminaB;
 import tfar.classicbar.impl.overlays.mod.ThirstWasTaken;
 import tfar.classicbar.util.ModUtils;
@@ -66,6 +67,8 @@ public class ClassicBarsConfig {
   // Added: null when homeostatic is not loaded — registered only inside the homeostatic config section
   static ModConfigSpec.ConfigValue<String> homeostaticWaterBarColor;
   static ModConfigSpec.ConfigValue<String> homeostaticHydrationBarColor;
+  // Added: null when irons_spellbooks is not loaded — registered only inside the irons_spellbooks config section
+  static ModConfigSpec.ConfigValue<String> ironsManaBarColor;
   static ModConfigSpec.ConfigValue<String> airBarColor;
   static ModConfigSpec.ConfigValue<List<? extends String>> armorColors;
   static ModConfigSpec.ConfigValue<List<? extends String>> armorToughnessColors;
@@ -91,6 +94,7 @@ public class ClassicBarsConfig {
     boolean tanLoaded = ModList.get().isLoaded("toughasnails"); // Tough as Nails mod id
     boolean thirstLoaded = ModList.get().isLoaded("thirst");    // Thirst Was Taken mod id
     boolean homeostaticLoaded = ModList.get().isLoaded("homeostatic"); // Homeostatic mod id
+    boolean ironsSpellbooksLoaded = ModList.get().isLoaded("irons_spellbooks"); // Iron's Spells n Spellbooks mod id
 
     builder.push("general"); // Added: explicit section push — must be paired with builder.pop() below so mod sections can be pushed at the same level
     // Added: .translation() calls on each value link the config key to en_us.json strings so NeoForge's ConfigurationScreen shows localized labels
@@ -166,6 +170,13 @@ public class ClassicBarsConfig {
       }
       builder.pop(); // End homeostatic section
     }
+
+    // Iron's Spells n Spellbooks section: only registered when irons_spellbooks is loaded
+    if (ironsSpellbooksLoaded) {
+      builder.push("irons_spellbooks");
+      ironsManaBarColor = builder.translation("classicbar.config.irons_spellbooks.irons_mana_bar_color").define("irons_mana_bar_color", "#1CAAE6", String.class::isInstance); // Mana-blue default
+      builder.pop(); // End irons_spellbooks section
+    }
   }
 
   @SubscribeEvent
@@ -184,7 +195,7 @@ public class ClassicBarsConfig {
   public static void readBarSettings() {
 
     if (!settingsPath.exists()) {
-      settingsPath.mkdir();
+      settingsPath.mkdirs(); // Fix: mkdirs() ensures parent directories (e.g. config/) are also created
     }
     writeDefault();
 
@@ -212,8 +223,7 @@ public class ClassicBarsConfig {
         }
 
       } catch (Exception e) {
-        ClassicBar.logger().error("Failed to read bar settings from {}", file.getName(), e); // NeoForge 1.21: use Logger instead of printStackTrace()
-        throw new RuntimeException(e);
+        ClassicBar.logger().error("Failed to read bar settings from {}, skipping", file.getName(), e);
       }
     }
   }
@@ -248,8 +258,7 @@ public class ClassicBarsConfig {
         gson.toJson(barSettings.toJson(), writer);
 
       } catch (Exception e) {
-        ClassicBar.logger().error("Couldn't save default config for {}", barOverlay.name(), e); // NeoForge 1.21: use Logger instead of printStackTrace()
-        throw new RuntimeException(e);
+        ClassicBar.logger().error("Couldn't save default config for {}, skipping", barOverlay.name(), e);
       }
     }
   }
@@ -260,6 +269,7 @@ public class ClassicBarsConfig {
   // Previously each overlay class overrode getIconRL() and shouldRenderText() directly.
   // Now icon and show_text defaults are centralized here and written to JSON on first load.
   static void makeDefaultBarSettings() {
+    if (!defaults.isEmpty()) return; // Fix: only build defaults once — avoids redundant allocations on every config reload
 
     nullSettings.show_text = true;
     nullSettings.icon = BarOverlayImpl.GUI_ICONS_LOCATION;
@@ -305,6 +315,10 @@ public class ClassicBarsConfig {
     BarSettings homeostaticWaterSettings = nullSettings.copy();
     homeostaticWaterSettings.icon = ModUtils.HOMEOSTATIC_ICONS;
     defaults.put(HomeostaticWater.NAME, homeostaticWaterSettings);
+
+    BarSettings ironsManaSettings = nullSettings.copy();
+    ironsManaSettings.icon = ModUtils.IRONS_SPELLBOOKS_ICONS;
+    defaults.put(IronsMana.NAME, ironsManaSettings);
   }
 
 

@@ -16,14 +16,14 @@ Status icons are bars now
 
 '''
 
-[[dependencies.${modid}]]
+[[dependencies.classicbar]]
     modId="neoforge"
     type="required"
     versionRange="[${neo_version},)"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.${modid}]]
+[[dependencies.classicbar]]
     modId="minecraft"
     type="required"
     versionRange="${minecraft_version_range}"
