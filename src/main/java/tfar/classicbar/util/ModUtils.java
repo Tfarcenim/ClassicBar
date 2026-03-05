@@ -6,7 +6,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import tfar.classicbar.impl.BarOverlayImpl;
 
-public class ModUtils {
+public final class ModUtils {
+  private ModUtils() {} // §16: utility class — private no-arg constructor
   public static final Minecraft mc = Minecraft.getInstance();
   // Changed: these three ResourceLocation constants were previously declared as private static
   // fields inside their respective overlay classes (Blood, Thirst, StaminaB) and returned by

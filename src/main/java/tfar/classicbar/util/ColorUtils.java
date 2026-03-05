@@ -7,7 +7,9 @@ import tfar.classicbar.config.ConfigCache;
 import java.util.List;
 
 
-public class ColorUtils {
+public final class ColorUtils {
+    private ColorUtils() {} // §16: utility class — private no-arg constructor
+
     public static Color hex2Color(String s) {
         int i1 = Integer.decode(s);
         int r = i1 >> 16 & 0xFF;
@@ -19,21 +21,23 @@ public class ColorUtils {
     public static Color calculateScaledColor(double d1, double d2, HealthEffect effect) {
         double d3 = (d1 / d2);
 
-        List<Color> colorCodes;
-        List<? extends Double> colorFractions;
+        // FROZEN: single flat color from config — no gradient needed
+        if (effect == HealthEffect.FROZEN) return ConfigCache.frozenHealth;
 
-        switch (effect) {
-            case NONE: colorCodes = ConfigCache.normal;
-            colorFractions = ClassicBarsConfig.normalFractions.get(); break;
-            case POISON: colorCodes = ConfigCache.poison;
-                colorFractions = ClassicBarsConfig.poisonedFractions.get(); break;
-            case WITHER: colorCodes = ConfigCache.wither;
-                colorFractions = ClassicBarsConfig.witheredFractions.get(); break;
-            // Changed: FROZEN no longer uses a multi-stop gradient (list + fractions).
-            // Simplified to a single flat color from config to avoid config complexity.
-            case FROZEN:return ConfigCache.frozenHealth;
-            default: return Color.BLACK;
-        }
+        // §1: arrow-form switch expression to select color codes and fractions
+        List<Color> colorCodes = switch (effect) {
+            case NONE -> ConfigCache.normal;
+            case POISON -> ConfigCache.poison;
+            case WITHER -> ConfigCache.wither;
+            default -> null;
+        };
+        List<? extends Double> colorFractions = switch (effect) {
+            case NONE -> ClassicBarsConfig.normalFractions.get();
+            case POISON -> ClassicBarsConfig.poisonedFractions.get();
+            case WITHER -> ClassicBarsConfig.witheredFractions.get();
+            default -> null;
+        };
+        if (colorCodes == null || colorFractions == null) return Color.BLACK;
 
         if (colorCodes.size() != colorFractions.size()) return Color.BLACK;
         int i1 = colorFractions.size() - 1;

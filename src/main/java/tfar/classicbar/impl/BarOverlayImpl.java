@@ -13,6 +13,7 @@ import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
+import com.mojang.blaze3d.systems.RenderSystem;
 import tfar.classicbar.util.ModUtils;
 
 public abstract class BarOverlayImpl implements BarOverlay {
@@ -59,8 +60,8 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public void render(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         if (barSettings == null || !shouldRender(player)) return;
         Gui gui = Minecraft.getInstance().gui;
-        com.mojang.blaze3d.systems.RenderSystem.enableBlend();
-        com.mojang.blaze3d.systems.RenderSystem.defaultBlendFunc();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
         bindBarTexture();
         renderBar(gui, graphics, player, screenWidth, screenHeight, vOffset);
         Color.reset(); // reset shader color after renderBar so text is drawn unaffected
@@ -74,7 +75,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
             renderIcon(graphics, player, screenWidth, screenHeight, vOffset);
         }
         Color.reset();
-        com.mojang.blaze3d.systems.RenderSystem.disableBlend();
+        RenderSystem.disableBlend();
         EventHandler.increment(gui, rightHandSide(), 10);
     }
 

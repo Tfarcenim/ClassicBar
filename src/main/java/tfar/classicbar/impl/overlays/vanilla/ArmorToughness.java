@@ -68,6 +68,7 @@ public class ArmorToughness extends BarOverlayImpl {
         }
     }
 
+    @Override
     public double getBarWidth(Player player) {
         double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
         return Math.ceil(WIDTH * Math.min(20, armorToughness) / 20);//armor toughness can go above 20 in modded contexts!

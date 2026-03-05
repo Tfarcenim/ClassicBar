@@ -10,18 +10,21 @@ import net.neoforged.neoforge.client.gui.ConfigurationScreen; // Added: NeoForge
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory; // Added: extension point interface that wires ConfigurationScreen into the Mods menu
 import net.neoforged.neoforge.common.ModConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
+import com.mojang.logging.LogUtils;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.network.Message;
 
 @Mod(value = ClassicBar.MODID)
-public class ClassicBar {
+public final class ClassicBar {
 
   public static final String MODID = "classicbar";
 
-  // Changed: switched from Log4j (LogManager.getLogger()) to SLF4J (LoggerFactory) per NeoForge 1.21.1 convention
-  public static final Logger logger = LoggerFactory.getLogger(ClassicBar.MODID);
+  // NeoForge 1.21: LogUtils.getLogger() returns an SLF4J Logger tied to this class
+  private static final Logger LOGGER = LogUtils.getLogger();
+
+  /** Public accessor for the mod logger — other classes should use {@code ClassicBar.logger()} */
+  public static Logger logger() { return LOGGER; }
 
   public static final ClassicBarsConfig CLIENT;
   // Changed: ForgeConfigSpec -> ModConfigSpec (NeoForge renamed the class)

@@ -115,13 +115,13 @@ public class Armor extends BarOverlayImpl {
         int warningAmount = 0;
         for (EquipmentSlot slot : armorList) {
             ItemStack stack = player.getItemBySlot(slot);
-            if (!(stack.getItem() instanceof ArmorItem)) continue;
+            if (!(stack.getItem() instanceof ArmorItem armorItem)) continue;
             int max = stack.getMaxDamage();
             int current = stack.getDamageValue();
             int percentage = 100;
             if (max != 0) percentage = 100 * (max - current) / (max);
             if (percentage < 5) {
-                warningAmount += ((ArmorItem) stack.getItem()).getDefense();
+                warningAmount += armorItem.getDefense();
             }
         }
         return warningAmount;

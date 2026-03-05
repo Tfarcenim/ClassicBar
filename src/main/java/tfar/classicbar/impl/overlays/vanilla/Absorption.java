@@ -66,6 +66,7 @@ public class Absorption extends BarOverlayImpl {
         }
     }
 
+    @Override
     public double getBarWidth(Player player) {
         double absorb = player.getAbsorptionAmount();
         double maxHealth = player.getMaxHealth();
@@ -75,21 +76,12 @@ public class Absorption extends BarOverlayImpl {
     @Override
     public Color getPrimaryBarColor(int index, Player player) {
         HealthEffect effect = getHealthEffect(player);
-        switch (effect) {
-            case NONE -> {
-                return ConfigCache.absorption.get(index);
-            }
-            case POISON -> {
-                return ConfigCache.absorptionPoison.get(index);
-            }
-            case WITHER -> {
-                return ConfigCache.absorptionWither.get(index);
-            }
-            case FROZEN -> {
-                return ConfigCache.absorption.get(index);
-            }
-        }
-        return super.getPrimaryBarColor(index, player);
+        // §1: switch expression over switch statement; FROZEN uses same colors as NONE
+        return switch (effect) {
+            case NONE, FROZEN -> ConfigCache.absorption.get(index);
+            case POISON -> ConfigCache.absorptionPoison.get(index);
+            case WITHER -> ConfigCache.absorptionWither.get(index);
+        };
     }
 
     @Override

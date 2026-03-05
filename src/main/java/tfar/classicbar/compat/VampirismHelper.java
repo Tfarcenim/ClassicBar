@@ -11,7 +11,8 @@ import net.minecraft.world.entity.player.Player;
 // The Vampirism 1.21 API exposes factionPlayerHandler() directly, so the capability
 // indirection is no longer needed. getFactionPlayerHandler() was removed; if external
 // code needs the handler it should call VampirismAPI directly.
-public class VampirismHelper {
+public final class VampirismHelper {
+    private VampirismHelper() {} // §16: utility class — private no-arg constructor
 
     // Changed: was LazyOptional<IFactionPlayerHandler>-based; now delegates to VampirismAPI directly
     public static boolean isVampire(Player player) {

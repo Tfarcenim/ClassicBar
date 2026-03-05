@@ -279,6 +279,7 @@ public class Thirst extends BarOverlayImpl {
         double barWidth = ModUtils.getWidth(exhaustionLevel, maxLevel);
         double barXStart = x + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
         ModUtils.drawTexturedModalRect(stack,barXStart + 2, y + 1, 1, 28, barWidth, 9);
+        RenderSystem.setShaderColor(1, 1, 1, 1); // Fix: reset after exhaustion overlay — 0.25f alpha was leaking into subsequent render calls
     }
 
     @Override

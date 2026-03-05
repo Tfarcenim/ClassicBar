@@ -14,29 +14,29 @@ import tfar.classicbar.impl.BarOverlayImpl;
 // All of these are removed; shouldRender() now always returns false so nothing is drawn.
 public class Feathers extends BarOverlayImpl {
 
-public Feathers() {
-super("feathers");
-}
+    public Feathers() {
+        super("feathers");
+    }
 
-@Override
-public boolean shouldRender(Player player) {
-return false;
-}
+    @Override
+    public boolean shouldRender(Player player) {
+        return false;
+    }
 
-@Override
-public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-}
+    @Override
+    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    }
 
-@Override
-public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-}
+    @Override
+    public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    }
 
-@Override
-public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-}
+    @Override
+    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    }
 
-@Override
-public double getBarWidth(Player player) {
-return 0;
-}
+    @Override
+    public double getBarWidth(Player player) {
+        return 0;
+    }
 }

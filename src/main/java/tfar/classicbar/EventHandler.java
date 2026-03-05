@@ -72,12 +72,14 @@ public class EventHandler implements LayeredDraw.Layer {
       try {
         overlay.render(matrices, player, screenWidth, screenHeight, getOffset(gui, rightHand));
       } catch (Error e) {
-        ClassicBar.logger.error("Removing broken overlay " + overlay.name());
-        e.printStackTrace();
+        ClassicBar.logger().error("Removing broken overlay {}", overlay.name(), e); // NeoForge 1.21: use Logger instead of printStackTrace()
         errored.add(overlay);
       }
     }
-    if (!errored.isEmpty()) all.removeAll(errored); // Changed: moved removal out of loop; batch-clears all newly errored overlays at once
+    if (!errored.isEmpty()) {
+      all.removeAll(errored); // Changed: moved removal out of loop; batch-clears all newly errored overlays at once
+      errored.clear(); // Fix: clear after batch removal to prevent stale entries accumulating across frames
+    }
 
     ModUtils.mc.getProfiler().pop();
   }
@@ -109,11 +111,11 @@ public class EventHandler implements LayeredDraw.Layer {
             ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "hud"),
             new EventHandler());
 
-    ClassicBar.logger.info("Registering Vanilla Overlays");
+    ClassicBar.logger().info("Registering Vanilla Overlays");
     EventHandler.registerAll(new Absorption(), new Air(), new Armor(), new ArmorToughness(),
             new Health(), new Hunger(), new MountHealth());
 
-    ClassicBar.logger.info("Registering Mod Overlays");
+    ClassicBar.logger().info("Registering Mod Overlays");
     if (ModCompat.vampirism.loaded) EventHandler.register(new Blood());
     if (ModCompat.parcool.loaded) EventHandler.register(new StaminaB());
     if (ModCompat.toughasnails.loaded) EventHandler.register(new Thirst());

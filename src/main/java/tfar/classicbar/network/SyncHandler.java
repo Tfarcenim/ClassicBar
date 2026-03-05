@@ -106,8 +106,8 @@ public final class SyncHandler {
 
   @SubscribeEvent
   public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-    if (!(event.getEntity() instanceof ServerPlayer)) return;
-    UUID uuid = event.getEntity().getUUID();
+    if (!(event.getEntity() instanceof ServerPlayer player)) return; // §1: pattern matching instanceof
+    UUID uuid = player.getUUID();
 
     lastSaturationLevels.remove(uuid);
     lastExhaustionLevels.remove(uuid);

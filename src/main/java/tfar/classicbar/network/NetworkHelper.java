@@ -10,7 +10,8 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 // New: IPayloadContext.player() already returns the correct side-appropriate player,
 // so the direction check is gone. getServerPlayer() added as a typed helper for
 // server-side handlers that need to send replies or access server-only APIs.
-public class NetworkHelper {
+public final class NetworkHelper {
+    private NetworkHelper() {} // §16: utility class — private no-arg constructor
 
     // Changed: replaces getSidedPlayer(NetworkEvent.Context); no direction check needed
     // because NeoForge's IPayloadContext.player() is already side-appropriate.

@@ -12,7 +12,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
-import org.apache.commons.io.IOUtils;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
 import tfar.classicbar.api.BarOverlay;
@@ -31,7 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("removal")
+@SuppressWarnings("removal") // Suppressed: ModConfigSpec.Builder methods are marked for removal but no replacement exists yet in NeoForge 1.21
 @EventBusSubscriber(modid = ClassicBar.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClassicBarsConfig {
 
@@ -173,7 +172,7 @@ public class ClassicBarsConfig {
   public static void onConfigChanged(ModConfigEvent event) {
       EventHandler.cacheConfigs();
       readBarSettings();
-      ClassicBar.logger.info("Syncing Classic Bar Configs");
+      ClassicBar.logger().info("Syncing Classic Bar Configs");
   }
 
   static File settingsPath = new File("config/" + ClassicBar.MODID + "/");
@@ -195,10 +194,8 @@ public class ClassicBarsConfig {
     for (File file : files) {
       if (!file.isFile() || !file.getName().endsWith(".json")) continue;
 
-      Reader reader = null;
-      try {
-        reader = new FileReader(file);
-
+      // NeoForge 1.21: use try-with-resources for Closeable resources (§17)
+      try (Reader reader = new FileReader(file)) {
         JsonReader jsonReader = new JsonReader(reader);
 
         Gson gson = new GsonBuilder().registerTypeAdapter(ResourceLocation.class,new ResourceLocation.Serializer()).create();
@@ -215,10 +212,8 @@ public class ClassicBarsConfig {
         }
 
       } catch (Exception e) {
-        e.printStackTrace();
+        ClassicBar.logger().error("Failed to read bar settings from {}", file.getName(), e); // NeoForge 1.21: use Logger instead of printStackTrace()
         throw new RuntimeException(e);
-      } finally {
-        IOUtils.closeQuietly(reader);
       }
     }
   }
@@ -245,20 +240,16 @@ public class ClassicBarsConfig {
       // Changed: colon replaced with underscore in filenames (e.g. "parcool:stamina" -> "parcool_stamina.json")
       File file = new File("config/" + ClassicBar.MODID + "/"+ barOverlay.name().replace(':', '_')+".json");
       if (file.exists()) continue; // Changed: skip existing files so user edits are not overwritten
-      JsonWriter writer = null;
-      try {
-        writer = gson.newJsonWriter(new FileWriter(file));
+      // NeoForge 1.21: use try-with-resources for Closeable resources (§17)
+      try (JsonWriter writer = gson.newJsonWriter(new FileWriter(file))) {
         writer.setIndent("    ");
 
         BarSettings barSettings = defaults.getOrDefault(barOverlay.name(),nullSettings);
         gson.toJson(barSettings.toJson(), writer);
 
       } catch (Exception e) {
-        ClassicBar.logger.error("Couldn't save config");
-        e.printStackTrace();
+        ClassicBar.logger().error("Couldn't save default config for {}", barOverlay.name(), e); // NeoForge 1.21: use Logger instead of printStackTrace()
         throw new RuntimeException(e);
-      } finally {
-        IOUtils.closeQuietly(writer);
       }
     }
   }
