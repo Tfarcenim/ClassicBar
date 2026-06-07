@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import tfar.classicbar.ClassicBar;
 
@@ -15,7 +15,7 @@ import tfar.classicbar.ClassicBar;
 public record MessageSaturationSync(float saturation) implements CustomPacketPayload {
 
     public static final Type<MessageSaturationSync> TYPE = // Changed: replaces integer channel ID
-            new Type<>(ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "saturation_sync"));
+            new Type<>(Identifier.fromNamespaceAndPath(ClassicBar.MODID, "saturation_sync"));
 
     public static final StreamCodec<FriendlyByteBuf, MessageSaturationSync> STREAM_CODEC = // Changed: replaces separate encode() and decode-constructor
             StreamCodec.of(

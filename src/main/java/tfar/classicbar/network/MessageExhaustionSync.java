@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import tfar.classicbar.ClassicBar;
 
@@ -16,7 +16,7 @@ import tfar.classicbar.ClassicBar;
 public record MessageExhaustionSync(float exhaustion) implements CustomPacketPayload {
 
     public static final Type<MessageExhaustionSync> TYPE = // Changed: replaces integer channel ID
-            new Type<>(ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "exhaustion_sync"));
+            new Type<>(Identifier.fromNamespaceAndPath(ClassicBar.MODID, "exhaustion_sync"));
 
     public static final StreamCodec<FriendlyByteBuf, MessageExhaustionSync> STREAM_CODEC = // Changed: replaces separate encode() and decode-constructor
             StreamCodec.of(
@@ -35,7 +35,7 @@ public record MessageExhaustionSync(float exhaustion) implements CustomPacketPay
     public static void handle(MessageExhaustionSync msg, IPayloadContext ctx) {
         ctx.enqueueWork(() -> {
             if (Minecraft.getInstance().player != null) {
-                Minecraft.getInstance().player.getFoodData().setExhaustion(msg.exhaustion);
+                Minecraft.getInstance().player.getFoodData().exhaustionLevel = msg.exhaustion; // Changed: setExhaustion(float) removed in MC 26.1; field exposed via access transformer
             }
         });
     }

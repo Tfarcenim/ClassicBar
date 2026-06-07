@@ -1,8 +1,8 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.client.gui.Gui;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -27,7 +27,7 @@ public class Health extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(Gui gui, GuiGraphicsExtractor graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
     int updateCounter = gui.getGuiTicks();
 
     double health = player.getHealth();
@@ -43,7 +43,9 @@ public class Health extends BarOverlayImpl {
       /* lastPlayerHealth = playerHealth;*/
     }
     playerHealth = health;
-    double displayHealth = health + (lastPlayerHealth - health) * ((double) player.invulnerableTime / player.invulnerableDuration);
+    // Changed: LivingEntity.invulnerableDuration was removed in MC 26.1; it was the constant
+    // hurt-invulnerability window (20 ticks) used to ease the health-bar damage animation.
+    double displayHealth = health + (lastPlayerHealth - health) * ((double) player.invulnerableTime / 20);
 
     int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
@@ -84,8 +86,10 @@ public class Health extends BarOverlayImpl {
     renderPartialBar(graphics,f + 2, yStart + 2, barWidth);
     if (effect == HealthEffect.POISON) {
       //draw poison overlay
-      RenderSystem.setShaderColor(0, .5f, 0, .5f);
+      // Changed: RenderSystem.setShaderColor removed in MC 26.1; tint passed per-blit via ModUtils.CURRENT_COLOR.
+      ModUtils.CURRENT_COLOR = ModUtils.argb(.5f, 0, .5f, 0);
       ModUtils.drawTexturedModalRect(graphics,f + 1, yStart + 1, 1, 36, barWidth, 7);
+      Color.reset();
     }
   }
 
@@ -105,20 +109,20 @@ public class Health extends BarOverlayImpl {
   }
 
   @Override
-  public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+  public void renderText(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
     double health = player.getHealth();
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     textHelper(graphics,xStart,yStart,health,getPrimaryBarColor(0,player).colorToText());
   }
 
-  private static final ResourceLocation HEART_CONTAINER = ResourceLocation.withDefaultNamespace("hud/heart/container");
-  private static final ResourceLocation HEART_CONTAINER_HARDCORE = ResourceLocation.withDefaultNamespace("hud/heart/container_hardcore");
-  private static final ResourceLocation HEART_FULL = ResourceLocation.withDefaultNamespace("hud/heart/full");
-  private static final ResourceLocation HEART_HARDCORE_FULL = ResourceLocation.withDefaultNamespace("hud/heart/hardcore_full");
-  private static final ResourceLocation HEART_POISONED_FULL = ResourceLocation.withDefaultNamespace("hud/heart/poisoned_full");
-  private static final ResourceLocation HEART_WITHERED_FULL = ResourceLocation.withDefaultNamespace("hud/heart/withered_full");
-  private static final ResourceLocation HEART_FROZEN_FULL = ResourceLocation.withDefaultNamespace("hud/heart/frozen_full");
+  private static final Identifier HEART_CONTAINER = Identifier.withDefaultNamespace("hud/heart/container");
+  private static final Identifier HEART_CONTAINER_HARDCORE = Identifier.withDefaultNamespace("hud/heart/container_hardcore");
+  private static final Identifier HEART_FULL = Identifier.withDefaultNamespace("hud/heart/full");
+  private static final Identifier HEART_HARDCORE_FULL = Identifier.withDefaultNamespace("hud/heart/hardcore_full");
+  private static final Identifier HEART_POISONED_FULL = Identifier.withDefaultNamespace("hud/heart/poisoned_full");
+  private static final Identifier HEART_WITHERED_FULL = Identifier.withDefaultNamespace("hud/heart/withered_full");
+  private static final Identifier HEART_FROZEN_FULL = Identifier.withDefaultNamespace("hud/heart/frozen_full");
 
   // Changed: renderIcon rewritten to use blitSprite with named sprite ResourceLocations
   // instead of drawTexturedModalRect with raw texture atlas offsets (previously effect.getX()).
@@ -126,7 +130,7 @@ public class Health extends BarOverlayImpl {
   // Also removed: shouldRenderText() override that returned ClassicBarsConfig.showHealthNumbers.get();
   // text visibility is now driven by barSettings.show_text (see BarOverlayImpl).
   @Override
-  public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+  public void renderIcon(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
     HealthEffect effect = getHealthEffect(player);
 
     int xStart = width / 2 + getIconOffset();
@@ -134,14 +138,14 @@ public class Health extends BarOverlayImpl {
     boolean hardcore = player.level().getLevelData().isHardcore();
     //Draw health icon
     //heart background
-    graphics.blitSprite(hardcore ? HEART_CONTAINER_HARDCORE : HEART_CONTAINER, xStart, yStart, 9, 9);
+    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, hardcore ? HEART_CONTAINER_HARDCORE : HEART_CONTAINER, xStart, yStart, 9, 9);
     //heart
-    ResourceLocation heartSprite = switch (effect) {
+    Identifier heartSprite = switch (effect) {
       case NONE -> hardcore ? HEART_HARDCORE_FULL : HEART_FULL;
       case POISON -> HEART_POISONED_FULL;
       case WITHER -> HEART_WITHERED_FULL;
       case FROZEN -> HEART_FROZEN_FULL;
     };
-    graphics.blitSprite(heartSprite, xStart, yStart, 9, 9);
+    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, heartSprite, xStart, yStart, 9, 9);
   }
 }

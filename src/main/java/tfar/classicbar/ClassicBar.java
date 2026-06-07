@@ -45,7 +45,7 @@ public final class ClassicBar {
     container.registerConfig(ModConfig.Type.CLIENT, CLIENT_SPEC); // Changed: was ModLoadingContext.get().registerConfig()
 
     Message.registerMessages(modEventBus); // Changed: now passes the mod event bus; old API used a channel name string
-    if (FMLEnvironment.dist.isClient()) {
+    if (FMLEnvironment.getDist().isClient()) { // Changed: FMLEnvironment.dist field -> getDist() in MC 26.1
       // Added: registers ConfigurationScreen as the config UI for this mod; exposes the Config button in Mods > classicbar
       // ConfigurationScreen::new matches IConfigScreenFactory.createScreen(ModContainer, Screen) via constructor reference
       container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);

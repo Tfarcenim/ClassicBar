@@ -1,6 +1,5 @@
 package tfar.classicbar.util;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.util.Mth;
 
 // Changed: converted from a plain class to a record; removes boilerplate constructor
@@ -37,13 +36,12 @@ public record Color(int r,int g,int b) {
         return this.r << 16 | this.g << 8 | this.b;
     }
 
+    // Changed: MC 26.1 removed RenderSystem.setShaderColor. The tint is now stored as a packed
+    // ARGB int in ModUtils.CURRENT_COLOR and applied per-blit by ModUtils.drawTexturedModalRect.
     public void color2Gla(float a) {
-        float r = this.r / 255f;
-        float g = this.g / 255f;
-        float b = this.b / 255f;
-        RenderSystem.setShaderColor(r, g, b, a);
+        ModUtils.CURRENT_COLOR = ((int) (a * 255f) & 0xFF) << 24 | (this.r & 0xFF) << 16 | (this.g & 0xFF) << 8 | (this.b & 0xFF);
     }
     public static void reset() {
-        RenderSystem.setShaderColor(1,1,1,1);
+        ModUtils.CURRENT_COLOR = 0xFFFFFFFF;
     }
 }

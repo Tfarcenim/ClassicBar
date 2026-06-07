@@ -1,7 +1,7 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -12,7 +12,7 @@ import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.network.Message;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
@@ -30,7 +30,7 @@ public class Hunger extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(Gui gui, GuiGraphics matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(Gui gui, GuiGraphicsExtractor matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
     double hunger = player.getFoodData().getFoodLevel();
     double maxHunger = 20;//HungerHelper.getMaxHunger(player);
     
@@ -39,7 +39,7 @@ public class Hunger extends BarOverlayImpl {
     double currentSat = player.getFoodData().getSaturationLevel();
     double maxSat = maxHunger;
     double barWidthS = getSatBarWidth(player);
-    float exhaustion = player.getFoodData().getExhaustionLevel();
+    float exhaustion = player.getFoodData().exhaustionLevel; // Changed: getExhaustionLevel() removed in MC 26.1; field exposed via access transformer
 
     int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
@@ -108,9 +108,10 @@ public class Hunger extends BarOverlayImpl {
       exhaustion = Math.min(exhaustion, 4);
       f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
       //draw exhaustion
-      RenderSystem.setShaderColor(1, 1, 1, .25f);
+      // Changed: RenderSystem.setShaderColor removed in MC 26.1; tint passed per-blit via ModUtils.CURRENT_COLOR.
+      ModUtils.CURRENT_COLOR = ModUtils.argb(.25f, 1, 1, 1);
       ModUtils.drawTexturedModalRect(matrices,f + 2, yStart + 1, 1, 28, ModUtils.getWidth(exhaustion, 4f), 9);
-      RenderSystem.setShaderColor(1, 1, 1, 1); // Changed: added reset after exhaustion overlay; the 0.25f alpha was leaking into subsequent render calls
+      Color.reset(); // reset after exhaustion overlay; the 0.25f alpha was leaking into subsequent render calls
     }
   }
 
@@ -141,7 +142,7 @@ public class Hunger extends BarOverlayImpl {
   }
 
   @Override
-  public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+  public void renderText(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     //draw hunger amount
@@ -150,13 +151,13 @@ public class Hunger extends BarOverlayImpl {
     textHelper(graphics,xStart,yStart,hunger,c);
   }
 
-  private static final ResourceLocation FOOD_EMPTY = ResourceLocation.withDefaultNamespace("hud/food_empty");
-  private static final ResourceLocation FOOD_EMPTY_HUNGER = ResourceLocation.withDefaultNamespace("hud/food_empty_hunger");
-  private static final ResourceLocation FOOD_FULL = ResourceLocation.withDefaultNamespace("hud/food_full");
-  private static final ResourceLocation FOOD_FULL_HUNGER = ResourceLocation.withDefaultNamespace("hud/food_full_hunger");
+  private static final Identifier FOOD_EMPTY = Identifier.withDefaultNamespace("hud/food_empty");
+  private static final Identifier FOOD_EMPTY_HUNGER = Identifier.withDefaultNamespace("hud/food_empty_hunger");
+  private static final Identifier FOOD_FULL = Identifier.withDefaultNamespace("hud/food_full");
+  private static final Identifier FOOD_FULL_HUNGER = Identifier.withDefaultNamespace("hud/food_full_hunger");
 
   @Override
-  public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+  public void renderIcon(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
 
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
@@ -164,9 +165,9 @@ public class Hunger extends BarOverlayImpl {
 
     //Draw hunger icon
     //hunger background
-    graphics.blitSprite(hungerActive ? FOOD_EMPTY_HUNGER : FOOD_EMPTY, xStart, yStart, 9, 9);
+    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, hungerActive ? FOOD_EMPTY_HUNGER : FOOD_EMPTY, xStart, yStart, 9, 9);
     //hunger
-    graphics.blitSprite(hungerActive ? FOOD_FULL_HUNGER : FOOD_FULL, xStart, yStart, 9, 9);
+    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, hungerActive ? FOOD_FULL_HUNGER : FOOD_FULL, xStart, yStart, 9, 9);
 
   }
 }

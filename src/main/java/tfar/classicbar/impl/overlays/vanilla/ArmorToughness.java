@@ -1,6 +1,6 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.client.gui.Gui;
@@ -26,7 +26,7 @@ public class ArmorToughness extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphicsExtractor graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         //armor toughness stuff
         double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
         double barWidth = getBarWidth(player);
@@ -90,7 +90,7 @@ public class ArmorToughness extends BarOverlayImpl {
     }
 
     @Override
-    public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    public void renderText(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
@@ -101,7 +101,7 @@ public class ArmorToughness extends BarOverlayImpl {
     }
 
     @Override
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    public void renderIcon(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         //Draw armor toughness icon

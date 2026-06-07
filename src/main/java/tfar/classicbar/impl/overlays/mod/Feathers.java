@@ -1,6 +1,6 @@
 package tfar.classicbar.impl.overlays.mod;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.client.gui.Gui;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -24,15 +24,15 @@ public class Feathers extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphicsExtractor graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
     }
 
     @Override
-    public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    public void renderText(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
     }
 
     @Override
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    public void renderIcon(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
     }
 
     @Override

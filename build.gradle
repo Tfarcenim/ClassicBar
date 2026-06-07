@@ -1,6 +1,6 @@
 plugins {
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.1.20'
+    id 'net.neoforged.gradle.userdev' version '7.1.36'
 }
 
 version = "${mod_version}"
@@ -14,7 +14,15 @@ jar {
     archiveFileName = "${modid}-${minecraft_version}-${mod_version}-neoforge.jar"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+minecraft {
+    // MC 26.1 made FoodData.exhaustionLevel private (the public exhaustion accessors were
+    // removed). Expose it via access transformer so ClassicBar can read/write exhaustion.
+    accessTransformers {
+        file('src/main/resources/META-INF/accesstransformer.cfg')
+    }
+}
 
 runs {
     configureEach {
@@ -48,15 +56,20 @@ repositories {
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
-    compileOnly "curse.maven:parcool-482378:${parcool}"
-    compileOnly "curse.maven:glitchcore-955399:${glitchcore}"
-    compileOnly "curse.maven:tough-as-nails-246391:${tough_as_nails}"
-    compileOnly "de.teamlapen.vampirism:Vampirism:1.21-1.10.7:api"
-    compileOnly "curse.maven:vampirism-become-a-vampire-233029:${vampirism}"
-    compileOnly "curse.maven:thirst-was-taken-679270:${thirst_was_taken}"
-    compileOnly "curse.maven:homeostatic-634466:${homeostatic}"
-    compileOnly "curse.maven:overloaded-armor-bar-314002:${overloaded_armor_bar}"
-    compileOnly "curse.maven:irons-spells-n-spellbooks-855414:${irons_spells}"
+    // Mod-compat integrations are temporarily disabled for the MC 26.1.2 upgrade.
+    // These CurseForge/Vampirism artifacts are still pinned to MC 1.21.1 and reference
+    // classes that were removed in 26.1, so they cannot be on the 26.1 compile classpath.
+    // The corresponding overlays/helpers are stubbed out (shouldRender() == false) and
+    // each dependency should be re-enabled as the upstream mod ships a 26.1 build.
+    // compileOnly "curse.maven:parcool-482378:${parcool}"
+    // compileOnly "curse.maven:glitchcore-955399:${glitchcore}"
+    // compileOnly "curse.maven:tough-as-nails-246391:${tough_as_nails}"
+    // compileOnly "de.teamlapen.vampirism:Vampirism:1.21-1.10.7:api"
+    // compileOnly "curse.maven:vampirism-become-a-vampire-233029:${vampirism}"
+    // compileOnly "curse.maven:thirst-was-taken-679270:${thirst_was_taken}"
+    // compileOnly "curse.maven:homeostatic-634466:${homeostatic}"
+    // compileOnly "curse.maven:overloaded-armor-bar-314002:${overloaded_armor_bar}"
+    // compileOnly "curse.maven:irons-spells-n-spellbooks-855414:${irons_spells}"
 }
 
 tasks.withType(ProcessResources).configureEach {
