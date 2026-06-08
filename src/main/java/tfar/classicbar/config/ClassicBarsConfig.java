@@ -131,6 +131,7 @@ public class ClassicBarsConfig {
   static File settingsPath = new File("config/" + ClassicBar.MODID + "/");
 
 
+  //hint:  use codecs
   public static void readBarSettings() {
 
     if (settingsPath.exists()) {

@@ -9,7 +9,7 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.network.Message;
+import tfar.classicbar.network.PacketHandler;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 import toughasnails.api.potion.TANEffects;
@@ -216,7 +216,7 @@ public class Thirst extends BarOverlayImpl {
             drawHeldDrink(graphics, player, thirstData, xStart, yStart, MAX_THIRST_LEVEL, MAX_HYDRATION_LEVEL);
         }
 
-        if (ClassicBarsConfig.showThirstExhaustionOverlay.get() && Message.presentOnServer) {
+        if (ClassicBarsConfig.showThirstExhaustionOverlay.get() && PacketHandler.presentOnServer) {
             drawExhaustion(graphics, player, xStart, yStart, exhaustionLevel, maxExhaustionLevel);
         }
 

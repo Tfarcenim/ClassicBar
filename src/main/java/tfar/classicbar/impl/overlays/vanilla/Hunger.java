@@ -12,7 +12,7 @@ import tfar.classicbar.compat.VampirismHelper;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.network.Message;
+import tfar.classicbar.network.PacketHandler;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
@@ -107,7 +107,7 @@ public class Hunger extends BarOverlayImpl {
       }
     }
 
-    if (ClassicBarsConfig.showExhaustionOverlay.get() && Message.presentOnServer) {
+    if (ClassicBarsConfig.showExhaustionOverlay.get() && PacketHandler.presentOnServer) {
       exhaustion = Math.min(exhaustion, 4);
       f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
       //draw exhaustion
@@ -125,7 +125,7 @@ public class Hunger extends BarOverlayImpl {
   }
   
   public int getSatBarWidth(Player player) {
-    double saturation = player.getFoodData().getSaturationLevel();
+    double saturation = Math.min(player.getFoodData().getSaturationLevel(),20);
     double maxSat = 20;
     return (int) Math.ceil(BarOverlayImpl.WIDTH * saturation / maxSat);
   }

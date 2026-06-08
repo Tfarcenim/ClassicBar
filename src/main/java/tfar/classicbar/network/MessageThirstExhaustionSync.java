@@ -2,36 +2,24 @@ package tfar.classicbar.network;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.network.NetworkEvent;
+import tfar.classicbar.client.ClassicBarClient;
 import tfar.classicbar.compat.ModCompat;
 import toughasnails.api.thirst.ThirstHelper;
 
-import java.util.function.Supplier;
-
-public class MessageThirstExhaustionSync {
-
-    private final float exhaustionLevel;
-
-    public MessageThirstExhaustionSync(float exhaustionLevel) {
-        this.exhaustionLevel = exhaustionLevel;
-    }
+public record MessageThirstExhaustionSync(float exhaustionLevel) implements S2CModPacket {
 
     public MessageThirstExhaustionSync(FriendlyByteBuf buf) {
-        this.exhaustionLevel = buf.readFloat();
+        this(buf.readFloat());
     }
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeFloat(exhaustionLevel);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
+    public void handleClient() {
         if (ModCompat.toughasnails.loaded) {
-            ctx.get().enqueueWork(() -> {
-                Player player = NetworkHelper.getSidedPlayer(ctx.get());
-                ThirstHelper.getThirst(player).setExhaustion(exhaustionLevel);
-            });
+            Player player = ClassicBarClient.getLocalPlayer();
+            ThirstHelper.getThirst(player).setExhaustion(exhaustionLevel);
         }
-        ctx.get().setPacketHandled(true);
     }
-
 }

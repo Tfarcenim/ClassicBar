@@ -2,35 +2,21 @@ package tfar.classicbar.network;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.network.NetworkEvent;
+import tfar.classicbar.client.ClassicBarClient;
 
-import java.util.function.Supplier;
-
-public class MessageExhaustionSync {
-
-    private final float exhaustionLevel;
-
-    public MessageExhaustionSync(float exhaustionLevel) {
-        this.exhaustionLevel = exhaustionLevel;
-    }
+public record MessageExhaustionSync(float exhaustionLevel) implements S2CModPacket {
 
     public MessageExhaustionSync(FriendlyByteBuf buf) {
-        this.exhaustionLevel = buf.readFloat();
+        this(buf.readFloat());
     }
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeFloat(exhaustionLevel);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        {
-            // defer to the next game loop; we can't guarantee that Minecraft.thePlayer is initialized yet
-            ctx.get().enqueueWork(() -> {
-                Player player = NetworkHelper.getSidedPlayer(ctx.get());
-                player.getFoodData().setExhaustion(exhaustionLevel);
-            });
-        }
-        ctx.get().setPacketHandled(true);
+    @Override
+    public void handleClient() {
+        Player player = ClassicBarClient.getLocalPlayer();
+        player.getFoodData().setExhaustion(exhaustionLevel);
     }
-
 }
