@@ -1,11 +1,14 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.client.gui.Gui;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
@@ -30,7 +33,7 @@ public class Armor extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphicsExtractor graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         double armor = calculateArmorValue(player);
         double barWidth = getBarWidth(player);
 
@@ -115,20 +118,25 @@ public class Armor extends BarOverlayImpl {
         int warningAmount = 0;
         for (EquipmentSlot slot : armorList) {
             ItemStack stack = player.getItemBySlot(slot);
-            if (!(stack.getItem() instanceof ArmorItem armorItem)) continue;
+            // Changed: ArmorItem was removed in MC 26.1. Armor defense now comes from the
+            // ATTRIBUTE_MODIFIERS data component; compute the item's ARMOR contribution for
+            // this slot (0 if the item grants no armor, i.e. it is not an armor piece).
+            ItemAttributeModifiers modifiers = stack.getOrDefault(DataComponents.ATTRIBUTE_MODIFIERS, ItemAttributeModifiers.EMPTY);
+            int defense = (int) modifiers.compute(Attributes.ARMOR, 0, slot);
+            if (defense <= 0) continue;
             int max = stack.getMaxDamage();
             int current = stack.getDamageValue();
             int percentage = 100;
             if (max != 0) percentage = 100 * (max - current) / (max);
             if (percentage < 5) {
-                warningAmount += armorItem.getDefense();
+                warningAmount += defense;
             }
         }
         return warningAmount;
     }
 
     @Override
-    public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    public void renderText(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         double armor = calculateArmorValue(player);
@@ -138,14 +146,14 @@ public class Armor extends BarOverlayImpl {
         textHelper(graphics, xStart, yStart, armor, c);
     }
 
-    private static final ResourceLocation ARMOR_FULL_SPRITE = ResourceLocation.withDefaultNamespace("hud/armor_full");
+    private static final Identifier ARMOR_FULL_SPRITE = Identifier.withDefaultNamespace("hud/armor_full");
 
     @Override
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    public void renderIcon(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         //Draw armor icon
-        graphics.blitSprite(ARMOR_FULL_SPRITE, xStart, yStart, 9, 9);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ARMOR_FULL_SPRITE, xStart, yStart, 9, 9);
     }
 
     private static int calculateArmorValue(Player player) {

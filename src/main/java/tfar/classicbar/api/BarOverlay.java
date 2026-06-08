@@ -1,7 +1,7 @@
 package tfar.classicbar.api;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
@@ -16,9 +16,9 @@ public interface BarOverlay {
   boolean rightHandSide();
   BarOverlay setSide(boolean right);
 
-  void render(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
+  void render(GuiGraphicsExtractor graphics, Player player, int screenWidth, int screenHeight, int vOffset);
 
-  ResourceLocation getIconRL();
+  Identifier getIconRL();
   default void bindIconTexture() {
     ModUtils.CURRENT_TEXTURE = getIconRL();
   }

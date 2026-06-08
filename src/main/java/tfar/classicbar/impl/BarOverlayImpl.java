@@ -1,7 +1,7 @@
 package tfar.classicbar.impl;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.client.Minecraft;
@@ -13,7 +13,6 @@ import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
-import com.mojang.blaze3d.systems.RenderSystem;
 import tfar.classicbar.util.ModUtils;
 
 public abstract class BarOverlayImpl implements BarOverlay {
@@ -23,9 +22,9 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public static final int HEIGHT = 5;
     public static final int BAR_U = 2;
     public static final int BAR_V = 11;
-    public static final ResourceLocation ICON_BAR = ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/health.png");
+    public static final Identifier ICON_BAR = Identifier.fromNamespaceAndPath(ClassicBar.MODID, "textures/gui/health.png");
 
-    public static final ResourceLocation GUI_ICONS_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/icons.png"); // Aligned: was parse(); uses withDefaultNamespace() like all vanilla sprite ResourceLocations
+    public static final Identifier GUI_ICONS_LOCATION = Identifier.withDefaultNamespace("textures/gui/icons.png"); // Aligned: was parse(); uses withDefaultNamespace() like all vanilla sprite Identifiers
     protected String name;
     protected boolean side;
     protected BarSettings barSettings; // Changed: added to hold per-bar JSON config (show_text, icon)
@@ -57,11 +56,11 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     @Override
-    public void render(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void render(GuiGraphicsExtractor graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         if (barSettings == null || !shouldRender(player)) return;
         Gui gui = Minecraft.getInstance().gui;
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
+        // Changed: removed RenderSystem.enableBlend()/defaultBlendFunc()/disableBlend() — MC 26.1
+        // GUI blits manage blending via their RenderPipeline (GUI_TEXTURED).
         bindBarTexture();
         renderBar(gui, graphics, player, screenWidth, screenHeight, vOffset);
         Color.reset(); // reset shader color after renderBar so text is drawn unaffected
@@ -75,11 +74,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
             renderIcon(graphics, player, screenWidth, screenHeight, vOffset);
         }
         Color.reset();
-        RenderSystem.disableBlend();
         EventHandler.increment(gui, rightHandSide(), 10);
     }
 
-    public abstract void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
+    public abstract void renderBar(Gui gui, GuiGraphicsExtractor graphics, Player player, int screenWidth, int screenHeight, int vOffset);
 
     protected boolean shouldFlash(Player player) {
         return false;
@@ -93,9 +91,9 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return barSettings.show_text;
     }
 
-    public abstract void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset);
+    public abstract void renderText(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset);
 
-    public abstract void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset);
+    public abstract void renderIcon(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset);
 
     public int getHOffset() {
         return rightHandSide() ? 10 : -91;
@@ -113,7 +111,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return effects;
     }
 
-    public void renderBarBackground(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBarBackground(GuiGraphicsExtractor graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         double barWidth = getBarWidth(player);
         int xStart = screenWidth / 2 + getHOffset();
         if (isFitted() && rightHandSide()) {
@@ -125,7 +123,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
             drawScaledBarBackground(graphics, barWidth, xStart, yStart + 1);
         } else renderFullBarBackground(graphics, xStart, yStart);
     }
-    public void drawScaledBarBackground(GuiGraphics stack, double barWidth, int x, int y) {
+    public void drawScaledBarBackground(GuiGraphicsExtractor stack, double barWidth, int x, int y) {
         if (rightHandSide()) {
             ModUtils.drawTexturedModalRect(stack,x, y - 1, 0, 0, barWidth + 2, 9);
             ModUtils.drawTexturedModalRect(stack,x + barWidth + 2, y-1, WIDTH + 2, 0, 2, 9);
@@ -134,7 +132,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
             ModUtils.drawTexturedModalRect(stack, (int) (x + barWidth + 2), y - 1, WIDTH + 2, 0, 2, 9);
         }
     }
-    public void textHelper(GuiGraphics graphics,int xStart,int yStart,double stat, int color) {
+    public void textHelper(GuiGraphicsExtractor graphics,int xStart,int yStart,double stat, int color) {
         int i1 = (int) Math.floor(stat);
         int i2 = ConfigCache.icons ? 1 : 0;
 
@@ -145,13 +143,13 @@ public abstract class BarOverlayImpl implements BarOverlay {
             ModUtils.drawStringOnHUD(graphics, i1 + "", xStart - 9 * i2 - i3 + 5, yStart - 1, color);
         }
     }
-    public void renderFullBarBackground(GuiGraphics matrices, int xStart, int yStart) {
+    public void renderFullBarBackground(GuiGraphicsExtractor matrices, int xStart, int yStart) {
         ModUtils.drawTexturedModalRect(matrices, xStart, yStart, 0, 0, WIDTH + 4, 9);
     }
-    public void renderFullBar(GuiGraphics matrices, int xStart, int yStart) {
+    public void renderFullBar(GuiGraphicsExtractor matrices, int xStart, int yStart) {
         renderPartialBar(matrices,xStart,yStart,WIDTH);
     }
-    public void renderPartialBar(GuiGraphics matrices, double xStart, int yStart,double barWidth) {
+    public void renderPartialBar(GuiGraphicsExtractor matrices, double xStart, int yStart,double barWidth) {
         ModUtils.drawTexturedModalRect(matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
     }
     @Override
@@ -167,7 +165,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     // parcool stamina bar). Now final and reads from barSettings.icon set via JSON default in
     // ClassicBarsConfig.makeDefaultBarSettings(), removing the override in each overlay class.
     @Override
-    public final ResourceLocation getIconRL() {
+    public final Identifier getIconRL() {
         return barSettings.icon;
     }
     @Override

@@ -1,8 +1,9 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.client.gui.Gui;
@@ -29,7 +30,7 @@ public class MountHealth extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(Gui gui, GuiGraphicsExtractor graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
     //Push to avoid lasting changes
     long updateCounter = Minecraft.getInstance().level != null ? Minecraft.getInstance().level.getGameTime() : 0;
 
@@ -70,7 +71,7 @@ public class MountHealth extends BarOverlayImpl {
   }
 
   @Override
-  public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+  public void renderText(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     LivingEntity mount = (LivingEntity) player.getVehicle();
@@ -78,16 +79,16 @@ public class MountHealth extends BarOverlayImpl {
     textHelper(graphics,xStart,yStart,mountHealth, ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).colorToText());
   }
 
-  private static final ResourceLocation HEART_VEHICLE_CONTAINER = ResourceLocation.withDefaultNamespace("hud/heart/vehicle_container");
-  private static final ResourceLocation HEART_VEHICLE_FULL = ResourceLocation.withDefaultNamespace("hud/heart/vehicle_full");
+  private static final Identifier HEART_VEHICLE_CONTAINER = Identifier.withDefaultNamespace("hud/heart/vehicle_container");
+  private static final Identifier HEART_VEHICLE_FULL = Identifier.withDefaultNamespace("hud/heart/vehicle_full");
 
   @Override
-  public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+  public void renderIcon(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     //heart background
-    graphics.blitSprite(HEART_VEHICLE_CONTAINER, xStart, yStart, 9, 9);
+    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, HEART_VEHICLE_CONTAINER, xStart, yStart, 9, 9);
     //heart
-    graphics.blitSprite(HEART_VEHICLE_FULL, xStart, yStart, 9, 9);
+    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, HEART_VEHICLE_FULL, xStart, yStart, 9, 9);
   }
 }

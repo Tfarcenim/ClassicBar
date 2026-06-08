@@ -4,15 +4,16 @@ import javax.annotation.Nonnull;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import tfar.classicbar.api.BarOverlay;
@@ -30,7 +31,7 @@ import tfar.classicbar.util.ModUtils;
 
 import java.util.*;
 
-public class EventHandler implements LayeredDraw.Layer {
+public class EventHandler implements GuiLayer {
 
   private static Gui forgeGui() {
     return Minecraft.getInstance().gui;
@@ -56,7 +57,7 @@ public class EventHandler implements LayeredDraw.Layer {
   }
 
   @Override
-  public void render(@Nonnull GuiGraphics matrices, @Nonnull DeltaTracker deltaTracker) {
+  public void render(@Nonnull GuiGraphicsExtractor matrices, @Nonnull DeltaTracker deltaTracker) {
     int screenWidth = matrices.guiWidth();
     int screenHeight = matrices.guiHeight();
     Gui gui = forgeGui();
@@ -64,7 +65,8 @@ public class EventHandler implements LayeredDraw.Layer {
     Entity entity = ModUtils.mc.getCameraEntity();
     if (!(entity instanceof Player player)) return;
     if (player.getAbilities().instabuild || player.isSpectator()) return;
-    ModUtils.mc.getProfiler().push("classicbars_hud");
+    // Changed: Minecraft.getProfiler() was removed in MC 26.1; use Profiler.get() instead.
+    Profiler.get().push("classicbars_hud");
 
     // Changed: removed the pre-loop "if (errored.contains(overlay)) continue;" check.
     // Instead, broken overlays are batch-removed after the loop with removeAll(), which
@@ -83,7 +85,7 @@ public class EventHandler implements LayeredDraw.Layer {
       errored.clear(); // Fix: clear after batch removal to prevent stale entries accumulating across frames
     }
 
-    ModUtils.mc.getProfiler().pop();
+    Profiler.get().pop();
   }
 
   public static void increment(Gui gui, boolean side, int amount) {
@@ -110,7 +112,7 @@ public class EventHandler implements LayeredDraw.Layer {
   public static void setupOverlays(RegisterGuiLayersEvent e) {
     NeoForge.EVENT_BUS.addListener(EventHandler::disableOtherOverlays);
     e.registerBelow(VanillaGuiLayers.SELECTED_ITEM_NAME,
-            ResourceLocation.fromNamespaceAndPath(ClassicBar.MODID, "hud"),
+            Identifier.fromNamespaceAndPath(ClassicBar.MODID, "hud"),
             new EventHandler());
 
     ClassicBar.logger().info("Registering Vanilla Overlays");
@@ -129,21 +131,21 @@ public class EventHandler implements LayeredDraw.Layer {
     ClassicBarsConfig.readBarSettings();
   }
 
-  private static final List<ResourceLocation> vanilla_overlays = List.of(
+  private static final List<Identifier> vanilla_overlays = List.of(
           VanillaGuiLayers.AIR_LEVEL,
           VanillaGuiLayers.ARMOR_LEVEL,
           VanillaGuiLayers.PLAYER_HEALTH,
           VanillaGuiLayers.VEHICLE_HEALTH,
           VanillaGuiLayers.FOOD_LEVEL);
 
-  private static final ResourceLocation PARCOOL_STAMINA_HUD = ResourceLocation.fromNamespaceAndPath("parcool", "hud.stamina");
-  // Changed: ResourceLocation for the Overloaded Armor Bar mod's GUI layer; cancelled when ClassicBar is handling armor rendering
-  private static final ResourceLocation OVERLOADED_ARMOR_BAR_HUD = ResourceLocation.fromNamespaceAndPath("overloadedarmorbar", "overloadedarmorbar");
-  // Changed: ResourceLocation for Iron's Spells n Spellbooks mana overlay; cancelled when ClassicBar renders mana as a horizontal bar
-  private static final ResourceLocation IRONS_MANA_OVERLAY = ResourceLocation.fromNamespaceAndPath("irons_spellbooks", "mana_overlay");
+  private static final Identifier PARCOOL_STAMINA_HUD = Identifier.fromNamespaceAndPath("parcool", "hud.stamina");
+  // Changed: Identifier for the Overloaded Armor Bar mod's GUI layer; cancelled when ClassicBar is handling armor rendering
+  private static final Identifier OVERLOADED_ARMOR_BAR_HUD = Identifier.fromNamespaceAndPath("overloadedarmorbar", "overloadedarmorbar");
+  // Changed: Identifier for Iron's Spells n Spellbooks mana overlay; cancelled when ClassicBar renders mana as a horizontal bar
+  private static final Identifier IRONS_MANA_OVERLAY = Identifier.fromNamespaceAndPath("irons_spellbooks", "mana_overlay");
 
   public static void disableOtherOverlays(RenderGuiLayerEvent.Pre e) {
-    ResourceLocation id = e.getName();
+    Identifier id = e.getName();
     if (vanilla_overlays.contains(id)) e.setCanceled(true);
     else if (ModCompat.toughasnails.loaded && Thirst.isEnabled() && Thirst.OVERLAY_ID.equals(id)) e.setCanceled(true);
     else if (ModCompat.parcool.loaded && PARCOOL_STAMINA_HUD.equals(id)) e.setCanceled(true);

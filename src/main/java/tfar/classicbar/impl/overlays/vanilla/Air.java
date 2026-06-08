@@ -1,7 +1,8 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.client.gui.Gui;
 import tfar.classicbar.config.ConfigCache;
@@ -21,7 +22,7 @@ public class Air extends BarOverlayImpl {
     return player.getAirSupply() < player.getMaxAirSupply();
   }
   @Override
-  public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) { //NOSONAR Gui kept for BarOverlayImpl contract
+  public void renderBar(Gui gui, GuiGraphicsExtractor graphics, Player player, int screenWidth, int screenHeight, int vOffset) { //NOSONAR Gui kept for BarOverlayImpl contract
     int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
     double barWidth = getBarWidth(player);
@@ -46,7 +47,7 @@ public class Air extends BarOverlayImpl {
     return ConfigCache.air;
   }
   @Override
-  public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+  public void renderText(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
     //draw air amount
     int air = player.getAirSupply();
     int xStart = width / 2 + getIconOffset();
@@ -54,13 +55,13 @@ public class Air extends BarOverlayImpl {
     Color color = getPrimaryBarColor(0,player);
     textHelper(graphics,xStart,yStart,air/20,color.colorToText());
   }
-  private static final ResourceLocation AIR_SPRITE = ResourceLocation.withDefaultNamespace("hud/air");
+  private static final Identifier AIR_SPRITE = Identifier.withDefaultNamespace("hud/air");
 
   @Override
-  public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+  public void renderIcon(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     //Draw air icon
-    graphics.blitSprite(AIR_SPRITE, xStart, yStart, 9, 9);
+    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, AIR_SPRITE, xStart, yStart, 9, 9);
   }
 }

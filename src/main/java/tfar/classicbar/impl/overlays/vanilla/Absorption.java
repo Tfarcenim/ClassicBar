@@ -1,7 +1,8 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.client.gui.Gui;
 import tfar.classicbar.config.ClassicBarsConfig;
@@ -27,7 +28,7 @@ public class Absorption extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(Gui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBar(Gui gui, GuiGraphicsExtractor graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
 
         double absorb = player.getAbsorptionAmount();
         double barWidth = getBarWidth(player);
@@ -90,7 +91,7 @@ public class Absorption extends BarOverlayImpl {
     }
 
     @Override
-    public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    public void renderText(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
 
         double absorb = player.getAbsorptionAmount();
         double maxHealth = player.getMaxHealth();
@@ -102,22 +103,22 @@ public class Absorption extends BarOverlayImpl {
         textHelper(graphics, xStart, yStart, absorb, c.colorToText());
     }
 
-    private static final ResourceLocation HEART_CONTAINER = ResourceLocation.withDefaultNamespace("hud/heart/container");
-    private static final ResourceLocation HEART_CONTAINER_HARDCORE = ResourceLocation.withDefaultNamespace("hud/heart/container_hardcore");
-    private static final ResourceLocation HEART_ABSORBING_FULL = ResourceLocation.withDefaultNamespace("hud/heart/absorbing_full");
-    private static final ResourceLocation HEART_ABSORBING_HARDCORE_FULL = ResourceLocation.withDefaultNamespace("hud/heart/absorbing_hardcore_full");
+    private static final Identifier HEART_CONTAINER = Identifier.withDefaultNamespace("hud/heart/container");
+    private static final Identifier HEART_CONTAINER_HARDCORE = Identifier.withDefaultNamespace("hud/heart/container_hardcore");
+    private static final Identifier HEART_ABSORBING_FULL = Identifier.withDefaultNamespace("hud/heart/absorbing_full");
+    private static final Identifier HEART_ABSORBING_HARDCORE_FULL = Identifier.withDefaultNamespace("hud/heart/absorbing_hardcore_full");
 
     // Changed: rewritten to use blitSprite with named sprite ResourceLocations instead of
     // drawTexturedModalRect with raw atlas offsets (was (16,0) for container, (160,0) for fill).
     // Added hardcore variant support — was missing in the old atlas-offset approach.
     @Override
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    public void renderIcon(GuiGraphicsExtractor graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
 
         boolean hardcore = player.level().getLevelData().isHardcore();
         //draw absorption icon
-        graphics.blitSprite(hardcore ? HEART_CONTAINER_HARDCORE : HEART_CONTAINER, xStart, yStart, 9, 9);
-        graphics.blitSprite(hardcore ? HEART_ABSORBING_HARDCORE_FULL : HEART_ABSORBING_FULL, xStart, yStart, 9, 9);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, hardcore ? HEART_CONTAINER_HARDCORE : HEART_CONTAINER, xStart, yStart, 9, 9);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, hardcore ? HEART_ABSORBING_HARDCORE_FULL : HEART_ABSORBING_FULL, xStart, yStart, 9, 9);
     }
 }

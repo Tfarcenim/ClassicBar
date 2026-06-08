@@ -9,8 +9,8 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import tfar.classicbar.compat.ModCompat;
-import toughasnails.api.thirst.IThirst;
-import toughasnails.api.thirst.ThirstHelper;
+// Changed (MC 26.1 upgrade): Tough As Nails compat temporarily disabled (no 26.1 build),
+// so toughasnails.* imports are removed and syncToughAsNailsData() is now a no-op.
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +66,7 @@ public final class SyncHandler {
       lastSaturationLevels.put(uuid, saturationLevel);
     }
 
-    float exhaustionLevel = player.getFoodData().getExhaustionLevel();
+    float exhaustionLevel = player.getFoodData().exhaustionLevel; // Changed: getExhaustionLevel() removed in MC 26.1; field exposed via access transformer
     if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
       PacketDistributor.sendToPlayer(player, new MessageExhaustionSync(exhaustionLevel)); // Changed: was Message.channel().sendTo(msg, connection, NetworkDirection.PLAY_TO_CLIENT)
       lastExhaustionLevels.put(uuid, exhaustionLevel);
@@ -74,28 +74,14 @@ public final class SyncHandler {
   }
 
   /**
-   * Whether the mod has been loaded should be ensured via the context.
+   * No-op while Tough As Nails compat is disabled for MC 26.1.
+   * <p>
+   * Restore the original implementation (read hydration/exhaustion via
+   * {@code ThirstHelper.getThirst(player)} and send {@link MessageHydrationSync} /
+   * {@link MessageThirstExhaustionSync}) once a 26.1-compatible Tough As Nails build exists.
    */
   private void syncToughAsNailsData(ServerPlayer player) {
-    if (!ThirstHelper.isThirstEnabled()) return;
-
-    UUID uuid = player.getUUID();
-    Float lastHydrationLevel = lastHydrationLevels.get(uuid);
-    Float lastExhaustionLevel = lastThirstExhaustionLevels.get(uuid);
-
-    IThirst thirstData = ThirstHelper.getThirst(player);
-
-    float hydrationLevel = thirstData.getHydration();
-    if (lastHydrationLevel == null || lastHydrationLevel != hydrationLevel) {
-      PacketDistributor.sendToPlayer(player, new MessageHydrationSync(hydrationLevel)); // Changed: was Message.channel().sendTo(msg, connection, NetworkDirection.PLAY_TO_CLIENT)
-      lastHydrationLevels.put(uuid, hydrationLevel);
-    }
-
-    float exhaustionLevel = thirstData.getExhaustion();
-    if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
-      PacketDistributor.sendToPlayer(player, new MessageThirstExhaustionSync(exhaustionLevel)); // Changed: was Message.channel().sendTo(msg, connection, NetworkDirection.PLAY_TO_CLIENT)
-      lastThirstExhaustionLevels.put(uuid, exhaustionLevel);
-    }
+    // intentionally empty — see method javadoc
   }
 
   @OnlyIn(Dist.CLIENT)

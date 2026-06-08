@@ -3,9 +3,10 @@ package tfar.classicbar.config;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.ModList; // Added: used to check at config-build time whether mod-specific sections should be registered
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -32,7 +33,9 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("removal") // Suppressed: ModConfigSpec.Builder methods are marked for removal but no replacement exists yet in NeoForge 1.21
-@EventBusSubscriber(modid = ClassicBar.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+// Changed: MC 26.1 / NeoForge unified the event buses; @EventBusSubscriber no longer has a
+// `bus` element (the Bus enum was removed). value = Dist.CLIENT still scopes registration.
+@EventBusSubscriber(modid = ClassicBar.MODID, value = Dist.CLIENT)
 public class ClassicBarsConfig {
 
   static ModConfigSpec.BooleanValue displayIcons;
@@ -209,7 +212,13 @@ public class ClassicBarsConfig {
       try (Reader reader = new FileReader(file)) {
         JsonReader jsonReader = new JsonReader(reader);
 
-        Gson gson = new GsonBuilder().registerTypeAdapter(ResourceLocation.class,new ResourceLocation.Serializer()).create();
+        // Changed: ResourceLocation.Serializer (Gson adapter) was removed in MC 26.1 along
+        // with the ResourceLocation -> Identifier rename. Register a small deserializer that
+        // parses the JSON string form ("namespace:path") into an Identifier instead.
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Identifier.class,
+                        (JsonDeserializer<Identifier>) (json, type, context) -> Identifier.parse(json.getAsString()))
+                .create();
 
         BarSettings barSettings = gson.fromJson(jsonReader, BarSettings.class);
         String fileName = file.getName();
