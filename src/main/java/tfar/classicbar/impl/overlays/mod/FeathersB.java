@@ -37,19 +37,7 @@ public class FeathersB extends BarOverlayImpl {
 
 	@Override
 	public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-		int barWidth = getBarWidth(player);
-		int xStart = screenWidth / 2 + getHOffset();
-		if (getSide() == BarSide.RIGHT) {
-			xStart += WIDTH - barWidth;
-		}
-		int yStart = screenHeight - vOffset;
-
-		//Bar background
-		renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset);
-		//draw portion of bar based on feathers amount
-		double f = xStart + WIDTH + 2 - barWidth;
-		//AQUA.color2Gl();
-		renderPartialBar(AQUA,graphics,f,yStart+2,barWidth);
+		renderSimpleBar(AQUA,graphics, player, screenWidth, screenHeight, vOffset);
 	}
 
 	@Override

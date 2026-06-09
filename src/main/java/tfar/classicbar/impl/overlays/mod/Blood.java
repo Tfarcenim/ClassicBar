@@ -48,14 +48,7 @@ public class Blood extends BarOverlayImpl {
     @Override
     public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).ifPresent(stats -> {
-            double barWidth = getBarWidth(player);
-            int xStart = screenWidth / 2 + getHOffset();
-            int yStart = screenHeight - vOffset;
-            //Bar background
-            renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset);
-            //draw portion of bar based on blood amount
-            double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
-            renderPartialBar(getPrimaryBarColor(),graphics, f + 2, yStart + 2,barWidth);
+            renderSimpleBar(getPrimaryBarColor(), graphics, player, screenWidth, screenHeight, vOffset);
         });
     }
 

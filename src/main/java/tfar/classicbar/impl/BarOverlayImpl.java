@@ -180,6 +180,12 @@ public abstract class BarOverlayImpl implements BarOverlay {
         }
     }
 
+    protected int getXStartBar(int screenWidth,int barWidth){
+        int xStart = screenWidth / 2 + getHOffset();
+        if (getSide() == BarSide.RIGHT) xStart += (WIDTH - barWidth);
+        return xStart;
+    }
+
     private void renderFullBarBackground(GuiGraphics matrices, int xStart, int yStart) {
         renderFullBarBackground(matrices,xStart,yStart,0);
     }
@@ -192,6 +198,24 @@ public abstract class BarOverlayImpl implements BarOverlay {
         renderPartialBar(color,matrices,xStart,yStart,WIDTH);
     }
 
+    protected void renderSimpleBar(Color color, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+        int barWidth = getBarWidth(player);
+        int xStart = getXStartBar(screenWidth,barWidth);
+        int yStart = screenHeight - vOffset;
+
+        //Bar background
+        renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset);
+        //draw portion of bar based on feathers amount
+        renderPartialBar(color,graphics,xStart+2,yStart+2,barWidth);
+    }
+
+    public int getNumerator(Player player) {
+
+    }
+
+    public int getDenominator(Player player) {
+        
+    }
 
     public void renderPartialBar(Color color,GuiGraphics matrices, double xStart, int yStart,double barWidth) {
         color.color2Gl();
