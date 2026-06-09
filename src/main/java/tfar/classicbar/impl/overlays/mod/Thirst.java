@@ -249,14 +249,14 @@ public class Thirst extends BarOverlayImpl {
     }
 
     private void drawThirst(GuiGraphics stack, Player player, int x, int y, double thirstLevel, double maxLevel) {
-        getSecondaryBarColor(0, player).color2Gl();
+        getSecondaryBarColor(player).color2Gl();
         double barWidth = ModUtils.getWidth(thirstLevel, maxLevel);
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         renderPartialBar(stack, barXStart + 2, y + 2, barWidth);
     }
 
     private void drawHydration(GuiGraphics stack, Player player, int x, int y, double hydrationLevel, double maxLevel) {
-        getPrimaryBarColor(0, player).color2Gl();
+        getPrimaryBarColor(player).color2Gl();
         double barWidth = ModUtils.getWidth(hydrationLevel, maxLevel);
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         renderPartialBar(stack, barXStart + 2, y + 2, barWidth);
@@ -274,7 +274,7 @@ public class Thirst extends BarOverlayImpl {
         if (thirstLevel < maxThirstLevel) {
             double barWidth = ModUtils.getWidth(thirstLevel + restoredThirstLevel, maxThirstLevel);
             double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
-            getSecondaryBarColor(0, player).color2Gla((float)drinkAlpha);
+            getSecondaryBarColor(player).color2Gla((float)drinkAlpha);
             renderPartialBar(stack,barXStart + 2, y + 2, barWidth);
         }
 
@@ -293,7 +293,7 @@ public class Thirst extends BarOverlayImpl {
             }
             double barWidth = ModUtils.getWidth(hydrationLevel + restoredHydrationLevel, maxHydrationLevel);
             double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
-            getPrimaryBarColor(0, player).color2Gla((float)drinkAlpha);
+            getPrimaryBarColor(player).color2Gla((float)drinkAlpha);
             renderPartialBar(stack,barXStart + 2, y + 2, barWidth);
         }
     }
@@ -311,7 +311,7 @@ public class Thirst extends BarOverlayImpl {
         int yStart = height - vOffset;
         IThirst thirstData = ThirstHelper.getThirst(player);
         int thirst = thirstData.getThirst();
-        int c = getSecondaryBarColor(0, player).colorToText();
+        int c = getSecondaryBarColor(player).colorToText();
         textHelper(graphics, xStart, yStart, thirst, c);
     }
 
@@ -336,8 +336,7 @@ public class Thirst extends BarOverlayImpl {
     /**
      * hydration
      */
-    @Override
-    public Color getPrimaryBarColor(int index, Player player) {
+    public Color getPrimaryBarColor(Player player) {
         if (player.hasEffect(TANEffects.THIRST)) return ConfigCache.hydrationDebuff;
         return ConfigCache.hydration;
     }
@@ -345,8 +344,7 @@ public class Thirst extends BarOverlayImpl {
     /**
      * thirst
      */
-    @Override
-    public Color getSecondaryBarColor(int index, Player player) {
+    public Color getSecondaryBarColor(Player player) {
         if (player.hasEffect(TANEffects.THIRST)) return ConfigCache.thirstDebuff;
         return ConfigCache.thirst;
     }

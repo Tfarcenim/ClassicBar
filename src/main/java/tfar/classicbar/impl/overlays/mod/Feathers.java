@@ -38,7 +38,6 @@ public class Feathers extends BarOverlayImpl {
 		
 		int xStart = screenWidth / 2 + 10;
 		int yStart = screenHeight - vOffset;
-		GlStateManager._enableBlend();
 
 		Color.reset();
 		//Bar background

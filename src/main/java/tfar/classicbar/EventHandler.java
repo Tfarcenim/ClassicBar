@@ -51,7 +51,7 @@ public class EventHandler implements IGuiOverlay {
           increment(gui, side, 10);
         }
       } catch (Error e) {
-        ClassicBar.logger.error("disabling broken overlay "+overlay.name());
+          ClassicBar.logger.error("disabling broken overlay {}", overlay.name());
         e.printStackTrace();
         overlay.setErrored();
       }

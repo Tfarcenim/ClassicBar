@@ -59,7 +59,7 @@ public class Armor extends BarOverlayImpl {
         renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
         //how many layers are there? remember to start at 0
         int index = (int) Math.min(Math.ceil(armor / 20), ConfigCache.armor.size()) - 1;
-        Color primary = getPrimaryBarColor(index, player);
+        Color primary = getPrimaryBarColor(index);
 
         if (index == 0) {
             //calculate bar color
@@ -71,7 +71,7 @@ public class Armor extends BarOverlayImpl {
             //draw first bar
             //case 1: bar is not capped and is partially filled
             if (armor % 20 != 0) {
-                Color secondary = getSecondaryBarColor(index - 1, player);
+                Color secondary = getSecondaryBarColor(index - 1);
                 //draw complete first bar
                 secondary.color2Gla(armorAlpha);
                 renderFullBar(graphics, xStart + 2, yStart + 2);
@@ -101,13 +101,11 @@ public class Armor extends BarOverlayImpl {
         return ClassicBarsConfig.lowArmorWarning.get() && getDamagedAmount(player) > 0;
     }
 
-    @Override
-    public Color getPrimaryBarColor(int index, Player player) {
+    public Color getPrimaryBarColor(int index) {
         return ConfigCache.armor.get(index);
     }
 
-    @Override
-    public Color getSecondaryBarColor(int index, Player player) {
+    public Color getSecondaryBarColor(int index) {
         return ConfigCache.armor.get(index);
     }
 
@@ -134,7 +132,7 @@ public class Armor extends BarOverlayImpl {
         double armor = calculateArmorValue(player);
         //draw armor amount
         int index = (int) Math.min(Math.ceil(armor / 20), ConfigCache.armor.size()) - 1;
-        int c = getPrimaryBarColor(index, player).colorToText();
+        int c = getPrimaryBarColor(index).colorToText();
         textHelper(graphics, xStart, yStart, armor, c);
     }
 

@@ -68,8 +68,8 @@ public class Food extends BarOverlayImpl {
     //draw portion of bar based on hunger amount
     double f = xStart + (getSide() == BarSide.RIGHT? BarOverlayImpl.WIDTH - barWidthH : 0);
 
-    Color hungerColor = getSecondaryBarColor(0,player);
-    Color satColor = getPrimaryBarColor(0,player);
+    Color hungerColor = getSecondaryBarColor(player);
+    Color satColor = getPrimaryBarColor(player);
 
     hungerColor.color2Gl();
     renderPartialBar(matrices,f + 2, yStart + 2,  barWidthH);
@@ -147,15 +147,13 @@ public class Food extends BarOverlayImpl {
     return (int) Math.ceil(BarOverlayImpl.WIDTH * saturation / maxSat);
   }
   //saturation
-  @Override
-  public Color getPrimaryBarColor(int index, Player player) {
+  public Color getPrimaryBarColor(Player player) {
     boolean hunger = player.hasEffect(MobEffects.HUNGER);
     return hunger ? ConfigCache.saturationDebuff : ConfigCache.saturation;
   }
 
   //hunger
-  @Override
-  public Color getSecondaryBarColor(int index, Player player) {
+  public Color getSecondaryBarColor(Player player) {
     boolean hunger = player.hasEffect(MobEffects.HUNGER);
     return hunger ? ConfigCache.hungerDebuff : ConfigCache.hunger;
   }
@@ -166,7 +164,7 @@ public class Food extends BarOverlayImpl {
     int yStart = height - vOffset;
     //draw hunger amount
     double hunger = player.getFoodData().getFoodLevel();
-    int c = getSecondaryBarColor(0,player).colorToText();
+    int c = getSecondaryBarColor(player).colorToText();
     textHelper(graphics,xStart,yStart,hunger,c);
   }
 

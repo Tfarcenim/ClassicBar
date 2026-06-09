@@ -13,16 +13,7 @@ public interface BarOverlay {
 
   boolean render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
 
-  Color getPrimaryBarColor(int index,Player player);
-
-  Color getSecondaryBarColor(int index,Player player);
-
-  boolean isFitted();
-
-  boolean errored();
-
   void setErrored();
 
   String name();
-  Set<String> dependencies();
 }

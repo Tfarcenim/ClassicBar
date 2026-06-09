@@ -39,7 +39,6 @@ public class Blood extends BarOverlayImpl {
         boolean b = super.shouldRender(player);
         return b && VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION;
     }
-    @Override
     public Color getPrimaryBarColor(int index, Player player) {
         return Color.RED;
     }

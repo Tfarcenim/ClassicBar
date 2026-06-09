@@ -63,7 +63,7 @@ public class Absorption extends BarOverlayImpl {
         } else {
             //we have wrapped, draw 2 bars
             //draw first full bar
-            Color secondary = getSecondaryBarColor(index - 1, player);
+            Color secondary = Color.BLACK;
             secondary.color2Gl();
             renderFullBar(graphics, xStart + 2, yStart + 2);
             //is it on the edge or capped already?
@@ -75,7 +75,6 @@ public class Absorption extends BarOverlayImpl {
         }
     }
 
-    @Override
     public Color getPrimaryBarColor(int index, Player player) {
         HealthEffect effect = getHealthEffect(player);
         switch (effect) {
@@ -89,7 +88,7 @@ public class Absorption extends BarOverlayImpl {
                 return ConfigCache.absorptionWither.get(index);
             }
         }
-        return super.getPrimaryBarColor(index, player);
+        return Color.BLACK;
     }
 
     @Override

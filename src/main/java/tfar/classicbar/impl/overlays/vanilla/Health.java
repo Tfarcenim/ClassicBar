@@ -88,7 +88,7 @@ public class Health extends BarOverlayImpl {
       }
     }
     //calculate bar color
-    Color primary = getPrimaryBarColor(0,player);
+    Color primary = getPrimaryBarColor(player);
     primary.color2Gl();
     //draw portion of bar based on health remaining
     renderPartialBar(graphics,f + 2, yStart + 2, barWidth);
@@ -99,8 +99,7 @@ public class Health extends BarOverlayImpl {
     }
   }
 
-  @Override
-  public Color getPrimaryBarColor(int index, Player player) {
+  public Color getPrimaryBarColor(Player player) {
     double health = player.getHealth();
     double maxHealth = player.getMaxHealth();
     HealthEffect effect = getHealthEffect(player);
@@ -112,7 +111,7 @@ public class Health extends BarOverlayImpl {
     double health = player.getHealth();
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
-    textHelper(graphics,xStart,yStart,health,getPrimaryBarColor(0,player).colorToText());
+    textHelper(graphics,xStart,yStart,health,getPrimaryBarColor(player).colorToText());
   }
 
   @Override

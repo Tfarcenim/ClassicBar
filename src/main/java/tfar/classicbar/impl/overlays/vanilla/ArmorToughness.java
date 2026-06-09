@@ -46,7 +46,7 @@ public class ArmorToughness extends BarOverlayImpl {
         }
         int yStart = screenHeight - vOffset;
         int index = (int) Math.min(Math.ceil(armorToughness / 20), ConfigCache.armor_toughness.size()) - 1;
-        Color primary = getPrimaryBarColor(index, player);
+        Color primary = getPrimaryBarColor(index);
         //draw bar background portion
         Color.reset();
         renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
@@ -59,7 +59,7 @@ public class ArmorToughness extends BarOverlayImpl {
             int size = ConfigCache.armor_toughness.size();
             //if we are out of colors wrap the bar
             if (index < size && armorToughness % 20 != 0) {
-                Color secondary = getSecondaryBarColor(index - 1, player);
+                Color secondary = getSecondaryBarColor(index - 1);
                 //draw complete first bar
                 secondary.color2Gl();
                 renderFullBar(graphics, xStart + 2, yStart + 2);
@@ -78,13 +78,11 @@ public class ArmorToughness extends BarOverlayImpl {
         }
     }
 
-    @Override
-    public Color getPrimaryBarColor(int index, Player player) {
+    public Color getPrimaryBarColor(int index) {
         return ConfigCache.armor_toughness.get(index);
     }
 
-    @Override
-    public Color getSecondaryBarColor(int index, Player player) {
+    public Color getSecondaryBarColor(int index) {
         return ConfigCache.armor_toughness.get(index);
     }
 
@@ -94,7 +92,7 @@ public class ArmorToughness extends BarOverlayImpl {
         int yStart = height - vOffset;
         double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
         int index = (int) Math.min(Math.ceil(armorToughness / 20) - 1, ConfigCache.armor_toughness.size() - 1);
-        int c = getPrimaryBarColor(index, player).colorToText();
+        int c = getPrimaryBarColor(index).colorToText();
         //draw armor toughness amount
         textHelper(graphics, xStart, yStart, armorToughness, c);
     }

@@ -1,6 +1,5 @@
 package tfar.classicbar.impl;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -178,29 +177,17 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public void renderPartialBar(GuiGraphics matrices, double xStart, int yStart,double barWidth) {
         ModUtils.drawTexturedModalRect(BAR,matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
     }
-    @Override
-    public Color getPrimaryBarColor(int index, Player player) {
-        return Color.BLACK;
-    }
-    @Override
-    public Color getSecondaryBarColor(int index, Player player) {
-        return Color.BLACK;
-    }
+
     public ResourceLocation getIconRL() {
         return barSettings.icon();
     }
 
     public abstract Codec<? extends BarOverlayImpl> getCodec();
 
-    public Set<String> dependencies() {
-        return dependencies;
-    }
-
     public final float getBarWidth(Player player) {
         return (float) Math.ceil(WIDTH* Mth.clamp(widthGetter.apply(player),0,1));
     }
 
-    @Override
     public final boolean isFitted() {
         return barSettings.fitted();
     }
