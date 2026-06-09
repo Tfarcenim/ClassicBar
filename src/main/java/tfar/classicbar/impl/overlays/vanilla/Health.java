@@ -2,9 +2,12 @@ package tfar.classicbar.impl.overlays.vanilla;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ColorUtils;
@@ -17,8 +20,19 @@ public class Health extends BarOverlayImpl {
   private long healthUpdateCounter = 0;
   private double lastPlayerHealth = 0;
 
-  public Health() {
-    super("health");
+  public Health(BarSettings settings) {
+    super("health",settings);
+  }
+
+  public static final Codec<Health> CODEC = RecordCodecBuilder.create(
+          objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
+                  .forGetter(Health::getBarSettings)
+          ).apply(objectInstance,Health::new)
+  );
+
+  @Override
+  public Codec<? extends BarOverlayImpl> getCodec() {
+    return CODEC;
   }
 
   @Override
@@ -55,7 +69,7 @@ public class Health extends BarOverlayImpl {
 
     Color.reset();
     //Bar background
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 0, i4, WIDTH + 4, 9);
+    ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart, yStart, 0, i4, WIDTH + 4, 9);
 
     double f = xStart + (rightHandSide() ? WIDTH - barWidth : 0);
 
@@ -85,7 +99,7 @@ public class Health extends BarOverlayImpl {
     if (effect == HealthEffect.POISON) {
       //draw poison overlay
       RenderSystem.setShaderColor(0, .5f, 0, .5f);
-      ModUtils.drawTexturedModalRect(graphics,f + 1, yStart + 1, 1, 36, barWidth, 7);
+      ModUtils.drawTexturedModalRect(getIconRL(),graphics,f + 1, yStart + 1, 1, 36, barWidth, 7);
     }
   }
 
@@ -122,8 +136,8 @@ public class Health extends BarOverlayImpl {
     //Draw health icon
     //heart background
     Color.reset();
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 16, 9 * i5, 9, 9);
+    ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart, yStart, 16, 9 * i5, 9, 9);
     //heart
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, 36 + effect.i, 9 * i5, 9, 9);
+    ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart, yStart, 36 + effect.i, 9 * i5, 9, 9);
   }
 }

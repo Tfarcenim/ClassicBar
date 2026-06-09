@@ -1,24 +1,47 @@
 package tfar.classicbar.api;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
+import tfar.classicbar.impl.BarOverlayImpl;
 
-public class BarSettings {
-    public boolean show_text;
-    public ResourceLocation icon;
+import java.util.Set;
 
-    public JsonObject toJson() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("show_text",show_text);
-        jsonObject.addProperty("icon",icon.toString());
-        return jsonObject;
+public record BarSettings(boolean enabled, boolean show_text, ResourceLocation icon) {
+
+    public static final MapCodec<BarSettings> CODEC = RecordCodecBuilder.mapCodec(
+            objectInstance -> objectInstance.group(
+                    Codec.BOOL.fieldOf("enabled").forGetter(BarSettings::enabled),
+                    Codec.BOOL.fieldOf("show_text").forGetter(BarSettings::show_text),
+                    ResourceLocation.CODEC.fieldOf("icon")
+                            .forGetter(BarSettings::icon)).apply(objectInstance,BarSettings::new)
+    );
+
+    public static BarSettings.Builder getBuilder() {
+        return new BarSettings.Builder();
     }
 
-    public BarSettings copy() {
-        BarSettings copy = new BarSettings();
-        copy.show_text = show_text;
-        copy.icon = icon;
-        return copy;
-    }
+    public static class Builder {
+        private boolean enabled = true;
+        private boolean show_text = true;
+        private ResourceLocation icon = BarOverlayImpl.GUI_ICONS_LOCATION;
 
+        public Builder setEnabled(boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
+        public Builder setShowText(boolean show_text) {
+            this.show_text = show_text;
+            return this;
+        }
+
+        public Builder setIcon(ResourceLocation icon) {
+            this.icon = icon;
+            return this;
+        }
+
+        public BarSettings build() {return new BarSettings(enabled,show_text,icon);}
+    }
 }

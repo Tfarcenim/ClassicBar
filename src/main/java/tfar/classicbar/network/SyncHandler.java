@@ -48,15 +48,13 @@ public final class SyncHandler {
 
     float saturationLevel = player.getFoodData().getSaturationLevel();
     if (lastSaturationLevel == null || lastSaturationLevel != saturationLevel) {
-      MessageSaturationSync msg = new MessageSaturationSync(saturationLevel);
-      PacketHandler.sendToClient(msg, player);
+      SyncState.SATURATION.sendTo(player,saturationLevel);
       lastSaturationLevels.put(uuid, saturationLevel);
     }
 
     float exhaustionLevel = player.getFoodData().getExhaustionLevel();
     if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
-      MessageExhaustionSync msg = new MessageExhaustionSync(exhaustionLevel);
-      PacketHandler.sendToClient(msg, player);
+      SyncState.EXHAUSTION.sendTo(player, exhaustionLevel);
       lastExhaustionLevels.put(uuid, exhaustionLevel);
     }
   }
@@ -75,15 +73,13 @@ public final class SyncHandler {
 
     float hydrationLevel = thirstData.getHydration();
     if (lastHydrationLevel == null || lastHydrationLevel != hydrationLevel) {
-      MessageHydrationSync msg = new MessageHydrationSync(hydrationLevel);
-      PacketHandler.sendToClient(msg, player);
+      SyncState.HYDRATION.sendTo(player, hydrationLevel);
       lastHydrationLevels.put(uuid, hydrationLevel);
     }
 
     float exhaustionLevel = thirstData.getExhaustion();
     if (lastExhaustionLevel == null || Math.abs(lastExhaustionLevel - exhaustionLevel) >= 0.01f) {
-      MessageThirstExhaustionSync msg = new MessageThirstExhaustionSync(exhaustionLevel);
-      PacketHandler.sendToClient(msg, player);
+      SyncState.THIRST_EXHAUSTION.sendTo(player,exhaustionLevel);
       lastThirstExhaustionLevels.put(uuid, exhaustionLevel);
     }
   }
@@ -94,9 +90,7 @@ public final class SyncHandler {
 
     lastSaturationLevels.remove(uuid);
     lastExhaustionLevels.remove(uuid);
-    if (ModCompat.toughasnails.loaded) {
-      lastHydrationLevels.remove(uuid);
-      lastThirstExhaustionLevels.remove(uuid);
-    }
+    lastHydrationLevels.remove(uuid);
+    lastThirstExhaustionLevels.remove(uuid);
   }
 }

@@ -4,25 +4,40 @@ package tfar.classicbar.impl.overlays.mod;
 import com.alrex.parcool.client.hud.impl.HUDType;
 import com.alrex.parcool.common.capability.IStamina;
 import com.alrex.parcool.config.ParCoolConfig;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.impl.overlays.vanilla.Air;
 import tfar.classicbar.util.Color;
 
 public class StaminaB extends BarOverlayImpl {
 
     public static final String name = "parcool:stamina";
 
-    public StaminaB() {
-        super(name);
+    public StaminaB(BarSettings settings) {
+        super(name,settings);
     }
+
+    public static final Codec<StaminaB> CODEC = RecordCodecBuilder.create(
+            objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
+                    .forGetter(StaminaB::getBarSettings)
+            ).apply(objectInstance,StaminaB::new)
+    );
 
     @Override
     public boolean shouldRender(Player player) {
-        if (!checkConfigs()) return false;
+        if (!super.shouldRender(player) && !checkConfigs()) return false;
         IStamina stamina = IStamina.get(player);
         return stamina.getMaxStamina() > stamina.get();
+    }
+
+    @Override
+    public Codec<? extends BarOverlayImpl> getCodec() {
+        return null;
     }
 
     public static boolean checkConfigs() {

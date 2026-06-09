@@ -40,3 +40,9 @@ Status icons are bars now
     versionRange="[43.0.45,)"
     ordering="NONE"
     side="BOTH"
+[[dependencies.classicbar]]
+modId="toughasnails"
+mandatory=false
+versionRange="[9.2.0.171,)"
+ordering="NONE"
+side="BOTH"

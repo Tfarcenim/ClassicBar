@@ -41,11 +41,7 @@ public final class PacketHandler {
             clientVersion -> NetworkRegistry.ABSENT.version().equals(clientVersion) || NETWORK_VERSION.equals(clientVersion)
     );
 
-    registerClientPacket(MessageExhaustionSync.class,MessageExhaustionSync::new);
-    registerClientPacket(MessageSaturationSync.class, MessageSaturationSync::new);
-    registerClientPacket(MessageThirstExhaustionSync.class, MessageThirstExhaustionSync::new);
-    registerClientPacket(MessageHydrationSync.class, MessageHydrationSync::new);
-
+    registerClientPacket(SyncState.S2CValueSync.class, SyncState.S2CValueSync::new);
   }
 
   public static  <MSG extends S2CModPacket> void registerClientPacket(Class<MSG> packetLocation, Function<FriendlyByteBuf, MSG> reader) {

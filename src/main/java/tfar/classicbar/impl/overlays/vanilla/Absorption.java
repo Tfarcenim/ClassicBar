@@ -1,8 +1,11 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -12,8 +15,19 @@ import tfar.classicbar.util.ModUtils;
 
 public class Absorption extends BarOverlayImpl {
 
-    public Absorption() {
-        super("absorption");
+    public Absorption(BarSettings barSettings) {
+        super("absorption",barSettings);
+    }
+
+    public static final Codec<Absorption> CODEC = RecordCodecBuilder.create(
+            objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
+                    .forGetter(Absorption::getBarSettings)
+            ).apply(objectInstance,Absorption::new)
+    );
+
+    @Override
+    public Codec<? extends BarOverlayImpl> getCodec() {
+        return CODEC;
     }
 
     @Override
@@ -109,7 +123,7 @@ public class Absorption extends BarOverlayImpl {
 
         int i5 = (player.level().getLevelData().isHardcore()) ? 5 : 0;
         //draw absorption icon
-        ModUtils.drawTexturedModalRect(graphics, xStart, yStart, 16, 9 * i5, 9, 9);
-        ModUtils.drawTexturedModalRect(graphics, xStart, yStart, 160, 0, 9, 9);
+        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 16, 9 * i5, 9, 9);
+        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 160, 0, 9, 9);
     }
 }

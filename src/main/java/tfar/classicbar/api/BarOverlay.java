@@ -1,29 +1,18 @@
 package tfar.classicbar.api;
 
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
-import tfar.classicbar.util.ModUtils;
+
+import java.util.Set;
 
 public interface BarOverlay {
 
-  void setBarSettings(BarSettings barSettings);
   boolean rightHandSide();
   BarOverlay setSide(boolean right);
 
   void render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
-
-  ResourceLocation getIconRL();
-  default void bindIconTexture() {
-    ModUtils.CURRENT_TEXTURE = getIconRL();
-  }
-
-  default void bindBarTexture() {
-    ModUtils.CURRENT_TEXTURE = BarOverlayImpl.ICON_BAR;
-  }
 
   double getBarWidth(Player player);
 
@@ -34,4 +23,5 @@ public interface BarOverlay {
   boolean isFitted();
 
   String name();
+  Set<String> dependencies();
 }

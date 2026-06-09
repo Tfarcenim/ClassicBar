@@ -1,11 +1,14 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -17,13 +20,24 @@ public class Armor extends BarOverlayImpl {
     private static final EquipmentSlot[] armorList = new EquipmentSlot[]{EquipmentSlot.HEAD,
             EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
-    public Armor() {
-        super("armor");
+    public Armor(BarSettings barSettings) {
+        super("armor",barSettings);
+    }
+
+    public static final Codec<Armor> CODEC = RecordCodecBuilder.create(
+            objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
+                    .forGetter(Armor::getBarSettings)
+            ).apply(objectInstance,Armor::new)
+    );
+
+    @Override
+    public Codec<? extends BarOverlayImpl> getCodec() {
+        return CODEC;
     }
 
     @Override
     public boolean shouldRender(Player player) {
-        return calculateArmorValue(player) >= 1;
+        return super.shouldRender(player) && calculateArmorValue(player) >= 1;
     }
 
     @Override
@@ -140,7 +154,7 @@ public class Armor extends BarOverlayImpl {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         //Draw armor icon
-        ModUtils.drawTexturedModalRect(graphics, xStart, yStart, 43, 9, 9, 9);
+        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 43, 9, 9, 9);
     }
 
     private static int calculateArmorValue(Player player) {

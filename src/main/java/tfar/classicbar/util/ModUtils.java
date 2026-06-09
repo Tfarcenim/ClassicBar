@@ -14,8 +14,8 @@ public class ModUtils {
   public static final ResourceLocation ICONS = new ResourceLocation("parcool:textures/gui/stamina_bar.png");
   public static ResourceLocation CURRENT_TEXTURE = BarOverlayImpl.GUI_ICONS_LOCATION;
 
-  public static void drawTexturedModalRect(GuiGraphics stack, double x, int y, int textureX, int textureY, double width, int height) {
-    stack.blit(CURRENT_TEXTURE, (int) x, y, textureX, textureY, (int) width, height);
+  public static void drawTexturedModalRect(ResourceLocation texture,GuiGraphics stack, double x, int y, int textureX, int textureY, double width, int height) {
+    stack.blit(texture, (int) x, y, textureX, textureY, (int) width, height);
   }
 
   public static double getWidth(double d1, double d2) {

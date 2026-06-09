@@ -1,5 +1,10 @@
 package tfar.classicbar;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import com.mojang.serialization.*;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -13,36 +18,22 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.loading.FMLPaths;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.compat.ModCompat;
-import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
-import tfar.classicbar.impl.overlays.mod.Blood;
 import tfar.classicbar.impl.overlays.mod.StaminaB;
 import tfar.classicbar.impl.overlays.mod.Thirst;
-import tfar.classicbar.impl.overlays.vanilla.*;
 import tfar.classicbar.util.ModUtils;
 
+import java.io.*;
 import java.util.*;
 
 public class EventHandler implements IGuiOverlay {
 
-  private static final List<BarOverlay> all = new ArrayList<>();
   public static final Map<String, BarOverlay> registry = new HashMap<>();
 
   private static final List<BarOverlay> errored = new ArrayList<>();
-
-  public static void register(BarOverlay iBarOverlay) {
-    registry.put(iBarOverlay.name(), iBarOverlay);
-  }
-
-  public static void registerAll(BarOverlay... iBarOverlay) {
-    Arrays.stream(iBarOverlay).forEach(overlay -> {
-      if (overlay != null) {
-      registry.put(overlay.name(), overlay);
-      }
-    });
-  }
 
   public void render(ForgeGui gui, GuiGraphics matrices, float partialTick, int screenWidth, int screenHeight) {
 
@@ -51,19 +42,18 @@ public class EventHandler implements IGuiOverlay {
     if (player.getAbilities().instabuild || player.isSpectator()) return;
     ModUtils.mc.getProfiler().push("classicbars_hud");
 
-    for (BarOverlay overlay : all) {
+    for (BarOverlay overlay : registry.values()) {
       boolean rightHand = overlay.rightHandSide();
       try {
         overlay.render(gui, matrices, player, screenWidth, screenHeight, getOffset(gui, rightHand));
       } catch (Error e) {
-        ClassicBar.logger.error("Removing broken overlay "+overlay.name());
+        ClassicBar.logger.error("disabling broken overlay "+overlay.name());
         e.printStackTrace();
         errored.add(overlay);
       }
     }
-    if (!errored.isEmpty()) all.removeAll(errored);
+    //if (!errored.isEmpty()) all.removeAll(errored);
 
-    // mc.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
     ModUtils.mc.getProfiler().pop();
   }
 
@@ -77,10 +67,6 @@ public class EventHandler implements IGuiOverlay {
   }
 
   public static void cacheConfigs() {
-    all.clear();
-    ClassicBarsConfig.leftorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(false)));
-    ClassicBarsConfig.rightorder.get().stream().filter(s -> registry.get(s) != null).forEach(e -> all.add(registry.get(e).setSide(true)));
-    all.removeAll(errored);
     ConfigCache.bake();
   }
 
@@ -93,17 +79,16 @@ public class EventHandler implements IGuiOverlay {
     e.registerBelow(VanillaGuiOverlay.ITEM_NAME.id(),ClassicBar.MODID,new EventHandler());
 
     //Register renderers for events
-    ClassicBar.logger.info("Registering Vanilla Overlays");
+    ClassicBar.logger.info("Registering Overlays");
 
-    EventHandler.registerAll(new Absorption(), new Air(), new Armor(), new ArmorToughness(),
-            new Health(), new Hunger(), new MountHealth());
+    loadBarFiles();
 
     //mod renderers
-    ClassicBar.logger.info("Registering Mod Overlays");
-    if (ModCompat.vampirism.loaded)EventHandler.register(new Blood());
+   // ClassicBar.logger.info("Registering Mod Overlays");
+   // if (ModCompat.vampirism.loaded)EventHandler.register(new Blood());
   //  if (ModCompat.feathers.loaded)EventHandler.register(new Feathers());
-    if (ModCompat.parcool.loaded)EventHandler.register(new StaminaB());
-    if (ModCompat.toughasnails.loaded)EventHandler.register(new Thirst());
+   // if (ModCompat.parcool.loaded)EventHandler.register(new StaminaB());
+    //if (ModCompat.toughasnails.loaded)EventHandler.register(new Thirst());
     // if (ModList.get().isLoaded("randomthings")) MinecraftForge.EVENT_BUS.register(new LavaCharmRenderer());
     // if (ModList.get().isLoaded("lavawaderbauble")) {
     //    MinecraftForge.EVENT_BUS.register(new LavaWaderBaubleRenderer());
@@ -114,6 +99,43 @@ public class EventHandler implements IGuiOverlay {
 
     //MinecraftForge.EVENT_BUS.register(new BetterDivingRenderer());
     //  if (ModList.get().isLoaded("botania")) MinecraftForge.EVENT_BUS.register(new TiaraBarRenderer());
+  }
+
+  public static void loadBarFiles() {
+    Gson gson = new Gson();
+    for (Map.Entry<String, Codec<? extends BarOverlay>> entry : BarRegistry.REGISTRY.entrySet()) {
+      File file = FMLPaths.CONFIGDIR.get().resolve(ClassicBar.MODID).resolve(entry.getKey() + ".json").toFile();
+      if (!file.exists()) {
+        try (JsonWriter writer = gson.newJsonWriter(new FileWriter(file))) {
+          writer.setIndent("    ");
+          gson.toJson(BarRegistry.DEFAULTS.get(entry.getKey()), writer);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      } else {
+        try (JsonReader reader = gson.newJsonReader(new FileReader(file))) {
+          JsonObject json = gson.fromJson(reader, JsonObject.class);
+          BarOverlay barOverlay = BarRegistry.REGISTRY.get(entry.getKey()).parse(new Dynamic<>(JsonOps.INSTANCE, json)).get().orThrow();
+          registry.put(entry.getKey(), barOverlay);
+        } catch (Exception e) {
+          //write a new file
+          try (JsonWriter writer = gson.newJsonWriter(new FileWriter(file))) {
+            writer.setIndent("    ");
+            gson.toJson(BarRegistry.DEFAULTS.get(entry.getKey()), writer);
+          } catch (IOException ex) {
+            throw new RuntimeException(ex);
+          }
+
+          try (JsonReader reader = gson.newJsonReader(new FileReader(file))) {
+            JsonObject json = gson.fromJson(reader, JsonObject.class);
+            BarOverlay barOverlay = BarRegistry.REGISTRY.get(entry.getKey()).parse(new Dynamic<>(JsonOps.INSTANCE, json)).get().orThrow();
+            registry.put(entry.getKey(), barOverlay);
+          } catch (Exception ex) {
+            throw new RuntimeException(ex);
+          }
+        }
+      }
+    }
   }
 
   private static final List<ResourceLocation> vanilla_overlays = List.of(VanillaGuiOverlay.AIR_LEVEL.id(),VanillaGuiOverlay.ARMOR_LEVEL.id(),

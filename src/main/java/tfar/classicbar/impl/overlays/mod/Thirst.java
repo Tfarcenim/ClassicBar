@@ -1,11 +1,14 @@
 package tfar.classicbar.impl.overlays.mod;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -15,7 +18,7 @@ import tfar.classicbar.util.ModUtils;
 import toughasnails.api.potion.TANEffects;
 import toughasnails.api.thirst.IThirst;
 import toughasnails.api.thirst.ThirstHelper;
-import toughasnails.config.ThirstConfig;
+import toughasnails.init.ModConfig;
 import toughasnails.init.ModTags;
 
 public class Thirst extends BarOverlayImpl {
@@ -182,18 +185,29 @@ public class Thirst extends BarOverlayImpl {
         return 0.0F;
     }
 
-    public Thirst() {
-        super(NAME);
+    public Thirst(BarSettings settings) {
+        super(NAME,settings);
+    }
+
+    public static final Codec<Thirst> CODEC = RecordCodecBuilder.create(
+            objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
+                    .forGetter(Thirst::getBarSettings)
+            ).apply(objectInstance,Thirst::new)
+    );
+
+    @Override
+    public Codec<? extends BarOverlayImpl> getCodec() {
+        return CODEC;
     }
 
     @Override
     public boolean shouldRender(Player player) {
-        return isEnabled();
+        return super.shouldRender(player) && isEnabled();
     }
 
     @Override
     public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        Double maxExhaustionLevel = ThirstConfig.thirstExhaustionThreshold.get();
+        double maxExhaustionLevel = ModConfig.thirst.thirstExhaustionThreshold;
 
         IThirst thirstData = ThirstHelper.getThirst(player);
         int thirstLevel = thirstData.getThirst();
@@ -276,7 +290,7 @@ public class Thirst extends BarOverlayImpl {
         RenderSystem.setShaderColor(1, 1, 1, .25f);
         double barWidth = ModUtils.getWidth(exhaustionLevel, maxLevel);
         double barXStart = x + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
-        ModUtils.drawTexturedModalRect(stack,barXStart + 2, y + 1, 1, 28, barWidth, 9);
+        ModUtils.drawTexturedModalRect(getIconRL(),stack,barXStart + 2, y + 1, 1, 28, barWidth, 9);
     }
 
     @Override
@@ -296,15 +310,15 @@ public class Thirst extends BarOverlayImpl {
 
         int texX = 36;
         int texBgX = 0;
-        if (player.hasEffect(TANEffects.THIRST.get())) {
+        if (player.hasEffect(TANEffects.THIRST)) {
             texX += 36;  // i.e texX = 72
             texBgX = texX + 45; // i.e texBg += 117
         }
 
         // thirst background
-        ModUtils.drawTexturedModalRect(graphics, xStart, yStart, texBgX, 32, 9, 9);
+        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, texBgX, 32, 9, 9);
         // thirst
-        ModUtils.drawTexturedModalRect(graphics, xStart, yStart, texX, 32, 9, 9);
+        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, texX, 32, 9, 9);
     }
 
     /**
@@ -322,7 +336,7 @@ public class Thirst extends BarOverlayImpl {
      */
     @Override
     public Color getPrimaryBarColor(int index, Player player) {
-        if (player.hasEffect(TANEffects.THIRST.get())) return ConfigCache.hydrationDebuff;
+        if (player.hasEffect(TANEffects.THIRST)) return ConfigCache.hydrationDebuff;
         return ConfigCache.hydration;
     }
 
@@ -331,7 +345,7 @@ public class Thirst extends BarOverlayImpl {
      */
     @Override
     public Color getSecondaryBarColor(int index, Player player) {
-        if (player.hasEffect(TANEffects.THIRST.get())) return ConfigCache.thirstDebuff;
+        if (player.hasEffect(TANEffects.THIRST)) return ConfigCache.thirstDebuff;
         return ConfigCache.thirst;
     }
 

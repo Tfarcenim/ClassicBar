@@ -1,12 +1,15 @@
 package tfar.classicbar.impl.overlays.vanilla;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.compat.VampirismHelper;
 import tfar.classicbar.config.ClassicBarsConfig;
@@ -18,9 +21,15 @@ import tfar.classicbar.util.ModUtils;
 
 public class Hunger extends BarOverlayImpl {
 
-  public Hunger() {
-    super("food");
+  public Hunger(BarSettings barSettings) {
+    super("food",barSettings);
   }
+
+  public static final Codec<Hunger> CODEC = RecordCodecBuilder.create(
+          objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
+                  .forGetter(Hunger::getBarSettings)
+          ).apply(objectInstance,Hunger::new)
+  );
 
   @Override
   public boolean shouldRender(Player player) {
@@ -112,9 +121,14 @@ public class Hunger extends BarOverlayImpl {
       f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
       //draw exhaustion
       RenderSystem.setShaderColor(1, 1, 1, .25f);
-      ModUtils.drawTexturedModalRect(matrices,f + 2, yStart + 1, 1, 28, ModUtils.getWidth(exhaustion, 4f), 9);
+      ModUtils.drawTexturedModalRect(getIconRL(),matrices,f + 2, yStart + 1, 1, 28, ModUtils.getWidth(exhaustion, 4f), 9);
       RenderSystem.setShaderColor(1, 1, 1, 1);
     }
+  }
+
+  @Override
+  public Codec<? extends BarOverlayImpl> getCodec() {
+    return CODEC;
   }
 
   @Override
@@ -125,7 +139,7 @@ public class Hunger extends BarOverlayImpl {
   }
   
   public int getSatBarWidth(Player player) {
-    double saturation = Math.min(player.getFoodData().getSaturationLevel(),20);
+    double saturation = player.getFoodData().getSaturationLevel();
     double maxSat = 20;
     return (int) Math.ceil(BarOverlayImpl.WIDTH * saturation / maxSat);
   }
@@ -168,9 +182,9 @@ public class Hunger extends BarOverlayImpl {
     }
     //Draw hunger icon
     //hunger background
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, k6, 27, 9, 9);
+    ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart, yStart, k6, 27, 9, 9);
     //hunger
-    ModUtils.drawTexturedModalRect(graphics,xStart, yStart, k5, 27, 9, 9);
+    ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart, yStart, k5, 27, 9, 9);
 
   }
 }

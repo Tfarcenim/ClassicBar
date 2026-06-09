@@ -1,10 +1,13 @@
 package tfar.classicbar.impl;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.fml.ModList;
+import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
 import tfar.classicbar.api.BarOverlay;
@@ -13,6 +16,8 @@ import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
+
+import java.util.Set;
 
 public abstract class BarOverlayImpl implements BarOverlay {
 
@@ -25,20 +30,42 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
     public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
     protected String name;
+    private final BarSettings barSettings;
+    protected final Set<String> dependencies;
+    protected final boolean dependenciesMet;
     protected boolean side;
-    protected BarSettings barSettings;
 
-    public BarOverlayImpl(String name) {
+    public BarOverlayImpl(String name,BarSettings barSettings) {
+        this(name,barSettings,Set.of());
+    }
+
+    public BarOverlayImpl(String name,BarSettings barSettings,String dependency) {
+        this(name,barSettings,Set.of(dependency));
+    }
+
+    public BarOverlayImpl(String name,BarSettings barSettings,Set<String> dependencies) {
         this.name = name;
-    }
-
-    public boolean shouldRender(Player player) {
-        return true;
-    }
-
-    @Override
-    public void setBarSettings(BarSettings barSettings) {
         this.barSettings = barSettings;
+        this.dependencies = dependencies;
+        dependenciesMet = checkDependencies();
+    }
+
+
+    public boolean checkDependencies() {
+        return dependencies.isEmpty() || dependencies.stream().allMatch(s -> ModList.get().isLoaded(s));
+    }
+
+    public BarSettings getBarSettings() {
+        return barSettings;
+    }
+
+    @MustBeInvokedByOverriders
+    public boolean shouldRender(Player player) {
+        return canRender();
+    }
+
+    public final boolean canRender() {
+        return barSettings.enabled() && dependenciesMet;
     }
 
     @Override
@@ -56,13 +83,11 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public void render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         if (shouldRender(player)) {
             gui.setupOverlayRenderState(true, false);
-            bindBarTexture();
             renderBar(gui, graphics, player, screenWidth, screenHeight, vOffset);
             if (shouldRenderText()) {
                 renderText(graphics, player, screenWidth, screenHeight, vOffset);
             }
             if (ConfigCache.icons) {
-                bindIconTexture();
                 renderIcon(graphics, player, screenWidth, screenHeight, vOffset);
             }
             EventHandler.increment(gui, rightHandSide(), 10);
@@ -76,7 +101,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     public final boolean shouldRenderText() {
-        return barSettings.show_text;
+        return barSettings.show_text();
     }
 
     public abstract void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset);
@@ -113,11 +138,11 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
     public void drawScaledBarBackground(GuiGraphics stack, double barWidth, int x, int y) {
         if (rightHandSide()) {
-            ModUtils.drawTexturedModalRect(stack,x, y - 1, 0, 0, barWidth + 2, 9);
-            ModUtils.drawTexturedModalRect(stack,x + barWidth + 2, y-1, WIDTH + 2, 0, 2, 9);
+            ModUtils.drawTexturedModalRect(ICON_BAR,stack,x, y - 1, 0, 0, barWidth + 2, 9);
+            ModUtils.drawTexturedModalRect(ICON_BAR,stack,x + barWidth + 2, y-1, WIDTH + 2, 0, 2, 9);
         } else {
-            ModUtils.drawTexturedModalRect(stack,x, y - 1, 0, 0, (int) (barWidth + 2), 9);
-            ModUtils.drawTexturedModalRect(stack, (int) (x + barWidth + 2), y - 1, WIDTH + 2, 0, 2, 9);
+            ModUtils.drawTexturedModalRect(ICON_BAR,stack,x, y - 1, 0, 0, (int) (barWidth + 2), 9);
+            ModUtils.drawTexturedModalRect(ICON_BAR,stack, (int) (x + barWidth + 2), y - 1, WIDTH + 2, 0, 2, 9);
         }
     }
     public void textHelper(GuiGraphics graphics,int xStart,int yStart,double stat, int color) {
@@ -132,13 +157,13 @@ public abstract class BarOverlayImpl implements BarOverlay {
         }
     }
     public void renderFullBarBackground(GuiGraphics matrices, int xStart, int yStart) {
-        ModUtils.drawTexturedModalRect(matrices, xStart, yStart, 0, 0, WIDTH + 4, 9);
+        ModUtils.drawTexturedModalRect(ICON_BAR,matrices, xStart, yStart, 0, 0, WIDTH + 4, 9);
     }
     public void renderFullBar(GuiGraphics matrices, int xStart, int yStart) {
         renderPartialBar(matrices,xStart,yStart,WIDTH);
     }
     public void renderPartialBar(GuiGraphics matrices, double xStart, int yStart,double barWidth) {
-        ModUtils.drawTexturedModalRect(matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
+        ModUtils.drawTexturedModalRect(ICON_BAR,matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
     }
     @Override
     public Color getPrimaryBarColor(int index, Player player) {
@@ -148,10 +173,16 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public Color getSecondaryBarColor(int index, Player player) {
         return Color.BLACK;
     }
-    @Override
-    public final ResourceLocation getIconRL() {
-        return barSettings.icon;
+    public ResourceLocation getIconRL() {
+        return barSettings.icon();
     }
+
+    public abstract Codec<? extends BarOverlayImpl> getCodec();
+
+    public Set<String> dependencies() {
+        return dependencies;
+    }
+
     @Override
     public boolean isFitted() {
         return false;
