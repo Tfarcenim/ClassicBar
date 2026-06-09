@@ -81,10 +81,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
             gui.setupOverlayRenderState(true, false);
             renderBar(gui, graphics, player, screenWidth, screenHeight, vOffset);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);//don't leak colors
-            if (shouldRenderText()) {
+            if (barSettings.show_text()) {
                 renderText(graphics, player, screenWidth, screenHeight, vOffset);
             }
-            if (ConfigCache.icons) {
+            if (barSettings.show_icon()) {
                 renderIcon(graphics, player, screenWidth, screenHeight, vOffset);
             }
             return true;
@@ -95,10 +95,6 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
     protected boolean shouldFlash(Player player) {
         return false;
-    }
-
-    public final boolean shouldRenderText() {
-        return barSettings.show_text();
     }
 
     public abstract void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset);
@@ -156,7 +152,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
     public void textHelper(GuiGraphics graphics,int xStart,int yStart,double stat, int color) {
         int i1 = (int) Math.floor(stat);
-        int i2 = ConfigCache.icons ? 1 : 0;
+        int i2 = barSettings.show_icon() ? 1 : 0;
 
         switch (getSide()) {
             case LEFT -> {

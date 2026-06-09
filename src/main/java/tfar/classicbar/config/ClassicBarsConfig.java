@@ -15,14 +15,10 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = ClassicBar.MODID, bus = Mod.EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
 public class ClassicBarsConfig {
 
-  static ForgeConfigSpec.BooleanValue displayIcons;
-
   public static ForgeConfigSpec.BooleanValue lowArmorWarning;
-  public static ForgeConfigSpec.BooleanValue showSaturationBar;
   public static ForgeConfigSpec.BooleanValue showHydrationBar;
   public static ForgeConfigSpec.BooleanValue showHeldFoodOverlay;
   public static ForgeConfigSpec.BooleanValue showHeldDrinkOverlay;
-  public static ForgeConfigSpec.BooleanValue showExhaustionOverlay;
   public static ForgeConfigSpec.BooleanValue showThirstExhaustionOverlay;
 
   public static ForgeConfigSpec.DoubleValue transitionSpeed;
@@ -54,15 +50,12 @@ public class ClassicBarsConfig {
 
   public ClassicBarsConfig(ForgeConfigSpec.Builder builder) {
     builder.push("general");
-    displayIcons = builder.define("display_icons", true);
 
     lowArmorWarning = builder.define("display_low_armor_warning", true);
 
-    showSaturationBar = builder.define("show_saturation_bar", true);
     showHydrationBar = builder.define("show_hydration_bar", true);
     showHeldFoodOverlay = builder.define("show_held_food_overlay", true);
     showHeldDrinkOverlay = builder.define("show_held_drink_overlay", true);
-    showExhaustionOverlay = builder.define("show_exhaustion_overlay", true);
     showThirstExhaustionOverlay = builder.define("show_thirst_exhaustion_overlay", true);
     transitionSpeed = builder.defineInRange("transition_speed", 3, 0, Double.MAX_VALUE);
 

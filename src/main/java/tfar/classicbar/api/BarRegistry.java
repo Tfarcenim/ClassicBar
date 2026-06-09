@@ -31,7 +31,7 @@ public class BarRegistry {
         registerBar("armor", Armor.CODEC,createArmorJson());
         registerBar("armor_toughness", ArmorToughness.CODEC,createArmorToughnessJson());
         registerBar("blood", Blood.CODEC,createBloodJson());
-        registerBar("food", Hunger.CODEC,createFoodJson());
+        registerBar("food", Food.CODEC,createFoodJson());
         registerBar("health", Health.CODEC,createHealthJson());
         registerBar("mount_health", MountHealth.CODEC,createMountHealthJson());
         registerBar("thirst", Thirst.CODEC,createThirstJson());
@@ -79,9 +79,9 @@ public class BarRegistry {
     }
 
     static JsonElement createFoodJson() {
-        return Hunger.CODEC.encodeStart(JsonOps.INSTANCE, new Hunger(
+        return Food.CODEC.encodeStart(JsonOps.INSTANCE, new Food(
                 BarSettings.getBuilder().setSide(BarSide.RIGHT).build()
-        )).getOrThrow(false, JsonParseException::new);
+        ,true,true)).getOrThrow(false, JsonParseException::new);
     }
 
     static JsonElement createHealthJson() {
@@ -107,30 +107,7 @@ public class BarRegistry {
         return Thirst.CODEC.encodeStart(JsonOps.INSTANCE, new Thirst(
                 BarSettings.getBuilder().setSide(BarSide.RIGHT)
                         .setIcon(Thirst.OVERLAY)
-                        .build()
+                        .build(),true,true
         )).getOrThrow(false, JsonParseException::new);
-    }
-
-    static void makeDefaultBarSettings() {
-
-        /*BarSettings absorbSettings = defaultBarSettings.copy();
-        defaults.put("absorption",absorbSettings);
-
-        BarSettings airSettings = defaultBarSettings.copy();
-        defaults.put("air",airSettings);
-
-        BarSettings armorSettings = defaultBarSettings.copy();
-        defaults.put("armor",armorSettings);
-
-        BarSettings armorToughnessSettings = defaultBarSettings.copy();
-        armorToughnessSettings.icon = BarOverlayImpl.ICON_BAR;
-        defaults.put("armor_toughness",armorToughnessSettings);
-
-        BarSettings bloodSettings = defaultBarSettings.copy();
-        bloodSettings.icon = ModUtils.VAMPIRISM_ICONS;
-        defaults.put("blood",bloodSettings);
-
-        BarSettings healthMountSettings = defaultBarSettings.copy();
-        defaults.put("health_mount",healthMountSettings);*/
     }
 }

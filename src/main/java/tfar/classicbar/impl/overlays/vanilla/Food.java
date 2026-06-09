@@ -20,16 +20,23 @@ import tfar.classicbar.network.PacketHandler;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
-public class Hunger extends BarOverlayImpl {
+public class Food extends BarOverlayImpl {
 
-  public Hunger(BarSettings barSettings) {
+  protected final boolean showSaturation;
+  protected final boolean showExhaustion;
+
+  public Food(BarSettings barSettings, boolean showSaturation, boolean showExhaustion) {
     super("food",barSettings);
+      this.showSaturation = showSaturation;
+      this.showExhaustion = showExhaustion;
   }
 
-  public static final Codec<Hunger> CODEC = RecordCodecBuilder.create(
+  public static final Codec<Food> CODEC = RecordCodecBuilder.create(
           objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
-                  .forGetter(Hunger::getBarSettings)
-          ).apply(objectInstance,Hunger::new)
+                  .forGetter(Food::getBarSettings),
+                  Codec.BOOL.fieldOf("show_saturation").forGetter(f -> f.showSaturation),
+                  Codec.BOOL.fieldOf("show_exhaustion").forGetter(f -> f.showExhaustion)
+          ).apply(objectInstance, Food::new)
   );
 
   @Override
@@ -63,7 +70,7 @@ public class Hunger extends BarOverlayImpl {
 
     hungerColor.color2Gl();
     renderPartialBar(matrices,f + 2, yStart + 2,  barWidthH);
-    if (currentSat > 0 && ClassicBarsConfig.showSaturationBar.get()) {
+    if (currentSat > 0 && showSaturation) {
       //draw saturation
       satColor.color2Gl();
       f = xStart + (getSide()  == BarSide.RIGHT? BarOverlayImpl.WIDTH - barWidthS : 0);
@@ -93,7 +100,7 @@ public class Hunger extends BarOverlayImpl {
       }
 
       //Draw Potential saturation
-      if (ClassicBarsConfig.showSaturationBar.get()) {
+      if (showSaturation) {
         //maximum potential saturation cannot combine with current saturation to go over 20
         double saturationWidth = Math.min(potentialSat, maxSat - currentSat);
 
@@ -117,7 +124,7 @@ public class Hunger extends BarOverlayImpl {
       }
     }
 
-    if (ClassicBarsConfig.showExhaustionOverlay.get() && PacketHandler.presentOnServer) {
+    if (showExhaustion && PacketHandler.presentOnServer) {
       exhaustion = Math.min(exhaustion, 4);
       f = xStart + (getSide()  == BarSide.RIGHT ? BarOverlayImpl.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
       //draw exhaustion

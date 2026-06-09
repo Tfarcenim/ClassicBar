@@ -6,9 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import tfar.classicbar.impl.BarOverlayImpl;
 
-import java.util.Set;
-
-public record BarSettings(boolean enabled,BarSide side,boolean fitted, boolean show_text, ResourceLocation icon) {
+public record BarSettings(boolean enabled,BarSide side,boolean fitted, boolean show_text,boolean show_icon, ResourceLocation icon) {
 
     public static final MapCodec<BarSettings> CODEC = RecordCodecBuilder.mapCodec(
             objectInstance -> objectInstance.group(
@@ -16,6 +14,7 @@ public record BarSettings(boolean enabled,BarSide side,boolean fitted, boolean s
                     BarSide.CODEC.fieldOf("side").forGetter(BarSettings::side),
                     Codec.BOOL.fieldOf("fitted").forGetter(BarSettings::fitted),
                     Codec.BOOL.fieldOf("show_text").forGetter(BarSettings::show_text),
+                    Codec.BOOL.fieldOf("show_icon").forGetter(BarSettings::show_icon),
                     ResourceLocation.CODEC.fieldOf("icon")
                             .forGetter(BarSettings::icon)).apply(objectInstance,BarSettings::new)
     );
@@ -29,6 +28,7 @@ public record BarSettings(boolean enabled,BarSide side,boolean fitted, boolean s
         private BarSide side = BarSide.LEFT;
         private boolean fitted = false;
         private boolean show_text = true;
+        private boolean show_icon = true;
         private ResourceLocation icon = BarOverlayImpl.GUI_ICONS_LOCATION;
 
         public Builder setEnabled(boolean enabled) {
@@ -56,8 +56,13 @@ public record BarSettings(boolean enabled,BarSide side,boolean fitted, boolean s
             return this;
         }
 
+        public Builder setShowIcon(boolean show_icon) {
+            this.show_icon = show_icon;
+            return this;
+        }
+
         public BarSettings build() {
-            return new BarSettings(enabled,side,fitted,show_text,icon);
+            return new BarSettings(enabled,side,fitted,show_text,show_icon,icon);
         }
     }
 }

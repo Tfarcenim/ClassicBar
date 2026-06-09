@@ -190,13 +190,20 @@ public class Thirst extends BarOverlayImpl {
         return 0.0F;
     }
 
-    public Thirst(BarSettings settings) {
+    protected final boolean showSaturation;
+    protected final boolean showExhaustion;
+
+    public Thirst(BarSettings settings, boolean showSaturation, boolean showExhaustion) {
         super(NAME,settings, ModCompat.toughasnails.name());
+        this.showSaturation = showSaturation;
+        this.showExhaustion = showExhaustion;
     }
 
     public static final Codec<Thirst> CODEC = RecordCodecBuilder.create(
             objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
-                    .forGetter(Thirst::getBarSettings)
+                    .forGetter(Thirst::getBarSettings),
+                    Codec.BOOL.fieldOf("show_saturation").forGetter(f -> f.showSaturation),
+                    Codec.BOOL.fieldOf("show_exhaustion").forGetter(f -> f.showExhaustion)
             ).apply(objectInstance,Thirst::new)
     );
 
