@@ -11,7 +11,7 @@ public interface BarOverlay {
 
   BarSide getSide();
 
-  void render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
+  boolean render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
 
   double getBarWidth(Player player);
 

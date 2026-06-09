@@ -85,11 +85,6 @@ public class ArmorToughness extends BarOverlayImpl {
     }
 
     @Override
-    public boolean isFitted() {
-        return !ClassicBarsConfig.fullToughnessBar.get();
-    }
-
-    @Override
     public Color getPrimaryBarColor(int index, Player player) {
         return ConfigCache.armor_toughness.get(index);
     }

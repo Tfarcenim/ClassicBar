@@ -28,6 +28,9 @@ public class Thirst extends BarOverlayImpl {
     public static final String NAME = "thirst_level";
     public static final ResourceLocation OVERLAY_ID = new ResourceLocation("toughasnails", NAME);
 
+    public static final ResourceLocation OVERLAY = new ResourceLocation("toughasnails:textures/gui/icons.png");
+
+
     public static final double MAX_THIRST_LEVEL = 20;
     public static final double MAX_HYDRATION_LEVEL = 1.0;
 
@@ -292,7 +295,7 @@ public class Thirst extends BarOverlayImpl {
         RenderSystem.setShaderColor(1, 1, 1, .25f);
         double barWidth = ModUtils.getWidth(exhaustionLevel, maxLevel);
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
-        ModUtils.drawTexturedModalRect(getIconRL(),stack,barXStart + 2, y + 1, 1, 28, barWidth, 9);
+        ModUtils.drawTexturedModalRect(BAR,stack,barXStart + 2, y + 1, 1, 28, barWidth, 9);
     }
 
     @Override

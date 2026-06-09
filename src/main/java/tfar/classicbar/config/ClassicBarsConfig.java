@@ -16,9 +16,7 @@ import java.util.List;
 public class ClassicBarsConfig {
 
   static ForgeConfigSpec.BooleanValue displayIcons;
-  public static ForgeConfigSpec.BooleanValue fullAbsorptionBar;
-  public static ForgeConfigSpec.BooleanValue fullArmorBar;
-  public static ForgeConfigSpec.BooleanValue fullToughnessBar;
+
   public static ForgeConfigSpec.BooleanValue lowArmorWarning;
   public static ForgeConfigSpec.BooleanValue showSaturationBar;
   public static ForgeConfigSpec.BooleanValue showHydrationBar;
@@ -58,9 +56,6 @@ public class ClassicBarsConfig {
     builder.push("general");
     displayIcons = builder.define("display_icons", true);
 
-    fullAbsorptionBar = builder.define("full_absorption_bar", false);
-    fullArmorBar = builder.define("full_armor_bar", false);
-    fullToughnessBar = builder.define("full_toughness_bar", false);
     lowArmorWarning = builder.define("display_low_armor_warning", true);
 
     showSaturationBar = builder.define("show_saturation_bar", true);
@@ -97,7 +92,9 @@ public class ClassicBarsConfig {
     witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
     frozenHealthColor = builder.define("frozen_health_color", "#7fafff");
 
-    priority = builder.defineList("priority", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2","blood","health_mount","food","thirst_level"),String.class::isInstance);
+    priority = builder.defineList("priority", Lists.newArrayList("health","food","armor","armor_toughness",
+            "absorption","lavacharm",
+            "lavacharm2","blood","health_mount","thirst"),String.class::isInstance);
   }
 
   @SubscribeEvent

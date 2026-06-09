@@ -4,7 +4,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
+import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.mod.Blood;
+import tfar.classicbar.impl.overlays.mod.Feathers;
+import tfar.classicbar.impl.overlays.mod.StaminaB;
 import tfar.classicbar.impl.overlays.mod.Thirst;
 import tfar.classicbar.impl.overlays.vanilla.*;
 import tfar.classicbar.util.ModUtils;
@@ -26,9 +29,11 @@ public class BarRegistry {
         registerBar("air", Air.CODEC,createAirJson());
         registerBar("absorption", Absorption.CODEC,createAbsorptionJson());
         registerBar("armor", Armor.CODEC,createArmorJson());
+        registerBar("armor_toughness", ArmorToughness.CODEC,createArmorToughnessJson());
         registerBar("blood", Blood.CODEC,createBloodJson());
-        registerBar("food", Hunger.CODEC,createHealthJson());
-        registerBar("health", Health.CODEC,createFoodJson());
+        registerBar("food", Hunger.CODEC,createFoodJson());
+        registerBar("health", Health.CODEC,createHealthJson());
+        registerBar("mount_health", MountHealth.CODEC,createMountHealthJson());
         registerBar("thirst", Thirst.CODEC,createThirstJson());
     }
 
@@ -39,22 +44,37 @@ public class BarRegistry {
     }
 
     static JsonElement createAbsorptionJson() {
-        return Air.CODEC.encodeStart(JsonOps.INSTANCE, new Air(
-                BarSettings.getBuilder().build()
+        return Absorption.CODEC.encodeStart(JsonOps.INSTANCE, new Absorption(
+                BarSettings.getBuilder().setFitted(true).build()
         )).getOrThrow(false, JsonParseException::new);
     }
 
     static JsonElement createArmorJson() {
-        return Air.CODEC.encodeStart(JsonOps.INSTANCE, new Air(
-                BarSettings.getBuilder().build()
+        return Armor.CODEC.encodeStart(JsonOps.INSTANCE, new Armor(
+                BarSettings.getBuilder().setFitted(true).build()
         )).getOrThrow(false, JsonParseException::new);
     }
+
+
+
+    static JsonElement createArmorToughnessJson() {
+        return ArmorToughness.CODEC.encodeStart(JsonOps.INSTANCE, new ArmorToughness(
+                BarSettings.getBuilder().setSide(BarSide.RIGHT).setFitted(true).setIcon(BarOverlayImpl.BAR).build()
+        )).getOrThrow(false, JsonParseException::new);
+    }
+
 
     static JsonElement createBloodJson() {
         return Blood.CODEC.encodeStart(JsonOps.INSTANCE, new Blood(
                 BarSettings.getBuilder()
                         .setIcon(ModUtils.VAMPIRISM_ICONS)
                         .build()
+        )).getOrThrow(false, JsonParseException::new);
+    }
+
+    static JsonElement createFeathersJson() {
+        return Feathers.CODEC.encodeStart(JsonOps.INSTANCE, new Feathers(
+                BarSettings.getBuilder().setSide(BarSide.RIGHT).setIcon(BarOverlayImpl.BAR).build()
         )).getOrThrow(false, JsonParseException::new);
     }
 
@@ -70,9 +90,24 @@ public class BarRegistry {
         )).getOrThrow(false, JsonParseException::new);
     }
 
+    static JsonElement createMountHealthJson() {
+        return MountHealth.CODEC.encodeStart(JsonOps.INSTANCE, new MountHealth(
+                BarSettings.getBuilder().setSide(BarSide.RIGHT).build()
+        )).getOrThrow(false, JsonParseException::new);
+    }
+
+    static JsonElement createStaminaJson() {
+        return StaminaB.CODEC.encodeStart(JsonOps.INSTANCE, new StaminaB(
+                BarSettings.getBuilder().setSide(BarSide.RIGHT).build()
+        )).getOrThrow(false, JsonParseException::new);
+    }
+
+
     static JsonElement createThirstJson() {
         return Thirst.CODEC.encodeStart(JsonOps.INSTANCE, new Thirst(
-                BarSettings.getBuilder().setSide(BarSide.RIGHT).build()
+                BarSettings.getBuilder().setSide(BarSide.RIGHT)
+                        .setIcon(Thirst.OVERLAY)
+                        .build()
         )).getOrThrow(false, JsonParseException::new);
     }
 

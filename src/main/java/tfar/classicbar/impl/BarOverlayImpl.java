@@ -1,5 +1,6 @@
 package tfar.classicbar.impl;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -9,7 +10,6 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import tfar.classicbar.ClassicBar;
-import tfar.classicbar.EventHandler;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
@@ -76,18 +76,19 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     @Override
-    public void render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public boolean render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         if (shouldRender(player)) {
             gui.setupOverlayRenderState(true, false);
             renderBar(gui, graphics, player, screenWidth, screenHeight, vOffset);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);//don't leak colors
             if (shouldRenderText()) {
                 renderText(graphics, player, screenWidth, screenHeight, vOffset);
             }
             if (ConfigCache.icons) {
                 renderIcon(graphics, player, screenWidth, screenHeight, vOffset);
             }
-            EventHandler.increment(gui, getSide(), 10);
-        }
+            return true;
+        } return false;
     }
 
     public abstract void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
@@ -196,8 +197,8 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     @Override
-    public boolean isFitted() {
-        return false;
+    public final boolean isFitted() {
+        return barSettings.fitted();
     }
     @Override
     public final String name() {

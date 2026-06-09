@@ -117,12 +117,6 @@ public class Armor extends BarOverlayImpl {
         return ConfigCache.armor.get(index);
     }
 
-    @Override
-    public boolean isFitted() {
-        return !ClassicBarsConfig.fullArmorBar.get();
-    }
-
-
     public static int getDamagedAmount(Player player) {
         int warningAmount = 0;
         for (EquipmentSlot slot : armorList) {

@@ -100,11 +100,6 @@ public class Absorption extends BarOverlayImpl {
     }
 
     @Override
-    public boolean isFitted() {
-        return !ClassicBarsConfig.fullAbsorptionBar.get();
-    }
-
-    @Override
     public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
 
         double absorb = player.getAbsorptionAmount();

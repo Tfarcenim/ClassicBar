@@ -20,7 +20,6 @@ public class ClassicBarClient {
     }
 
     public static void setup(FMLClientSetupEvent event) {
-        event.enqueueWork(EventHandler::loadBarFiles);
     }
 
     public static void onClientPlayerLoggedIn(ClientPlayerNetworkEvent.LoggingIn event) {
