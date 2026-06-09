@@ -1,6 +1,7 @@
 package tfar.classicbar.impl;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -152,7 +153,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
             drawScaledBarBackground(graphics, barWidth, xStart, yStart + 1);
         } else renderFullBarBackground(graphics, xStart, yStart);
     }
-    public void drawScaledBarBackground(GuiGraphics stack, double barWidth, int x, int y) {
+    private void drawScaledBarBackground(GuiGraphics stack, double barWidth, int x, int y) {
         switch (getSide()) {
             case LEFT -> {
                 ModUtils.drawTexturedModalRect(BAR,stack,x, y - 1, 0, 0, (int) (barWidth + 2), 9);
@@ -170,7 +171,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
         switch (getSide()) {
             case LEFT -> {
-                int i3 = ModUtils.getStringLength(i1 + "");
+                int i3 = Minecraft.getInstance().font.width(i1 + "");
                 ModUtils.drawStringOnHUD(graphics, i1 + "", xStart - 9 * i2 - i3 + 5, yStart - 1, color);
             }
             case RIGHT -> {
@@ -179,7 +180,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         }
     }
 
-    public void renderFullBarBackground(GuiGraphics matrices, int xStart, int yStart) {
+    private void renderFullBarBackground(GuiGraphics matrices, int xStart, int yStart) {
         renderFullBarBackground(matrices,xStart,yStart,0);
     }
 
@@ -203,8 +204,8 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
     public abstract Codec<? extends BarOverlayImpl> getCodec();
 
-    public final float getBarWidth(Player player) {
-        return (float) Math.ceil(WIDTH* Mth.clamp(widthGetter.apply(player),0,1));
+    public final int getBarWidth(Player player) {
+        return (int) Math.ceil(WIDTH* Mth.clamp(widthGetter.apply(player),0,1));
     }
 
     public final boolean isFitted() {

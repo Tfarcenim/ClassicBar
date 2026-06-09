@@ -229,8 +229,7 @@ public class Thirst extends BarOverlayImpl {
         int xStart = screenWidth / 2 + getHOffset();
         int yStart = screenHeight - vOffset;
 
-        Color.reset();
-        renderFullBarBackground(graphics, xStart, yStart);
+        renderBarBackground(graphics, player,screenWidth,screenHeight,vOffset);
 
         drawThirst(graphics, player, xStart, yStart, thirstLevel, MAX_THIRST_LEVEL);
 

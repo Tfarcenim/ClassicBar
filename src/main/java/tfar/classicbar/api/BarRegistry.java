@@ -6,11 +6,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.mod.Blood;
-import tfar.classicbar.impl.overlays.mod.Feathers;
+import tfar.classicbar.impl.overlays.mod.FeathersB;
 import tfar.classicbar.impl.overlays.mod.StaminaB;
 import tfar.classicbar.impl.overlays.mod.Thirst;
 import tfar.classicbar.impl.overlays.vanilla.*;
-import tfar.classicbar.util.ModUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +30,7 @@ public class BarRegistry {
         registerBar("armor", Armor.CODEC,createArmorJson());
         registerBar("armor_toughness", ArmorToughness.CODEC,createArmorToughnessJson());
         registerBar("blood", Blood.CODEC,createBloodJson());
+        registerBar("feathers", FeathersB.CODEC,createFeathersJson());
         registerBar("food", Food.CODEC,createFoodJson());
         registerBar("health", Health.CODEC,createHealthJson());
         registerBar("mount_health", MountHealth.CODEC,createMountHealthJson());
@@ -67,14 +67,14 @@ public class BarRegistry {
     static JsonElement createBloodJson() {
         return Blood.CODEC.encodeStart(JsonOps.INSTANCE, new Blood(
                 BarSettings.getBuilder()
-                        .setIcon(ModUtils.VAMPIRISM_ICONS)
+                        .setIcon(Blood.VAMPIRISM_ICONS)
                         .build()
         )).getOrThrow(false, JsonParseException::new);
     }
 
     static JsonElement createFeathersJson() {
-        return Feathers.CODEC.encodeStart(JsonOps.INSTANCE, new Feathers(
-                BarSettings.getBuilder().setSide(BarSide.RIGHT).setIcon(BarOverlayImpl.BAR).build()
+        return FeathersB.CODEC.encodeStart(JsonOps.INSTANCE, new FeathersB(
+                BarSettings.getBuilder().setSide(BarSide.RIGHT).setIcon(FeathersB.ICONS).build()
         )).getOrThrow(false, JsonParseException::new);
     }
 

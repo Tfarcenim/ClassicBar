@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
@@ -17,6 +18,8 @@ import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
 public class Blood extends BarOverlayImpl {
+
+    public static final ResourceLocation VAMPIRISM_ICONS = new ResourceLocation("vampirism:textures/gui/icons.png");
 
     public Blood(BarSettings settings) {
         super("blood",settings, ModCompat.vampirism.name(),Blood::getBloodRatio);
@@ -48,9 +51,8 @@ public class Blood extends BarOverlayImpl {
             double barWidth = getBarWidth(player);
             int xStart = screenWidth / 2 + getHOffset();
             int yStart = screenHeight - vOffset;
-            Color.reset();
             //Bar background
-            renderFullBarBackground(graphics,xStart,yStart);
+            renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset);
             //draw portion of bar based on blood amount
             double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
             renderPartialBar(getPrimaryBarColor(),graphics, f + 2, yStart + 2,barWidth);

@@ -2,7 +2,6 @@ package tfar.classicbar.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import tfar.classicbar.util.Color;
-import tfar.classicbar.util.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,21 +50,21 @@ public class ConfigCache {
         cacheList(ClassicBarsConfig.absorptionColors,absorption);
         cacheList(ClassicBarsConfig.absorptionPoisonColors,absorptionPoison);
         cacheList(ClassicBarsConfig.absorptionWitherColors,absorptionWither);
-        hunger = ColorUtils.hex2Color(ClassicBarsConfig.hungerBarColor.get());
-        hungerDebuff = ColorUtils.hex2Color(ClassicBarsConfig.hungerBarDebuffColor.get());
-        saturation = ColorUtils.hex2Color(ClassicBarsConfig.saturationBarColor.get());
-        saturationDebuff = ColorUtils.hex2Color(ClassicBarsConfig.saturationBarDebuffColor.get());
-        thirst = ColorUtils.hex2Color(ClassicBarsConfig.thirstBarColor.get());
-        thirstDebuff = ColorUtils.hex2Color(ClassicBarsConfig.thirstBarDebuffColor.get());
-        hydration = ColorUtils.hex2Color(ClassicBarsConfig.hydrationBarColor.get());
-        hydrationDebuff = ColorUtils.hex2Color(ClassicBarsConfig.hydrationBarDebuffColor.get());
-        air = ColorUtils.hex2Color(ClassicBarsConfig.airBarColor.get());
-        frozenHealth = ColorUtils.hex2Color(ClassicBarsConfig.frozenHealthColor.get());
+        hunger = Color.hex2Color(ClassicBarsConfig.hungerBarColor.get());
+        hungerDebuff = Color.hex2Color(ClassicBarsConfig.hungerBarDebuffColor.get());
+        saturation = Color.hex2Color(ClassicBarsConfig.saturationBarColor.get());
+        saturationDebuff = Color.hex2Color(ClassicBarsConfig.saturationBarDebuffColor.get());
+        thirst = Color.hex2Color(ClassicBarsConfig.thirstBarColor.get());
+        thirstDebuff = Color.hex2Color(ClassicBarsConfig.thirstBarDebuffColor.get());
+        hydration = Color.hex2Color(ClassicBarsConfig.hydrationBarColor.get());
+        hydrationDebuff = Color.hex2Color(ClassicBarsConfig.hydrationBarDebuffColor.get());
+        air = Color.hex2Color(ClassicBarsConfig.airBarColor.get());
+        frozenHealth = Color.hex2Color(ClassicBarsConfig.frozenHealthColor.get());
     }
 
     private static void cacheList(ForgeConfigSpec.ConfigValue<List<? extends String>> config, List<Color> cache) {
         for (String s : config.get()) {
-            cache.add(ColorUtils.hex2Color(s));
+            cache.add(Color.hex2Color(s));
         }
     }
 }

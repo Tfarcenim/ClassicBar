@@ -7,6 +7,7 @@ import com.alrex.parcool.config.ParCoolConfig;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
@@ -17,6 +18,7 @@ import tfar.classicbar.util.Color;
 public class StaminaB extends BarOverlayImpl {
 
     public static final String name = "parcool:stamina";
+    public static final ResourceLocation ICONS = new ResourceLocation("parcool:textures/gui/stamina_bar.png");
 
     public StaminaB(BarSettings settings) {
         super(name,settings,player -> {
@@ -53,9 +55,8 @@ public class StaminaB extends BarOverlayImpl {
         int xStart = screenWidth / 2 + getHOffset();
         int yStart = screenHeight - vOffset;
         double barWidth = getBarWidth(player);
-        Color.reset();
         //Bar background
-        renderFullBarBackground(graphics, xStart, yStart);
+        renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset);
         //draw portion of bar based on air amount
         double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         Color color = getPrimaryBarColor();

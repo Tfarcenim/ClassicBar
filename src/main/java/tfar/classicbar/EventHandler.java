@@ -39,10 +39,10 @@ public class EventHandler implements IGuiOverlay {
 
   public void render(ForgeGui gui, GuiGraphics matrices, float partialTick, int screenWidth, int screenHeight) {
 
-    Entity entity = ModUtils.mc.getCameraEntity();
+    Entity entity = gui.getMinecraft().getCameraEntity();
     if (!(entity instanceof Player player)) return;
     if (player.getAbilities().instabuild || player.isSpectator()) return;
-    ModUtils.mc.getProfiler().push("classicbars_hud");
+    gui.getMinecraft().getProfiler().push("classicbars_hud");
 
     for (BarOverlay overlay : registry) {
       BarSide side = overlay.getSide();
@@ -56,7 +56,7 @@ public class EventHandler implements IGuiOverlay {
         overlay.setErrored();
       }
     }
-    ModUtils.mc.getProfiler().pop();
+    gui.getMinecraft().getProfiler().pop();
   }
 
   public static void increment(ForgeGui gui, BarSide side, int amount){

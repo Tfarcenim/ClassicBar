@@ -63,8 +63,7 @@ public class Food extends BarOverlayImpl {
     int yStart = screenHeight - vOffset;
 
     //Bar background
-    Color.reset();
-    renderFullBarBackground(matrices,xStart,yStart);
+    renderBarBackground(matrices,player,screenWidth,screenHeight,vOffset);
     //draw portion of bar based on hunger amount
     double f = xStart + (getSide() == BarSide.RIGHT? BarOverlayImpl.WIDTH - barWidthH : 0);
 

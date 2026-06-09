@@ -80,7 +80,7 @@ public class ClassicBarsConfig {
 
     priority = builder.defineList("priority", Lists.newArrayList("health","food","armor","armor_toughness",
             "absorption","lavacharm",
-            "lavacharm2","blood","health_mount","thirst"),String.class::isInstance);
+            "lavacharm2","blood","health_mount","thirst","feathers"),String.class::isInstance);
   }
 
   @SubscribeEvent

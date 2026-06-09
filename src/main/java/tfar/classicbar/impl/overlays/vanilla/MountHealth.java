@@ -9,7 +9,7 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.util.ColorUtils;
+import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 
@@ -70,7 +70,7 @@ public class MountHealth extends BarOverlayImpl {
     //calculate bar color
     double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
     //draw portion of bar based on mountHealth remaining
-    renderPartialBar(ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE),graphics,f + 2, yStart + 2, barWidth);
+    renderPartialBar(Color.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE),graphics,f + 2, yStart + 2, barWidth);
   }
 
   @Override
@@ -79,7 +79,7 @@ public class MountHealth extends BarOverlayImpl {
     int yStart = height - vOffset;
     LivingEntity mount = (LivingEntity) player.getVehicle();
     double maxHealth = mount.getMaxHealth();
-    textHelper(graphics,xStart,yStart,mountHealth, ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).colorToText());
+    textHelper(graphics,xStart,yStart,mountHealth, Color.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).colorToText());
   }
 
   @Override

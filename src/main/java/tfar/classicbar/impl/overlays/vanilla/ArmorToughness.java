@@ -48,7 +48,6 @@ public class ArmorToughness extends BarOverlayImpl {
         int index = (int) Math.min(Math.ceil(armorToughness / 20), ConfigCache.armor_toughness.size()) - 1;
         Color primary = getPrimaryBarColor(index);
         //draw bar background portion
-        Color.reset();
         renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
         if (index == 0) {
             //draw portion of bar based on armor toughness amount

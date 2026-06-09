@@ -33,9 +33,8 @@ public class Air extends BarOverlayImpl {
     int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
     double barWidth = getBarWidth(player);
-    Color.reset();
     //Bar background
-    renderFullBarBackground(graphics,xStart, yStart);
+    renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset);
     //draw portion of bar based on air amount
     double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
     Color color = getPrimaryBarColor();

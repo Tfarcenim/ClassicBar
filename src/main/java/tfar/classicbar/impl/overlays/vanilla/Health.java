@@ -11,7 +11,6 @@ import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
-import tfar.classicbar.util.ColorUtils;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 
@@ -63,8 +62,7 @@ public class Health extends BarOverlayImpl {
 
     int i4 = (highlight) ? 18 : 0;
 
-    Color.reset();
-    //Bar background
+    //Bar background todo
     ModUtils.drawTexturedModalRect(BAR,graphics,xStart, yStart, 0, i4, WIDTH + 4, 9);
 
     double f = xStart + (getSide() == BarSide.RIGHT ? WIDTH - barWidth : 0);
@@ -101,7 +99,7 @@ public class Health extends BarOverlayImpl {
     double health = player.getHealth();
     double maxHealth = player.getMaxHealth();
     HealthEffect effect = getHealthEffect(player);
-    return ColorUtils.calculateScaledColor(health,maxHealth,effect);
+    return Color.calculateScaledColor(health,maxHealth,effect);
   }
 
   @Override
@@ -121,7 +119,6 @@ public class Health extends BarOverlayImpl {
     int i5 = (player.level().getLevelData().isHardcore()) ? 5 : 0;
     //Draw health icon
     //heart background
-    Color.reset();
     ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart, yStart, 16, 9 * i5, 9, 9);
     //heart
     ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart, yStart, 36 + effect.i, 9 * i5, 9, 9);

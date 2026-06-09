@@ -1,29 +1,31 @@
 package tfar.classicbar.impl.overlays.mod;
 
 import com.elenai.feathers.api.FeathersHelper;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarSide;
+import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
-import tfar.classicbar.util.ColorUtils;
 import tfar.classicbar.util.ModUtils;
 
-public class Feathers extends BarOverlayImpl {
+public class FeathersB extends BarOverlayImpl {
 
-	public Feathers(BarSettings settings) {
-		super("feathers",settings,player -> (float)FeathersHelper.getFeathers()/FeathersHelper.getMaxFeathers());
+	public FeathersB(BarSettings settings) {
+		super("feathers", settings,ModCompat.feathers.name(), player -> (float)FeathersHelper.getFeathers()/FeathersHelper.getMaxFeathers());
 	}
+	public static final ResourceLocation ICONS = new ResourceLocation("feathers", "textures/gui/icons.png");
 
 
-	public static final Codec<Feathers> CODEC = RecordCodecBuilder.create(
+	public static final Codec<FeathersB> CODEC = RecordCodecBuilder.create(
 			objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
-					.forGetter(Feathers::getBarSettings)
-			).apply(objectInstance,Feathers::new)
+					.forGetter(FeathersB::getBarSettings)
+			).apply(objectInstance, FeathersB::new)
 	);
 
 	@Override
@@ -31,32 +33,32 @@ public class Feathers extends BarOverlayImpl {
 		return CODEC;
 	}
 
+	protected static final Color AQUA = Color.hex2Color("#22a5f0");
+
 	@Override
 	public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-		double feathers = FeathersHelper.getFeathers();
-		int maxFeathers = FeathersHelper.getMaxFeathers();
-		
-		int xStart = screenWidth / 2 + 10;
+		int barWidth = getBarWidth(player);
+		int xStart = screenWidth / 2 + getHOffset();
+		if (getSide() == BarSide.RIGHT) {
+			xStart += WIDTH - barWidth;
+		}
 		int yStart = screenHeight - vOffset;
 
-		Color.reset();
 		//Bar background
-		ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart, yStart, 0, 0, 81, 9);
+		renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset);
 		//draw portion of bar based on feathers amount
-		double f = xStart + 79 - ModUtils.getWidth(feathers, maxFeathers);
-		ColorUtils.hex2Color("#22a5f0").color2Gl();
-		ModUtils.drawTexturedModalRect(getIconRL(),graphics,f, yStart + 1, 1, 10, ModUtils.getWidth(feathers, maxFeathers), 7);
-
+		double f = xStart + WIDTH + 2 - barWidth;
+		//AQUA.color2Gl();
+		renderPartialBar(AQUA,graphics,f,yStart+2,barWidth);
 	}
 
 	@Override
 	public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
 		//draw feathers amount
-		double feathers = 0;//FeathersHelper.getFeatherLevel(Minecraft.getInstance().player);
-		int c = Integer.decode("#22a5f0");
+		double feathers = FeathersHelper.getFeathers();
 		int xStart = width / 2 + getIconOffset();
 		int yStart = height - vOffset;
-		textHelper(graphics,xStart,yStart,feathers,c);
+		textHelper(graphics,xStart,yStart,feathers,AQUA.colorToText());
 	}
 	@Override
 	public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {

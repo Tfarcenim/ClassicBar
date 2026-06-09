@@ -52,12 +52,9 @@ public class Absorption extends BarOverlayImpl {
         //draw absorption bar
         int index = Math.min((int) Math.ceil(absorb / maxHealth), ConfigCache.absorption.size()) - 1;
         Color primary = getPrimaryBarColor(index, player);
-        Color.reset();
         //draw background bar
         renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
         if (index == 0) {//no wrapping
-            //background
-            primary.color2Gl();
             //bar
             renderPartialBar(primary,graphics, xStart + 2, yStart + 2, barWidth);
         } else {
