@@ -75,12 +75,11 @@ public class Health extends BarOverlayImpl {
     if (displayHealth != health) {
       //reset to white
       if (displayHealth > health) {
-        Color.reset();
         //draw interpolation
         double w = ModUtils.getWidth(displayHealth, maxHealth);
         double off = getSide() == BarSide.RIGHT ? w - barWidth : 0;
         //draw interpolation
-        renderPartialBar(graphics,f + 2 - off, yStart + 2,w);
+        renderPartialBar(Color.WHITE,graphics,f + 2 - off, yStart + 2,w);
         //Health is increasing, IDK what to do here
       } else {/*
                   f = xStart + getWidth(health, maxHealth);
@@ -89,9 +88,8 @@ public class Health extends BarOverlayImpl {
     }
     //calculate bar color
     Color primary = getPrimaryBarColor(player);
-    primary.color2Gl();
     //draw portion of bar based on health remaining
-    renderPartialBar(graphics,f + 2, yStart + 2, barWidth);
+    renderPartialBar(primary,graphics,f + 2, yStart + 2, barWidth);
     if (effect == HealthEffect.POISON) {
       //draw poison overlay
       RenderSystem.setShaderColor(0, .5f, 0, .5f);

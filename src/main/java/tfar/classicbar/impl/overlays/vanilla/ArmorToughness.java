@@ -51,9 +51,8 @@ public class ArmorToughness extends BarOverlayImpl {
         Color.reset();
         renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
         if (index == 0) {
-            primary.color2Gl();
             //draw portion of bar based on armor toughness amount
-            renderPartialBar(graphics, xStart + 2, yStart + 2, barWidth);
+            renderPartialBar(primary,graphics, xStart + 2, yStart + 2, barWidth);
         } else {
             //we have wrapped, draw 2 bars
             int size = ConfigCache.armor_toughness.size();
@@ -61,19 +60,16 @@ public class ArmorToughness extends BarOverlayImpl {
             if (index < size && armorToughness % 20 != 0) {
                 Color secondary = getSecondaryBarColor(index - 1);
                 //draw complete first bar
-                secondary.color2Gl();
-                renderFullBar(graphics, xStart + 2, yStart + 2);
+                renderFullBar(secondary, graphics, xStart + 2, yStart + 2);
                 //draw partial second bar
 
                 double w = ModUtils.getWidth(armorToughness % 20, 20);
 
-                primary.color2Gl();
                 double f = xStart + (getSide() == BarSide.RIGHT ? WIDTH - w : 0);
-                renderPartialBar(graphics, f + 2, yStart + 2, w);
+                renderPartialBar(primary,graphics, f + 2, yStart + 2, w);
             } else { //case 2, bar is a multiple of 20, or it is capped
                 //draw complete second bar
-                primary.color2Gl();
-                renderFullBar(graphics, xStart + 2, yStart + 2);
+                renderFullBar(primary, graphics, xStart + 2, yStart + 2);
             }
         }
     }

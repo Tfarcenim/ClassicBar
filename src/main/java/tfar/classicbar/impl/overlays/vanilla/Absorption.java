@@ -59,18 +59,16 @@ public class Absorption extends BarOverlayImpl {
             //background
             primary.color2Gl();
             //bar
-            renderPartialBar(graphics, xStart + 2, yStart + 2, barWidth);
+            renderPartialBar(primary,graphics, xStart + 2, yStart + 2, barWidth);
         } else {
             //we have wrapped, draw 2 bars
             //draw first full bar
             Color secondary = Color.BLACK;
-            secondary.color2Gl();
-            renderFullBar(graphics, xStart + 2, yStart + 2);
+            renderFullBar(secondary, graphics, xStart + 2, yStart + 2);
             //is it on the edge or capped already?
             if (absorb % maxHealth != 0 && index < ConfigCache.absorption.size() - 1) {
                 //draw second partial bar
-                primary.color2Gl();
-                renderPartialBar(graphics, xStart + 2, yStart + 2, ModUtils.getWidth(absorb % maxHealth, maxHealth));
+                renderPartialBar(primary,graphics, xStart + 2, yStart + 2, ModUtils.getWidth(absorb % maxHealth, maxHealth));
             }
         }
     }

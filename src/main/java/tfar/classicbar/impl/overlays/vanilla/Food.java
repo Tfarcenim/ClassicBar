@@ -71,13 +71,11 @@ public class Food extends BarOverlayImpl {
     Color hungerColor = getSecondaryBarColor(player);
     Color satColor = getPrimaryBarColor(player);
 
-    hungerColor.color2Gl();
-    renderPartialBar(matrices,f + 2, yStart + 2,  barWidthH);
+    renderPartialBar(hungerColor,matrices,f + 2, yStart + 2,  barWidthH);
     if (currentSat > 0 && showSaturation) {
       //draw saturation
-      satColor.color2Gl();
       f = xStart + (getSide()  == BarSide.RIGHT? BarOverlayImpl.WIDTH - barWidthS : 0);
-      renderPartialBar(matrices,f + 2, yStart + 2, barWidthS);
+      renderPartialBar(satColor,matrices,f + 2, yStart + 2, barWidthS);
     }
     //render held hunger overlay
     if (showHeldFood && player.getMainHandItem().getItem().isEdible()) {
@@ -97,8 +95,7 @@ public class Food extends BarOverlayImpl {
         double w = ModUtils.getWidth(hungerWidth + hunger, maxHunger);
 
         f = xStart + (getSide()  == BarSide.RIGHT? BarOverlayImpl.WIDTH - w : 0);
-        hungerColor.color2Gla((float)foodAlpha);
-        renderPartialBar(matrices,f + 2, yStart + 2, w);
+        renderPartialBar(hungerColor.withAlpha((float) foodAlpha),matrices,f + 2, yStart + 2, w);
       }
 
       //Draw Potential saturation
@@ -118,9 +115,9 @@ public class Food extends BarOverlayImpl {
 
         //offset used to decide where to place the bar
         f = xStart + (getSide()  == BarSide.RIGHT? BarOverlayImpl.WIDTH - w : 0);
-        satColor.color2Gla((float)foodAlpha);
+        ;
         if (true)//currentSat > 0)
-          renderPartialBar(matrices,f + 2, yStart + 2,w);
+          renderPartialBar(satColor.withAlpha((float)foodAlpha),matrices,f + 2, yStart + 2,w);
         else ;//drawTexturedModalRect(f, yStart+1, 1, 10, getWidthfloor(saturationWidth,20), 7);
 
       }

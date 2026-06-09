@@ -63,9 +63,8 @@ public class Armor extends BarOverlayImpl {
 
         if (index == 0) {
             //calculate bar color
-            primary.color2Gla(armorAlpha);
             //draw portion of bar based on armor
-            renderPartialBar(graphics, xStart + 2, yStart + 2, barWidth);
+            renderPartialBar(primary.withAlpha(armorAlpha),graphics, xStart + 2, yStart + 2, barWidth);
         } else {
             //we have wrapped, draw 2 bars
             //draw first bar
@@ -73,30 +72,25 @@ public class Armor extends BarOverlayImpl {
             if (armor % 20 != 0) {
                 Color secondary = getSecondaryBarColor(index - 1);
                 //draw complete first bar
-                secondary.color2Gla(armorAlpha);
-                renderFullBar(graphics, xStart + 2, yStart + 2);
+                renderFullBar(secondary.withAlpha(armorAlpha), graphics, xStart + 2, yStart + 2);
                 //draw partial second bar
-                primary.color2Gl();
                 double w = ModUtils.getWidth(armor % 20, 20);
                 double f = xStart + (getSide() == BarSide.RIGHT ? WIDTH - w : 0);
-                renderPartialBar(graphics, f + 2, yStart + 2, w);
+                renderPartialBar(primary,graphics, f + 2, yStart + 2, w);
             }
             //case 2, bar is a multiple of 20, or it is capped
             else {
                 //draw complete second bar
-                primary.color2Gla(armorAlpha);
-                renderFullBar(graphics, xStart + 2, yStart + 2);
+                renderFullBar(primary.withAlpha(armorAlpha), graphics, xStart + 2, yStart + 2);
             }
             // now handle the low armor warning
             if (warn) {
                 //draw one bar
-                primary.color2Gla(armorAlpha);
-                renderPartialBar(graphics, xStart + 2, yStart + 2, ModUtils.getWidth(armor - index * 20, 20));
+                renderPartialBar(primary.withAlpha(armorAlpha),graphics, xStart + 2, yStart + 2, ModUtils.getWidth(armor - index * 20, 20));
             }
         }
     }
 
-    @Override
     protected boolean shouldFlash(Player player) {
         return ClassicBarsConfig.lowArmorWarning.get() && getDamagedAmount(player) > 0;
     }

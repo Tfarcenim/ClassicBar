@@ -68,10 +68,9 @@ public class MountHealth extends BarOverlayImpl {
     //is the bar changing
     //Pass 1, draw bar portion
     //calculate bar color
-    ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).color2Gl();
     double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
     //draw portion of bar based on mountHealth remaining
-    renderPartialBar(graphics,f + 2, yStart + 2, barWidth);
+    renderPartialBar(ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE),graphics,f + 2, yStart + 2, barWidth);
   }
 
   @Override

@@ -14,8 +14,7 @@ import tfar.classicbar.api.BarSide;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
-
-import static tfar.classicbar.util.ModUtils.drawTexturedModalRect;
+import tfar.classicbar.util.ModUtils;
 
 public class Blood extends BarOverlayImpl {
 
@@ -39,7 +38,7 @@ public class Blood extends BarOverlayImpl {
         boolean b = super.shouldRender(player);
         return b && VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION;
     }
-    public Color getPrimaryBarColor(int index, Player player) {
+    public Color getPrimaryBarColor() {
         return Color.RED;
     }
 
@@ -54,8 +53,7 @@ public class Blood extends BarOverlayImpl {
             renderFullBarBackground(graphics,xStart,yStart);
             //draw portion of bar based on blood amount
             double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
-            getPrimaryBarColor(0, player).color2Gl();
-            renderPartialBar(graphics, f + 2, yStart + 2,barWidth);
+            renderPartialBar(getPrimaryBarColor(),graphics, f + 2, yStart + 2,barWidth);
         });
     }
 
@@ -75,7 +73,7 @@ public class Blood extends BarOverlayImpl {
         //draw blood amount
         VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).ifPresent(stats -> {
             int blood = stats.getBloodLevel();
-            int c = getPrimaryBarColor(0, player).colorToText();
+            int c = getPrimaryBarColor().colorToText();
             int xStart = width / 2 + getIconOffset();
             int yStart = height - vOffset;
             textHelper(graphics, xStart, yStart, blood, c);
@@ -86,7 +84,7 @@ public class Blood extends BarOverlayImpl {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         //Draw blood icon
-        drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 0, 0, 9, 9);
-        drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 9, 0, 9, 9);
+        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 0, 0, 9, 9);
+        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 9, 0, 9, 9);
     }
 }

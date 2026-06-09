@@ -59,8 +59,7 @@ public class StaminaB extends BarOverlayImpl {
         //draw portion of bar based on air amount
         double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         Color color = getPrimaryBarColor();
-        color.color2Gl();
-        renderPartialBar(graphics, f + 2, yStart + 2, barWidth);
+        renderPartialBar(color,graphics, f + 2, yStart + 2, barWidth);
     }
 
     public Color getPrimaryBarColor() {

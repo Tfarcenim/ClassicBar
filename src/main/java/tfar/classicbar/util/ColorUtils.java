@@ -13,7 +13,7 @@ public class ColorUtils {
         int r = i1 >> 16 & 0xFF;
         int g = i1 >> 8 & 0xFF;
         int b = i1 & 0xFF;
-        return Color.from(r, g, b);
+        return Color.fromRGB(r, g, b);
     }
 
     public static Color calculateScaledColor(double d1, double d2, HealthEffect effect) {

@@ -249,17 +249,15 @@ public class Thirst extends BarOverlayImpl {
     }
 
     private void drawThirst(GuiGraphics stack, Player player, int x, int y, double thirstLevel, double maxLevel) {
-        getSecondaryBarColor(player).color2Gl();
         double barWidth = ModUtils.getWidth(thirstLevel, maxLevel);
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
-        renderPartialBar(stack, barXStart + 2, y + 2, barWidth);
+        renderPartialBar(getSecondaryBarColor(player),stack, barXStart + 2, y + 2, barWidth);
     }
 
     private void drawHydration(GuiGraphics stack, Player player, int x, int y, double hydrationLevel, double maxLevel) {
-        getPrimaryBarColor(player).color2Gl();
         double barWidth = ModUtils.getWidth(hydrationLevel, maxLevel);
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
-        renderPartialBar(stack, barXStart + 2, y + 2, barWidth);
+        renderPartialBar(getPrimaryBarColor(player),stack, barXStart + 2, y + 2, barWidth);
     }
 
     private void drawHeldDrink(GuiGraphics stack, Player player, IThirst thirstData, int x, int y, double maxThirstLevel, double maxHydrationLevel) {
@@ -274,8 +272,7 @@ public class Thirst extends BarOverlayImpl {
         if (thirstLevel < maxThirstLevel) {
             double barWidth = ModUtils.getWidth(thirstLevel + restoredThirstLevel, maxThirstLevel);
             double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
-            getSecondaryBarColor(player).color2Gla((float)drinkAlpha);
-            renderPartialBar(stack,barXStart + 2, y + 2, barWidth);
+            renderPartialBar(getSecondaryBarColor(player).withAlpha((float) drinkAlpha),stack,barXStart + 2, y + 2, barWidth);
         }
 
         if (showHydration) {
@@ -293,8 +290,7 @@ public class Thirst extends BarOverlayImpl {
             }
             double barWidth = ModUtils.getWidth(hydrationLevel + restoredHydrationLevel, maxHydrationLevel);
             double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
-            getPrimaryBarColor(player).color2Gla((float)drinkAlpha);
-            renderPartialBar(stack,barXStart + 2, y + 2, barWidth);
+            renderPartialBar(getPrimaryBarColor(player).withAlpha((float)drinkAlpha),stack,barXStart + 2, y + 2, barWidth);
         }
     }
 
