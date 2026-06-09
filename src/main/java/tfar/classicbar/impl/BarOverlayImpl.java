@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.serialization.Codec;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -13,12 +14,12 @@ import tfar.classicbar.ClassicBar;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
-import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 
 import java.util.Set;
+import java.util.function.Function;
 
 public abstract class BarOverlayImpl implements BarOverlay {
 
@@ -37,18 +38,21 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
     protected boolean errored;
 
-    public BarOverlayImpl(String name,BarSettings barSettings) {
-        this(name,barSettings,Set.of());
+    protected final Function<Player,Float> widthGetter;
+
+    public BarOverlayImpl(String name, BarSettings barSettings, Function<Player, Float> widthGetter) {
+        this(name,barSettings,Set.of(), widthGetter);
     }
 
-    public BarOverlayImpl(String name,BarSettings barSettings,String dependency) {
-        this(name,barSettings,Set.of(dependency));
+    public BarOverlayImpl(String name, BarSettings barSettings, String dependency, Function<Player, Float> widthGetter) {
+        this(name,barSettings,Set.of(dependency), widthGetter);
     }
 
-    public BarOverlayImpl(String name,BarSettings barSettings,Set<String> dependencies) {
+    public BarOverlayImpl(String name, BarSettings barSettings, Set<String> dependencies, Function<Player, Float> widthGetter) {
         this.name = name;
         this.barSettings = barSettings;
         this.dependencies = dependencies;
+        this.widthGetter = widthGetter;
         dependenciesMet = checkDependencies();
     }
 
@@ -80,7 +84,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         if (shouldRender(player)) {
             gui.setupOverlayRenderState(true, false);
             renderBar(gui, graphics, player, screenWidth, screenHeight, vOffset);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);//don't leak colors
+            Color.reset();//don't leak colors
             if (barSettings.show_text()) {
                 renderText(graphics, player, screenWidth, screenHeight, vOffset);
             }
@@ -190,6 +194,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
     public Set<String> dependencies() {
         return dependencies;
+    }
+
+    public final float getBarWidth(Player player) {
+        return (float) Math.ceil(WIDTH* Mth.clamp(widthGetter.apply(player),0,1));
     }
 
     @Override

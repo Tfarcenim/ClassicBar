@@ -20,7 +20,7 @@ import static tfar.classicbar.util.ModUtils.drawTexturedModalRect;
 public class Blood extends BarOverlayImpl {
 
     public Blood(BarSettings settings) {
-        super("blood",settings, ModCompat.vampirism.name());
+        super("blood",settings, ModCompat.vampirism.name(),Blood::getBloodRatio);
     }
 
     public static final Codec<Blood> CODEC = RecordCodecBuilder.create(
@@ -60,13 +60,13 @@ public class Blood extends BarOverlayImpl {
         });
     }
 
-    @Override
-    public double getBarWidth(Player player) {
+
+    public static float getBloodRatio(Player player) {
         IBloodStats stats = VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).orElse(null);
         if (stats != null) {
             int blood = stats.getBloodLevel();
             int maxBlood = stats.getMaxBlood();
-            return Math.ceil((double) WIDTH * blood / maxBlood);
+            return (float) blood / maxBlood;
         }
         return 0;
     }

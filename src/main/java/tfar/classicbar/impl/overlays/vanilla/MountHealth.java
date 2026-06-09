@@ -20,7 +20,14 @@ public class MountHealth extends BarOverlayImpl {
   private double mountHealth = 0;
 
   public MountHealth(BarSettings barSettings) {
-    super("health_mount",barSettings);
+    super("health_mount",barSettings, MountHealth::getRatio);
+  }
+
+  public static float getRatio(Player player) {
+    LivingEntity mount = (LivingEntity) player.getVehicle();
+    float mounthHealth = mount.getHealth();
+    float maxHealth = mount.getMaxHealth();
+    return mounthHealth/maxHealth;
   }
 
   public static final Codec<MountHealth> CODEC = RecordCodecBuilder.create(
@@ -65,13 +72,6 @@ public class MountHealth extends BarOverlayImpl {
     double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
     //draw portion of bar based on mountHealth remaining
     renderPartialBar(graphics,f + 2, yStart + 2, barWidth);
-  }
-  @Override
-  public double getBarWidth(Player player) {
-    LivingEntity mount = (LivingEntity) player.getVehicle();
-    double mounthHealth = mount.getHealth();
-    double maxHealth = mount.getMaxHealth();
-    return (int) Math.ceil(BarOverlayImpl.WIDTH * Math.min(maxHealth,mounthHealth) / mounthHealth);
   }
 
   @Override

@@ -19,7 +19,12 @@ public class StaminaB extends BarOverlayImpl {
     public static final String name = "parcool:stamina";
 
     public StaminaB(BarSettings settings) {
-        super(name,settings);
+        super(name,settings,player -> {
+            IStamina stamina = IStamina.get(player);
+            int cStamina = stamina.get();
+            int maxStamina = stamina.getMaxStamina();
+            return (float) Math.ceil((float) cStamina / maxStamina);
+        });
     }
 
     public static final Codec<StaminaB> CODEC = RecordCodecBuilder.create(
@@ -30,14 +35,13 @@ public class StaminaB extends BarOverlayImpl {
 
     @Override
     public boolean shouldRender(Player player) {
-        if (!super.shouldRender(player) && !checkConfigs()) return false;
-        IStamina stamina = IStamina.get(player);
-        return stamina.getMaxStamina() > stamina.get();
+        if (!(super.shouldRender(player) && checkConfigs())) return false;
+        return widthGetter.apply(player)<1;
     }
 
     @Override
     public Codec<? extends BarOverlayImpl> getCodec() {
-        return null;
+        return CODEC;
     }
 
     public static boolean checkConfigs() {
@@ -57,14 +61,6 @@ public class StaminaB extends BarOverlayImpl {
         Color color = getPrimaryBarColor(0, player);
         color.color2Gl();
         renderPartialBar(graphics, f + 2, yStart + 2, barWidth);
-    }
-
-    @Override
-    public double getBarWidth(Player player) {
-        IStamina stamina = IStamina.get(player);
-        int cStamina = stamina.get();
-        int maxStamina = stamina.getMaxStamina();
-        return Math.ceil((double) BarOverlayImpl.WIDTH * cStamina / maxStamina);
     }
 
     @Override

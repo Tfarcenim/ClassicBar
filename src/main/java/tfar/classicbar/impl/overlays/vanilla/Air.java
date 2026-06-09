@@ -15,7 +15,7 @@ import tfar.classicbar.util.ModUtils;
 public class Air extends BarOverlayImpl {
 
   public Air(BarSettings settings) {
-    super("air",settings);
+    super("air",settings,player -> (float)player.getAirSupply()/player.getMaxAirSupply());
   }
 
   public static final Codec<Air> CODEC = RecordCodecBuilder.create(
@@ -43,12 +43,6 @@ public class Air extends BarOverlayImpl {
     renderPartialBar(graphics,f + 2, yStart + 2,barWidth);
   }
 
-  @Override
-  public double getBarWidth(Player player) {
-    int air = player.getAirSupply();
-    int maxAir = player.getMaxAirSupply();
-    return Math.ceil((double) BarOverlayImpl.WIDTH * air/ maxAir);
-  }
   @Override
   public Color getPrimaryBarColor(int index, Player player) {
     return ConfigCache.air;

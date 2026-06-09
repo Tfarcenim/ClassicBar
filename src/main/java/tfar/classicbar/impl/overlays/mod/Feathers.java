@@ -9,7 +9,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.impl.overlays.vanilla.Air;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ColorUtils;
 import tfar.classicbar.util.ModUtils;
@@ -17,7 +16,7 @@ import tfar.classicbar.util.ModUtils;
 public class Feathers extends BarOverlayImpl {
 
 	public Feathers(BarSettings settings) {
-		super("feathers",settings);
+		super("feathers",settings,player -> (float)FeathersHelper.getFeathers()/FeathersHelper.getMaxFeathers());
 	}
 
 
@@ -66,11 +65,5 @@ public class Feathers extends BarOverlayImpl {
 		int yStart = height - vOffset;
 		//Draw feathers icon
 		ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart + 82, yStart, 34, 0, 9, 9);
-	}
-	@Override
-	public double getBarWidth(Player player) {
-		double feathers = FeathersHelper.getFeathers();
-		int maxFeathers = FeathersHelper.getMaxFeathers();
-		return WIDTH * feathers / maxFeathers;
 	}
 }

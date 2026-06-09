@@ -22,7 +22,7 @@ public class Armor extends BarOverlayImpl {
             EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
     public Armor(BarSettings barSettings) {
-        super("armor",barSettings);
+        super("armor",barSettings,player -> calculateArmorValue(player)/20f);
     }
 
     public static final Codec<Armor> CODEC = RecordCodecBuilder.create(
@@ -102,12 +102,6 @@ public class Armor extends BarOverlayImpl {
     }
 
     @Override
-    public double getBarWidth(Player player) {
-        int armor = calculateArmorValue(player);
-        return Math.ceil(WIDTH * Math.min(20, armor) / 20d);//armor can go above 20 in modded contexts!
-    }
-
-    @Override
     public Color getPrimaryBarColor(int index, Player player) {
         return ConfigCache.armor.get(index);
     }
@@ -152,7 +146,7 @@ public class Armor extends BarOverlayImpl {
         ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 43, 9, 9, 9);
     }
 
-    private static int calculateArmorValue(Player player) {
+    private static float calculateArmorValue(Player player) {
         return player.getArmorValue();
     }
 }

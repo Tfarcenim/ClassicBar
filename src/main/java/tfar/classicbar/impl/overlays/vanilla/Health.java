@@ -22,7 +22,7 @@ public class Health extends BarOverlayImpl {
   private double lastPlayerHealth = 0;
 
   public Health(BarSettings settings) {
-    super("health",settings);
+    super("health",settings,player -> player.getHealth()/player.getMaxHealth());
   }
 
   public static final Codec<Health> CODEC = RecordCodecBuilder.create(
@@ -105,13 +105,6 @@ public class Health extends BarOverlayImpl {
     double maxHealth = player.getMaxHealth();
     HealthEffect effect = getHealthEffect(player);
     return ColorUtils.calculateScaledColor(health,maxHealth,effect);
-  }
-
-  @Override
-  public double getBarWidth(Player player) {
-    double health = player.getHealth();
-    double maxHealth = player.getMaxHealth();
-    return WIDTH * health / maxHealth;
   }
 
   @Override

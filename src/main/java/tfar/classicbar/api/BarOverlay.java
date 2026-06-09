@@ -13,8 +13,6 @@ public interface BarOverlay {
 
   boolean render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
 
-  double getBarWidth(Player player);
-
   Color getPrimaryBarColor(int index,Player player);
 
   Color getSecondaryBarColor(int index,Player player);

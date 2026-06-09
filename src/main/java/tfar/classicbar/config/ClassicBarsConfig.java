@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
-import tfar.classicbar.impl.overlays.mod.StaminaB;
 
 import java.util.List;
 
@@ -16,10 +15,7 @@ import java.util.List;
 public class ClassicBarsConfig {
 
   public static ForgeConfigSpec.BooleanValue lowArmorWarning;
-  public static ForgeConfigSpec.BooleanValue showHydrationBar;
-  public static ForgeConfigSpec.BooleanValue showHeldFoodOverlay;
   public static ForgeConfigSpec.BooleanValue showHeldDrinkOverlay;
-  public static ForgeConfigSpec.BooleanValue showThirstExhaustionOverlay;
 
   public static ForgeConfigSpec.DoubleValue transitionSpeed;
   static ForgeConfigSpec.ConfigValue<String> hungerBarColor;
@@ -53,10 +49,7 @@ public class ClassicBarsConfig {
 
     lowArmorWarning = builder.define("display_low_armor_warning", true);
 
-    showHydrationBar = builder.define("show_hydration_bar", true);
-    showHeldFoodOverlay = builder.define("show_held_food_overlay", true);
     showHeldDrinkOverlay = builder.define("show_held_drink_overlay", true);
-    showThirstExhaustionOverlay = builder.define("show_thirst_exhaustion_overlay", true);
     transitionSpeed = builder.defineInRange("transition_speed", 3, 0, Double.MAX_VALUE);
 
     hungerBarColor = builder.define("hunger_bar_color","#B34D00",String.class::isInstance);

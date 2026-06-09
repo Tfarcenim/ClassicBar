@@ -31,7 +31,7 @@ public class Thirst extends BarOverlayImpl {
     public static final ResourceLocation OVERLAY = new ResourceLocation("toughasnails:textures/gui/icons.png");
 
 
-    public static final double MAX_THIRST_LEVEL = 20;
+    public static final float MAX_THIRST_LEVEL = 20;
     public static final double MAX_HYDRATION_LEVEL = 1.0;
 
     /**
@@ -190,19 +190,19 @@ public class Thirst extends BarOverlayImpl {
         return 0.0F;
     }
 
-    protected final boolean showSaturation;
+    protected final boolean showHydration;
     protected final boolean showExhaustion;
 
-    public Thirst(BarSettings settings, boolean showSaturation, boolean showExhaustion) {
-        super(NAME,settings, ModCompat.toughasnails.name());
-        this.showSaturation = showSaturation;
+    public Thirst(BarSettings settings, boolean showHydration, boolean showExhaustion) {
+        super(NAME,settings, ModCompat.toughasnails.name(),player -> (float)ThirstHelper.getThirst(player).getThirst()/MAX_THIRST_LEVEL);
+        this.showHydration = showHydration;
         this.showExhaustion = showExhaustion;
     }
 
     public static final Codec<Thirst> CODEC = RecordCodecBuilder.create(
             objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
                     .forGetter(Thirst::getBarSettings),
-                    Codec.BOOL.fieldOf("show_saturation").forGetter(f -> f.showSaturation),
+                    Codec.BOOL.fieldOf("show_hydration").forGetter(f -> f.showHydration),
                     Codec.BOOL.fieldOf("show_exhaustion").forGetter(f -> f.showExhaustion)
             ).apply(objectInstance,Thirst::new)
     );
@@ -234,7 +234,7 @@ public class Thirst extends BarOverlayImpl {
 
         drawThirst(graphics, player, xStart, yStart, thirstLevel, MAX_THIRST_LEVEL);
 
-        if (hydrationLevel > 0 && ClassicBarsConfig.showHydrationBar.get()) {
+        if (hydrationLevel > 0 && showHydration) {
             drawHydration(graphics, player, xStart, yStart, hydrationLevel, MAX_HYDRATION_LEVEL);
         }
 
@@ -242,7 +242,7 @@ public class Thirst extends BarOverlayImpl {
             drawHeldDrink(graphics, player, thirstData, xStart, yStart, MAX_THIRST_LEVEL, MAX_HYDRATION_LEVEL);
         }
 
-        if (ClassicBarsConfig.showThirstExhaustionOverlay.get() && PacketHandler.presentOnServer) {
+        if (showExhaustion && PacketHandler.presentOnServer) {
             drawExhaustion(graphics, player, xStart, yStart, exhaustionLevel, maxExhaustionLevel);
         }
 
@@ -278,7 +278,7 @@ public class Thirst extends BarOverlayImpl {
             renderPartialBar(stack,barXStart + 2, y + 2, barWidth);
         }
 
-        if (ClassicBarsConfig.showHydrationBar.get()) {
+        if (showHydration) {
             float hydrationLevel = thirstData.getHydration();
             float potentialHydrationLevel = getPotentialHydrationLevel(drink);
             double restoredHydrationLevel = Math.min(maxHydrationLevel - hydrationLevel, potentialHydrationLevel);
@@ -331,16 +331,6 @@ public class Thirst extends BarOverlayImpl {
         ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, texBgX, 32, 9, 9);
         // thirst
         ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, texX, 32, 9, 9);
-    }
-
-    /**
-     * Not used, but still impl in case.
-     */
-    @Override
-    public double getBarWidth(Player player) {
-        IThirst thirstData = ThirstHelper.getThirst(player);
-        int thirst = thirstData.getThirst();
-        return Math.ceil(BarOverlayImpl.WIDTH * thirst / MAX_THIRST_LEVEL);
     }
 
     /**

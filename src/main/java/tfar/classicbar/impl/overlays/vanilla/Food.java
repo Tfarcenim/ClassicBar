@@ -24,18 +24,21 @@ public class Food extends BarOverlayImpl {
 
   protected final boolean showSaturation;
   protected final boolean showExhaustion;
+    private final boolean showHeldFood;
 
-  public Food(BarSettings barSettings, boolean showSaturation, boolean showExhaustion) {
-    super("food",barSettings);
+    public Food(BarSettings barSettings, boolean showSaturation, boolean showExhaustion,boolean showHeldFood) {
+    super("food",barSettings,player -> player.getFoodData().getFoodLevel()/20f);
       this.showSaturation = showSaturation;
       this.showExhaustion = showExhaustion;
-  }
+      this.showHeldFood = showHeldFood;
+    }
 
   public static final Codec<Food> CODEC = RecordCodecBuilder.create(
           objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
                   .forGetter(Food::getBarSettings),
                   Codec.BOOL.fieldOf("show_saturation").forGetter(f -> f.showSaturation),
-                  Codec.BOOL.fieldOf("show_exhaustion").forGetter(f -> f.showExhaustion)
+                  Codec.BOOL.fieldOf("show_exhaustion").forGetter(f -> f.showExhaustion),
+                  Codec.BOOL.fieldOf("show_held_food").forGetter(f -> f.showHeldFood)
           ).apply(objectInstance, Food::new)
   );
 
@@ -77,8 +80,7 @@ public class Food extends BarOverlayImpl {
       renderPartialBar(matrices,f + 2, yStart + 2, barWidthS);
     }
     //render held hunger overlay
-    if (ClassicBarsConfig.showHeldFoodOverlay.get() &&
-            player.getMainHandItem().getItem().isEdible()) {
+    if (showHeldFood && player.getMainHandItem().getItem().isEdible()) {
       ItemStack stack = player.getMainHandItem();
       double time = System.currentTimeMillis()/1000d * ClassicBarsConfig.transitionSpeed.get();
       double foodAlpha = Math.sin(time)/2 + .5;
@@ -137,13 +139,6 @@ public class Food extends BarOverlayImpl {
   @Override
   public Codec<? extends BarOverlayImpl> getCodec() {
     return CODEC;
-  }
-
-  @Override
-  public double getBarWidth(Player player) {
-    double hunger = player.getFoodData().getFoodLevel();
-    double maxHunger = 20;
-    return Math.ceil(BarOverlayImpl.WIDTH * hunger / maxHunger);
   }
   
   public int getSatBarWidth(Player player) {

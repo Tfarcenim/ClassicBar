@@ -7,7 +7,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
-import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
@@ -17,7 +16,7 @@ import tfar.classicbar.util.ModUtils;
 public class Absorption extends BarOverlayImpl {
 
     public Absorption(BarSettings barSettings) {
-        super("absorption",barSettings);
+        super("absorption",barSettings,player -> player.getAbsorptionAmount()/player.getMaxHealth());
     }
 
     public static final Codec<Absorption> CODEC = RecordCodecBuilder.create(
@@ -74,12 +73,6 @@ public class Absorption extends BarOverlayImpl {
                 renderPartialBar(graphics, xStart + 2, yStart + 2, ModUtils.getWidth(absorb % maxHealth, maxHealth));
             }
         }
-    }
-
-    public double getBarWidth(Player player) {
-        double absorb = player.getAbsorptionAmount();
-        double maxHealth = player.getMaxHealth();
-        return (int) Math.ceil(BarOverlayImpl.WIDTH * Math.min(maxHealth, absorb) / maxHealth);
     }
 
     @Override

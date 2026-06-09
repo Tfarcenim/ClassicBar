@@ -8,7 +8,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
-import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
@@ -17,7 +16,7 @@ import tfar.classicbar.util.ModUtils;
 public class ArmorToughness extends BarOverlayImpl {
 
     public ArmorToughness(BarSettings barSettings) {
-        super("armor_toughness",barSettings);
+        super("armor_toughness",barSettings,player -> (float) player.getAttributeValue(Attributes.ARMOR_TOUGHNESS)/20f);
     }
 
     public static final Codec<ArmorToughness> CODEC = RecordCodecBuilder.create(
@@ -77,11 +76,6 @@ public class ArmorToughness extends BarOverlayImpl {
                 renderFullBar(graphics, xStart + 2, yStart + 2);
             }
         }
-    }
-
-    public double getBarWidth(Player player) {
-        double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
-        return Math.ceil(WIDTH * Math.min(20, armorToughness) / 20);//armor toughness can go above 20 in modded contexts!
     }
 
     @Override

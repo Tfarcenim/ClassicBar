@@ -81,7 +81,7 @@ public class BarRegistry {
     static JsonElement createFoodJson() {
         return Food.CODEC.encodeStart(JsonOps.INSTANCE, new Food(
                 BarSettings.getBuilder().setSide(BarSide.RIGHT).build()
-        ,true,true)).getOrThrow(false, JsonParseException::new);
+        ,true,true,true)).getOrThrow(false, JsonParseException::new);
     }
 
     static JsonElement createHealthJson() {
