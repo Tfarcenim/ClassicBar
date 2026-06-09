@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarSide;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ColorUtils;
@@ -33,11 +34,6 @@ public class Health extends BarOverlayImpl {
   @Override
   public Codec<? extends BarOverlayImpl> getCodec() {
     return CODEC;
-  }
-
-  @Override
-  public boolean shouldRender(Player player) {
-    return true;
   }
 
   @Override
@@ -69,9 +65,9 @@ public class Health extends BarOverlayImpl {
 
     Color.reset();
     //Bar background
-    ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart, yStart, 0, i4, WIDTH + 4, 9);
+    ModUtils.drawTexturedModalRect(BAR,graphics,xStart, yStart, 0, i4, WIDTH + 4, 9);
 
-    double f = xStart + (rightHandSide() ? WIDTH - barWidth : 0);
+    double f = xStart + (getSide() == BarSide.RIGHT ? WIDTH - barWidth : 0);
 
     //is the bar changing
     //Pass 1, draw bar portion
@@ -82,7 +78,7 @@ public class Health extends BarOverlayImpl {
         Color.reset();
         //draw interpolation
         double w = ModUtils.getWidth(displayHealth, maxHealth);
-        double off = rightHandSide() ? w - barWidth : 0;
+        double off = getSide() == BarSide.RIGHT ? w - barWidth : 0;
         //draw interpolation
         renderPartialBar(graphics,f + 2 - off, yStart + 2,w);
         //Health is increasing, IDK what to do here

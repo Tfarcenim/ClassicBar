@@ -8,11 +8,12 @@ import tfar.classicbar.impl.BarOverlayImpl;
 
 import java.util.Set;
 
-public record BarSettings(boolean enabled, boolean show_text, ResourceLocation icon) {
+public record BarSettings(boolean enabled,BarSide side, boolean show_text, ResourceLocation icon) {
 
     public static final MapCodec<BarSettings> CODEC = RecordCodecBuilder.mapCodec(
             objectInstance -> objectInstance.group(
                     Codec.BOOL.fieldOf("enabled").forGetter(BarSettings::enabled),
+                    BarSide.CODEC.fieldOf("side").forGetter(BarSettings::side),
                     Codec.BOOL.fieldOf("show_text").forGetter(BarSettings::show_text),
                     ResourceLocation.CODEC.fieldOf("icon")
                             .forGetter(BarSettings::icon)).apply(objectInstance,BarSettings::new)
@@ -24,11 +25,17 @@ public record BarSettings(boolean enabled, boolean show_text, ResourceLocation i
 
     public static class Builder {
         private boolean enabled = true;
+        private BarSide side = BarSide.LEFT;
         private boolean show_text = true;
         private ResourceLocation icon = BarOverlayImpl.GUI_ICONS_LOCATION;
 
         public Builder setEnabled(boolean enabled) {
             this.enabled = enabled;
+            return this;
+        }
+
+        public Builder setSide(BarSide side) {
+            this.side = side;
             return this;
         }
 
@@ -42,6 +49,6 @@ public record BarSettings(boolean enabled, boolean show_text, ResourceLocation i
             return this;
         }
 
-        public BarSettings build() {return new BarSettings(enabled,show_text,icon);}
+        public BarSettings build() {return new BarSettings(enabled,side,show_text,icon);}
     }
 }

@@ -20,6 +20,8 @@ import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.loading.FMLPaths;
 import tfar.classicbar.api.BarOverlay;
+import tfar.classicbar.api.BarRegistry;
+import tfar.classicbar.api.BarSide;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.overlays.mod.StaminaB;
@@ -33,8 +35,6 @@ public class EventHandler implements IGuiOverlay {
 
   public static final Map<String, BarOverlay> registry = new HashMap<>();
 
-  private static final List<BarOverlay> errored = new ArrayList<>();
-
   public void render(ForgeGui gui, GuiGraphics matrices, float partialTick, int screenWidth, int screenHeight) {
 
     Entity entity = ModUtils.mc.getCameraEntity();
@@ -43,13 +43,13 @@ public class EventHandler implements IGuiOverlay {
     ModUtils.mc.getProfiler().push("classicbars_hud");
 
     for (BarOverlay overlay : registry.values()) {
-      boolean rightHand = overlay.rightHandSide();
+      BarSide rightHand = overlay.getSide();
       try {
         overlay.render(gui, matrices, player, screenWidth, screenHeight, getOffset(gui, rightHand));
       } catch (Error e) {
         ClassicBar.logger.error("disabling broken overlay "+overlay.name());
         e.printStackTrace();
-        errored.add(overlay);
+        overlay.setErrored();
       }
     }
     //if (!errored.isEmpty()) all.removeAll(errored);
@@ -57,13 +57,18 @@ public class EventHandler implements IGuiOverlay {
     ModUtils.mc.getProfiler().pop();
   }
 
-  public static void increment(ForgeGui gui,boolean side ,int amount){
-    if (side)gui.rightHeight+=amount;
-    else gui.leftHeight+=amount;
+  public static void increment(ForgeGui gui, BarSide side , int amount){
+    switch (side) {
+      case LEFT ->gui.leftHeight+=amount;
+      case RIGHT ->gui.rightHeight+=amount;
+    }
   }
 
-  public static int getOffset(ForgeGui gui,boolean right) {
-    return right ? gui.rightHeight : gui.leftHeight;
+  public static int getOffset(ForgeGui gui, BarSide side) {
+    return switch (side) {
+      case RIGHT -> gui.rightHeight;
+      case LEFT -> gui.leftHeight;
+    };
   }
 
   public static void cacheConfigs() {
@@ -80,8 +85,6 @@ public class EventHandler implements IGuiOverlay {
 
     //Register renderers for events
     ClassicBar.logger.info("Registering Overlays");
-
-    loadBarFiles();
 
     //mod renderers
    // ClassicBar.logger.info("Registering Mod Overlays");

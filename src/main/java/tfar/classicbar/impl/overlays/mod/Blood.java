@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarSide;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
@@ -53,7 +54,7 @@ public class Blood extends BarOverlayImpl {
             //Bar background
             renderFullBarBackground(graphics,xStart,yStart);
             //draw portion of bar based on blood amount
-            double f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
+            double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
             getPrimaryBarColor(0, player).color2Gl();
             renderPartialBar(graphics, f + 2, yStart + 2,barWidth);
         });

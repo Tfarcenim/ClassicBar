@@ -9,6 +9,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarSide;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -49,7 +50,7 @@ public class Armor extends BarOverlayImpl {
         float armorAlpha = warn ? (System.currentTimeMillis() / 500) % 2 : 1;
         int xStart = screenWidth / 2 + getHOffset();
 
-        if (rightHandSide()) {
+        if (getSide() == BarSide.RIGHT) {
             xStart += WIDTH - barWidth;
         }
 
@@ -77,7 +78,7 @@ public class Armor extends BarOverlayImpl {
                 //draw partial second bar
                 primary.color2Gl();
                 double w = ModUtils.getWidth(armor % 20, 20);
-                double f = xStart + (rightHandSide() ? WIDTH - w : 0);
+                double f = xStart + (getSide() == BarSide.RIGHT ? WIDTH - w : 0);
                 renderPartialBar(graphics, f + 2, yStart + 2, w);
             }
             //case 2, bar is a multiple of 20, or it is capped

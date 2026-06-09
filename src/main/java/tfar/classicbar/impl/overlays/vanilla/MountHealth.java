@@ -7,6 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarSide;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.ColorUtils;
 import tfar.classicbar.util.HealthEffect;
@@ -30,12 +31,11 @@ public class MountHealth extends BarOverlayImpl {
 
   @Override
   public boolean shouldRender(Player player) {
-    return player.getVehicle() instanceof LivingEntity;
+    return super.shouldRender(player) && player.getVehicle() instanceof LivingEntity;
   }
 
   @Override
   public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-    //Push to avoid lasting changes
     int updateCounter = gui.getGuiTicks();
 
     LivingEntity mount = (LivingEntity) player.getVehicle();
@@ -62,7 +62,7 @@ public class MountHealth extends BarOverlayImpl {
     //Pass 1, draw bar portion
     //calculate bar color
     ColorUtils.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).color2Gl();
-    double f = xStart + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
+    double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
     //draw portion of bar based on mountHealth remaining
     renderPartialBar(graphics,f + 2, yStart + 2, barWidth);
   }

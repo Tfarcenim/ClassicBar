@@ -9,8 +9,7 @@ import java.util.Set;
 
 public interface BarOverlay {
 
-  boolean rightHandSide();
-  BarOverlay setSide(boolean right);
+  BarSide getSide();
 
   void render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
 
@@ -21,6 +20,10 @@ public interface BarOverlay {
   Color getSecondaryBarColor(int index,Player player);
 
   boolean isFitted();
+
+  boolean errored();
+
+  void setErrored();
 
   String name();
   Set<String> dependencies();

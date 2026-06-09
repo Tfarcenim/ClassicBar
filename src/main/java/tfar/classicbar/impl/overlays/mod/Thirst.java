@@ -9,6 +9,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarSide;
+import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -186,7 +188,7 @@ public class Thirst extends BarOverlayImpl {
     }
 
     public Thirst(BarSettings settings) {
-        super(NAME,settings);
+        super(NAME,settings, ModCompat.toughasnails.name());
     }
 
     public static final Codec<Thirst> CODEC = RecordCodecBuilder.create(
@@ -239,14 +241,14 @@ public class Thirst extends BarOverlayImpl {
     private void drawThirst(GuiGraphics stack, Player player, int x, int y, double thirstLevel, double maxLevel) {
         getSecondaryBarColor(0, player).color2Gl();
         double barWidth = ModUtils.getWidth(thirstLevel, maxLevel);
-        double barXStart = x + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
+        double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         renderPartialBar(stack, barXStart + 2, y + 2, barWidth);
     }
 
     private void drawHydration(GuiGraphics stack, Player player, int x, int y, double hydrationLevel, double maxLevel) {
         getPrimaryBarColor(0, player).color2Gl();
         double barWidth = ModUtils.getWidth(hydrationLevel, maxLevel);
-        double barXStart = x + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
+        double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         renderPartialBar(stack, barXStart + 2, y + 2, barWidth);
     }
 
@@ -261,7 +263,7 @@ public class Thirst extends BarOverlayImpl {
         double restoredThirstLevel = Math.min(maxThirstLevel - thirstLevel, potentialThirstLevel);
         if (thirstLevel < maxThirstLevel) {
             double barWidth = ModUtils.getWidth(thirstLevel + restoredThirstLevel, maxThirstLevel);
-            double barXStart = x + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
+            double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
             getSecondaryBarColor(0, player).color2Gla((float)drinkAlpha);
             renderPartialBar(stack,barXStart + 2, y + 2, barWidth);
         }
@@ -280,7 +282,7 @@ public class Thirst extends BarOverlayImpl {
                 restoredHydrationLevel = potentialHydrationLevel - diff;
             }
             double barWidth = ModUtils.getWidth(hydrationLevel + restoredHydrationLevel, maxHydrationLevel);
-            double barXStart = x + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
+            double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
             getPrimaryBarColor(0, player).color2Gla((float)drinkAlpha);
             renderPartialBar(stack,barXStart + 2, y + 2, barWidth);
         }
@@ -289,7 +291,7 @@ public class Thirst extends BarOverlayImpl {
     private void drawExhaustion(GuiGraphics stack, Player player, int x, int y, double exhaustionLevel, double maxLevel) {
         RenderSystem.setShaderColor(1, 1, 1, .25f);
         double barWidth = ModUtils.getWidth(exhaustionLevel, maxLevel);
-        double barXStart = x + (rightHandSide() ? BarOverlayImpl.WIDTH - barWidth : 0);
+        double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         ModUtils.drawTexturedModalRect(getIconRL(),stack,barXStart + 2, y + 1, 1, 28, barWidth, 9);
     }
 

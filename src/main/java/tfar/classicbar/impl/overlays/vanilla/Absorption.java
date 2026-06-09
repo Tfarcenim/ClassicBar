@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarSide;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -32,7 +33,7 @@ public class Absorption extends BarOverlayImpl {
 
     @Override
     public boolean shouldRender(Player player) {
-        return player.getAbsorptionAmount() > 0;
+        return super.shouldRender(player)&&player.getAbsorptionAmount() > 0;
     }
 
     @Override
@@ -45,7 +46,7 @@ public class Absorption extends BarOverlayImpl {
         int yStart = screenHeight - vOffset;
         double maxHealth = player.getMaxHealth();
 
-        if (rightHandSide()) {
+        if (getSide() == BarSide.RIGHT) {
             xStart += BarOverlayImpl.WIDTH - barWidth;
         }
 

@@ -12,6 +12,7 @@ import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarSide;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
@@ -26,14 +27,15 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public static final int HEIGHT = 5;
     public static final int BAR_U = 2;
     public static final int BAR_V = 11;
-    public static final ResourceLocation ICON_BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
+    public static final ResourceLocation BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
 
     public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
     protected String name;
     private final BarSettings barSettings;
     protected final Set<String> dependencies;
     protected final boolean dependenciesMet;
-    protected boolean side;
+
+    protected boolean errored;
 
     public BarOverlayImpl(String name,BarSettings barSettings) {
         this(name,barSettings,Set.of());
@@ -51,7 +53,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
 
-    public boolean checkDependencies() {
+    protected boolean checkDependencies() {
         return dependencies.isEmpty() || dependencies.stream().allMatch(s -> ModList.get().isLoaded(s));
     }
 
@@ -65,18 +67,12 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     public final boolean canRender() {
-        return barSettings.enabled() && dependenciesMet;
+        return !errored() && barSettings.enabled() && dependenciesMet;
     }
 
     @Override
-    public final boolean rightHandSide() {
-        return side;
-    }
-
-    @Override
-    public final BarOverlay setSide(boolean right) {
-        side = right;
-        return this;
+    public final BarSide getSide() {
+        return barSettings.side();
     }
 
     @Override
@@ -90,7 +86,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
             if (ConfigCache.icons) {
                 renderIcon(graphics, player, screenWidth, screenHeight, vOffset);
             }
-            EventHandler.increment(gui, rightHandSide(), 10);
+            EventHandler.increment(gui, getSide(), 10);
         }
     }
 
@@ -109,11 +105,19 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public abstract void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset);
 
     public int getHOffset() {
-        return rightHandSide() ? 10 : -91;
+
+        return switch (getSide()){
+            case LEFT -> -91;
+            case RIGHT -> 10;
+        };
+
     }
 
     public int getIconOffset() {
-        return rightHandSide() ? 92 : -101;
+        return switch (getSide()) {
+            case LEFT -> -101;
+            case RIGHT -> 92;
+        };
     }
 
     protected HealthEffect getHealthEffect(Player player) {
@@ -127,7 +131,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public void renderBarBackground(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         double barWidth = getBarWidth(player);
         int xStart = screenWidth / 2 + getHOffset();
-        if (isFitted() && rightHandSide()) {
+        if (isFitted() && getSide() == BarSide.RIGHT) {
             xStart += WIDTH - barWidth;
         }
         int yStart = screenHeight - vOffset;
@@ -137,33 +141,41 @@ public abstract class BarOverlayImpl implements BarOverlay {
         } else renderFullBarBackground(graphics, xStart, yStart);
     }
     public void drawScaledBarBackground(GuiGraphics stack, double barWidth, int x, int y) {
-        if (rightHandSide()) {
-            ModUtils.drawTexturedModalRect(ICON_BAR,stack,x, y - 1, 0, 0, barWidth + 2, 9);
-            ModUtils.drawTexturedModalRect(ICON_BAR,stack,x + barWidth + 2, y-1, WIDTH + 2, 0, 2, 9);
-        } else {
-            ModUtils.drawTexturedModalRect(ICON_BAR,stack,x, y - 1, 0, 0, (int) (barWidth + 2), 9);
-            ModUtils.drawTexturedModalRect(ICON_BAR,stack, (int) (x + barWidth + 2), y - 1, WIDTH + 2, 0, 2, 9);
+
+        switch (getSide()) {
+            case LEFT -> {
+                ModUtils.drawTexturedModalRect(BAR,stack,x, y - 1, 0, 0, (int) (barWidth + 2), 9);
+                ModUtils.drawTexturedModalRect(BAR,stack, (int) (x + barWidth + 2), y - 1, WIDTH + 2, 0, 2, 9);
+            }
+            case RIGHT -> {
+                ModUtils.drawTexturedModalRect(BAR,stack,x, y - 1, 0, 0, barWidth + 2, 9);
+                ModUtils.drawTexturedModalRect(BAR,stack,x + barWidth + 2, y-1, WIDTH + 2, 0, 2, 9);
+            }
         }
     }
     public void textHelper(GuiGraphics graphics,int xStart,int yStart,double stat, int color) {
         int i1 = (int) Math.floor(stat);
         int i2 = ConfigCache.icons ? 1 : 0;
 
-        if (rightHandSide()) {
-            ModUtils.drawStringOnHUD(graphics, i1 + "", xStart + 9 * i2, yStart - 1, color);
-        } else {
-            int i3 = ModUtils.getStringLength(i1 + "");
-            ModUtils.drawStringOnHUD(graphics, i1 + "", xStart - 9 * i2 - i3 + 5, yStart - 1, color);
+        switch (getSide()) {
+            case LEFT -> {
+                int i3 = ModUtils.getStringLength(i1 + "");
+                ModUtils.drawStringOnHUD(graphics, i1 + "", xStart - 9 * i2 - i3 + 5, yStart - 1, color);
+            }
+            case RIGHT -> {
+                ModUtils.drawStringOnHUD(graphics, i1 + "", xStart + 9 * i2, yStart - 1, color);
+            }
         }
     }
+
     public void renderFullBarBackground(GuiGraphics matrices, int xStart, int yStart) {
-        ModUtils.drawTexturedModalRect(ICON_BAR,matrices, xStart, yStart, 0, 0, WIDTH + 4, 9);
+        ModUtils.drawTexturedModalRect(BAR,matrices, xStart, yStart, 0, 0, WIDTH + 4, 9);
     }
     public void renderFullBar(GuiGraphics matrices, int xStart, int yStart) {
         renderPartialBar(matrices,xStart,yStart,WIDTH);
     }
     public void renderPartialBar(GuiGraphics matrices, double xStart, int yStart,double barWidth) {
-        ModUtils.drawTexturedModalRect(ICON_BAR,matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
+        ModUtils.drawTexturedModalRect(BAR,matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
     }
     @Override
     public Color getPrimaryBarColor(int index, Player player) {
@@ -190,5 +202,13 @@ public abstract class BarOverlayImpl implements BarOverlay {
     @Override
     public final String name() {
         return name;
+    }
+
+    public final boolean errored() {
+        return errored;
+    }
+
+    public void setErrored() {
+        this.errored = true;
     }
 }

@@ -52,8 +52,7 @@ public class ClassicBarsConfig {
   public static ForgeConfigSpec.ConfigValue<String> lavaBarColor;
   public static ForgeConfigSpec.ConfigValue<String> flightBarColor;
 
-  public static ForgeConfigSpec.ConfigValue<List<? extends String>> leftorder;
-  public static ForgeConfigSpec.ConfigValue<List<? extends String>> rightorder;
+  public static ForgeConfigSpec.ConfigValue<List<? extends String>> priority;
 
   public ClassicBarsConfig(ForgeConfigSpec.Builder builder) {
     builder.push("general");
@@ -98,8 +97,7 @@ public class ClassicBarsConfig {
     witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
     frozenHealthColor = builder.define("frozen_health_color", "#7fafff");
 
-    leftorder = builder.defineList("left_order", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2"),String.class::isInstance);
-    rightorder = builder.defineList("right_order", Lists.newArrayList("blood","health_mount","food","thirst_level", StaminaB.name,"feathers","armor_toughness","air","flighttiara","decay"),String.class::isInstance);
+    priority = builder.defineList("priority", Lists.newArrayList("health","armor","absorption","lavacharm","lavacharm2","blood","health_mount","food","thirst_level"),String.class::isInstance);
   }
 
   @SubscribeEvent

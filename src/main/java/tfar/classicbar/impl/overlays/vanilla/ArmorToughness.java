@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarSide;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -41,7 +42,7 @@ public class ArmorToughness extends BarOverlayImpl {
         double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
         double barWidth = getBarWidth(player);
         int xStart = screenWidth / 2 + getHOffset();
-        if (rightHandSide()) {
+        if (getSide() == BarSide.RIGHT) {
             xStart += WIDTH - barWidth;
         }
         int yStart = screenHeight - vOffset;
@@ -68,7 +69,7 @@ public class ArmorToughness extends BarOverlayImpl {
                 double w = ModUtils.getWidth(armorToughness % 20, 20);
 
                 primary.color2Gl();
-                double f = xStart + (rightHandSide() ? WIDTH - w : 0);
+                double f = xStart + (getSide() == BarSide.RIGHT ? WIDTH - w : 0);
                 renderPartialBar(graphics, f + 2, yStart + 2, w);
             } else { //case 2, bar is a multiple of 20, or it is capped
                 //draw complete second bar
