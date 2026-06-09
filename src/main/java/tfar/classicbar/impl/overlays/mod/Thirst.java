@@ -1,5 +1,6 @@
 package tfar.classicbar.impl.overlays.mod;
 
+import com.alrex.parcool.common.capability.IStamina;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -13,6 +14,7 @@ import tfar.classicbar.api.BarSide;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.network.PacketHandler;
 import tfar.classicbar.util.Color;
@@ -25,8 +27,7 @@ import toughasnails.init.ModTags;
 
 public class Thirst extends BarOverlayImpl {
 
-    public static final String NAME = "thirst_level";
-    public static final ResourceLocation OVERLAY_ID = new ResourceLocation("toughasnails", NAME);
+    public static final ResourceLocation OVERLAY_ID = new ResourceLocation("toughasnails", "thirst_level");
 
     public static final ResourceLocation OVERLAY = new ResourceLocation("toughasnails:textures/gui/icons.png");
 
@@ -193,28 +194,26 @@ public class Thirst extends BarOverlayImpl {
     protected final boolean showHydration;
     protected final boolean showExhaustion;
 
+    public static final BarInfo INFO = new BarInfo("toughasnails:thirst",ModCompat.toughasnails.name(),
+            player -> isEnabled()
+            ,player -> (float)ThirstHelper.getThirst(player).getThirst(),fixed(MAX_THIRST_LEVEL));
+
     public Thirst(BarSettings settings, boolean showHydration, boolean showExhaustion) {
-        super(NAME,settings, ModCompat.toughasnails.name(),player -> (float)ThirstHelper.getThirst(player).getThirst()/MAX_THIRST_LEVEL);
+        super(INFO,settings);
         this.showHydration = showHydration;
         this.showExhaustion = showExhaustion;
     }
 
     public static final Codec<Thirst> CODEC = RecordCodecBuilder.create(
-            objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
-                    .forGetter(Thirst::getBarSettings),
-                    Codec.BOOL.fieldOf("show_hydration").forGetter(f -> f.showHydration),
-                    Codec.BOOL.fieldOf("show_exhaustion").forGetter(f -> f.showExhaustion)
-            ).apply(objectInstance,Thirst::new)
+            o -> codecStart(o)
+                    .and(Codec.BOOL.fieldOf("show_hydration").forGetter(f -> f.showHydration))
+                    .and(Codec.BOOL.fieldOf("show_exhaustion").forGetter(f -> f.showExhaustion)
+            ).apply(o,Thirst::new)
     );
 
     @Override
     public Codec<? extends BarOverlayImpl> getCodec() {
         return CODEC;
-    }
-
-    @Override
-    public boolean shouldRender(Player player) {
-        return super.shouldRender(player) && isEnabled();
     }
 
     @Override

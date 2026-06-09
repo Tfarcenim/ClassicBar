@@ -18,7 +18,6 @@ public class ConfigCache {
     public static Color thirstDebuff;
     public static Color hydration;
     public static Color hydrationDebuff;
-    public static Color air;
     //public static ForgeConfigSpec.ConfigValue<List<? extends Double>> normalFractions;
     public static List<Color> normal = new ArrayList<>();
     //public static ForgeConfigSpec.ConfigValue<List<? extends Double>> poisonedFractions;
@@ -58,7 +57,6 @@ public class ConfigCache {
         thirstDebuff = Color.hex2Color(ClassicBarsConfig.thirstBarDebuffColor.get());
         hydration = Color.hex2Color(ClassicBarsConfig.hydrationBarColor.get());
         hydrationDebuff = Color.hex2Color(ClassicBarsConfig.hydrationBarDebuffColor.get());
-        air = Color.hex2Color(ClassicBarsConfig.airBarColor.get());
         frozenHealth = Color.hex2Color(ClassicBarsConfig.frozenHealthColor.get());
     }
 

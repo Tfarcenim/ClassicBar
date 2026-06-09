@@ -12,6 +12,7 @@ import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
@@ -21,24 +22,21 @@ public class Armor extends BarOverlayImpl {
     private static final EquipmentSlot[] armorList = new EquipmentSlot[]{EquipmentSlot.HEAD,
             EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
+    public static final BarInfo INFO = new BarInfo("armor",
+            player -> calculateArmorValue(player) >= 1,Armor::calculateArmorValue,fixed(20f));
+
     public Armor(BarSettings barSettings) {
-        super("armor",barSettings,player -> calculateArmorValue(player)/20f);
+        super(INFO,barSettings);
     }
 
     public static final Codec<Armor> CODEC = RecordCodecBuilder.create(
-            objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
-                    .forGetter(Armor::getBarSettings)
-            ).apply(objectInstance,Armor::new)
+            objectInstance -> codecStart(objectInstance)
+                    .apply(objectInstance,Armor::new)
     );
 
     @Override
     public Codec<? extends BarOverlayImpl> getCodec() {
         return CODEC;
-    }
-
-    @Override
-    public boolean shouldRender(Player player) {
-        return super.shouldRender(player) && calculateArmorValue(player) >= 1;
     }
 
     @Override

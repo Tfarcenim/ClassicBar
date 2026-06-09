@@ -13,22 +13,27 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.compat.ModCompat;
+import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.impl.overlays.OneColorBar;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
-public class Blood extends BarOverlayImpl {
+public class Blood extends OneColorBar {
 
     public static final ResourceLocation VAMPIRISM_ICONS = new ResourceLocation("vampirism:textures/gui/icons.png");
 
-    public Blood(BarSettings settings) {
-        super("blood",settings, ModCompat.vampirism.name(),Blood::getBloodRatio);
+    public static final BarInfo INFO = new BarInfo(
+            "vampirism:blood",ModCompat.vampirism.name(),
+            player -> VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION,
+            Blood::getNumerator,Blood::getDenominator);
+
+    public Blood(BarSettings settings,Color color) {
+        super(INFO,settings,color);
     }
 
     public static final Codec<Blood> CODEC = RecordCodecBuilder.create(
-            objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
-                    .forGetter(Blood::getBarSettings)
-            ).apply(objectInstance,Blood::new)
+            objectInstance -> altCodecStart(objectInstance).apply(objectInstance,Blood::new)
     );
 
     @Override
@@ -36,44 +41,17 @@ public class Blood extends BarOverlayImpl {
         return CODEC;
     }
 
-    @Override
-    public boolean shouldRender(Player player) {
-        boolean b = super.shouldRender(player);
-        return b && VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION;
-    }
-    public Color getPrimaryBarColor() {
-        return Color.RED;
-    }
-
-    @Override
-    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).ifPresent(stats -> {
-            renderSimpleBar(getPrimaryBarColor(), graphics, player, screenWidth, screenHeight, vOffset);
-        });
-    }
-
-
-    public static float getBloodRatio(Player player) {
+    public static float getNumerator(Player player) {
         IBloodStats stats = VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).orElse(null);
-        if (stats != null) {
-            int blood = stats.getBloodLevel();
-            int maxBlood = stats.getMaxBlood();
-            return (float) blood / maxBlood;
-        }
-        return 0;
+        return stats != null ? stats.getBloodLevel() : 0;
     }
 
-    @Override
-    public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        //draw blood amount
-        VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).ifPresent(stats -> {
-            int blood = stats.getBloodLevel();
-            int c = getPrimaryBarColor().colorToText();
-            int xStart = width / 2 + getIconOffset();
-            int yStart = height - vOffset;
-            textHelper(graphics, xStart, yStart, blood, c);
-        });
+    public static float getDenominator(Player player) {
+        IBloodStats stats = VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).orElse(null);
+        //don't divide by zero
+        return stats != null ? stats.getMaxBlood() : 1;
     }
+
     @Override
     public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();

@@ -3,56 +3,28 @@ package tfar.classicbar.impl.overlays.vanilla;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
-import tfar.classicbar.api.BarSide;
-import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.impl.overlays.OneColorBar;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
-public class Air extends BarOverlayImpl {
+public class Air extends OneColorBar {
 
-  public Air(BarSettings settings) {
-    super("air",settings,player -> (float)player.getAirSupply()/player.getMaxAirSupply());
+  public static final BarInfo INFO = new BarInfo("air",
+          player -> player.getAirSupply() < player.getMaxAirSupply()
+          ,Entity::getAirSupply, Entity::getMaxAirSupply);
+
+  public Air(BarSettings settings,Color color) {
+    super(INFO,settings, color);
   }
 
   public static final Codec<Air> CODEC = RecordCodecBuilder.create(
-          objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
-                  .forGetter(Air::getBarSettings)
-          ).apply(objectInstance,Air::new)
+          inst -> altCodecStart(inst).apply(inst,Air::new)
   );
-
-  @Override
-  public boolean shouldRender(Player player) {
-      return super.shouldRender(player) && player.getAirSupply() < player.getMaxAirSupply();
-  }
-  @Override
-  public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-    int xStart = screenWidth / 2 + getHOffset();
-    int yStart = screenHeight - vOffset;
-    double barWidth = getBarWidth(player);
-    //Bar background
-    renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset);
-    //draw portion of bar based on air amount
-    double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
-    Color color = getPrimaryBarColor();
-    renderPartialBar(color,graphics,f + 2, yStart + 2,barWidth);
-  }
-
-  public Color getPrimaryBarColor() {
-    return ConfigCache.air;
-  }
-  @Override
-  public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-    //draw air amount
-    int air = player.getAirSupply();
-    int xStart = width / 2 + getIconOffset();
-    int yStart = height - vOffset;
-    Color color = getPrimaryBarColor();
-    textHelper(graphics,xStart,yStart,air/20,color.colorToText());
-  }
 
   @Override
   public Codec<? extends BarOverlayImpl> getCodec() {

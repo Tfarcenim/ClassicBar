@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
+import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
@@ -19,15 +20,22 @@ public class MountHealth extends BarOverlayImpl {
 
   private double mountHealth = 0;
 
+  public static final BarInfo INFO = new BarInfo("mount_health",
+          player -> player.getVehicle() instanceof LivingEntity livingEntity && livingEntity.isAlive()
+          ,MountHealth::getNumerator,MountHealth::getDenominator);
+
   public MountHealth(BarSettings barSettings) {
-    super("health_mount",barSettings, MountHealth::getRatio);
+    super(INFO,barSettings);
   }
 
-  public static float getRatio(Player player) {
+  protected static float getNumerator(Player player) {
     LivingEntity mount = (LivingEntity) player.getVehicle();
-    float mounthHealth = mount.getHealth();
-    float maxHealth = mount.getMaxHealth();
-    return mounthHealth/maxHealth;
+      return mount.getHealth();
+  }
+
+  protected static float getDenominator(Player player) {
+    LivingEntity mount = (LivingEntity) player.getVehicle();
+      return mount.getMaxHealth();
   }
 
   public static final Codec<MountHealth> CODEC = RecordCodecBuilder.create(
@@ -37,16 +45,10 @@ public class MountHealth extends BarOverlayImpl {
   );
 
   @Override
-  public boolean shouldRender(Player player) {
-    return super.shouldRender(player) && player.getVehicle() instanceof LivingEntity;
-  }
-
-  @Override
   public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
     int updateCounter = gui.getGuiTicks();
 
     LivingEntity mount = (LivingEntity) player.getVehicle();
-    if (!mount.isAlive()) return;
     double mountHealth = mount.getHealth();
     double barWidth = getBarWidth(player);
 

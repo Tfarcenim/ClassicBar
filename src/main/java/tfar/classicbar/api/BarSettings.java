@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import tfar.classicbar.impl.BarOverlayImpl;
 
+//these are common settings that the player can adjust
 public record BarSettings(boolean enabled,BarSide side,boolean fitted, boolean show_text,boolean show_icon, ResourceLocation icon) {
 
     public static final MapCodec<BarSettings> CODEC = RecordCodecBuilder.mapCodec(

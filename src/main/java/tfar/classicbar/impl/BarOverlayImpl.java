@@ -1,13 +1,19 @@
 package tfar.classicbar.impl;
 
+import com.mojang.datafixers.Products;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.objects.Object2FloatFunction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.BendingTrunkPlacer;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import tfar.classicbar.ClassicBar;
@@ -31,43 +37,33 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public static final ResourceLocation BAR = new ResourceLocation(ClassicBar.MODID, "textures/gui/health.png");
 
     public static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
-    protected String name;
     private final BarSettings barSettings;
-    protected final Set<String> dependencies;
-    protected final boolean dependenciesMet;
 
+    protected final boolean dependenciesMet;
     protected boolean errored;
 
-    protected final Function<Player,Float> widthGetter;
+    protected final BarInfo barInfo;
 
-    public BarOverlayImpl(String name, BarSettings barSettings, Function<Player, Float> widthGetter) {
-        this(name,barSettings,Set.of(), widthGetter);
+    /**
+     */
+    protected static <T extends BarOverlayImpl> Products.P1<RecordCodecBuilder.Mu<T>, BarSettings> codecStart(
+            RecordCodecBuilder.Instance<T> instance) {
+        return instance.group(BarSettings.CODEC.fieldOf("bar_settings").forGetter(BarOverlayImpl::getBarSettings));
     }
 
-    public BarOverlayImpl(String name, BarSettings barSettings, String dependency, Function<Player, Float> widthGetter) {
-        this(name,barSettings,Set.of(dependency), widthGetter);
-    }
 
-    public BarOverlayImpl(String name, BarSettings barSettings, Set<String> dependencies, Function<Player, Float> widthGetter) {
-        this.name = name;
+    protected BarOverlayImpl(BarInfo barInfo, BarSettings barSettings) {
+        this.barInfo = barInfo;
         this.barSettings = barSettings;
-        this.dependencies = dependencies;
-        this.widthGetter = widthGetter;
-        dependenciesMet = checkDependencies();
-    }
-
-
-    protected boolean checkDependencies() {
-        return dependencies.isEmpty() || dependencies.stream().allMatch(s -> ModList.get().isLoaded(s));
+        dependenciesMet = barInfo.checkDependencies();
     }
 
     public BarSettings getBarSettings() {
         return barSettings;
     }
 
-    @MustBeInvokedByOverriders
-    public boolean shouldRender(Player player) {
-        return canRender();
+    public final boolean shouldRender(Player player) {
+        return canRender() && barInfo.shouldRender().test(player);
     }
 
     public final boolean canRender() {
@@ -209,14 +205,6 @@ public abstract class BarOverlayImpl implements BarOverlay {
         renderPartialBar(color,graphics,xStart+2,yStart+2,barWidth);
     }
 
-    public int getNumerator(Player player) {
-
-    }
-
-    public int getDenominator(Player player) {
-        
-    }
-
     public void renderPartialBar(Color color,GuiGraphics matrices, double xStart, int yStart,double barWidth) {
         color.color2Gl();
         ModUtils.drawTexturedModalRect(BAR,matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
@@ -229,7 +217,21 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public abstract Codec<? extends BarOverlayImpl> getCodec();
 
     public final int getBarWidth(Player player) {
-        return (int) Math.ceil(WIDTH* Mth.clamp(widthGetter.apply(player),0,1));
+        return (int) Math.ceil(WIDTH* barInfo.getRatio(player));
+    }
+
+    @FunctionalInterface
+    protected interface Numerator {
+        float getValue(Player player);
+    }
+
+    @FunctionalInterface
+    protected interface Denominator {
+        float getValue(Player player);
+    }
+
+    protected static Denominator fixed(float value) {
+        return p -> value;
     }
 
     public final boolean isFitted() {
@@ -237,7 +239,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
     @Override
     public final String name() {
-        return name;
+        return barInfo.name();
     }
 
     public final boolean errored() {

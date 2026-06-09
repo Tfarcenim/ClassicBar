@@ -1,30 +1,32 @@
 package tfar.classicbar.impl.overlays;
 
-import com.elenai.feathers.api.FeathersHelper;
-import com.mojang.serialization.Codec;
+import com.mojang.datafixers.Products;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
-
-import java.util.Set;
-import java.util.function.Function;
 
 public abstract class OneColorBar extends BarOverlayImpl {
     private final Color color;
 
-    public OneColorBar(String name, BarSettings barSettings, Function<Player, Float> widthGetter,Color color) {
-        this(name, barSettings,Set.of(), widthGetter,color);
+    protected static <T extends OneColorBar> Products.P2<RecordCodecBuilder.Mu<T>, BarSettings,Color> simpleCodecStart(
+            RecordCodecBuilder.Instance<T> instance) {
+        return instance.group(BarSettings.CODEC.fieldOf("bar_settings").forGetter(BarOverlayImpl::getBarSettings),
+                Color.HEX_CODEC.fieldOf("color").forGetter(OneColorBar::getColor)
+        );
     }
 
-    public OneColorBar(String name, BarSettings barSettings, String dependency, Function<Player, Float> widthGetter,Color color) {
-        this(name, barSettings,Set.of(dependency), widthGetter,color);
+    protected static <T extends OneColorBar> Products.P2<RecordCodecBuilder.Mu<T>, BarSettings,Color> altCodecStart(
+            RecordCodecBuilder.Instance<T> instance) {
+        return codecStart(instance).and(Color.HEX_CODEC.fieldOf("color").forGetter(OneColorBar::getColor));
     }
 
-    public OneColorBar(String name, BarSettings barSettings, Set<String> dependencies, Function<Player, Float> widthGetter, Color color) {
-        super(name, barSettings, dependencies, widthGetter);
+    protected OneColorBar(BarInfo barInfo, BarSettings barSettings, Color color) {
+        super(barInfo, barSettings);
         this.color = color;
     }
 
@@ -35,15 +37,12 @@ public abstract class OneColorBar extends BarOverlayImpl {
 
     @Override
     public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        //draw feathers amount
-        double feathers = FeathersHelper.getFeathers();
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
-        textHelper(graphics,xStart,yStart,feathers,color.colorToText());
+        textHelper(graphics,xStart,yStart,barInfo.numerator().getValue(player),color.colorToText());
     }
 
-    @Override
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-
+    public Color getColor() {
+        return color;
     }
 }

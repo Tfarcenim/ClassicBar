@@ -3,11 +3,13 @@ package tfar.classicbar.impl.overlays.vanilla;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
@@ -15,24 +17,19 @@ import tfar.classicbar.util.ModUtils;
 
 public class Absorption extends BarOverlayImpl {
 
+    public static final BarInfo INFO = new BarInfo("absorption",
+            player -> player.getAbsorptionAmount() > 0,Player::getAbsorptionAmount,LivingEntity::getMaxHealth);
+
     public Absorption(BarSettings barSettings) {
-        super("absorption",barSettings,player -> player.getAbsorptionAmount()/player.getMaxHealth());
+        super(INFO,barSettings);
     }
 
     public static final Codec<Absorption> CODEC = RecordCodecBuilder.create(
-            objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
-                    .forGetter(Absorption::getBarSettings)
-            ).apply(objectInstance,Absorption::new)
-    );
+            o -> codecStart(o).apply(o,Absorption::new));
 
     @Override
     public Codec<? extends BarOverlayImpl> getCodec() {
         return CODEC;
-    }
-
-    @Override
-    public boolean shouldRender(Player player) {
-        return super.shouldRender(player)&&player.getAbsorptionAmount() > 0;
     }
 
     @Override

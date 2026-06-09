@@ -1,29 +1,45 @@
 package tfar.classicbar.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Mth;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 
 import java.util.List;
 
-public record Color(int r,int g,int b,int a) {
+public record Color(int a,int r,int g,int b) {
     public static final Color WHITE = Color.fromRGB(0xff,0xff,0xff);
     public static final Color BLACK = Color.fromRGB(0,0,0);
     public static final Color RED = Color.fromRGB(0xff,0,0);
     public static final Color YELLOW = Color.fromRGB(0xff,0xff,0);
+    public static final Color FEATHERS = Color.hex2Color("#22a5f0");
+
 
     public static Color fromRGB(int red, int green, int blue) {
         return fromRGBA(red, green, blue,0xff);
     }
 
     public static Color fromRGBA(int red, int green, int blue, int alpha) {
-        return new Color(red, green, blue,alpha);
+        return new Color(alpha,red, green, blue);
     }
+
+    public static final Codec<Color> CODEC = RecordCodecBuilder.create(
+            colorInstance -> colorInstance.group(
+                    Codec.INT.fieldOf("alpha").forGetter(Color::a),
+                    Codec.INT.fieldOf("red").forGetter(Color::r),
+                    Codec.INT.fieldOf("green").forGetter(Color::g),
+                    Codec.INT.fieldOf("blue").forGetter(Color::b)
+            ).apply(colorInstance, Color::new)
+    );
+
+    public static final Codec<Color> HEX_CODEC = Codec.STRING.xmap(Color::hex2Color, Color::toHexString);
 
 
     public static Color hex2Color(String s) {
-        int i1 = Integer.decode(s);
+        s = s.startsWith("#") ? s.substring(1) : s;
+        int i1 = Integer.parseUnsignedInt(s,16);
         int r = i1 >> 16 & 0xFF;
         int g = i1 >> 8 & 0xFF;
         int b = i1 & 0xFF;
@@ -78,7 +94,7 @@ public record Color(int r,int g,int b,int a) {
     }
 
     public Color withAlpha(float alpha) {
-        return new Color(this.r, this.g, this.b, (int) (alpha * 0xff));
+        return fromRGBA(this.r, this.g, this.b, (int) (alpha * 0xff));
     }
 
     public Color colorBlend(Color c2, float d) {
@@ -87,8 +103,13 @@ public record Color(int r,int g,int b,int a) {
         int b = Mth.lerpInt(d,this.b,c2.b);
         return Color.fromRGB(r, g, b);
     }
+
+    public String toHexString() {
+        return "#"+Integer.toHexString(colorToText());
+    }
+
     public int colorToText(){
-        return this.r << 16 | this.g << 8 | this.b;
+        return this.a << 24 | this.r << 16 | this.g << 8 | this.b;
     }
 
     public static void reset() {

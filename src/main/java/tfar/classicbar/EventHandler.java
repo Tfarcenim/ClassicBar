@@ -26,9 +26,8 @@ import tfar.classicbar.api.BarSide;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
-import tfar.classicbar.impl.overlays.mod.StaminaB;
+import tfar.classicbar.impl.overlays.mod.ParcoolStaminaB;
 import tfar.classicbar.impl.overlays.mod.Thirst;
-import tfar.classicbar.util.ModUtils;
 
 import java.io.*;
 import java.util.*;
@@ -139,7 +138,7 @@ public class EventHandler implements IGuiOverlay {
   public static void disableOtherOverlays(RenderGuiOverlayEvent.Pre e) {
     NamedGuiOverlay overlay = e.getOverlay();
     if (vanilla_overlays.contains(overlay.id())) e.setCanceled(true);
-    else if (overlay.id().getNamespace().equals(ModCompat.parcool.name()) && StaminaB.checkConfigs()) e.setCanceled(true);
+    else if (overlay.id().getNamespace().equals(ModCompat.parcool.name()) && ParcoolStaminaB.checkConfigs()) e.setCanceled(true);
     else if (ModCompat.toughasnails.loaded && Thirst.isEnabled() && Thirst.OVERLAY_ID.equals(overlay.id())) e.setCanceled(true);
   }
 }

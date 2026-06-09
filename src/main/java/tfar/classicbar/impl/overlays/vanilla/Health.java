@@ -5,10 +5,12 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
+import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.HealthEffect;
@@ -20,14 +22,15 @@ public class Health extends BarOverlayImpl {
   private long healthUpdateCounter = 0;
   private double lastPlayerHealth = 0;
 
+  public static final BarInfo INFO = new BarInfo("health",
+          player -> true,LivingEntity::getHealth, LivingEntity::getMaxHealth);
+
   public Health(BarSettings settings) {
-    super("health",settings,player -> player.getHealth()/player.getMaxHealth());
+    super(INFO,settings);
   }
 
   public static final Codec<Health> CODEC = RecordCodecBuilder.create(
-          objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
-                  .forGetter(Health::getBarSettings)
-          ).apply(objectInstance,Health::new)
+          objectInstance -> codecStart(objectInstance).apply(objectInstance,Health::new)
   );
 
   @Override

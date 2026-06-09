@@ -26,7 +26,6 @@ public class ClassicBarsConfig {
   static ForgeConfigSpec.ConfigValue<String> thirstBarDebuffColor;
   static ForgeConfigSpec.ConfigValue<String> hydrationBarColor;
   static ForgeConfigSpec.ConfigValue<String> hydrationBarDebuffColor;
-  static ForgeConfigSpec.ConfigValue<String> airBarColor;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> armorColors;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> armorToughnessColors;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionColors;
@@ -56,7 +55,6 @@ public class ClassicBarsConfig {
     hungerBarDebuffColor = builder.define("hunger_bar_debuff_color","#249016",String.class::isInstance);
     thirstBarColor = builder.define("thirstr_bar_color","#1C5EE4",String.class::isInstance);
     thirstBarDebuffColor = builder.define("thirst_bar_debuff_color","#5A891C",String.class::isInstance);
-    airBarColor = builder.define("air_bar_color","#00E6E6",String.class::isInstance);
     saturationBarColor = builder.define("saturation_bar_color","#FFCC00",String.class::isInstance);
     saturationBarDebuffColor = builder.define("saturation_bar_debuff_color","#87BC00",String.class::isInstance);
     hydrationBarColor = builder.define("hydration_bar_color","#00A3E2",String.class::isInstance);
@@ -78,9 +76,9 @@ public class ClassicBarsConfig {
     witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
     frozenHealthColor = builder.define("frozen_health_color", "#7fafff");
 
-    priority = builder.defineList("priority", Lists.newArrayList("health","food","armor","armor_toughness",
-            "absorption","lavacharm",
-            "lavacharm2","blood","health_mount","thirst","feathers"),String.class::isInstance);
+    priority = builder.defineList("priority",() -> Lists.newArrayList("health","food","armor","armor_toughness",
+            "absorption", "vampirism:blood","mount_health","toughasnails:thirst",
+            "feathers:feathers","parcool:stamina"),String.class::isInstance);
   }
 
   @SubscribeEvent
@@ -88,20 +86,4 @@ public class ClassicBarsConfig {
       EventHandler.cacheConfigs();
       ClassicBar.logger.info("Syncing Classic Bar Configs");
   }
-
-
-  /*public static class BarSettingsDeserializer implements JsonDeserializer<BarSettings> {
-
-    @Override
-    public BarSettings deserialize
-            (JsonElement jElement, Type typeOfT, JsonDeserializationContext context)
-            throws JsonParseException {
-      JsonObject jObject = jElement.getAsJsonObject();
-      int intValue = jObject.get("valueInt").getAsInt();
-      String stringValue = jObject.get("valueString").getAsString();
-      return new BarSettings(intValue, stringValue);
-    }
-  }*/
-
-
 }

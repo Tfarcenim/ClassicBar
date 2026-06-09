@@ -9,30 +9,28 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.Color;
 import tfar.classicbar.util.ModUtils;
 
 public class ArmorToughness extends BarOverlayImpl {
 
+    public static final BarInfo INFO = new BarInfo("armor_toughness",
+            player -> player.getAttributeValue(Attributes.ARMOR_TOUGHNESS) >= 1,
+            player -> (float) player.getAttributeValue(Attributes.ARMOR_TOUGHNESS),fixed(20f));
+
     public ArmorToughness(BarSettings barSettings) {
-        super("armor_toughness",barSettings,player -> (float) player.getAttributeValue(Attributes.ARMOR_TOUGHNESS)/20f);
+        super(INFO,barSettings);
     }
 
     public static final Codec<ArmorToughness> CODEC = RecordCodecBuilder.create(
-            objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
-                    .forGetter(ArmorToughness::getBarSettings)
-            ).apply(objectInstance,ArmorToughness::new)
+            o -> codecStart(o).apply(o,ArmorToughness::new)
     );
 
     @Override
     public Codec<? extends BarOverlayImpl> getCodec() {
         return CODEC;
-    }
-
-    @Override
-    public boolean shouldRender(Player player) {
-        return super.shouldRender(player) && player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue() >= 1;
     }
 
     @Override

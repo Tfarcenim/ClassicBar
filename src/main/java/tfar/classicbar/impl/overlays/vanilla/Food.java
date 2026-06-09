@@ -15,6 +15,7 @@ import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.compat.VampirismHelper;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.network.PacketHandler;
 import tfar.classicbar.util.Color;
@@ -24,28 +25,26 @@ public class Food extends BarOverlayImpl {
 
   protected final boolean showSaturation;
   protected final boolean showExhaustion;
-    private final boolean showHeldFood;
+  private final boolean showHeldFood;
 
-    public Food(BarSettings barSettings, boolean showSaturation, boolean showExhaustion,boolean showHeldFood) {
-    super("food",barSettings,player -> player.getFoodData().getFoodLevel()/20f);
-      this.showSaturation = showSaturation;
-      this.showExhaustion = showExhaustion;
-      this.showHeldFood = showHeldFood;
-    }
+  public static final BarInfo INFO = new BarInfo("food",
+          player -> (!ModCompat.vampirism.loaded || !VampirismHelper.isVampire(player))
+          ,player -> player.getFoodData().getFoodLevel(),fixed(20));
+
+  public Food(BarSettings barSettings, boolean showSaturation, boolean showExhaustion,boolean showHeldFood) {
+    super(INFO,barSettings);
+    this.showSaturation = showSaturation;
+    this.showExhaustion = showExhaustion;
+    this.showHeldFood = showHeldFood;
+  }
 
   public static final Codec<Food> CODEC = RecordCodecBuilder.create(
-          objectInstance -> objectInstance.group(BarSettings.CODEC.fieldOf("bar_settings")
-                  .forGetter(Food::getBarSettings),
-                  Codec.BOOL.fieldOf("show_saturation").forGetter(f -> f.showSaturation),
-                  Codec.BOOL.fieldOf("show_exhaustion").forGetter(f -> f.showExhaustion),
-                  Codec.BOOL.fieldOf("show_held_food").forGetter(f -> f.showHeldFood)
+          objectInstance -> codecStart(objectInstance)
+                  .and(Codec.BOOL.fieldOf("show_saturation").forGetter(f -> f.showSaturation))
+                  .and(Codec.BOOL.fieldOf("show_exhaustion").forGetter(f -> f.showExhaustion))
+                  .and(Codec.BOOL.fieldOf("show_held_food").forGetter(f -> f.showHeldFood)
           ).apply(objectInstance, Food::new)
   );
-
-  @Override
-  public boolean shouldRender(Player player) {
-    return super.shouldRender(player) && (!ModCompat.vampirism.loaded || !VampirismHelper.isVampire(player));
-  }
 
   @Override
   public void renderBar(ForgeGui gui, GuiGraphics matrices, Player player, int screenWidth, int screenHeight, int vOffset) {

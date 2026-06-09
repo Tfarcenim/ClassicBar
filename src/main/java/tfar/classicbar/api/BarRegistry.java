@@ -7,9 +7,10 @@ import com.mojang.serialization.JsonOps;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.mod.Blood;
 import tfar.classicbar.impl.overlays.mod.FeathersB;
-import tfar.classicbar.impl.overlays.mod.StaminaB;
+import tfar.classicbar.impl.overlays.mod.ParcoolStaminaB;
 import tfar.classicbar.impl.overlays.mod.Thirst;
 import tfar.classicbar.impl.overlays.vanilla.*;
+import tfar.classicbar.util.Color;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class BarRegistry {
 
     static JsonElement createAirJson() {
         return Air.CODEC.encodeStart(JsonOps.INSTANCE, new Air(
-                BarSettings.getBuilder().build()
+                BarSettings.getBuilder().build(),Color.hex2Color("#00E6E6")
         )).getOrThrow(false, JsonParseException::new);
     }
 
@@ -69,13 +70,13 @@ public class BarRegistry {
                 BarSettings.getBuilder()
                         .setIcon(Blood.VAMPIRISM_ICONS)
                         .build()
-        )).getOrThrow(false, JsonParseException::new);
+        , Color.RED)).getOrThrow(false, JsonParseException::new);
     }
 
     static JsonElement createFeathersJson() {
         return FeathersB.CODEC.encodeStart(JsonOps.INSTANCE, new FeathersB(
                 BarSettings.getBuilder().setSide(BarSide.RIGHT).setIcon(FeathersB.ICONS).build()
-        )).getOrThrow(false, JsonParseException::new);
+        ,Color.FEATHERS)).getOrThrow(false, JsonParseException::new);
     }
 
     static JsonElement createFoodJson() {
@@ -97,9 +98,9 @@ public class BarRegistry {
     }
 
     static JsonElement createStaminaJson() {
-        return StaminaB.CODEC.encodeStart(JsonOps.INSTANCE, new StaminaB(
+        return ParcoolStaminaB.CODEC.encodeStart(JsonOps.INSTANCE, new ParcoolStaminaB(
                 BarSettings.getBuilder().setSide(BarSide.RIGHT).build()
-        )).getOrThrow(false, JsonParseException::new);
+        ,Color.YELLOW)).getOrThrow(false, JsonParseException::new);
     }
 
 
