@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
+import tfar.classicbar.api.colorprovider.HealthColorProvider;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.api.Color;
@@ -63,10 +64,8 @@ public class Health extends BarOverlayImpl {
 
     HealthEffect effect = getHealthEffect(player);
 
-    int i4 = (highlight) ? 18 : 0;
-
-    //Bar background todo
-    ModUtils.drawTexturedModalRect(BAR,graphics,xStart, yStart, 0, i4, WIDTH + 4, 9);
+      //Bar background
+    renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset,highlight);
 
     double f = xStart + (getSide() == BarSide.RIGHT ? WIDTH - barWidth : 0);
 
@@ -88,7 +87,7 @@ public class Health extends BarOverlayImpl {
       }
     }
     //calculate bar color
-    Color primary = getPrimaryBarColor(player);
+    Color primary = getBarSettings().colorProvider().getColor(player,0);
     //draw portion of bar based on health remaining
     renderPartialBar(primary,graphics,f + 2, yStart + 2, barWidth);
     if (effect == HealthEffect.POISON) {
@@ -96,21 +95,6 @@ public class Health extends BarOverlayImpl {
       RenderSystem.setShaderColor(0, .5f, 0, .5f);
       ModUtils.drawTexturedModalRect(getIconRL(),graphics,f + 1, yStart + 1, 1, 36, barWidth, 7);
     }
-  }
-
-  public Color getPrimaryBarColor(Player player) {
-    double health = player.getHealth();
-    double maxHealth = player.getMaxHealth();
-    HealthEffect effect = getHealthEffect(player);
-    return Color.calculateScaledColor(health,maxHealth,effect);
-  }
-
-  @Override
-  public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-    double health = player.getHealth();
-    int xStart = width / 2 + getIconOffset();
-    int yStart = height - vOffset;
-    textHelper(graphics,xStart,yStart,health,getPrimaryBarColor(player).colorToText());
   }
 
   @Override

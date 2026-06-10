@@ -1,4 +1,4 @@
-package tfar.classicbar.api;
+package tfar.classicbar.api.colorprovider;
 
 import com.mojang.serialization.MapCodec;
 

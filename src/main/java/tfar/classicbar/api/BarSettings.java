@@ -4,10 +4,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
+import tfar.classicbar.api.colorprovider.ColorProvider;
+import tfar.classicbar.api.colorprovider.SingleColorProvider;
 import tfar.classicbar.impl.BarOverlayImpl;
 
 //these are common settings that the player can adjust
-public record BarSettings(boolean enabled,BarSide side,boolean fitted,ColorProvider colorProvider, boolean show_text,boolean show_icon, ResourceLocation icon) {
+public record BarSettings(boolean enabled, BarSide side, boolean fitted, ColorProvider colorProvider, boolean show_text, boolean show_icon, ResourceLocation icon) {
 
     public static final MapCodec<BarSettings> CODEC = RecordCodecBuilder.mapCodec(
             objectInstance -> objectInstance.group(

@@ -18,22 +18,12 @@ public class ConfigCache {
     public static Color thirstDebuff;
     public static Color hydration;
     public static Color hydrationDebuff;
-    //public static ForgeConfigSpec.ConfigValue<List<? extends Double>> normalFractions;
-    public static List<Color> normal = new ArrayList<>();
-    //public static ForgeConfigSpec.ConfigValue<List<? extends Double>> poisonedFractions;
-    public static List<Color> poison = new ArrayList<>();
-    //public static ForgeConfigSpec.ConfigValue<List<? extends Double>> witheredFractions;
-    public static List<Color> wither = new ArrayList<>();
     public static List<Color> absorption = new ArrayList<>();
     public static List<Color> absorptionPoison = new ArrayList<>();
     public static List<Color> absorptionWither = new ArrayList<>();
-    public static Color frozenHealth;
     private static void clear() {
         armor.clear();
         armor_toughness.clear();
-        normal.clear();
-        poison.clear();
-        wither.clear();
         absorption.clear();
         absorptionPoison.clear();
         absorptionWither.clear();
@@ -43,9 +33,6 @@ public class ConfigCache {
 
         cacheList(ClassicBarsConfig.armorColors,armor);
         cacheList(ClassicBarsConfig.armorToughnessColors,armor_toughness);
-        cacheList(ClassicBarsConfig.normalColors,normal);
-        cacheList(ClassicBarsConfig.poisonedColors,poison);
-        cacheList(ClassicBarsConfig.witheredColors,wither);
         cacheList(ClassicBarsConfig.absorptionColors,absorption);
         cacheList(ClassicBarsConfig.absorptionPoisonColors,absorptionPoison);
         cacheList(ClassicBarsConfig.absorptionWitherColors,absorptionWither);
@@ -57,7 +44,6 @@ public class ConfigCache {
         thirstDebuff = Color.hex2Color(ClassicBarsConfig.thirstBarDebuffColor.get());
         hydration = Color.hex2Color(ClassicBarsConfig.hydrationBarColor.get());
         hydrationDebuff = Color.hex2Color(ClassicBarsConfig.hydrationBarDebuffColor.get());
-        frozenHealth = Color.hex2Color(ClassicBarsConfig.frozenHealthColor.get());
     }
 
     private static void cacheList(ForgeConfigSpec.ConfigValue<List<? extends String>> config, List<Color> cache) {

@@ -8,9 +8,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
+import tfar.classicbar.api.colorprovider.HealthColorProvider;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.api.Color;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 
@@ -72,16 +72,7 @@ public class MountHealth extends BarOverlayImpl {
     //calculate bar color
     double f = xStart + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
     //draw portion of bar based on mountHealth remaining
-    renderPartialBar(Color.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE),graphics,f + 2, yStart + 2, barWidth);
-  }
-
-  @Override
-  public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-    int xStart = width / 2 + getIconOffset();
-    int yStart = height - vOffset;
-    LivingEntity mount = (LivingEntity) player.getVehicle();
-    double maxHealth = mount.getMaxHealth();
-    textHelper(graphics,xStart,yStart,mountHealth, Color.calculateScaledColor(mountHealth, maxHealth, HealthEffect.NONE).colorToText());
+    renderPartialBar(getBarSettings().colorProvider().getColor(player,0),graphics,f + 2, yStart + 2, barWidth);
   }
 
   @Override

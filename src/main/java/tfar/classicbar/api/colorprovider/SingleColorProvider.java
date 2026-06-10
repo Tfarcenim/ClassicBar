@@ -1,9 +1,9 @@
-package tfar.classicbar.api;
+package tfar.classicbar.api.colorprovider;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.player.Player;
+import tfar.classicbar.api.Color;
 
 public record SingleColorProvider(Color color) implements ColorProvider {
 
@@ -17,11 +17,6 @@ public record SingleColorProvider(Color color) implements ColorProvider {
 
     @Override
     public ColorProviderSerializer<?> getSerializer() {
-        return ColorProviders.SINGLE_COLOR;
-    }
-
-    @Override
-    public String getSerializedName() {
-        return "single_color_provider";
+        return ColorProviderSerializers.SINGLE_COLOR;
     }
 }
