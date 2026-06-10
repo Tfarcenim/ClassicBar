@@ -1,4 +1,4 @@
-package tfar.classicbar.util;
+package tfar.classicbar.api;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.serialization.Codec;
@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.Mth;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
+import tfar.classicbar.util.HealthEffect;
 
 import java.util.List;
 
@@ -40,6 +41,7 @@ public record Color(int a,int r,int g,int b) {
     public static Color hex2Color(String s) {
         s = s.startsWith("#") ? s.substring(1) : s;
         int i1 = Integer.parseUnsignedInt(s,16);
+        int a = i1 >> 24 & 0xFF;
         int r = i1 >> 16 & 0xFF;
         int g = i1 >> 8 & 0xFF;
         int b = i1 & 0xFF;

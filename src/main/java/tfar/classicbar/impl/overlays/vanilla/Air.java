@@ -9,7 +9,7 @@ import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.OneColorBar;
-import tfar.classicbar.util.Color;
+import tfar.classicbar.api.Color;
 import tfar.classicbar.util.ModUtils;
 
 public class Air extends OneColorBar {
@@ -18,16 +18,16 @@ public class Air extends OneColorBar {
           player -> player.getAirSupply() < player.getMaxAirSupply()
           ,Entity::getAirSupply, Entity::getMaxAirSupply);
 
-  public Air(BarSettings settings,Color color) {
-    super(INFO,settings, color);
+  public Air(BarSettings settings) {
+    super(INFO,settings);
   }
 
   public static final Codec<Air> CODEC = RecordCodecBuilder.create(
-          inst -> altCodecStart(inst).apply(inst,Air::new)
+          inst -> codecStart(inst).apply(inst,Air::new)
   );
 
   @Override
-  public Codec<? extends BarOverlayImpl> getCodec() {
+  public Codec<? extends BarOverlayImpl> codec() {
     return CODEC;
   }
 

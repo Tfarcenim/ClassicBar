@@ -7,13 +7,14 @@ import net.minecraft.resources.ResourceLocation;
 import tfar.classicbar.impl.BarOverlayImpl;
 
 //these are common settings that the player can adjust
-public record BarSettings(boolean enabled,BarSide side,boolean fitted, boolean show_text,boolean show_icon, ResourceLocation icon) {
+public record BarSettings(boolean enabled,BarSide side,boolean fitted,ColorProvider colorProvider, boolean show_text,boolean show_icon, ResourceLocation icon) {
 
     public static final MapCodec<BarSettings> CODEC = RecordCodecBuilder.mapCodec(
             objectInstance -> objectInstance.group(
                     Codec.BOOL.fieldOf("enabled").forGetter(BarSettings::enabled),
                     BarSide.CODEC.fieldOf("side").forGetter(BarSettings::side),
                     Codec.BOOL.fieldOf("fitted").forGetter(BarSettings::fitted),
+                    ColorProvider.CODEC.fieldOf("color_provider").forGetter(BarSettings::colorProvider),
                     Codec.BOOL.fieldOf("show_text").forGetter(BarSettings::show_text),
                     Codec.BOOL.fieldOf("show_icon").forGetter(BarSettings::show_icon),
                     ResourceLocation.CODEC.fieldOf("icon")
@@ -27,6 +28,7 @@ public record BarSettings(boolean enabled,BarSide side,boolean fitted, boolean s
     public static class Builder {
         private boolean enabled = true;
         private BarSide side = BarSide.LEFT;
+        private ColorProvider colorProvider = new SingleColorProvider(Color.WHITE);
         private boolean fitted = false;
         private boolean show_text = true;
         private boolean show_icon = true;
@@ -42,13 +44,18 @@ public record BarSettings(boolean enabled,BarSide side,boolean fitted, boolean s
             return this;
         }
 
-        public Builder setFitted(boolean fitted) {
-            this.fitted = fitted;
+        public Builder fitted() {
+            this.fitted = true;
             return this;
         }
 
         public Builder setShowText(boolean show_text) {
             this.show_text = show_text;
+            return this;
+        }
+
+        public Builder setColorProvider(ColorProvider colorProvider) {
+            this.colorProvider = colorProvider;
             return this;
         }
 
@@ -63,7 +70,7 @@ public record BarSettings(boolean enabled,BarSide side,boolean fitted, boolean s
         }
 
         public BarSettings build() {
-            return new BarSettings(enabled,side,fitted,show_text,show_icon,icon);
+            return new BarSettings(enabled,side,fitted,colorProvider,show_text,show_icon,icon);
         }
     }
 }

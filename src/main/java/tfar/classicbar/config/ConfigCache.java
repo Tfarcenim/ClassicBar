@@ -1,7 +1,7 @@
 package tfar.classicbar.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
-import tfar.classicbar.util.Color;
+import tfar.classicbar.api.Color;
 
 import java.util.ArrayList;
 import java.util.List;

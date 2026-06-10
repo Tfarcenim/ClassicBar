@@ -10,34 +10,34 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.OneColorBar;
-import tfar.classicbar.util.Color;
+import tfar.classicbar.api.Color;
 
 public class ParcoolStaminaB extends OneColorBar {
 
-    public static final String name = "parcool:stamina";
     public static final ResourceLocation ICONS = new ResourceLocation("parcool:textures/gui/stamina_bar.png");
 
-    public static final BarInfo INFO = new BarInfo(name,
+    public static final BarInfo INFO = new BarInfo("parcool_stamina", ModCompat.parcool.name(),
             player -> !checkConfigs() && getRatio(player) < 1
             ,player -> IStamina.get(player).get(),player -> IStamina.get(player).getMaxStamina());
 
-    public ParcoolStaminaB(BarSettings settings, Color color) {
-        super(INFO,settings,color);
+    public ParcoolStaminaB(BarSettings settings) {
+        super(INFO,settings);
     }
 
     protected static float getRatio(Player player) {
         return (float)IStamina.get(player).get() / IStamina.get(player).getMaxStamina();
     }
 
-    public static final Codec<ParcoolStaminaB> CODEC = RecordCodecBuilder.create(o -> altCodecStart(o)
+    public static final Codec<ParcoolStaminaB> CODEC = RecordCodecBuilder.create(o -> codecStart(o)
             .apply(o, ParcoolStaminaB::new)
     );
 
     @Override
-    public Codec<? extends BarOverlayImpl> getCodec() {
+    public Codec<? extends BarOverlayImpl> codec() {
         return CODEC;
     }
 

@@ -8,7 +8,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
+import tfar.classicbar.api.BarRegistry;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = ClassicBar.MODID, bus = Mod.EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
@@ -76,9 +78,7 @@ public class ClassicBarsConfig {
     witheredFractions = builder.defineList("withered_fractions", Lists.newArrayList(.25, .5, .75),Double.class::isInstance);
     frozenHealthColor = builder.define("frozen_health_color", "#7fafff");
 
-    priority = builder.defineList("priority",() -> Lists.newArrayList("health","food","armor","armor_toughness",
-            "absorption", "vampirism:blood","mount_health","toughasnails:thirst",
-            "feathers:feathers","parcool:stamina"),String.class::isInstance);
+    priority = builder.defineList("priority",() -> new ArrayList<>(BarRegistry.REGISTRY.keySet()),String.class::isInstance);
   }
 
   @SubscribeEvent

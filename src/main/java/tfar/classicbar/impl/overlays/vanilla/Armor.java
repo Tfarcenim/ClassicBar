@@ -14,7 +14,7 @@ import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.util.Color;
+import tfar.classicbar.api.Color;
 import tfar.classicbar.util.ModUtils;
 
 public class Armor extends BarOverlayImpl {
@@ -35,7 +35,7 @@ public class Armor extends BarOverlayImpl {
     );
 
     @Override
-    public Codec<? extends BarOverlayImpl> getCodec() {
+    public Codec<? extends BarOverlayImpl> codec() {
         return CODEC;
     }
 

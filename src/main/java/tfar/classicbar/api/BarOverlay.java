@@ -1,11 +1,9 @@
 package tfar.classicbar.api;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import tfar.classicbar.util.Color;
-
-import java.util.Set;
 
 public interface BarOverlay {
 
@@ -16,4 +14,5 @@ public interface BarOverlay {
   void setErrored();
 
   String name();
+  Codec<? extends BarOverlay> codec();
 }

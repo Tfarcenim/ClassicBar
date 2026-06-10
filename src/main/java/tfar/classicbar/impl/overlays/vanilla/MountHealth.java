@@ -10,7 +10,7 @@ import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.util.Color;
+import tfar.classicbar.api.Color;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 
@@ -85,7 +85,7 @@ public class MountHealth extends BarOverlayImpl {
   }
 
   @Override
-  public Codec<? extends BarOverlayImpl> getCodec() {
+  public Codec<? extends BarOverlayImpl> codec() {
     return CODEC;
   }
 

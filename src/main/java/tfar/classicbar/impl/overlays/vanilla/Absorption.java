@@ -11,7 +11,7 @@ import tfar.classicbar.api.BarSide;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.util.Color;
+import tfar.classicbar.api.Color;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 
@@ -28,7 +28,7 @@ public class Absorption extends BarOverlayImpl {
             o -> codecStart(o).apply(o,Absorption::new));
 
     @Override
-    public Codec<? extends BarOverlayImpl> getCodec() {
+    public Codec<? extends BarOverlayImpl> codec() {
         return CODEC;
     }
 

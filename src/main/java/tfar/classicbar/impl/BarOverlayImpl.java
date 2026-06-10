@@ -1,31 +1,20 @@
 package tfar.classicbar.impl;
 
 import com.mojang.datafixers.Products;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import it.unimi.dsi.fastutil.objects.Object2FloatFunction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.levelgen.feature.trunkplacers.BendingTrunkPlacer;
-import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.common.loot.LootModifier;
-import net.minecraftforge.fml.ModList;
-import org.jetbrains.annotations.MustBeInvokedByOverriders;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
-import tfar.classicbar.util.Color;
+import tfar.classicbar.api.Color;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
-
-import java.util.Set;
-import java.util.function.Function;
 
 public abstract class BarOverlayImpl implements BarOverlay {
 
@@ -213,8 +202,6 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public ResourceLocation getIconRL() {
         return barSettings.icon();
     }
-
-    public abstract Codec<? extends BarOverlayImpl> getCodec();
 
     public final int getBarWidth(Player player) {
         return (int) Math.ceil(WIDTH* barInfo.getRatio(player));

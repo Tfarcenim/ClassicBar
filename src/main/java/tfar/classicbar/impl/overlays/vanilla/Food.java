@@ -18,7 +18,7 @@ import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.network.PacketHandler;
-import tfar.classicbar.util.Color;
+import tfar.classicbar.api.Color;
 import tfar.classicbar.util.ModUtils;
 
 public class Food extends BarOverlayImpl {
@@ -132,7 +132,7 @@ public class Food extends BarOverlayImpl {
   }
 
   @Override
-  public Codec<? extends BarOverlayImpl> getCodec() {
+  public Codec<? extends BarOverlayImpl> codec() {
     return CODEC;
   }
   

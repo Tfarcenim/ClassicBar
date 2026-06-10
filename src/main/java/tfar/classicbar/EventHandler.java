@@ -27,7 +27,7 @@ import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.overlays.mod.ParcoolStaminaB;
-import tfar.classicbar.impl.overlays.mod.Thirst;
+import tfar.classicbar.impl.overlays.mod.ToughAsNailsThirst;
 
 import java.io.*;
 import java.util.*;
@@ -91,7 +91,7 @@ public class EventHandler implements IGuiOverlay {
     registry.clear();
     FMLPaths.CONFIGDIR.get().resolve(ClassicBar.MODID).toFile().mkdirs();
     Gson gson = new Gson();
-    for (Map.Entry<String, Codec<? extends BarOverlay>> entry : BarRegistry.REGISTRY.entrySet()) {
+    for (Map.Entry<String, BarOverlay> entry : BarRegistry.REGISTRY.entrySet()) {
       File file = FMLPaths.CONFIGDIR.get().resolve(ClassicBar.MODID).resolve(entry.getKey() + ".json").toFile();
       if (!file.exists()) {
         try {
@@ -120,7 +120,10 @@ public class EventHandler implements IGuiOverlay {
     try (JsonWriter writer = gson.newJsonWriter(new FileWriter(file))) {
       writer.setIndent("    ");
 
-      JsonElement element = BarRegistry.DEFAULTS.get(name);
+      BarOverlay overlay = BarRegistry.REGISTRY.get(name);
+      Codec<BarOverlay> codec = (Codec<BarOverlay>) overlay.codec();
+
+      JsonElement element = codec.encodeStart(JsonOps.INSTANCE,overlay).resultOrPartial(ClassicBar.logger::error).orElseThrow();
       gson.toJson(element, writer);
     }
   }
@@ -128,7 +131,7 @@ public class EventHandler implements IGuiOverlay {
     static void tryRead(Gson gson,String name,File file)throws IOException {
     try (JsonReader reader = gson.newJsonReader(new FileReader(file))) {
       JsonObject json = gson.fromJson(reader, JsonObject.class);
-      BarOverlay barOverlay = BarRegistry.REGISTRY.get(name).parse(new Dynamic<>(JsonOps.INSTANCE, json)).get().orThrow();
+      BarOverlay barOverlay = BarRegistry.REGISTRY.get(name).codec().parse(new Dynamic<>(JsonOps.INSTANCE, json)).get().orThrow();
       registry.add(barOverlay);
     }
   }
@@ -139,6 +142,6 @@ public class EventHandler implements IGuiOverlay {
     NamedGuiOverlay overlay = e.getOverlay();
     if (vanilla_overlays.contains(overlay.id())) e.setCanceled(true);
     else if (overlay.id().getNamespace().equals(ModCompat.parcool.name()) && ParcoolStaminaB.checkConfigs()) e.setCanceled(true);
-    else if (ModCompat.toughasnails.loaded && Thirst.isEnabled() && Thirst.OVERLAY_ID.equals(overlay.id())) e.setCanceled(true);
+    else if (ModCompat.toughasnails.loaded && ToughAsNailsThirst.isEnabled() && ToughAsNailsThirst.OVERLAY_ID.equals(overlay.id())) e.setCanceled(true);
   }
 }

@@ -9,35 +9,33 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
-import tfar.classicbar.api.BarSide;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.OneColorBar;
-import tfar.classicbar.util.Color;
+import tfar.classicbar.api.Color;
 import tfar.classicbar.util.ModUtils;
 
-public class Blood extends OneColorBar {
+public class VampirismBlood extends OneColorBar {
 
     public static final ResourceLocation VAMPIRISM_ICONS = new ResourceLocation("vampirism:textures/gui/icons.png");
 
     public static final BarInfo INFO = new BarInfo(
-            "vampirism:blood",ModCompat.vampirism.name(),
+            "vampirism_blood",ModCompat.vampirism.name(),
             player -> VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION,
-            Blood::getNumerator,Blood::getDenominator);
+            VampirismBlood::getNumerator, VampirismBlood::getDenominator);
 
-    public Blood(BarSettings settings,Color color) {
-        super(INFO,settings,color);
+    public VampirismBlood(BarSettings settings) {
+        super(INFO,settings);
     }
 
-    public static final Codec<Blood> CODEC = RecordCodecBuilder.create(
-            objectInstance -> altCodecStart(objectInstance).apply(objectInstance,Blood::new)
+    public static final Codec<VampirismBlood> CODEC = RecordCodecBuilder.create(
+            objectInstance -> codecStart(objectInstance).apply(objectInstance, VampirismBlood::new)
     );
 
     @Override
-    public Codec<? extends BarOverlayImpl> getCodec() {
+    public Codec<? extends BarOverlayImpl> codec() {
         return CODEC;
     }
 

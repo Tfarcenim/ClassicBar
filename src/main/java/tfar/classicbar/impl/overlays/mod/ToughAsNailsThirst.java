@@ -1,6 +1,5 @@
 package tfar.classicbar.impl.overlays.mod;
 
-import com.alrex.parcool.common.capability.IStamina;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -17,7 +16,7 @@ import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.network.PacketHandler;
-import tfar.classicbar.util.Color;
+import tfar.classicbar.api.Color;
 import tfar.classicbar.util.ModUtils;
 import toughasnails.api.potion.TANEffects;
 import toughasnails.api.thirst.IThirst;
@@ -25,7 +24,7 @@ import toughasnails.api.thirst.ThirstHelper;
 import toughasnails.init.ModConfig;
 import toughasnails.init.ModTags;
 
-public class Thirst extends BarOverlayImpl {
+public class ToughAsNailsThirst extends BarOverlayImpl {
 
     public static final ResourceLocation OVERLAY_ID = new ResourceLocation("toughasnails", "thirst_level");
 
@@ -194,25 +193,25 @@ public class Thirst extends BarOverlayImpl {
     protected final boolean showHydration;
     protected final boolean showExhaustion;
 
-    public static final BarInfo INFO = new BarInfo("toughasnails:thirst",ModCompat.toughasnails.name(),
+    public static final BarInfo INFO = new BarInfo("toughasnails_thirst",ModCompat.toughasnails.name(),
             player -> isEnabled()
             ,player -> (float)ThirstHelper.getThirst(player).getThirst(),fixed(MAX_THIRST_LEVEL));
 
-    public Thirst(BarSettings settings, boolean showHydration, boolean showExhaustion) {
+    public ToughAsNailsThirst(BarSettings settings, boolean showHydration, boolean showExhaustion) {
         super(INFO,settings);
         this.showHydration = showHydration;
         this.showExhaustion = showExhaustion;
     }
 
-    public static final Codec<Thirst> CODEC = RecordCodecBuilder.create(
+    public static final Codec<ToughAsNailsThirst> CODEC = RecordCodecBuilder.create(
             o -> codecStart(o)
                     .and(Codec.BOOL.fieldOf("show_hydration").forGetter(f -> f.showHydration))
                     .and(Codec.BOOL.fieldOf("show_exhaustion").forGetter(f -> f.showExhaustion)
-            ).apply(o,Thirst::new)
+            ).apply(o, ToughAsNailsThirst::new)
     );
 
     @Override
-    public Codec<? extends BarOverlayImpl> getCodec() {
+    public Codec<? extends BarOverlayImpl> codec() {
         return CODEC;
     }
 

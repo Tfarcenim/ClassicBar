@@ -12,6 +12,8 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import tfar.classicbar.api.BarRegistry;
+import tfar.classicbar.api.ColorProviders;
 import tfar.classicbar.client.ClassicBarClient;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.network.PacketHandler;
@@ -45,6 +47,8 @@ public class ClassicBar {
     }
     MinecraftForge.EVENT_BUS.addListener(SyncHandler::onLivingUpdateEvent);
     MinecraftForge.EVENT_BUS.addListener(SyncHandler::onPlayerLoggedOut);
+    BarRegistry.init();
+    ColorProviders.init();
   }
 
 }
