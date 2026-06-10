@@ -13,8 +13,8 @@ public record DualColorProvider(Color primary, Color secondary) implements Color
     ).apply(instance,DualColorProvider::new));
 
     @Override
-    public Color getColor(Player player, BarLayer priority) {
-        return switch (priority) {
+    public Color getColor(Player player, float ratio, BarLayer layer) {
+        return switch (layer) {
             case PRIMARY ->  primary;
             case SECONDARY ->  secondary;
         };

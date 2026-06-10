@@ -87,7 +87,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         int text = (int)barInfo.numerator().getValue(player);
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
-        textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player, BarLayer.PRIMARY).colorToText());
+        textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player,barInfo.getRatio(player) , BarLayer.PRIMARY).colorToText());
     }
 
     public abstract void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset);

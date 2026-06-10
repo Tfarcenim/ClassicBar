@@ -16,6 +16,6 @@ public abstract class OneColorBar extends BarOverlayImpl {
 
     @Override
     public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        renderSimpleBar(getBarSettings().colorProvider().getColor(player, BarLayer.PRIMARY), graphics, player, screenWidth, screenHeight, vOffset);
+        renderSimpleBar(getBarSettings().colorProvider().getColor(player, barInfo.getRatio(player), BarLayer.PRIMARY), graphics, player, screenWidth, screenHeight, vOffset);
     }
 }

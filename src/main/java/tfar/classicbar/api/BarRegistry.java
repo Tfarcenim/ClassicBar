@@ -1,7 +1,8 @@
 package tfar.classicbar.api;
 
-import tfar.classicbar.api.colorprovider.HealthColorProvider;
+import tfar.classicbar.api.colorprovider.TransitioningColorProvider;
 import tfar.classicbar.api.colorprovider.SingleColorProvider;
+import tfar.classicbar.api.colorprovider.TransitioningEffectColorProvider;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.mod.VampirismBlood;
 import tfar.classicbar.impl.overlays.mod.FeathersB;
@@ -23,8 +24,8 @@ public class BarRegistry {
     }
 
     static {
-        registerBar(new Health(BarSettings.getBuilder().setColorProvider(HealthColorProvider.DEFAULT).build()));
-        registerBar(new MountHealth(BarSettings.getBuilder().setSide(BarSide.RIGHT).setColorProvider(HealthColorProvider.DEFAULT_MOUNT).build()));
+        registerBar(new Health(BarSettings.getBuilder().setColorProvider(TransitioningEffectColorProvider.DEFAULT).build()));
+        registerBar(new MountHealth(BarSettings.getBuilder().setSide(BarSide.RIGHT).setColorProvider(TransitioningColorProvider.DEFAULT).build()));
         registerBar(new Food(BarSettings.getBuilder().setSide(BarSide.RIGHT).build(),true,true,true));
         registerBar(new ToughAsNailsThirst(BarSettings.getBuilder().setSide(BarSide.RIGHT).setIcon(ToughAsNailsThirst.OVERLAY).build(),true,true));
         registerBar(new Air(BarSettings.getBuilder().setSide(BarSide.RIGHT)

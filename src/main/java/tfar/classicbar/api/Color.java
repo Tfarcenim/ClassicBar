@@ -11,6 +11,7 @@ public record Color(int a,int r,int g,int b) {
     public static final Color RED = Color.fromRGB(0xff,0,0);
     public static final Color YELLOW = Color.fromRGB(0xff,0xff,0);
     public static final Color FEATHERS = Color.hex2Color("#22a5f0");
+    public static final Color CLEAR = new Color(0,0,0,0);
 
 
     public static Color fromRGB(int red, int green, int blue) {

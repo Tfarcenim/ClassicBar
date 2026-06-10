@@ -88,7 +88,7 @@ public class Health extends BarOverlayImpl {
     //draw portion of bar based on health remaining
    // Color primary = getBarSettings().colorProvider().getColor(player, ,0);
 
-    renderSimpleBar(getBarSettings().colorProvider().getColor(player, BarLayer.PRIMARY), graphics, player, screenWidth, screenHeight, vOffset);
+    renderSimpleBar(getBarSettings().colorProvider().getColor(player,barInfo.getRatio(player) , BarLayer.PRIMARY), graphics, player, screenWidth, screenHeight, vOffset);
 
     HealthEffect effect = getHealthEffect(player);
 

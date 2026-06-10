@@ -16,8 +16,14 @@ public class ColorProviderSerializers {
     public static final ColorProviderSerializer<DualColorProvider> DUAL_COLOR = register(new ColorProviderSerializer<>
             ("dual",DualColorProvider.CODEC));
 
-    public static final ColorProviderSerializer<HealthColorProvider> HEALTH_COLOR = register(new ColorProviderSerializer<>
-            ("health",HealthColorProvider.CODEC));
+    public static final ColorProviderSerializer<TransitioningColorProvider> TRANSITIONING = register(new ColorProviderSerializer<>
+            ("transitioning", TransitioningColorProvider.CODEC));
+
+    public static final ColorProviderSerializer<TransitioningEffectColorProvider> TRANSITIONING_EFFECT = register(new ColorProviderSerializer<>
+            ("transitioning_effect", TransitioningEffectColorProvider.CODEC));
+
+    public static final ColorProviderSerializer<TransitioningEffectColorProvider> WRAPPING = register(new ColorProviderSerializer<>
+            ("transitioning_effect", TransitioningEffectColorProvider.CODEC));
 
     public static <C extends ColorProvider> ColorProviderSerializer<C> register(ColorProviderSerializer<C> serializer) {
         MAP.put(serializer.name(), serializer);

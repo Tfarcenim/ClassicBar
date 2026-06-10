@@ -11,7 +11,7 @@ public record SingleColorProvider(Color color) implements ColorProvider {
             Color.HEX_CODEC.fieldOf("color").forGetter(SingleColorProvider::color)).apply(instance,SingleColorProvider::new));
 
     @Override
-    public Color getColor(Player player, BarLayer priority) {
+    public Color getColor(Player player, float ratio, BarLayer layer) {
         return color;
     }
 
