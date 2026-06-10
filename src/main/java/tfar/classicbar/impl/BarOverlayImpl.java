@@ -83,10 +83,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
     public abstract void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
 
     public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        double health = player.getHealth();
+        int text = (int)barInfo.numerator().getValue(player);
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
-        textHelper(graphics,xStart,yStart,health,barSettings.colorProvider().getColor(player, getLayers()-1).colorToText());
+        textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player, getLayers()-1).colorToText());
     }
 
     public abstract void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset);
