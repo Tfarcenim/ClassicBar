@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
-import tfar.classicbar.api.colorprovider.HealthColorProvider;
+import tfar.classicbar.api.colorprovider.BarLayer;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.api.Color;
@@ -62,10 +62,9 @@ public class Health extends BarOverlayImpl {
     int yStart = screenHeight - vOffset;
     double maxHealth = player.getMaxHealth();
 
-    HealthEffect effect = getHealthEffect(player);
 
       //Bar background
-    renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset,highlight);
+   // renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset,highlight);
 
     double f = xStart + (getSide() == BarSide.RIGHT ? WIDTH - barWidth : 0);
 
@@ -86,10 +85,14 @@ public class Health extends BarOverlayImpl {
                   drawTexturedModalRect(f, yStart + 1, 1, 10, getWidth(health - displayHealth, maxHealth), 7, general.style, true, true);*/
       }
     }
-    //calculate bar color
-    Color primary = getBarSettings().colorProvider().getColor(player,0);
     //draw portion of bar based on health remaining
-    renderPartialBar(primary,graphics,f + 2, yStart + 2, barWidth);
+   // Color primary = getBarSettings().colorProvider().getColor(player, ,0);
+
+    renderSimpleBar(getBarSettings().colorProvider().getColor(player, BarLayer.PRIMARY), graphics, player, screenWidth, screenHeight, vOffset);
+
+    HealthEffect effect = getHealthEffect(player);
+
+    //renderPartialBar(primary,graphics,f + 2, yStart + 2, barWidth);
     if (effect == HealthEffect.POISON) {
       //draw poison overlay
       RenderSystem.setShaderColor(0, .5f, 0, .5f);

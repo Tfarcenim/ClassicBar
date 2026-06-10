@@ -19,7 +19,6 @@ public class ColorProviderSerializers {
     public static final ColorProviderSerializer<HealthColorProvider> HEALTH_COLOR = register(new ColorProviderSerializer<>
             ("health",HealthColorProvider.CODEC));
 
-
     public static <C extends ColorProvider> ColorProviderSerializer<C> register(ColorProviderSerializer<C> serializer) {
         MAP.put(serializer.name(), serializer);
         return serializer;

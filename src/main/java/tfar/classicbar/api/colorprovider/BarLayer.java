@@ -1,5 +1,5 @@
 package tfar.classicbar.api.colorprovider;
 
-public enum BarPriority {
+public enum BarLayer {
     PRIMARY,SECONDARY;
 }

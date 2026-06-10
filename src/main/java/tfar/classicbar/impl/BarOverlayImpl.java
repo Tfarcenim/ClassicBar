@@ -13,6 +13,7 @@ import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.api.Color;
+import tfar.classicbar.api.colorprovider.BarLayer;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 
@@ -86,7 +87,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         int text = (int)barInfo.numerator().getValue(player);
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
-        textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player, getLayers()-1).colorToText());
+        textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player, BarLayer.PRIMARY).colorToText());
     }
 
     public abstract void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset);
@@ -131,7 +132,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return effects;
     }
 
-    public void renderBarBackground(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    protected void renderBarBackground(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset,false);
     }
 
@@ -139,7 +140,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset,true);
     }
 
-    public void renderBarBackground(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset,boolean flash) {
+    protected void renderBarBackground(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset,boolean flash) {
         double barWidth = getBarWidth(player);
         int xStart = screenWidth / 2 + getHOffset();
         if (isFitted() && getSide() == BarSide.RIGHT) {
@@ -151,6 +152,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
             drawScaledBarBackground(graphics, barWidth, xStart, yStart + 1,flash);
         } else renderFullBarBackground(graphics, xStart, yStart,flash);
     }
+
     private void drawScaledBarBackground(GuiGraphics stack, double barWidth, int x, int y, boolean flash) {
         switch (getSide()) {
             case LEFT -> {
@@ -198,12 +200,16 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     protected void renderSimpleBar(Color color, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+        renderSimpleBar(color,graphics,player,screenWidth,screenHeight,vOffset,false);
+    }
+
+    protected void renderSimpleBar(Color color, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset,boolean highlight) {
         int barWidth = getBarWidth(player);
         int xStart = getXStartBar(screenWidth,barWidth);
         int yStart = screenHeight - vOffset;
 
         //Bar background
-        renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset);
+        renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset,highlight);
         //draw portion of bar based on feathers amount
         renderPartialBar(color,graphics,xStart+2,yStart+2,barWidth);
     }

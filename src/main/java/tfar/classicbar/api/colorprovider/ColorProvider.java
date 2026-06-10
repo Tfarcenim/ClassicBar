@@ -9,6 +9,6 @@ public interface ColorProvider {
     Codec<ColorProvider> CODEC = Codec.STRING.xmap(ColorProviderSerializers.MAP::get, ColorProviderSerializer::name)
             .dispatch(ColorProvider::getSerializer, c -> c.codec().codec());
 
-    Color getColor(Player player, int layer);
+    Color getColor(Player player, BarLayer priority);
     ColorProviderSerializer<?> getSerializer();
 }

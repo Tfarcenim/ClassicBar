@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.colorprovider.BarLayer;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 
@@ -15,6 +16,6 @@ public abstract class OneColorBar extends BarOverlayImpl {
 
     @Override
     public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        renderSimpleBar(getBarSettings().colorProvider().getColor(player,0), graphics, player, screenWidth, screenHeight, vOffset);
+        renderSimpleBar(getBarSettings().colorProvider().getColor(player, BarLayer.PRIMARY), graphics, player, screenWidth, screenHeight, vOffset);
     }
 }

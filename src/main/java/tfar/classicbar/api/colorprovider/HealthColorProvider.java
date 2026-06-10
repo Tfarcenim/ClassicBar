@@ -5,37 +5,56 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mojang.serialization.codecs.UnboundedMapCodec;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.Color;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.HealthEffect;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-public record HealthColorProvider(Map<Float,Color> normalColors,
-                                  Map<Float,Color> poisonColors,
-                                  Map<Float,Color> witherColors,
-                                  Map<Float,Color> frozenColors) implements ColorProvider {
+public record HealthColorProvider(boolean forMount,Map<Float, Color> normalColors,
+                                  Map<Float, Color> poisonColors,
+                                  Map<Float, Color> witherColors,
+                                  Map<Float, Color> frozenColors) implements ColorProvider {
 
     public static final MapCodec<HealthColorProvider> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.BOOL.fieldOf("for_mount").forGetter(HealthColorProvider::forMount),
             codec().fieldOf("normal").forGetter(HealthColorProvider::normalColors),
             codec().fieldOf("poison").forGetter(HealthColorProvider::poisonColors),
             codec().fieldOf("wither").forGetter(HealthColorProvider::witherColors),
             codec().fieldOf("frozen").forGetter(HealthColorProvider::frozenColors)
-    ).apply(instance,HealthColorProvider::new));
+    ).apply(instance, HealthColorProvider::new));
 
     public static UnboundedMapCodec<Float, Color> codec() {
-        return Codec.unboundedMap(Codec.STRING.xmap(Float::parseFloat, Object::toString),Color.HEX_CODEC);
+        return Codec.unboundedMap(Codec.STRING.xmap(Float::parseFloat, Object::toString), Color.HEX_CODEC);
     }
 
-    public static final HealthColorProvider DEFAULT = createDefault();
+    public static final HealthColorProvider DEFAULT = createDefault(false);
 
-    static HealthColorProvider createDefault() {
-        Map<Float,Color> normal = Map.of(.25f,Color.hex2Color("#FF0000"),.5f,Color.hex2Color("#FFFF00"),.75f,Color.hex2Color("#00FF00"));
-        Map<Float,Color> poison = Map.of(.25f,Color.hex2Color("#00FF00"),.5f,Color.hex2Color("#55FF55"),.75f,Color.hex2Color("#00FF00"));
-        Map<Float,Color> wither = Map.of(.25f,Color.hex2Color("#555555"),.5f,Color.hex2Color( "#AAAAAA"),.75f,Color.hex2Color( "#555555"));
-        Map<Float,Color> frozen = Map.of(.25f,Color.hex2Color( "#7fafff"),.5f,Color.hex2Color( "#7fafff"),.75f,Color.hex2Color( "#7fafff"));
-        return new HealthColorProvider(normal,poison,wither,frozen);
+    public static final HealthColorProvider DEFAULT_MOUNT = createDefault(true);
+
+    static HealthColorProvider createDefault(boolean forMount) {
+        Map<Float, Color> normal = new LinkedHashMap<>();
+        normal.put(.25f, Color.hex2Color("#FF0000"));
+        normal.put(.5f, Color.hex2Color("#FFFF00"));
+        normal.put(.75f, Color.hex2Color("#00FF00"));
+
+        Map<Float, Color> poison = new LinkedHashMap<>();
+        poison.put(.25f, Color.hex2Color("#00FF00"));
+        poison.put(.5f, Color.hex2Color("#55FF55"));
+        poison.put(.75f, Color.hex2Color("#00FF00"));
+
+        Map<Float, Color> wither = new LinkedHashMap<>();
+        wither.put(.25f, Color.hex2Color("#555555"));
+        wither.put(.5f, Color.hex2Color("#AAAAAA"));
+        wither.put(.75f, Color.hex2Color("#555555"));
+        Map<Float, Color> frozen = new LinkedHashMap<>();
+        frozen.put(.25f, Color.hex2Color("#7fafff"));
+        frozen.put(.5f, Color.hex2Color("#7fafff"));
+        frozen.put(.75f, Color.hex2Color("#7fafff"));
+        return new HealthColorProvider(forMount,normal, poison, wither, frozen);
     }
 
     public Color calculateScaledColor(double d1, double d2, HealthEffect effect) {
@@ -74,20 +93,22 @@ public record HealthColorProvider(Map<Float,Color> normalColors,
         }
 
         //return last color in the list if health is too high
-        if (aboveEverything) {return below;}
+        if (aboveEverything) {
+            return below;
+        }
 
 
-
-        double d4 = Mth.inverseLerp(d3,belowFraction,aboveFraction);
+        double d4 = Mth.inverseLerp(d3, belowFraction, aboveFraction);
         return below.colorBlend(above, (float) d4);
     }
 
     @Override
-    public Color getColor(Player player, int layer) {
-        double health = player.getHealth();
-        double maxHealth = player.getMaxHealth();
-        HealthEffect effect = BarOverlayImpl.getHealthEffect(player);
-        return calculateScaledColor(health,maxHealth,effect);
+    public Color getColor(Player player, BarLayer priority) {
+        LivingEntity entity = forMount ? (LivingEntity) player.getVehicle() : player;
+        double health = entity.getHealth();
+        double maxHealth = entity.getMaxHealth();
+        HealthEffect effect = entity instanceof Player ? BarOverlayImpl.getHealthEffect(player) : HealthEffect.NONE;
+        return calculateScaledColor(health, maxHealth, effect);
     }
 
     @Override

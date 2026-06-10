@@ -24,7 +24,7 @@ public class BarRegistry {
 
     static {
         registerBar(new Health(BarSettings.getBuilder().setColorProvider(HealthColorProvider.DEFAULT).build()));
-        registerBar(new MountHealth(BarSettings.getBuilder().setSide(BarSide.RIGHT).setColorProvider(HealthColorProvider.DEFAULT).build()));
+        registerBar(new MountHealth(BarSettings.getBuilder().setSide(BarSide.RIGHT).setColorProvider(HealthColorProvider.DEFAULT_MOUNT).build()));
         registerBar(new Food(BarSettings.getBuilder().setSide(BarSide.RIGHT).build(),true,true,true));
         registerBar(new ToughAsNailsThirst(BarSettings.getBuilder().setSide(BarSide.RIGHT).setIcon(ToughAsNailsThirst.OVERLAY).build(),true,true));
         registerBar(new Air(BarSettings.getBuilder().setSide(BarSide.RIGHT)

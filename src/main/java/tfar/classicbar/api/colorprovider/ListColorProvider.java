@@ -7,7 +7,7 @@ import java.util.List;
 
 public record ListColorProvider(List<Color> colors) implements ColorProvider{
     @Override
-    public Color getColor(Player player, int layer) {
+    public Color getColor(Player player, BarLayer priority) {
         return null;
     }
 

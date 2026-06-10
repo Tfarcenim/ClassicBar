@@ -5,16 +5,19 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.Color;
 
-public record DualColorProvider(Color layer0, Color layer1) implements ColorProvider{
+public record DualColorProvider(Color primary, Color secondary) implements ColorProvider{
 
     public static final MapCodec<DualColorProvider> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Color.HEX_CODEC.fieldOf("layer0").forGetter(DualColorProvider::layer0),
-            Color.HEX_CODEC.fieldOf("layer1").forGetter(DualColorProvider::layer1)
+            Color.HEX_CODEC.fieldOf("primary").forGetter(DualColorProvider::primary),
+            Color.HEX_CODEC.fieldOf("secondary").forGetter(DualColorProvider::secondary)
     ).apply(instance,DualColorProvider::new));
 
     @Override
-    public Color getColor(Player player, int layer) {
-        return layer == 0 ? layer0 : layer1;
+    public Color getColor(Player player, BarLayer priority) {
+        return switch (priority) {
+            case PRIMARY ->  primary;
+            case SECONDARY ->  secondary;
+        };
     }
 
     @Override
