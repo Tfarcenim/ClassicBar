@@ -7,17 +7,17 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarType;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.impl.overlays.OneColorBar;
 import tfar.classicbar.util.ModUtils;
 
-public class FeathersB extends OneColorBar {
+public class FeathersB extends BarOverlayImpl{
 
 	public static final BarInfo INFO = new BarInfo("feathers_feathers",ModCompat.feathers.name(),
 			player -> true,player -> FeathersHelper.getFeathers(),
-			player -> FeathersHelper.getMaxFeathers());
+			player -> FeathersHelper.getMaxFeathers(), BarType.SINGLE);
 
 	public FeathersB(BarSettings settings) {
 		super(INFO,settings);

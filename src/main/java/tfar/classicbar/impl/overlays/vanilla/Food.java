@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
+import tfar.classicbar.api.BarType;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.compat.VampirismHelper;
 import tfar.classicbar.config.ClassicBarsConfig;
@@ -29,7 +30,7 @@ public class Food extends BarOverlayImpl {
 
   public static final BarInfo INFO = new BarInfo("food",
           player -> (!ModCompat.vampirism.loaded || !VampirismHelper.isVampire(player))
-          ,player -> player.getFoodData().getFoodLevel(),fixed(20));
+          ,player -> player.getFoodData().getFoodLevel(),fixed(20), BarType.DUAL);
 
   public Food(BarSettings barSettings, boolean showSaturation, boolean showExhaustion,boolean showHeldFood) {
     super(INFO,barSettings);

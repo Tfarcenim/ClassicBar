@@ -16,7 +16,6 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = ClassicBar.MODID, bus = Mod.EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
 public class ClassicBarsConfig {
 
-  public static ForgeConfigSpec.BooleanValue lowArmorWarning;
   public static ForgeConfigSpec.BooleanValue showHeldDrinkOverlay;
 
   public static ForgeConfigSpec.DoubleValue transitionSpeed;
@@ -40,8 +39,6 @@ public class ClassicBarsConfig {
 
   public ClassicBarsConfig(ForgeConfigSpec.Builder builder) {
     builder.push("general");
-
-    lowArmorWarning = builder.define("display_low_armor_warning", true);
 
     showHeldDrinkOverlay = builder.define("show_held_drink_overlay", true);
     transitionSpeed = builder.defineInRange("transition_speed", 3, 0, Double.MAX_VALUE);

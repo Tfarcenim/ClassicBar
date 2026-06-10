@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
+import tfar.classicbar.api.BarType;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarInfo;
@@ -23,7 +24,7 @@ public class Armor extends BarOverlayImpl {
             EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
     public static final BarInfo INFO = new BarInfo("armor",
-            player -> calculateArmorValue(player) >= 1,Armor::calculateArmorValue,fixed(20f));
+            player -> calculateArmorValue(player) >= 1,Armor::calculateArmorValue,fixed(20f), BarType.DUAL);
 
     public Armor(BarSettings barSettings) {
         super(INFO,barSettings);
@@ -44,8 +45,6 @@ public class Armor extends BarOverlayImpl {
         double armor = calculateArmorValue(player);
         double barWidth = getBarWidth(player);
 
-        boolean warn = shouldFlash(player);
-        float armorAlpha = warn ? (System.currentTimeMillis() / 500) % 2 : 1;
         int xStart = screenWidth / 2 + getHOffset();
 
         if (getSide() == BarSide.RIGHT) {
@@ -55,14 +54,14 @@ public class Armor extends BarOverlayImpl {
         int yStart = screenHeight - vOffset;
         //bar background
         renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
-        //how many layers are there? remember to start at 0
+        //how many type are there? remember to start at 0
         int index = (int) Math.min(Math.ceil(armor / 20), ConfigCache.armor.size()) - 1;
         Color primary = getPrimaryBarColor(index);
 
         if (index == 0) {
             //calculate bar color
             //draw portion of bar based on armor
-            renderPartialBar(primary.withAlpha(armorAlpha),graphics, xStart + 2, yStart + 2, barWidth);
+            renderPartialBar(primary,graphics, xStart + 2, yStart + 2, barWidth);
         } else {
             //we have wrapped, draw 2 bars
             //draw first bar
@@ -70,7 +69,7 @@ public class Armor extends BarOverlayImpl {
             if (armor % 20 != 0) {
                 Color secondary = getSecondaryBarColor(index - 1);
                 //draw complete first bar
-                renderFullBar(secondary.withAlpha(armorAlpha), graphics, xStart + 2, yStart + 2);
+                renderFullBar(secondary, graphics, xStart + 2, yStart + 2);
                 //draw partial second bar
                 double w = ModUtils.getWidth(armor % 20, 20);
                 double f = xStart + (getSide() == BarSide.RIGHT ? WIDTH - w : 0);
@@ -79,18 +78,14 @@ public class Armor extends BarOverlayImpl {
             //case 2, bar is a multiple of 20, or it is capped
             else {
                 //draw complete second bar
-                renderFullBar(primary.withAlpha(armorAlpha), graphics, xStart + 2, yStart + 2);
-            }
-            // now handle the low armor warning
-            if (warn) {
-                //draw one bar
-                renderPartialBar(primary.withAlpha(armorAlpha),graphics, xStart + 2, yStart + 2, ModUtils.getWidth(armor - index * 20, 20));
+                renderFullBar(primary, graphics, xStart + 2, yStart + 2);
             }
         }
     }
 
-    protected boolean shouldFlash(Player player) {
-        return ClassicBarsConfig.lowArmorWarning.get() && getDamagedAmount(player) > 0;
+    @Override
+    public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+
     }
 
     public Color getPrimaryBarColor(int index) {

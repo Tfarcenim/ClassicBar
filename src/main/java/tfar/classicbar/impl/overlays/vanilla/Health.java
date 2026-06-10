@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
+import tfar.classicbar.api.BarType;
 import tfar.classicbar.api.colorprovider.BarLayer;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -24,7 +25,7 @@ public class Health extends BarOverlayImpl {
   private double lastPlayerHealth = 0;
 
   public static final BarInfo INFO = new BarInfo("health",
-          player -> true,LivingEntity::getHealth, LivingEntity::getMaxHealth);
+          player -> true,LivingEntity::getHealth, LivingEntity::getMaxHealth, BarType.SINGLE);
 
   public Health(BarSettings settings) {
     super(INFO,settings);

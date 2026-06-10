@@ -6,16 +6,16 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarType;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.impl.overlays.OneColorBar;
 import tfar.classicbar.util.ModUtils;
 
-public class Air extends OneColorBar {
+public class Air extends BarOverlayImpl {
 
   public static final BarInfo INFO = new BarInfo("air",
           player -> player.getAirSupply() < player.getMaxAirSupply()
-          ,Entity::getAirSupply, Entity::getMaxAirSupply);
+          ,Entity::getAirSupply, Entity::getMaxAirSupply, BarType.SINGLE);
 
   public Air(BarSettings settings) {
     super(INFO,settings);

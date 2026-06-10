@@ -9,10 +9,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.ClassicBar;
-import tfar.classicbar.api.BarOverlay;
-import tfar.classicbar.api.BarSettings;
-import tfar.classicbar.api.BarSide;
-import tfar.classicbar.api.Color;
+import tfar.classicbar.api.*;
 import tfar.classicbar.api.colorprovider.BarLayer;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
@@ -70,6 +67,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         if (shouldRender(player)) {
             gui.setupOverlayRenderState(true, false);
             renderBar(gui, graphics, player, screenWidth, screenHeight, vOffset);
+            renderBarDecorations(gui, graphics, player, screenWidth, screenHeight, vOffset);
             Color.reset();//don't leak colors
             if (barSettings.show_text()) {
                 renderText(graphics, player, screenWidth, screenHeight, vOffset);
@@ -81,7 +79,15 @@ public abstract class BarOverlayImpl implements BarOverlay {
         } return false;
     }
 
-    public abstract void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
+    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+        if (barInfo.type() == BarType.SINGLE) {
+            renderSimpleBar(getBarSettings().colorProvider().getColor(player, barInfo.getRatio(player), BarLayer.PRIMARY), graphics, player, screenWidth, screenHeight, vOffset);
+        }
+    }
+
+    public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+
+    }
 
     public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
         int text = (int)barInfo.numerator().getValue(player);

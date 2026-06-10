@@ -10,21 +10,20 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarType;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.impl.overlays.OneColorBar;
-import tfar.classicbar.api.Color;
 import tfar.classicbar.util.ModUtils;
 
-public class VampirismBlood extends OneColorBar {
+public class VampirismBlood extends BarOverlayImpl {
 
     public static final ResourceLocation VAMPIRISM_ICONS = new ResourceLocation("vampirism:textures/gui/icons.png");
 
     public static final BarInfo INFO = new BarInfo(
             "vampirism_blood",ModCompat.vampirism.name(),
             player -> VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION,
-            VampirismBlood::getNumerator, VampirismBlood::getDenominator);
+            VampirismBlood::getNumerator, VampirismBlood::getDenominator, BarType.SINGLE);
 
     public VampirismBlood(BarSettings settings) {
         super(INFO,settings);

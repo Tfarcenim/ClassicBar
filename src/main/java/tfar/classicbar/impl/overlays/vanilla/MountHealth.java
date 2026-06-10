@@ -6,16 +6,16 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarType;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.impl.overlays.OneColorBar;
 import tfar.classicbar.util.ModUtils;
 
-public class MountHealth extends OneColorBar {
+public class MountHealth extends BarOverlayImpl {
 
   public static final BarInfo INFO = new BarInfo("mount_health",
           player -> player.getVehicle() instanceof LivingEntity livingEntity && livingEntity.isAlive()
-          ,MountHealth::getNumerator,MountHealth::getDenominator);
+          ,MountHealth::getNumerator,MountHealth::getDenominator, BarType.SINGLE);
 
   public MountHealth(BarSettings barSettings) {
     super(INFO,barSettings);

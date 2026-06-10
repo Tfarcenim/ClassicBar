@@ -10,19 +10,18 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
+import tfar.classicbar.api.BarType;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.impl.overlays.OneColorBar;
-import tfar.classicbar.api.Color;
 
-public class ParcoolStaminaB extends OneColorBar {
+public class ParcoolStaminaB extends BarOverlayImpl {
 
     public static final ResourceLocation ICONS = new ResourceLocation("parcool:textures/gui/stamina_bar.png");
 
     public static final BarInfo INFO = new BarInfo("parcool_stamina", ModCompat.parcool.name(),
             player -> !checkConfigs() && getRatio(player) < 1
-            ,player -> IStamina.get(player).get(),player -> IStamina.get(player).getMaxStamina());
+            ,player -> IStamina.get(player).get(),player -> IStamina.get(player).getMaxStamina(), BarType.SINGLE);
 
     public ParcoolStaminaB(BarSettings settings) {
         super(INFO,settings);

@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
+import tfar.classicbar.api.BarType;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -18,7 +19,7 @@ public class ArmorToughness extends BarOverlayImpl {
 
     public static final BarInfo INFO = new BarInfo("armor_toughness",
             player -> player.getAttributeValue(Attributes.ARMOR_TOUGHNESS) >= 1,
-            player -> (float) player.getAttributeValue(Attributes.ARMOR_TOUGHNESS),fixed(20f));
+            player -> (float) player.getAttributeValue(Attributes.ARMOR_TOUGHNESS),fixed(20f), BarType.DUAL);
 
     public ArmorToughness(BarSettings barSettings) {
         super(INFO,barSettings);
