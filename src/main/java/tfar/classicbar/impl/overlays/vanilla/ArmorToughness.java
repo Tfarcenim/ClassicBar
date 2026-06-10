@@ -17,9 +17,9 @@ import tfar.classicbar.util.ModUtils;
 
 public class ArmorToughness extends BarOverlayImpl {
 
-    public static final BarInfo INFO = new BarInfo("armor_toughness",
+    public static final BarInfo INFO = BarInfo.createSimpleVanilla("armor_toughness",
             player -> player.getAttributeValue(Attributes.ARMOR_TOUGHNESS) >= 1,
-            player -> (float) player.getAttributeValue(Attributes.ARMOR_TOUGHNESS),fixed(20f), BarType.DUAL);
+            player -> (float) player.getAttributeValue(Attributes.ARMOR_TOUGHNESS),fixed(20f));
 
     public ArmorToughness(BarSettings barSettings) {
         super(INFO,barSettings);
@@ -38,7 +38,7 @@ public class ArmorToughness extends BarOverlayImpl {
     public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         //armor toughness stuff
         double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
-        double barWidth = getBarWidth(player);
+        double barWidth = getBarWidth(player, 0);
         int xStart = screenWidth / 2 + getHOffset();
         if (getSide() == BarSide.RIGHT) {
             xStart += WIDTH - barWidth;

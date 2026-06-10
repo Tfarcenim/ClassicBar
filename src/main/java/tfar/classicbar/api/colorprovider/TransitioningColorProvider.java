@@ -74,7 +74,7 @@ public record TransitioningColorProvider(Map<Float, Color> colors) implements Co
     }
 
     @Override
-    public Color getColor(Player player, float ratio, BarLayer layer) {
+    public Color getColor(Player player, float ratio, int layer) {
         return calculateScaledColor(ratio);
     }
 

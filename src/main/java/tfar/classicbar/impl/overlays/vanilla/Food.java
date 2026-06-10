@@ -28,9 +28,9 @@ public class Food extends BarOverlayImpl {
   protected final boolean showExhaustion;
   private final boolean showHeldFood;
 
-  public static final BarInfo INFO = new BarInfo("food",
+  public static final BarInfo INFO = BarInfo.createSimpleVanilla("food",
           player -> (!ModCompat.vampirism.loaded || !VampirismHelper.isVampire(player))
-          ,player -> player.getFoodData().getFoodLevel(),fixed(20), BarType.DUAL);
+          ,player -> player.getFoodData().getFoodLevel(),fixed(20));
 
   public Food(BarSettings barSettings, boolean showSaturation, boolean showExhaustion,boolean showHeldFood) {
     super(INFO,barSettings);
@@ -52,7 +52,7 @@ public class Food extends BarOverlayImpl {
     double hunger = player.getFoodData().getFoodLevel();
     double maxHunger = 20;//HungerHelper.getMaxHunger(player);
     
-    double barWidthH = getBarWidth(player);
+    double barWidthH = getBarWidth(player, 0);
     
     double currentSat = player.getFoodData().getSaturationLevel();
     double maxSat = maxHunger;

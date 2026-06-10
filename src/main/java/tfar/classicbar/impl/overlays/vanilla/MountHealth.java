@@ -13,9 +13,9 @@ import tfar.classicbar.util.ModUtils;
 
 public class MountHealth extends BarOverlayImpl {
 
-  public static final BarInfo INFO = new BarInfo("mount_health",
+  public static final BarInfo INFO = BarInfo.createSimpleVanilla("mount_health",
           player -> player.getVehicle() instanceof LivingEntity livingEntity && livingEntity.isAlive()
-          ,MountHealth::getNumerator,MountHealth::getDenominator, BarType.SINGLE);
+          ,MountHealth::getNumerator,MountHealth::getDenominator);
 
   public MountHealth(BarSettings barSettings) {
     super(INFO,barSettings);

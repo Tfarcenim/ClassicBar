@@ -59,7 +59,7 @@ public record TransitioningEffectColorProvider(Map<Float, Color> normalColors,
     }
 
     @Override
-    public Color getColor(Player player, float ratio, BarLayer layer) {
+    public Color getColor(Player player, float ratio, int layer) {
         HealthEffect effect = BarOverlayImpl.getHealthEffect(player);
         return calculateScaledColor(ratio, effect);
     }

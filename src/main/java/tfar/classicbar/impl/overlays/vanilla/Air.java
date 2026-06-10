@@ -13,9 +13,10 @@ import tfar.classicbar.util.ModUtils;
 
 public class Air extends BarOverlayImpl {
 
-  public static final BarInfo INFO = new BarInfo("air",
-          player -> player.getAirSupply() < player.getMaxAirSupply()
-          ,Entity::getAirSupply, Entity::getMaxAirSupply, BarType.SINGLE);
+  public static final BarInfo INFO = BarInfo.getBuilder("air")
+          .setShouldRender(player -> player.getAirSupply() < player.getMaxAirSupply())
+          .addNumerator(Entity::getAirSupply)
+          .setDenominator(Entity::getMaxAirSupply).build();
 
   public Air(BarSettings settings) {
     super(INFO,settings);

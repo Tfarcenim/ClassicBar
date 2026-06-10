@@ -9,7 +9,8 @@ import tfar.classicbar.api.colorprovider.SingleColorProvider;
 import tfar.classicbar.impl.BarOverlayImpl;
 
 //these are common settings that the player can adjust
-public record BarSettings(boolean enabled, BarSide side, boolean fitted, ColorProvider colorProvider, boolean show_text, boolean show_icon, ResourceLocation icon) {
+public record BarSettings(boolean enabled, BarSide side, boolean fitted, ColorProvider colorProvider, boolean show_text,int text_index,
+                          boolean show_icon, ResourceLocation icon) {
 
     public static final MapCodec<BarSettings> CODEC = RecordCodecBuilder.mapCodec(
             objectInstance -> objectInstance.group(
@@ -18,6 +19,7 @@ public record BarSettings(boolean enabled, BarSide side, boolean fitted, ColorPr
                     Codec.BOOL.fieldOf("fitted").forGetter(BarSettings::fitted),
                     ColorProvider.CODEC.fieldOf("color_provider").forGetter(BarSettings::colorProvider),
                     Codec.BOOL.fieldOf("show_text").forGetter(BarSettings::show_text),
+                    Codec.INT.fieldOf("text_index").forGetter(BarSettings::text_index),
                     Codec.BOOL.fieldOf("show_icon").forGetter(BarSettings::show_icon),
                     ResourceLocation.CODEC.fieldOf("icon")
                             .forGetter(BarSettings::icon)).apply(objectInstance,BarSettings::new)
@@ -33,6 +35,7 @@ public record BarSettings(boolean enabled, BarSide side, boolean fitted, ColorPr
         private ColorProvider colorProvider = new SingleColorProvider(Color.WHITE);
         private boolean fitted = false;
         private boolean show_text = true;
+        private int text_index = 0;
         private boolean show_icon = true;
         private ResourceLocation icon = BarOverlayImpl.GUI_ICONS_LOCATION;
 
@@ -56,6 +59,10 @@ public record BarSettings(boolean enabled, BarSide side, boolean fitted, ColorPr
             return this;
         }
 
+        public void setTextIndex(int text_index) {
+            this.text_index = text_index;
+        }
+
         public Builder setColorProvider(ColorProvider colorProvider) {
             this.colorProvider = colorProvider;
             return this;
@@ -72,7 +79,7 @@ public record BarSettings(boolean enabled, BarSide side, boolean fitted, ColorPr
         }
 
         public BarSettings build() {
-            return new BarSettings(enabled,side,fitted,colorProvider,show_text,show_icon,icon);
+            return new BarSettings(enabled,side,fitted,colorProvider,show_text,text_index,show_icon,icon);
         }
     }
 }

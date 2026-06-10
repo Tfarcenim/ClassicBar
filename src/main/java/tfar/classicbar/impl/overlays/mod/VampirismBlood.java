@@ -20,10 +20,11 @@ public class VampirismBlood extends BarOverlayImpl {
 
     public static final ResourceLocation VAMPIRISM_ICONS = new ResourceLocation("vampirism:textures/gui/icons.png");
 
-    public static final BarInfo INFO = new BarInfo(
-            "vampirism_blood",ModCompat.vampirism.name(),
-            player -> VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION,
-            VampirismBlood::getNumerator, VampirismBlood::getDenominator, BarType.SINGLE);
+    public static final BarInfo INFO = BarInfo.getBuilder("vampirism_blood")
+            .requireDependency(ModCompat.vampirism.name())
+            .setShouldRender(player -> VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION)
+            .addNumerator(VampirismBlood::getNumerator)
+            .setDenominator(VampirismBlood::getDenominator).build();
 
     public VampirismBlood(BarSettings settings) {
         super(INFO,settings);

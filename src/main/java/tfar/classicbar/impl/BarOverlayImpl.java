@@ -80,8 +80,14 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        if (barInfo.type() == BarType.SINGLE) {
-            renderSimpleBar(getBarSettings().colorProvider().getColor(player, barInfo.getRatio(player), BarLayer.PRIMARY), graphics, player, screenWidth, screenHeight, vOffset);
+        renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
+
+        for (int i = 0; i < barInfo.activeLayers().apply(player); i++) {
+            int barWidth = getBarWidth(player, i);
+            int xStart = getXStartBar(screenWidth,barWidth);
+            int yStart = screenHeight - vOffset;
+            Color color = getBarSettings().colorProvider().getColor(player, barInfo.getUnclampedRatio(player,i), i);
+            renderPartialBar(color, graphics, xStart+2, yStart+2, barWidth);
         }
     }
 
@@ -90,10 +96,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        int text = (int)barInfo.numerator().getValue(player);
+        int text = (int)barInfo.numerators().get(barSettings.text_index()).getValue(player);
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
-        textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player,barInfo.getRatio(player) , BarLayer.PRIMARY).colorToText());
+        textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player,barInfo.getRatio(player,0) , 0).colorToText());
     }
 
     public abstract void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset);
@@ -147,7 +153,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     protected void renderBarBackground(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset,boolean flash) {
-        double barWidth = getBarWidth(player);
+        double barWidth = getBarWidth(player, 0);
         int xStart = screenWidth / 2 + getHOffset();
         if (isFitted() && getSide() == BarSide.RIGHT) {
             xStart += WIDTH - barWidth;
@@ -210,7 +216,22 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     protected void renderSimpleBar(Color color, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset,boolean highlight) {
-        int barWidth = getBarWidth(player);
+        int barWidth = getBarWidth(player, 0);
+        int xStart = getXStartBar(screenWidth,barWidth);
+        int yStart = screenHeight - vOffset;
+
+        //Bar background
+        renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset,highlight);
+        //draw portion of bar based on feathers amount
+        renderPartialBar(color,graphics,xStart+2,yStart+2,barWidth);
+    }
+
+    protected void renderDoubleBar(Color color, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+        renderSimpleBar(color,graphics,player,screenWidth,screenHeight,vOffset,false);
+    }
+
+    protected void renderDoubleBar(Color color, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset,boolean highlight) {
+        int barWidth = getBarWidth(player,0 );
         int xStart = getXStartBar(screenWidth,barWidth);
         int yStart = screenHeight - vOffset;
 
@@ -225,25 +246,21 @@ public abstract class BarOverlayImpl implements BarOverlay {
         ModUtils.drawTexturedModalRect(BAR,matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
     }
 
-    public int getLayers() {
-        return 1;
-    }
-
     public ResourceLocation getIconRL() {
         return barSettings.icon();
     }
 
-    public final int getBarWidth(Player player) {
-        return (int) Math.ceil(WIDTH* barInfo.getRatio(player));
+    public final int getBarWidth(Player player,int layer) {
+        return (int) Math.ceil(WIDTH* barInfo.getRatio(player,layer));
     }
 
     @FunctionalInterface
-    protected interface Numerator {
+    public interface Numerator {
         float getValue(Player player);
     }
 
     @FunctionalInterface
-    protected interface Denominator {
+    public interface Denominator {
         float getValue(Player player);
     }
 

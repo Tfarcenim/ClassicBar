@@ -194,9 +194,10 @@ public class ToughAsNailsThirst extends BarOverlayImpl {
     protected final boolean showHydration;
     protected final boolean showExhaustion;
 
-    public static final BarInfo INFO = new BarInfo("toughasnails_thirst",ModCompat.toughasnails.name(),
-            player -> isEnabled()
-            ,player -> (float)ThirstHelper.getThirst(player).getThirst(),fixed(MAX_THIRST_LEVEL), BarType.DUAL);
+    public static final BarInfo INFO = BarInfo.getBuilder("toughasnails_thirst")
+            .requireDependency(ModCompat.toughasnails.name())
+            .setShouldRender(player -> isEnabled())
+            .addNumerator(player -> (float)ThirstHelper.getThirst(player).getThirst()).build();
 
     public ToughAsNailsThirst(BarSettings settings, boolean showHydration, boolean showExhaustion) {
         super(INFO,settings);

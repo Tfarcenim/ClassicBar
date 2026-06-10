@@ -15,13 +15,14 @@ public record WrappingColorProvider(List<Color> colors) implements ColorProvider
     ).apply(instance, WrappingColorProvider::new));
 
     @Override
-    public Color getColor(Player player, float ratio, BarLayer layer) {
+    public Color getColor(Player player, float ratio, int layer) {
         int primaryIndex = (int) Mth.clamp(Math.ceil(ratio) - 1,0,colors.size()-1);//0 - 20 = 0, 21 - 40 = 1 etc
         int secondaryIndex = primaryIndex - 1;
 
         return switch (layer) {
-            case PRIMARY ->  colors.get(primaryIndex);
-            case SECONDARY -> colors.get(secondaryIndex);
+            case 1 ->  colors.get(primaryIndex);
+            case 0 -> colors.get(secondaryIndex);
+            default -> throw new IllegalArgumentException("Invalid layer " + layer);
         };
     }
 

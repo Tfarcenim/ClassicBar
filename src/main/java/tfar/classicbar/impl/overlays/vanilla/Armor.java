@@ -11,7 +11,6 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.api.BarType;
-import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -23,8 +22,8 @@ public class Armor extends BarOverlayImpl {
     private static final EquipmentSlot[] armorList = new EquipmentSlot[]{EquipmentSlot.HEAD,
             EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
-    public static final BarInfo INFO = new BarInfo("armor",
-            player -> calculateArmorValue(player) >= 1,Armor::calculateArmorValue,fixed(20f), BarType.DUAL);
+    public static final BarInfo INFO = BarInfo.createSimpleVanilla("armor",
+            player -> calculateArmorValue(player) >= 1,Armor::calculateArmorValue,fixed(20f));
 
     public Armor(BarSettings barSettings) {
         super(INFO,barSettings);
@@ -43,7 +42,7 @@ public class Armor extends BarOverlayImpl {
     @Override
     public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         double armor = calculateArmorValue(player);
-        double barWidth = getBarWidth(player);
+        double barWidth = getBarWidth(player, 0);
 
         int xStart = screenWidth / 2 + getHOffset();
 

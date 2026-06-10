@@ -24,8 +24,8 @@ public class Health extends BarOverlayImpl {
   private long healthUpdateCounter = 0;
   private double lastPlayerHealth = 0;
 
-  public static final BarInfo INFO = new BarInfo("health",
-          player -> true,LivingEntity::getHealth, LivingEntity::getMaxHealth, BarType.SINGLE);
+  public static final BarInfo INFO = BarInfo.createSimpleVanilla("health",
+          player -> true,LivingEntity::getHealth, LivingEntity::getMaxHealth);
 
   public Health(BarSettings settings) {
     super(INFO,settings);
@@ -45,7 +45,7 @@ public class Health extends BarOverlayImpl {
     int updateCounter = gui.getGuiTicks();
 
     double health = player.getHealth();
-    double barWidth = getBarWidth(player);
+    double barWidth = getBarWidth(player, 0);
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
 
     //player is damaged and resistant
@@ -89,7 +89,7 @@ public class Health extends BarOverlayImpl {
     //draw portion of bar based on health remaining
    // Color primary = getBarSettings().colorProvider().getColor(player, ,0);
 
-    renderSimpleBar(getBarSettings().colorProvider().getColor(player,barInfo.getRatio(player) , BarLayer.PRIMARY), graphics, player, screenWidth, screenHeight, vOffset);
+    renderSimpleBar(getBarSettings().colorProvider().getColor(player,barInfo.getRatio(player,0),0), graphics, player, screenWidth, screenHeight, vOffset);
 
     HealthEffect effect = getHealthEffect(player);
 

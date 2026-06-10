@@ -18,8 +18,9 @@ import tfar.classicbar.util.ModUtils;
 
 public class Absorption extends BarOverlayImpl {
 
-    public static final BarInfo INFO = new BarInfo("absorption",
-            player -> player.getAbsorptionAmount() > 0,Player::getAbsorptionAmount,LivingEntity::getMaxHealth, BarType.DUAL);
+    public static final BarInfo INFO = BarInfo.getBuilder("absorption")
+            .setShouldRender(player -> player.getAbsorptionAmount() > 0)
+            .addNumerator(Player::getAbsorptionAmount).setDenominator(LivingEntity::getMaxHealth).build();
 
     public Absorption(BarSettings barSettings) {
         super(INFO,barSettings);
@@ -37,7 +38,7 @@ public class Absorption extends BarOverlayImpl {
     public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
 
         double absorb = player.getAbsorptionAmount();
-        double barWidth = getBarWidth(player);
+        double barWidth = getBarWidth(player, 0);
 
         int xStart = screenWidth / 2 + getHOffset();
         int yStart = screenHeight - vOffset;

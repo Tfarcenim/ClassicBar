@@ -10,6 +10,6 @@ public interface ColorProvider {
             .dispatch(ColorProvider::getSerializer, c -> c.codec().codec());
 
     //note, this CAN go above 1
-    Color getColor(Player player,float ratio, BarLayer layer);
+    Color getColor(Player player,float ratio, int layer);
     ColorProviderSerializer<?> getSerializer();
 }
