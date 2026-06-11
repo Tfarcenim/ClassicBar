@@ -27,8 +27,6 @@ public class ClassicBarsConfig {
   static ForgeConfigSpec.ConfigValue<String> thirstBarDebuffColor;
   static ForgeConfigSpec.ConfigValue<String> hydrationBarColor;
   static ForgeConfigSpec.ConfigValue<String> hydrationBarDebuffColor;
-  static ForgeConfigSpec.ConfigValue<List<? extends String>> armorColors;
-  static ForgeConfigSpec.ConfigValue<List<? extends String>> armorToughnessColors;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionColors;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionPoisonColors;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionWitherColors;
@@ -50,8 +48,6 @@ public class ClassicBarsConfig {
     hydrationBarColor = builder.define("hydration_bar_color","#00A3E2",String.class::isInstance);
     hydrationBarDebuffColor = builder.define("hydration_bar_debuff_color","#85CF25",String.class::isInstance);
 
-    armorColors = builder.defineList("armor_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"),String.class::isInstance);
-    armorToughnessColors = builder.defineList("armor_toughness_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"),String.class::isInstance);
     absorptionColors = builder.defineList("absorption_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
     absorptionPoisonColors = builder.defineList("absorption_poison_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);
     absorptionWitherColors = builder.defineList("absorption_wither_color_values", Lists.newArrayList("#D4AF37", "#C2C73B", "#8DC337", "#36BA77", "#4A5BC4", "#D89AE2", "#DF9DC7", "#DFA99D", "#D4DF9D", "#3E84C6", "#B8C1E8", "#DFDFDF"),String.class::isInstance);

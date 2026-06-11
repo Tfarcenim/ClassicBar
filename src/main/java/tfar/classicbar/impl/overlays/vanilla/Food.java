@@ -51,7 +51,7 @@ public class Food extends BarOverlayImpl {
     double hunger = player.getFoodData().getFoodLevel();
     double maxHunger = 20;//HungerHelper.getMaxHunger(player);
     
-    double barWidthH = getBarWidth(player, 0);
+    double barWidthH = getBarWidth(player);
     
     double currentSat = player.getFoodData().getSaturationLevel();
     double maxSat = maxHunger;
@@ -90,7 +90,7 @@ public class Food extends BarOverlayImpl {
       double hungerWidth = Math.min(maxHunger - hunger, hungerOverlay);
       //don't render the bar at all if hunger is full
       if (hunger < maxHunger) {
-        double w = ModUtils.getWidth(hungerWidth + hunger, maxHunger);
+        double w = BarOverlayImpl.getWidth(hungerWidth + hunger, maxHunger);
 
         f = xStart + (getSide()  == BarSide.RIGHT? BarOverlayImpl.WIDTH - w : 0);
         renderPartialBar(hungerColor.withAlpha((float) foodAlpha),matrices,f + 2, yStart + 2, w);
@@ -109,7 +109,7 @@ public class Food extends BarOverlayImpl {
           saturationWidth = potentialSat - diff;
         }
 
-        double w = ModUtils.getWidth(saturationWidth + currentSat, maxSat);
+        double w = BarOverlayImpl.getWidth(saturationWidth + currentSat, maxSat);
 
         //offset used to decide where to place the bar
         f = xStart + (getSide()  == BarSide.RIGHT? BarOverlayImpl.WIDTH - w : 0);
@@ -124,10 +124,10 @@ public class Food extends BarOverlayImpl {
     if (showExhaustion && PacketHandler.presentOnServer) {
       float exhaustion = player.getFoodData().getExhaustionLevel();
       exhaustion = Math.min(exhaustion, 4);
-      f = xStart + (getSide()  == BarSide.RIGHT ? BarOverlayImpl.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
+      f = xStart + (getSide()  == BarSide.RIGHT ? BarOverlayImpl.WIDTH - BarOverlayImpl.getWidth(exhaustion, 4) : 0);
       //draw exhaustion
       RenderSystem.setShaderColor(1, 1, 1, .25f);
-      ModUtils.drawTexturedModalRect(BAR,matrices,f + 2, yStart + 1, 1, 28, ModUtils.getWidth(exhaustion, 4f), 9);
+      ModUtils.drawTexturedModalRect(BAR,matrices,f + 2, yStart + 1, 1, 28, BarOverlayImpl.getWidth(exhaustion, 4f), 9);
       RenderSystem.setShaderColor(1, 1, 1, 1);
     }
   }

@@ -3,17 +3,11 @@ package tfar.classicbar.util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import tfar.classicbar.impl.BarOverlayImpl;
 
 public class ModUtils {
 
   public static void drawTexturedModalRect(ResourceLocation texture,GuiGraphics stack, double x, int y, int textureX, int textureY, double width, int height) {
     stack.blit(texture, (int) x, y, textureX, textureY, (int) width, height);
-  }
-
-  public static double getWidth(double d1, double d2) {
-    double ratio = BarOverlayImpl.WIDTH * d1 / d2;
-    return Math.ceil(ratio);
   }
 
   public static void drawStringOnHUD(GuiGraphics stack, String string, int xOffset, int yOffset, int color) {

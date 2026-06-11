@@ -247,13 +247,13 @@ public class ToughAsNailsThirst extends BarOverlayImpl {
     }
 
     private void drawThirst(GuiGraphics stack, Player player, int x, int y, double thirstLevel, double maxLevel) {
-        double barWidth = ModUtils.getWidth(thirstLevel, maxLevel);
+        double barWidth = BarOverlayImpl.getWidth(thirstLevel, maxLevel);
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         renderPartialBar(getSecondaryBarColor(player),stack, barXStart + 2, y + 2, barWidth);
     }
 
     private void drawHydration(GuiGraphics stack, Player player, int x, int y, double hydrationLevel, double maxLevel) {
-        double barWidth = ModUtils.getWidth(hydrationLevel, maxLevel);
+        double barWidth = BarOverlayImpl.getWidth(hydrationLevel, maxLevel);
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         renderPartialBar(getPrimaryBarColor(player),stack, barXStart + 2, y + 2, barWidth);
     }
@@ -268,7 +268,7 @@ public class ToughAsNailsThirst extends BarOverlayImpl {
         int potentialThirstLevel = getPotentialThirstLevel(drink);
         double restoredThirstLevel = Math.min(maxThirstLevel - thirstLevel, potentialThirstLevel);
         if (thirstLevel < maxThirstLevel) {
-            double barWidth = ModUtils.getWidth(thirstLevel + restoredThirstLevel, maxThirstLevel);
+            double barWidth = BarOverlayImpl.getWidth(thirstLevel + restoredThirstLevel, maxThirstLevel);
             double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
             renderPartialBar(getSecondaryBarColor(player).withAlpha((float) drinkAlpha),stack,barXStart + 2, y + 2, barWidth);
         }
@@ -286,7 +286,7 @@ public class ToughAsNailsThirst extends BarOverlayImpl {
                 double diff = (hydrationLevel + potentialHydrationLevel) - (thirstLevel + restoredThirstLevel);
                 restoredHydrationLevel = potentialHydrationLevel - diff;
             }
-            double barWidth = ModUtils.getWidth(hydrationLevel + restoredHydrationLevel, maxHydrationLevel);
+            double barWidth = BarOverlayImpl.getWidth(hydrationLevel + restoredHydrationLevel, maxHydrationLevel);
             double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
             renderPartialBar(getPrimaryBarColor(player).withAlpha((float)drinkAlpha),stack,barXStart + 2, y + 2, barWidth);
         }
@@ -294,7 +294,7 @@ public class ToughAsNailsThirst extends BarOverlayImpl {
 
     private void drawExhaustion(GuiGraphics stack, Player player, int x, int y, double exhaustionLevel, double maxLevel) {
         RenderSystem.setShaderColor(1, 1, 1, .25f);
-        double barWidth = ModUtils.getWidth(exhaustionLevel, maxLevel);
+        double barWidth = BarOverlayImpl.getWidth(exhaustionLevel, maxLevel);
         double barXStart = x + (getSide() == BarSide.RIGHT ? BarOverlayImpl.WIDTH - barWidth : 0);
         ModUtils.drawTexturedModalRect(BAR,stack,barXStart + 2, y + 1, 1, 28, barWidth, 9);
     }

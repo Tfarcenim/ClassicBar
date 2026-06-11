@@ -8,8 +8,6 @@ import java.util.List;
 
 public class ConfigCache {
 
-    public static List<Color> armor = new ArrayList<>();
-    public static List<Color> armor_toughness = new ArrayList<>();
     public static Color hunger;
     public static Color hungerDebuff;
     public static Color saturation;
@@ -22,8 +20,6 @@ public class ConfigCache {
     public static List<Color> absorptionPoison = new ArrayList<>();
     public static List<Color> absorptionWither = new ArrayList<>();
     private static void clear() {
-        armor.clear();
-        armor_toughness.clear();
         absorption.clear();
         absorptionPoison.clear();
         absorptionWither.clear();
@@ -31,8 +27,6 @@ public class ConfigCache {
     public static void bake() {
         clear();
 
-        cacheList(ClassicBarsConfig.armorColors,armor);
-        cacheList(ClassicBarsConfig.armorToughnessColors,armor_toughness);
         cacheList(ClassicBarsConfig.absorptionColors,absorption);
         cacheList(ClassicBarsConfig.absorptionPoisonColors,absorptionPoison);
         cacheList(ClassicBarsConfig.absorptionWitherColors,absorptionWither);

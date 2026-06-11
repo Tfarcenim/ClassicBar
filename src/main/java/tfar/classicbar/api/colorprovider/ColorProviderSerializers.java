@@ -22,8 +22,8 @@ public class ColorProviderSerializers {
     public static final ColorProviderSerializer<TransitioningEffectColorProvider> TRANSITIONING_EFFECT = register(new ColorProviderSerializer<>
             ("transitioning_effect", TransitioningEffectColorProvider.CODEC));
 
-    public static final ColorProviderSerializer<TransitioningEffectColorProvider> WRAPPING = register(new ColorProviderSerializer<>
-            ("transitioning_effect", TransitioningEffectColorProvider.CODEC));
+    public static final ColorProviderSerializer<StackingColorProvider> STACKING = register(new ColorProviderSerializer<>
+            ("stacking", StackingColorProvider.CODEC));
 
     public static <C extends ColorProvider> ColorProviderSerializer<C> register(ColorProviderSerializer<C> serializer) {
         MAP.put(serializer.name(), serializer);

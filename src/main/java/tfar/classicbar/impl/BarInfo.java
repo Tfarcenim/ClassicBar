@@ -21,11 +21,11 @@ public record BarInfo(String name, Set<String> dependencies, Predicate<Player> s
         return dependencies.isEmpty() || dependencies.stream().allMatch(s -> ModList.get().isLoaded(s));
     }
 
-    public float getRatio(Player player, int layer) {
-        return Mth.clamp(getUnclampedRatio(player,layer),0,1);
+    public float getRatio(Player player) {
+        return Mth.clamp(getUnclampedRatio(player),0,1);
     }
 
-    public float getUnclampedRatio(Player player,int layer) {
+    public float getUnclampedRatio(Player player) {
         return numerator.getValue(player)/denominator.getValue(player);
     }
 

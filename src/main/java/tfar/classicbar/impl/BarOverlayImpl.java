@@ -45,6 +45,11 @@ public abstract class BarOverlayImpl implements BarOverlay {
         dependenciesMet = barInfo.checkDependencies();
     }
 
+    public static int getWidth(double d1, double d2) {
+      double ratio = WIDTH * d1 / d2;
+      return (int)Math.ceil(ratio);
+    }
+
     public BarSettings getBarSettings() {
         return barSettings;
     }
@@ -83,10 +88,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
         renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
 
         for (int i = 0; i < barInfo.activeLayers().apply(player); i++) {
-            int barWidth = getBarWidth(player, i);
+            int barWidth = getBarWidth(player);
             int xStart = getXStartBar(screenWidth,barWidth);
             int yStart = screenHeight - vOffset;
-            Color color = getBarSettings().colorProvider().getColor(player, barInfo.getUnclampedRatio(player,i), i);
+            Color color = getBarSettings().colorProvider().getColor(player, barInfo.getUnclampedRatio(player), i);
             renderPartialBar(color, graphics, xStart+2, yStart+2, barWidth);
         }
     }
@@ -99,7 +104,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
         int text = (int)barInfo.numerator().getValue(player);
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
-        textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player,barInfo.getRatio(player,0) , 0).colorToText());
+        textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player,barInfo.getRatio(player) , 0).colorToText());
     }
 
     public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
@@ -148,7 +153,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     protected void renderBarBackground(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset,boolean flash) {
-        double barWidth = getBarWidth(player, 0);
+        double barWidth = getBarWidth(player);
         int xStart = screenWidth / 2 + getHOffset();
         if (isFitted() && getSide() == BarSide.RIGHT) {
             xStart += WIDTH - barWidth;
@@ -211,7 +216,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     protected void renderSimpleBar(Color color, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset,boolean highlight) {
-        int barWidth = getBarWidth(player, 0);
+        int barWidth = getBarWidth(player);
         int xStart = getXStartBar(screenWidth,barWidth);
         int yStart = screenHeight - vOffset;
 
@@ -226,7 +231,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     protected void renderDoubleBar(Color color, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset,boolean highlight) {
-        int barWidth = getBarWidth(player,0 );
+        int barWidth = getBarWidth(player);
         int xStart = getXStartBar(screenWidth,barWidth);
         int yStart = screenHeight - vOffset;
 
@@ -245,8 +250,8 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return barSettings.icon();
     }
 
-    public final int getBarWidth(Player player,int layer) {
-        return (int) Math.ceil(WIDTH* barInfo.getRatio(player,layer));
+    public final int getBarWidth(Player player) {
+        return (int) Math.ceil(WIDTH* barInfo.getRatio(player));
     }
 
     @FunctionalInterface

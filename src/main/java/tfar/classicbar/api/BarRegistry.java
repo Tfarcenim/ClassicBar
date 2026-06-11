@@ -1,5 +1,6 @@
 package tfar.classicbar.api;
 
+import tfar.classicbar.api.colorprovider.StackingColorProvider;
 import tfar.classicbar.api.colorprovider.TransitioningColorProvider;
 import tfar.classicbar.api.colorprovider.SingleColorProvider;
 import tfar.classicbar.api.colorprovider.TransitioningEffectColorProvider;
@@ -31,9 +32,13 @@ public class BarRegistry {
         registerBar(new Air(BarSettings.getBuilder().setSide(BarSide.RIGHT)
                 .setColorProvider(new SingleColorProvider(Color.hex2Color("#00E6E6")))
                 .build()));
-        registerBar(new Armor(BarSettings.getBuilder().fitted().build()));
+        registerBar(new Armor(BarSettings.getBuilder().fitted()
+                .setColorProvider(StackingColorProvider.DEFAULT_ARMOR)
+                .build()));
         registerBar(new Absorption(BarSettings.getBuilder().fitted().build()));
-        registerBar(new ArmorToughness(BarSettings.getBuilder().setSide(BarSide.RIGHT).fitted().setIcon(BarOverlayImpl.BAR).build()));
+        registerBar(new ArmorToughness(BarSettings.getBuilder().setSide(BarSide.RIGHT).fitted()
+                .setColorProvider(StackingColorProvider.DEFAULT_ARMOR)
+                .setIcon(BarOverlayImpl.BAR).build()));
         registerBar(new VampirismBlood(BarSettings.getBuilder()
                 .setColorProvider(new SingleColorProvider(Color.RED))
                 .setIcon(VampirismBlood.VAMPIRISM_ICONS).build()));

@@ -43,7 +43,7 @@ public class Health extends BarOverlayImpl {
     int updateCounter = gui.getGuiTicks();
 
     double health = player.getHealth();
-    double barWidth = getBarWidth(player, 0);
+    double barWidth = getBarWidth(player);
     boolean highlight = healthUpdateCounter > (long) updateCounter && (healthUpdateCounter - (long) updateCounter) / 3 % 2 == 1;
 
     //player is damaged and resistant
@@ -74,7 +74,7 @@ public class Health extends BarOverlayImpl {
       //reset to white
       if (displayHealth > health) {
         //draw interpolation
-        double w = ModUtils.getWidth(displayHealth, maxHealth);
+        double w = BarOverlayImpl.getWidth(displayHealth, maxHealth);
         double off = getSide() == BarSide.RIGHT ? w - barWidth : 0;
         //draw interpolation
         renderPartialBar(Color.WHITE,graphics,f + 2 - off, yStart + 2,w);
@@ -87,7 +87,7 @@ public class Health extends BarOverlayImpl {
     //draw portion of bar based on health remaining
    // Color primary = getBarSettings().colorProvider().getColor(player, ,0);
 
-    renderSimpleBar(getBarSettings().colorProvider().getColor(player,barInfo.getRatio(player,0),0), graphics, player, screenWidth, screenHeight, vOffset);
+    renderSimpleBar(getBarSettings().colorProvider().getColor(player,barInfo.getRatio(player),0), graphics, player, screenWidth, screenHeight, vOffset);
 
     HealthEffect effect = getHealthEffect(player);
 

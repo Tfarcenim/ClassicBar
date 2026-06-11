@@ -1,19 +1,13 @@
 package tfar.classicbar.impl.overlays;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
-import tfar.classicbar.api.BarSide;
 import tfar.classicbar.api.Color;
-import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.impl.overlays.vanilla.ArmorToughness;
-import tfar.classicbar.util.ModUtils;
 
 public class StackingBarOverlay extends BarOverlayImpl {
 
@@ -25,10 +19,6 @@ public class StackingBarOverlay extends BarOverlayImpl {
         this.codec = codec;
     }
 
-    public static final Codec<ArmorToughness> CODEC = RecordCodecBuilder.create(
-            o -> codecStart(o).apply(o,ArmorToughness::new)
-    );
-
     @Override
     public Codec<? extends BarOverlayImpl> codec() {
         return codec;
@@ -37,15 +27,12 @@ public class StackingBarOverlay extends BarOverlayImpl {
     @Override
     public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
         //armor toughness stuff
-        double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
-        double barWidth = getBarWidth(player, 0);
-        int xStart = screenWidth / 2 + getHOffset();
-        if (getSide() == BarSide.RIGHT) {
-            xStart += WIDTH - barWidth;
-        }
+        double value = barInfo.numerator().getValue(player);
+        int barWidth = getBarWidth(player);
+        int xStart = getXStartBar(screenWidth,barWidth);
         int yStart = screenHeight - vOffset;
-        int index = (int) Math.min(Math.ceil(armorToughness / 20), ConfigCache.armor_toughness.size()) - 1;
-        Color primary = getBarColor(index);
+        int index = getStackCount(player);
+        Color primary = getBarColor(player,index);
         //draw bar background portion
         renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
         if (index == 0) {
@@ -53,18 +40,16 @@ public class StackingBarOverlay extends BarOverlayImpl {
             renderPartialBar(primary,graphics, xStart + 2, yStart + 2, barWidth);
         } else {
             //we have wrapped, draw 2 bars
-            int size = ConfigCache.armor_toughness.size();
             //if we are out of colors wrap the bar
-            if (index < size && armorToughness % 20 != 0) {
-                Color secondary = getBarColor(index - 1);
+            if (value % 20 != 0) {
+                Color secondary = getBarColor(player,index - 1);
                 //draw complete first bar
                 renderFullBar(secondary, graphics, xStart + 2, yStart + 2);
                 //draw partial second bar
 
-                double w = ModUtils.getWidth(armorToughness % 20, 20);
-
-                double f = xStart + (getSide() == BarSide.RIGHT ? WIDTH - w : 0);
-                renderPartialBar(primary,graphics, f + 2, yStart + 2, w);
+                int w = BarOverlayImpl.getWidth(value % 20, 20);
+                 xStart = getXStartBar(screenWidth,w);
+                renderPartialBar(primary,graphics, xStart + 2, yStart + 2, w);
             } else { //case 2, bar is a multiple of 20, or it is capped
                 //draw complete second bar
                 renderFullBar(primary, graphics, xStart + 2, yStart + 2);
@@ -72,18 +57,23 @@ public class StackingBarOverlay extends BarOverlayImpl {
         }
     }
 
-    public Color getBarColor(int index) {
-        return ConfigCache.armor_toughness.get(index);
+    public int getStackCount(Player player) {
+        float ratio = barInfo.getUnclampedRatio(player);
+        return ratio > 1 ? (int) (Math.ceil(ratio) - 1) : 0;
+    }
+
+    public Color getBarColor(Player player,int index) {
+        return getBarSettings().colorProvider().getColor(player,barInfo.getUnclampedRatio(player),index);
     }
 
     @Override
     public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
-        double armorToughness = player.getAttribute(Attributes.ARMOR_TOUGHNESS).getValue();
-        int index = (int) Math.min(Math.ceil(armorToughness / 20) - 1, ConfigCache.armor_toughness.size() - 1);
-        int c = getBarColor(index).colorToText();
-        //draw armor toughness amount
-        textHelper(graphics, xStart, yStart, armorToughness, c);
+        double value = barInfo.numerator().getValue(player);
+        int index = getStackCount(player);
+        int c = getBarColor(player,index).colorToText();
+        //draw amount
+        textHelper(graphics, xStart, yStart, value, c);
     }
 }

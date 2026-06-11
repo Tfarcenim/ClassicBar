@@ -37,7 +37,7 @@ public class Absorption extends BarOverlayImpl {
     public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
 
         double absorb = player.getAbsorptionAmount();
-        double barWidth = getBarWidth(player, 0);
+        double barWidth = getBarWidth(player);
 
         int xStart = screenWidth / 2 + getHOffset();
         int yStart = screenHeight - vOffset;
@@ -63,7 +63,7 @@ public class Absorption extends BarOverlayImpl {
             //is it on the edge or capped already?
             if (absorb % maxHealth != 0 && index < ConfigCache.absorption.size() - 1) {
                 //draw second partial bar
-                renderPartialBar(primary,graphics, xStart + 2, yStart + 2, ModUtils.getWidth(absorb % maxHealth, maxHealth));
+                renderPartialBar(primary,graphics, xStart + 2, yStart + 2, BarOverlayImpl.getWidth(absorb % maxHealth, maxHealth));
             }
         }
     }
