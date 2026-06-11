@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.api.*;
-import tfar.classicbar.api.colorprovider.BarLayer;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 
@@ -96,7 +95,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        int text = (int)barInfo.numerators().get(barSettings.text_index()).getValue(player);
+        int text = (int)barInfo.numerator().getValue(player);
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
         textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player,barInfo.getRatio(player,0) , 0).colorToText());

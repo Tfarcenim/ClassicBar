@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
-import tfar.classicbar.api.BarType;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.util.ModUtils;
@@ -15,7 +14,7 @@ public class Air extends BarOverlayImpl {
 
   public static final BarInfo INFO = BarInfo.getBuilder("air")
           .setShouldRender(player -> player.getAirSupply() < player.getMaxAirSupply())
-          .addNumerator(Entity::getAirSupply)
+          .setNumerator(Entity::getAirSupply)
           .setDenominator(Entity::getMaxAirSupply).build();
 
   public Air(BarSettings settings) {

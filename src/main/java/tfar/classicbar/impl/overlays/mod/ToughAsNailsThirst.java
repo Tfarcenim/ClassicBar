@@ -10,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
-import tfar.classicbar.api.BarType;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.config.ConfigCache;
@@ -197,7 +196,7 @@ public class ToughAsNailsThirst extends BarOverlayImpl {
     public static final BarInfo INFO = BarInfo.getBuilder("toughasnails_thirst")
             .requireDependency(ModCompat.toughasnails.name())
             .setShouldRender(player -> isEnabled())
-            .addNumerator(player -> (float)ThirstHelper.getThirst(player).getThirst()).build();
+            .setNumerator(player -> (float)ThirstHelper.getThirst(player).getThirst()).build();
 
     public ToughAsNailsThirst(BarSettings settings, boolean showHydration, boolean showExhaustion) {
         super(INFO,settings);

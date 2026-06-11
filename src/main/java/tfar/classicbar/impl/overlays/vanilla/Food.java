@@ -133,6 +133,11 @@ public class Food extends BarOverlayImpl {
   }
 
   @Override
+  public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+
+  }
+
+  @Override
   public Codec<? extends BarOverlayImpl> codec() {
     return CODEC;
   }

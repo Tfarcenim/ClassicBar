@@ -9,11 +9,11 @@ import java.util.*;
 import java.util.function.Predicate;
 //this is for common values NOT meant to be touched by end user
 public record BarInfo(String name, Set<String> dependencies, Predicate<Player> shouldRender,
-                      List<BarOverlayImpl.Numerator> numerators, BarOverlayImpl.Denominator denominator, Object2IntFunction<Player> activeLayers) {
+                      BarOverlayImpl.Numerator numerator, BarOverlayImpl.Denominator denominator, Object2IntFunction<Player> activeLayers) {
 
     public static BarInfo createSimpleVanilla(String name, Predicate<Player> shouldRender,
                                               BarOverlayImpl.Numerator numerator, BarOverlayImpl.Denominator denominator) {
-        return new BarInfo(name,Set.of(),shouldRender,List.of(numerator),denominator,p -> 1);
+        return new BarInfo(name,Set.of(),shouldRender,numerator,denominator,p -> 1);
     }
 
     public boolean checkDependencies() {
@@ -25,7 +25,7 @@ public record BarInfo(String name, Set<String> dependencies, Predicate<Player> s
     }
 
     public float getUnclampedRatio(Player player,int layer) {
-        return numerators.get(layer).getValue(player)/denominator.getValue(player);
+        return numerator.getValue(player)/denominator.getValue(player);
     }
 
     public static Builder getBuilder(String name) {
@@ -37,7 +37,7 @@ public record BarInfo(String name, Set<String> dependencies, Predicate<Player> s
         private final String name;
         private final Set<String> dependencies = new HashSet<>();
         private Predicate<Player> shouldRender = s -> true;
-        private List<BarOverlayImpl.Numerator> numerators = new ArrayList<>();
+        private BarOverlayImpl.Numerator numerator;
         private BarOverlayImpl.Denominator denominator = p -> 20;
         private Object2IntFunction<Player> activeLayers = p -> 1;
 
@@ -56,8 +56,8 @@ public record BarInfo(String name, Set<String> dependencies, Predicate<Player> s
             return this;
         }
 
-        public Builder addNumerator(BarOverlayImpl.Numerator numerator) {
-            numerators.add(numerator);
+        public Builder setNumerator(BarOverlayImpl.Numerator numerator) {
+            this.numerator = numerator;
             return this;
         }
 
@@ -73,10 +73,10 @@ public record BarInfo(String name, Set<String> dependencies, Predicate<Player> s
         }
 
         public BarInfo build() {
-            if (numerators.isEmpty()) {
-                throw new IllegalStateException("numerators is empty");
+            if (numerator == null) {
+                throw new IllegalStateException("numerator is empty");
             }
-            return new BarInfo(name,dependencies,shouldRender,numerators,denominator,activeLayers);
+            return new BarInfo(name,dependencies,shouldRender, numerator,denominator,activeLayers);
         }
     }
 }

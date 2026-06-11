@@ -3,13 +3,10 @@ package tfar.classicbar.impl.overlays.mod;
 import com.elenai.feathers.api.FeathersHelper;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
-import tfar.classicbar.api.BarType;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -20,7 +17,7 @@ public class FeathersB extends BarOverlayImpl{
 
 	 public static final BarInfo INFO = BarInfo.getBuilder("feathers_feathers")
             .requireDependency(ModCompat.feathers.name())
-			.addNumerator(player -> FeathersHelper.getFeathers())
+			.setNumerator(player -> FeathersHelper.getFeathers())
             .setDenominator(player -> FeathersHelper.getMaxFeathers()).build();
 
 	public FeathersB(BarSettings settings) {

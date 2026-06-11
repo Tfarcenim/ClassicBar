@@ -10,7 +10,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
-import tfar.classicbar.api.BarType;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -23,7 +22,7 @@ public class VampirismBlood extends BarOverlayImpl {
     public static final BarInfo INFO = BarInfo.getBuilder("vampirism_blood")
             .requireDependency(ModCompat.vampirism.name())
             .setShouldRender(player -> VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION)
-            .addNumerator(VampirismBlood::getNumerator)
+            .setNumerator(VampirismBlood::getNumerator)
             .setDenominator(VampirismBlood::getDenominator).build();
 
     public VampirismBlood(BarSettings settings) {

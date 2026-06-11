@@ -21,7 +21,7 @@ public class ParcoolStaminaB extends BarOverlayImpl {
     public static final BarInfo INFO = BarInfo.getBuilder("parcool_stamina")
             .requireDependency(ModCompat.parcool.name())
             .setShouldRender(player -> !checkConfigs() && getRatio(player) < 1)
-            .addNumerator(player -> IStamina.get(player).get())
+            .setNumerator(player -> IStamina.get(player).get())
             .setDenominator(player -> IStamina.get(player).getMaxStamina()).build();
 
     public ParcoolStaminaB(BarSettings settings) {
