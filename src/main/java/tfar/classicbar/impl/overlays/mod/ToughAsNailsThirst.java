@@ -23,6 +23,7 @@ import toughasnails.api.thirst.IThirst;
 import toughasnails.api.thirst.ThirstHelper;
 import toughasnails.init.ModConfig;
 import toughasnails.init.ModTags;
+import toughasnails.thirst.ThirstData;
 
 public class ToughAsNailsThirst extends BarOverlayImpl {
 
@@ -32,7 +33,6 @@ public class ToughAsNailsThirst extends BarOverlayImpl {
 
 
     public static final float MAX_THIRST_LEVEL = 20;
-    public static final double MAX_HYDRATION_LEVEL = 1.0;
 
     /**
      * Whether {@code drink} is tagged as {@link ModTags.Items#DRINKS} should be ensured via the context.
@@ -192,23 +192,26 @@ public class ToughAsNailsThirst extends BarOverlayImpl {
 
     protected final boolean showHydration;
     protected final boolean showExhaustion;
+    protected final boolean showHeldDrink;
 
     public static final BarInfo INFO = BarInfo.getBuilder("toughasnails_thirst")
             .requireDependency(ModCompat.toughasnails.name())
             .setShouldRender(player -> isEnabled())
             .setNumerator(player -> (float)ThirstHelper.getThirst(player).getThirst()).build();
 
-    public ToughAsNailsThirst(BarSettings settings, boolean showHydration, boolean showExhaustion) {
+    public ToughAsNailsThirst(BarSettings settings, boolean showHydration, boolean showExhaustion,boolean showHeldDrink) {
         super(INFO,settings);
         this.showHydration = showHydration;
         this.showExhaustion = showExhaustion;
+        this.showHeldDrink = showHeldDrink;
     }
 
     public static final Codec<ToughAsNailsThirst> CODEC = RecordCodecBuilder.create(
             o -> codecStart(o)
                     .and(Codec.BOOL.fieldOf("show_hydration").forGetter(f -> f.showHydration))
-                    .and(Codec.BOOL.fieldOf("show_exhaustion").forGetter(f -> f.showExhaustion)
-            ).apply(o, ToughAsNailsThirst::new)
+                    .and(Codec.BOOL.fieldOf("show_exhaustion").forGetter(f -> f.showExhaustion))
+                    .and(Codec.BOOL.fieldOf("show_held_drink").forGetter(f -> f.showHeldDrink))
+                    .apply(o, ToughAsNailsThirst::new)
     );
 
     @Override
@@ -218,12 +221,11 @@ public class ToughAsNailsThirst extends BarOverlayImpl {
 
     @Override
     public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        double maxExhaustionLevel = ModConfig.thirst.thirstExhaustionThreshold;
 
         IThirst thirstData = ThirstHelper.getThirst(player);
-        int thirstLevel = thirstData.getThirst();
-        double hydrationLevel = Math.min(thirstData.getHydration(), MAX_HYDRATION_LEVEL);
-        double exhaustionLevel = Math.min(thirstData.getExhaustion(), maxExhaustionLevel);
+
+        float thirstLevel = barInfo.numerator().getValue(player);
+        double hydrationLevel = Math.min(thirstData.getHydration(), ThirstData.DEFAULT_HYDRATION);
 
         int xStart = screenWidth / 2 + getHOffset();
         int yStart = screenHeight - vOffset;
@@ -233,17 +235,28 @@ public class ToughAsNailsThirst extends BarOverlayImpl {
         drawThirst(graphics, player, xStart, yStart, thirstLevel, MAX_THIRST_LEVEL);
 
         if (hydrationLevel > 0 && showHydration) {
-            drawHydration(graphics, player, xStart, yStart, hydrationLevel, MAX_HYDRATION_LEVEL);
+            drawHydration(graphics, player, xStart, yStart, hydrationLevel, ThirstData.DEFAULT_HYDRATION);
         }
+    }
 
-        if (ClassicBarsConfig.showHeldDrinkOverlay.get() && ThirstHelper.canDrink(player, true)) {
-            drawHeldDrink(graphics, player, thirstData, xStart, yStart, MAX_THIRST_LEVEL, MAX_HYDRATION_LEVEL);
+    @Override
+    public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+        IThirst thirstData = ThirstHelper.getThirst(player);
+        double maxExhaustionLevel = ModConfig.thirst.thirstExhaustionThreshold;
+
+
+        double hydrationLevel = Math.min(thirstData.getHydration(), ThirstData.DEFAULT_HYDRATION);
+        double exhaustionLevel = Math.min(thirstData.getExhaustion(), maxExhaustionLevel);
+        int xStart = screenWidth / 2 + getHOffset();
+        int yStart = screenHeight - vOffset;
+
+        if (showHeldDrink && ThirstHelper.canDrink(player, true)) {
+            drawHeldDrink(graphics, player, thirstData, xStart, yStart, MAX_THIRST_LEVEL, ThirstData.DEFAULT_HYDRATION);
         }
 
         if (showExhaustion && PacketHandler.presentOnServer) {
             drawExhaustion(graphics, player, xStart, yStart, exhaustionLevel, maxExhaustionLevel);
         }
-
     }
 
     private void drawThirst(GuiGraphics stack, Player player, int x, int y, double thirstLevel, double maxLevel) {

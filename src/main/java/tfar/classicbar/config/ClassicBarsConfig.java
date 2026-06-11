@@ -16,8 +16,6 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = ClassicBar.MODID, bus = Mod.EventBusSubscriber.Bus.MOD,value = Dist.CLIENT)
 public class ClassicBarsConfig {
 
-  public static ForgeConfigSpec.BooleanValue showHeldDrinkOverlay;
-
   public static ForgeConfigSpec.DoubleValue transitionSpeed;
 
   static ForgeConfigSpec.ConfigValue<String> thirstBarColor;
@@ -30,7 +28,6 @@ public class ClassicBarsConfig {
   public ClassicBarsConfig(ForgeConfigSpec.Builder builder) {
     builder.push("general");
 
-    showHeldDrinkOverlay = builder.define("show_held_drink_overlay", true);
     transitionSpeed = builder.defineInRange("transition_speed", 3, 0, Double.MAX_VALUE);
 
     thirstBarColor = builder.define("thirstr_bar_color","#1C5EE4",String.class::isInstance);

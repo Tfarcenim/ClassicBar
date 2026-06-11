@@ -7,6 +7,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.Color;
+import toughasnails.api.potion.TANEffects;
 
 public record DualEffectColorProvider(MobEffect effect,
                                       Color primary, Color secondary,
@@ -24,14 +25,8 @@ public record DualEffectColorProvider(MobEffect effect,
     public static final DualEffectColorProvider FOOD = new DualEffectColorProvider(MobEffects.HUNGER,
             Color.hex2Color("#B34D00"),Color.hex2Color("#FFCC00"),Color.hex2Color("#249016"),Color.hex2Color("#87BC00"));
 
-    //    hungerBarColor = builder.define("hunger_bar_color",,String.class::isInstance);
-    //    hungerBarDebuffColor = builder.define("hunger_bar_debuff_color",String.class::isInstance);
-    //    thirstBarColor = builder.define("thirstr_bar_color","#1C5EE4",String.class::isInstance);
-    //    thirstBarDebuffColor = builder.define("thirst_bar_debuff_color","#5A891C",String.class::isInstance);
-    //    saturationBarColor = builder.define("saturation_bar_color",,String.class::isInstance);
-    //    saturationBarDebuffColor = builder.define("saturation_bar_debuff_color",,String.class::isInstance);
-    //    hydrationBarColor = builder.define("hydration_bar_color","#00A3E2",String.class::isInstance);
-    //    hydrationBarDebuffColor = builder.define("hydration_bar_debuff_color","#85CF25",String.class::isInstance);
+    public static final DualEffectColorProvider THIRST = new DualEffectColorProvider(TANEffects.THIRST,
+            Color.hex2Color("#1C5EE4"),Color.hex2Color("#00A3E2"),Color.hex2Color("#5A891C"),Color.hex2Color("#85CF25"));
 
     @Override
     public Color getColor(Player player, float ratio, int layer) {

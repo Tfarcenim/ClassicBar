@@ -28,7 +28,8 @@ public class BarRegistry {
                 .setColorProvider(DualEffectColorProvider.FOOD)
                 .build(),true,true,true));
         registerBar(new ToughAsNailsThirst(BarSettings.getBuilder().setSide(BarSide.RIGHT)
-                .setIcon(ToughAsNailsThirst.OVERLAY).build(),true,true));
+                .setColorProvider(DualEffectColorProvider.THIRST)
+                .setIcon(ToughAsNailsThirst.OVERLAY).build(),true,true,true));
         registerBar(new Air(BarSettings.getBuilder().setSide(BarSide.RIGHT)
                 .setColorProvider(new SingleColorProvider(Color.hex2Color("#00E6E6")))
                 .build()));
