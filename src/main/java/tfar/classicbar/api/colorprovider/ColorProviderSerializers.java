@@ -29,6 +29,9 @@ public class ColorProviderSerializers {
     public static final ColorProviderSerializer<StackingEffectColorProvider> STACKING_EFFECT = register(new ColorProviderSerializer<>
             ("stacking_effect", StackingEffectColorProvider.CODEC));
 
+    public static final ColorProviderSerializer<DualEffectColorProvider> DUAL_EFFECT = register(new ColorProviderSerializer<>
+            ("dual_effect", DualEffectColorProvider.CODEC));
+
     public static <C extends ColorProvider> ColorProviderSerializer<C> register(ColorProviderSerializer<C> serializer) {
         MAP.put(serializer.name(), serializer);
         return serializer;

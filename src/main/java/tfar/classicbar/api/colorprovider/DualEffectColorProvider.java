@@ -1,0 +1,51 @@
+package tfar.classicbar.api.colorprovider;
+
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
+import tfar.classicbar.api.Color;
+
+public record DualEffectColorProvider(MobEffect effect,
+                                      Color primary, Color secondary,
+                                      Color primaryUnderEffect,Color secondaryUnderEffect) implements ColorProvider {
+
+    public static final MapCodec<DualEffectColorProvider> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            BuiltInRegistries.MOB_EFFECT.byNameCodec().fieldOf("mob_effect").forGetter(DualEffectColorProvider::effect),
+            Color.HEX_CODEC.fieldOf("primary").forGetter(DualEffectColorProvider::primary),
+            Color.HEX_CODEC.fieldOf("secondary").forGetter(DualEffectColorProvider::secondary),
+            Color.HEX_CODEC.fieldOf("primary_under_effect").forGetter(DualEffectColorProvider::primaryUnderEffect),
+            Color.HEX_CODEC.fieldOf("secondary_under_effect").forGetter(DualEffectColorProvider::secondaryUnderEffect)
+    ).apply(instance, DualEffectColorProvider::new));
+
+
+    public static final DualEffectColorProvider FOOD = new DualEffectColorProvider(MobEffects.HUNGER,
+            Color.hex2Color("#B34D00"),Color.hex2Color("#FFCC00"),Color.hex2Color("#249016"),Color.hex2Color("#87BC00"));
+
+    //    hungerBarColor = builder.define("hunger_bar_color",,String.class::isInstance);
+    //    hungerBarDebuffColor = builder.define("hunger_bar_debuff_color",String.class::isInstance);
+    //    thirstBarColor = builder.define("thirstr_bar_color","#1C5EE4",String.class::isInstance);
+    //    thirstBarDebuffColor = builder.define("thirst_bar_debuff_color","#5A891C",String.class::isInstance);
+    //    saturationBarColor = builder.define("saturation_bar_color",,String.class::isInstance);
+    //    saturationBarDebuffColor = builder.define("saturation_bar_debuff_color",,String.class::isInstance);
+    //    hydrationBarColor = builder.define("hydration_bar_color","#00A3E2",String.class::isInstance);
+    //    hydrationBarDebuffColor = builder.define("hydration_bar_debuff_color","#85CF25",String.class::isInstance);
+
+    @Override
+    public Color getColor(Player player, float ratio, int layer) {
+        if (player.hasEffect(effect)) {
+            if (layer == 0) return primaryUnderEffect;
+            return secondaryUnderEffect;
+        } else {
+            if (layer == 0) return primary;
+            return secondary;
+        }
+    }
+
+    @Override
+    public ColorProviderSerializer<?> getSerializer() {
+        return ColorProviderSerializers.DUAL_EFFECT;
+    }
+}

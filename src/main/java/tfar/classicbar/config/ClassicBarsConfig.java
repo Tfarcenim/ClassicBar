@@ -19,10 +19,7 @@ public class ClassicBarsConfig {
   public static ForgeConfigSpec.BooleanValue showHeldDrinkOverlay;
 
   public static ForgeConfigSpec.DoubleValue transitionSpeed;
-  static ForgeConfigSpec.ConfigValue<String> hungerBarColor;
-  static ForgeConfigSpec.ConfigValue<String> hungerBarDebuffColor;
-  static ForgeConfigSpec.ConfigValue<String> saturationBarColor;
-  static ForgeConfigSpec.ConfigValue<String> saturationBarDebuffColor;
+
   static ForgeConfigSpec.ConfigValue<String> thirstBarColor;
   static ForgeConfigSpec.ConfigValue<String> thirstBarDebuffColor;
   static ForgeConfigSpec.ConfigValue<String> hydrationBarColor;
@@ -36,12 +33,8 @@ public class ClassicBarsConfig {
     showHeldDrinkOverlay = builder.define("show_held_drink_overlay", true);
     transitionSpeed = builder.defineInRange("transition_speed", 3, 0, Double.MAX_VALUE);
 
-    hungerBarColor = builder.define("hunger_bar_color","#B34D00",String.class::isInstance);
-    hungerBarDebuffColor = builder.define("hunger_bar_debuff_color","#249016",String.class::isInstance);
     thirstBarColor = builder.define("thirstr_bar_color","#1C5EE4",String.class::isInstance);
     thirstBarDebuffColor = builder.define("thirst_bar_debuff_color","#5A891C",String.class::isInstance);
-    saturationBarColor = builder.define("saturation_bar_color","#FFCC00",String.class::isInstance);
-    saturationBarDebuffColor = builder.define("saturation_bar_debuff_color","#87BC00",String.class::isInstance);
     hydrationBarColor = builder.define("hydration_bar_color","#00A3E2",String.class::isInstance);
     hydrationBarDebuffColor = builder.define("hydration_bar_debuff_color","#85CF25",String.class::isInstance);
 

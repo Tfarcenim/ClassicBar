@@ -154,14 +154,12 @@ public class Food extends BarOverlayImpl {
   }
   //saturation
   public Color getSaturationBarColor(Player player) {
-    boolean hunger = player.hasEffect(MobEffects.HUNGER);
-    return hunger ? ConfigCache.saturationDebuff : ConfigCache.saturation;
+    return getBarSettings().colorProvider().getColor(player,barInfo.getRatio(player),1);
   }
 
   //hunger
   public Color getHungerBarColor(Player player) {
-    boolean hunger = player.hasEffect(MobEffects.HUNGER);
-    return hunger ? ConfigCache.hungerDebuff : ConfigCache.hunger;
+    return getBarSettings().colorProvider().getColor(player,barInfo.getRatio(player),0);
   }
 
   @Override
