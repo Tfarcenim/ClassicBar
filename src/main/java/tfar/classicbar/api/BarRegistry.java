@@ -1,9 +1,6 @@
 package tfar.classicbar.api;
 
-import tfar.classicbar.api.colorprovider.StackingColorProvider;
-import tfar.classicbar.api.colorprovider.TransitioningColorProvider;
-import tfar.classicbar.api.colorprovider.SingleColorProvider;
-import tfar.classicbar.api.colorprovider.TransitioningEffectColorProvider;
+import tfar.classicbar.api.colorprovider.*;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.SimpleBarOverlay;
 import tfar.classicbar.impl.overlays.mod.VampirismBlood;
@@ -28,14 +25,16 @@ public class BarRegistry {
         registerBar(new Health(BarSettings.getBuilder().setColorProvider(TransitioningEffectColorProvider.DEFAULT).build()));
         registerBar(new MountHealth(BarSettings.getBuilder().setSide(BarSide.RIGHT).setColorProvider(TransitioningColorProvider.DEFAULT).build()));
         registerBar(new Food(BarSettings.getBuilder().setSide(BarSide.RIGHT).build(),true,true,true));
-        registerBar(new ToughAsNailsThirst(BarSettings.getBuilder().setSide(BarSide.RIGHT).setIcon(ToughAsNailsThirst.OVERLAY).build(),true,true));
+        registerBar(new ToughAsNailsThirst(BarSettings.getBuilder().setSide(BarSide.RIGHT)
+                .setIcon(ToughAsNailsThirst.OVERLAY).build(),true,true));
         registerBar(new Air(BarSettings.getBuilder().setSide(BarSide.RIGHT)
                 .setColorProvider(new SingleColorProvider(Color.hex2Color("#00E6E6")))
                 .build()));
         registerBar(new Armor(BarSettings.getBuilder().fitted()
                 .setColorProvider(StackingColorProvider.DEFAULT_ARMOR)
                 .build()));
-        registerBar(new Absorption(BarSettings.getBuilder().fitted().build()));
+        registerBar(new Absorption(BarSettings.getBuilder().fitted()
+                .setColorProvider(StackingEffectColorProvider.DEFAULT_ABSORPTION).build()));
         registerBar(new ArmorToughness(BarSettings.getBuilder().setSide(BarSide.RIGHT).fitted()
                 .setColorProvider(StackingColorProvider.DEFAULT_ARMOR)
                 .setIcon(BarOverlayImpl.BAR).build()));
