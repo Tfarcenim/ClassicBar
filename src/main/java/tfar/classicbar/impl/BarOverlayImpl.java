@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import org.joml.Vector2i;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.api.*;
 import tfar.classicbar.util.HealthEffect;
@@ -101,23 +102,18 @@ public abstract class BarOverlayImpl implements BarOverlay {
         textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player,barInfo.getRatio(player,0) , 0).colorToText());
     }
 
-    public abstract void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset);
-
-
-    public void renderSingleLayerIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        int xStart = width / 2 + getIconOffset();
-        int yStart = height - vOffset;
-        //Draw blood icon
-        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 0, 0, 9, 9);
-        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 9, 0, 9, 9);
+    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+        renderSimpleIcon(graphics, width, height, vOffset);
     }
 
-    public void renderDoubleLayerIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    public void renderSimpleIcon(GuiGraphics graphics, int width, int height, int vOffset) {
         int xStart = width / 2 + getIconOffset();
         int yStart = height - vOffset;
-        //Draw blood icon
-        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 0, 0, 9, 9);
-        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 9, 0, 9, 9);
+
+        for (int i = 0; i < barInfo.icon_data().uvs().size(); i++) {
+            Vector2i uv = barInfo.icon_data().uvs().get(i);
+            ModUtils.drawTexturedModalRect(getIconRL(),graphics,xStart, yStart, uv.x, uv.y, 9, 9);
+        }
     }
 
     public int getHOffset() {

@@ -4,8 +4,8 @@ import tfar.classicbar.api.colorprovider.TransitioningColorProvider;
 import tfar.classicbar.api.colorprovider.SingleColorProvider;
 import tfar.classicbar.api.colorprovider.TransitioningEffectColorProvider;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.impl.overlays.SimpleBarOverlay;
 import tfar.classicbar.impl.overlays.mod.VampirismBlood;
-import tfar.classicbar.impl.overlays.mod.FeathersB;
 import tfar.classicbar.impl.overlays.mod.ParcoolStaminaB;
 import tfar.classicbar.impl.overlays.mod.ToughAsNailsThirst;
 import tfar.classicbar.impl.overlays.vanilla.*;
@@ -37,9 +37,9 @@ public class BarRegistry {
         registerBar(new VampirismBlood(BarSettings.getBuilder()
                 .setColorProvider(new SingleColorProvider(Color.RED))
                 .setIcon(VampirismBlood.VAMPIRISM_ICONS).build()));
-        registerBar(new FeathersB(BarSettings.getBuilder().setSide(BarSide.RIGHT)
+        registerBar(SimpleBarOverlay.createFeathers(BarSettings.getBuilder().setSide(BarSide.RIGHT)
                 .setColorProvider(new SingleColorProvider(Color.FEATHERS))
-                .setIcon(FeathersB.ICONS).build()));
+                .setIcon(SimpleBarOverlay.FEATHERS_ICONS).build()));
         registerBar(new ParcoolStaminaB(BarSettings.getBuilder().setSide(BarSide.RIGHT)
                 .setColorProvider(new SingleColorProvider(Color.YELLOW)).setIcon(ParcoolStaminaB.ICONS).build()));
     }

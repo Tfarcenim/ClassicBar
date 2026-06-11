@@ -9,11 +9,15 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import org.joml.Vector2i;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.impl.IconData;
 import tfar.classicbar.util.ModUtils;
+
+import java.util.List;
 
 public class VampirismBlood extends BarOverlayImpl {
 
@@ -23,7 +27,9 @@ public class VampirismBlood extends BarOverlayImpl {
             .requireDependency(ModCompat.vampirism.name())
             .setShouldRender(player -> VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION)
             .setNumerator(VampirismBlood::getNumerator)
-            .setDenominator(VampirismBlood::getDenominator).build();
+            .setDenominator(VampirismBlood::getDenominator)
+            .setIconData(new IconData(List.of(new Vector2i(0,0),new Vector2i(0,9))))
+            .build();
 
     public VampirismBlood(BarSettings settings) {
         super(INFO,settings);
@@ -47,14 +53,5 @@ public class VampirismBlood extends BarOverlayImpl {
         IBloodStats stats = VReference.VAMPIRE_FACTION.getPlayerCapability(player).map(IVampirePlayer::getBloodStats).orElse(null);
         //don't divide by zero
         return stats != null ? stats.getMaxBlood() : 1;
-    }
-
-    @Override
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        int xStart = width / 2 + getIconOffset();
-        int yStart = height - vOffset;
-        //Draw blood icon
-        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 0, 0, 9, 9);
-        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 9, 0, 9, 9);
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import org.joml.Vector2i;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.api.BarType;
@@ -13,13 +14,19 @@ import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.api.Color;
+import tfar.classicbar.impl.IconData;
 import tfar.classicbar.util.ModUtils;
+
+import java.util.List;
 
 public class ArmorToughness extends BarOverlayImpl {
 
-    public static final BarInfo INFO = BarInfo.createSimpleVanilla("armor_toughness",
-            player -> player.getAttributeValue(Attributes.ARMOR_TOUGHNESS) >= 1,
-            player -> (float) player.getAttributeValue(Attributes.ARMOR_TOUGHNESS),fixed(20f));
+    public static final BarInfo INFO = BarInfo.getBuilder("armor_toughness")
+            .setShouldRender(player -> player.getAttributeValue(Attributes.ARMOR_TOUGHNESS) >= 1)
+            .setNumerator(player -> (float) player.getAttributeValue(Attributes.ARMOR_TOUGHNESS))
+            .setDenominator(fixed(20f))
+            .setIconData(new IconData(List.of(new Vector2i(83,0))))
+            .build();
 
     public ArmorToughness(BarSettings barSettings) {
         super(INFO,barSettings);
@@ -89,13 +96,5 @@ public class ArmorToughness extends BarOverlayImpl {
         int c = getPrimaryBarColor(index).colorToText();
         //draw armor toughness amount
         textHelper(graphics, xStart, yStart, armorToughness, c);
-    }
-
-    @Override
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        int xStart = width / 2 + getIconOffset();
-        int yStart = height - vOffset;
-        //Draw armor toughness icon
-        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 83, 0, 9, 9);
     }
 }

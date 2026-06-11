@@ -9,11 +9,12 @@ import java.util.*;
 import java.util.function.Predicate;
 //this is for common values NOT meant to be touched by end user
 public record BarInfo(String name, Set<String> dependencies, Predicate<Player> shouldRender,
-                      BarOverlayImpl.Numerator numerator, BarOverlayImpl.Denominator denominator, Object2IntFunction<Player> activeLayers) {
+                      BarOverlayImpl.Numerator numerator, BarOverlayImpl.Denominator denominator, Object2IntFunction<Player> activeLayers,
+                      IconData icon_data) {
 
     public static BarInfo createSimpleVanilla(String name, Predicate<Player> shouldRender,
                                               BarOverlayImpl.Numerator numerator, BarOverlayImpl.Denominator denominator) {
-        return new BarInfo(name,Set.of(),shouldRender,numerator,denominator,p -> 1);
+        return new BarInfo(name,Set.of(),shouldRender,numerator,denominator,p -> 1,IconData.DEFAULT_DATA);
     }
 
     public boolean checkDependencies() {
@@ -40,6 +41,7 @@ public record BarInfo(String name, Set<String> dependencies, Predicate<Player> s
         private BarOverlayImpl.Numerator numerator;
         private BarOverlayImpl.Denominator denominator = p -> 20;
         private Object2IntFunction<Player> activeLayers = p -> 1;
+        private IconData iconData = IconData.DEFAULT_DATA;
 
         public Builder(String name) {
             this.name = name;
@@ -72,11 +74,16 @@ public record BarInfo(String name, Set<String> dependencies, Predicate<Player> s
             return this;
         }
 
+        public Builder setIconData(IconData iconData) {
+            this.iconData = iconData;
+            return this;
+        }
+
         public BarInfo build() {
             if (numerator == null) {
                 throw new IllegalStateException("numerator is empty");
             }
-            return new BarInfo(name,dependencies,shouldRender, numerator,denominator,activeLayers);
+            return new BarInfo(name,dependencies,shouldRender, numerator,denominator,activeLayers, iconData);
         }
     }
 }

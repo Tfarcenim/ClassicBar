@@ -57,7 +57,7 @@ public class Food extends BarOverlayImpl {
     double currentSat = player.getFoodData().getSaturationLevel();
     double maxSat = maxHunger;
     double barWidthS = getSatBarWidth(player);
-    float exhaustion = player.getFoodData().getExhaustionLevel();
+
 
     int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
@@ -123,6 +123,7 @@ public class Food extends BarOverlayImpl {
     }
 
     if (showExhaustion && PacketHandler.presentOnServer) {
+      float exhaustion = player.getFoodData().getExhaustionLevel();
       exhaustion = Math.min(exhaustion, 4);
       f = xStart + (getSide()  == BarSide.RIGHT ? BarOverlayImpl.WIDTH - ModUtils.getWidth(exhaustion, 4) : 0);
       //draw exhaustion

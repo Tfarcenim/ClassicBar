@@ -81,7 +81,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:parcool-482378:${parcool}")
     implementation fg.deobf("curse.maven:tough-as-nails-246391:5815863")
     implementation fg.deobf("curse.maven:glitchcore-955399:5787839")
-    implementation fg.deobf("curse.maven:feathers-699933:4814309")
+    compileOnly fg.deobf("curse.maven:feathers-699933:4814309")
 
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.

@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
+import org.joml.Vector2i;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.api.BarType;
@@ -15,15 +16,21 @@ import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.api.Color;
+import tfar.classicbar.impl.IconData;
 import tfar.classicbar.util.ModUtils;
+
+import java.util.List;
 
 public class Armor extends BarOverlayImpl {
 
     private static final EquipmentSlot[] armorList = new EquipmentSlot[]{EquipmentSlot.HEAD,
             EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
-    public static final BarInfo INFO = BarInfo.createSimpleVanilla("armor",
-            player -> calculateArmorValue(player) >= 1,Armor::calculateArmorValue,fixed(20f));
+    public static final BarInfo INFO = BarInfo.getBuilder("armor")
+            .setShouldRender(player -> calculateArmorValue(player) >= 1)
+            .setNumerator(Armor::calculateArmorValue)
+            .setDenominator(fixed(20f))
+            .setIconData(new IconData(List.of(new Vector2i(43,9)))).build();
 
     public Armor(BarSettings barSettings) {
         super(INFO,barSettings);
@@ -120,14 +127,6 @@ public class Armor extends BarOverlayImpl {
         int index = (int) Math.min(Math.ceil(armor / 20), ConfigCache.armor.size()) - 1;
         int c = getPrimaryBarColor(index).colorToText();
         textHelper(graphics, xStart, yStart, armor, c);
-    }
-
-    @Override
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        int xStart = width / 2 + getIconOffset();
-        int yStart = height - vOffset;
-        //Draw armor icon
-        ModUtils.drawTexturedModalRect(getIconRL(),graphics, xStart, yStart, 43, 9, 9, 9);
     }
 
     private static float calculateArmorValue(Player player) {
