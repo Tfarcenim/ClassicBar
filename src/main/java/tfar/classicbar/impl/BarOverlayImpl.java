@@ -85,15 +85,7 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
-
-        for (int i = 0; i < barInfo.activeLayers().apply(player); i++) {
-            int barWidth = getBarWidth(player);
-            int xStart = getXStartBar(screenWidth,barWidth);
-            int yStart = screenHeight - vOffset;
-            Color color = getBarSettings().colorProvider().getColor(player, barInfo.getUnclampedRatio(player), i);
-            renderPartialBar(color, graphics, xStart+2, yStart+2, barWidth);
-        }
+        renderSimpleBar(barSettings.colorProvider().getColor(player,barInfo.getRatio(player),0),graphics, player, screenWidth, screenHeight, vOffset);
     }
 
     public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {

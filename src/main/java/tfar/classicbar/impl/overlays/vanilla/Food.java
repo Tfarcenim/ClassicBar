@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodConstants;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
@@ -29,7 +30,7 @@ public class Food extends BarOverlayImpl {
 
   public static final BarInfo INFO = BarInfo.createSimpleVanilla("food",
           player -> (!ModCompat.vampirism.loaded || !VampirismHelper.isVampire(player))
-          ,player -> player.getFoodData().getFoodLevel(),fixed(20));
+          ,player -> player.getFoodData().getFoodLevel(),fixed(FoodConstants.MAX_FOOD));
 
   public Food(BarSettings barSettings, boolean showSaturation, boolean showExhaustion,boolean showHeldFood) {
     super(INFO,barSettings);
@@ -47,34 +48,40 @@ public class Food extends BarOverlayImpl {
   );
 
   @Override
-  public void renderBar(ForgeGui gui, GuiGraphics matrices, Player player, int screenWidth, int screenHeight, int vOffset) {
-    double hunger = player.getFoodData().getFoodLevel();
-    double maxHunger = 20;//HungerHelper.getMaxHunger(player);
+  public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    double hunger = barInfo.numerator().getValue(player);
+    double maxHunger = barInfo.denominator().getValue(player);//HungerHelper.getMaxHunger(player);
     
-    double barWidthH = getBarWidth(player);
-    
-    double currentSat = player.getFoodData().getSaturationLevel();
-    double maxSat = maxHunger;
-    double barWidthS = getSatBarWidth(player);
-
+    int barWidthH = getBarWidth(player);
 
     int xStart = screenWidth / 2 + getHOffset();
     int yStart = screenHeight - vOffset;
 
     //Bar background
-    renderBarBackground(matrices,player,screenWidth,screenHeight,vOffset);
+    renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset);
     //draw portion of bar based on hunger amount
-    double f = xStart + (getSide() == BarSide.RIGHT? BarOverlayImpl.WIDTH - barWidthH : 0);
+    float f = xStart + (getSide() == BarSide.RIGHT? BarOverlayImpl.WIDTH - barWidthH : 0);
 
-    Color hungerColor = getSecondaryBarColor(player);
-    Color satColor = getPrimaryBarColor(player);
+    Color hungerColor = getHungerBarColor(player);
+    Color satColor = getSaturationBarColor(player);
 
-    renderPartialBar(hungerColor,matrices,f + 2, yStart + 2,  barWidthH);
+    renderPartialBar(hungerColor,graphics,f + 2, yStart + 2,  barWidthH);
+    float currentSat = player.getFoodData().getSaturationLevel();
     if (currentSat > 0 && showSaturation) {
+      int barWidthS = getSatBarWidth(player);
       //draw saturation
       f = xStart + (getSide()  == BarSide.RIGHT? BarOverlayImpl.WIDTH - barWidthS : 0);
-      renderPartialBar(satColor,matrices,f + 2, yStart + 2, barWidthS);
+      renderPartialBar(satColor,graphics,f + 2, yStart + 2, barWidthS);
     }
+
+  }
+
+  @Override
+  public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    double hunger = barInfo.numerator().getValue(player);
+    double maxHunger = barInfo.denominator().getValue(player);//HungerHelper.getMaxHunger(player);
+    int xStart = screenWidth / 2 + getHOffset();
+    int yStart = screenHeight - vOffset;
     //render held hunger overlay
     if (showHeldFood && player.getMainHandItem().getItem().isEdible()) {
       ItemStack stack = player.getMainHandItem();
@@ -90,16 +97,20 @@ public class Food extends BarOverlayImpl {
       double hungerWidth = Math.min(maxHunger - hunger, hungerOverlay);
       //don't render the bar at all if hunger is full
       if (hunger < maxHunger) {
-        double w = BarOverlayImpl.getWidth(hungerWidth + hunger, maxHunger);
+        int w = BarOverlayImpl.getWidth(hungerWidth + hunger, maxHunger);
 
-        f = xStart + (getSide()  == BarSide.RIGHT? BarOverlayImpl.WIDTH - w : 0);
-        renderPartialBar(hungerColor.withAlpha((float) foodAlpha),matrices,f + 2, yStart + 2, w);
+        float f = xStart + (getSide()  == BarSide.RIGHT? BarOverlayImpl.WIDTH - w : 0);
+        Color hungerColor = getHungerBarColor(player);
+
+        renderPartialBar(hungerColor.withAlpha((float) foodAlpha),graphics,f + 2, yStart + 2, w);
       }
 
       //Draw Potential saturation
       if (showSaturation) {
+        float currentSat = player.getFoodData().getSaturationLevel();
         //maximum potential saturation cannot combine with current saturation to go over 20
-        double saturationWidth = Math.min(potentialSat, maxSat - currentSat);
+        double saturationWidth = Math.min(potentialSat, maxHunger - currentSat);
+        Color satColor = getSaturationBarColor(player);
 
         //Potential Saturation cannot go over potential hunger + current hunger combined
         saturationWidth = Math.min(saturationWidth, hunger + hungerWidth);
@@ -109,13 +120,13 @@ public class Food extends BarOverlayImpl {
           saturationWidth = potentialSat - diff;
         }
 
-        double w = BarOverlayImpl.getWidth(saturationWidth + currentSat, maxSat);
+        int w = BarOverlayImpl.getWidth(saturationWidth + currentSat, maxHunger);
 
         //offset used to decide where to place the bar
-        f = xStart + (getSide()  == BarSide.RIGHT? BarOverlayImpl.WIDTH - w : 0);
+        float f = xStart + (getSide()  == BarSide.RIGHT? BarOverlayImpl.WIDTH - w : 0);
         ;
         if (true)//currentSat > 0)
-          renderPartialBar(satColor.withAlpha((float)foodAlpha),matrices,f + 2, yStart + 2,w);
+          renderPartialBar(satColor.withAlpha((float)foodAlpha),graphics,f + 2, yStart + 2,w);
         else ;//drawTexturedModalRect(f, yStart+1, 1, 10, getWidthfloor(saturationWidth,20), 7);
 
       }
@@ -123,18 +134,13 @@ public class Food extends BarOverlayImpl {
 
     if (showExhaustion && PacketHandler.presentOnServer) {
       float exhaustion = player.getFoodData().getExhaustionLevel();
-      exhaustion = Math.min(exhaustion, 4);
-      f = xStart + (getSide()  == BarSide.RIGHT ? BarOverlayImpl.WIDTH - BarOverlayImpl.getWidth(exhaustion, 4) : 0);
+      exhaustion = Math.min(exhaustion, FoodConstants.EXHAUSTION_DROP);
+      int barWidthE = BarOverlayImpl.getWidth(exhaustion, FoodConstants.EXHAUSTION_DROP);
+      xStart = getXStartBar(screenWidth,barWidthE);
       //draw exhaustion
       RenderSystem.setShaderColor(1, 1, 1, .25f);
-      ModUtils.drawTexturedModalRect(BAR,matrices,f + 2, yStart + 1, 1, 28, BarOverlayImpl.getWidth(exhaustion, 4f), 9);
-      RenderSystem.setShaderColor(1, 1, 1, 1);
+      ModUtils.drawTexturedModalRect(BAR,graphics,xStart + 2, yStart + 1, 1, 28, exhaustion, 9);
     }
-  }
-
-  @Override
-  public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-
   }
 
   @Override
@@ -144,17 +150,16 @@ public class Food extends BarOverlayImpl {
   
   public int getSatBarWidth(Player player) {
     double saturation = player.getFoodData().getSaturationLevel();
-    double maxSat = 20;
-    return (int) Math.ceil(BarOverlayImpl.WIDTH * saturation / maxSat);
+    return (int) Math.ceil(BarOverlayImpl.WIDTH * saturation / FoodConstants.MAX_SATURATION);
   }
   //saturation
-  public Color getPrimaryBarColor(Player player) {
+  public Color getSaturationBarColor(Player player) {
     boolean hunger = player.hasEffect(MobEffects.HUNGER);
     return hunger ? ConfigCache.saturationDebuff : ConfigCache.saturation;
   }
 
   //hunger
-  public Color getSecondaryBarColor(Player player) {
+  public Color getHungerBarColor(Player player) {
     boolean hunger = player.hasEffect(MobEffects.HUNGER);
     return hunger ? ConfigCache.hungerDebuff : ConfigCache.hunger;
   }
@@ -164,8 +169,8 @@ public class Food extends BarOverlayImpl {
     int xStart = width / 2 + getIconOffset();
     int yStart = height - vOffset;
     //draw hunger amount
-    double hunger = player.getFoodData().getFoodLevel();
-    int c = getSecondaryBarColor(player).colorToText();
+    double hunger = barInfo.numerator().getValue(player);
+    int c = getHungerBarColor(player).colorToText();
     textHelper(graphics,xStart,yStart,hunger,c);
   }
 
