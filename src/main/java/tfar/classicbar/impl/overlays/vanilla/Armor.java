@@ -11,7 +11,6 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import org.joml.Vector2i;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.BarSide;
-import tfar.classicbar.api.BarType;
 import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.BarOverlayImpl;
@@ -62,7 +61,7 @@ public class Armor extends BarOverlayImpl {
         renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
         //how many type are there? remember to start at 0
         int index = (int) Math.min(Math.ceil(armor / 20), ConfigCache.armor.size()) - 1;
-        Color primary = getPrimaryBarColor(index);
+        Color primary = getBarColor(index);
 
         if (index == 0) {
             //calculate bar color
@@ -73,7 +72,7 @@ public class Armor extends BarOverlayImpl {
             //draw first bar
             //case 1: bar is not capped and is partially filled
             if (armor % 20 != 0) {
-                Color secondary = getSecondaryBarColor(index - 1);
+                Color secondary = getBarColor(index - 1);
                 //draw complete first bar
                 renderFullBar(secondary, graphics, xStart + 2, yStart + 2);
                 //draw partial second bar
@@ -94,13 +93,10 @@ public class Armor extends BarOverlayImpl {
 
     }
 
-    public Color getPrimaryBarColor(int index) {
+    public Color getBarColor(int index) {
         return ConfigCache.armor.get(index);
     }
 
-    public Color getSecondaryBarColor(int index) {
-        return ConfigCache.armor.get(index);
-    }
 
     public static int getDamagedAmount(Player player) {
         int warningAmount = 0;
@@ -125,7 +121,7 @@ public class Armor extends BarOverlayImpl {
         double armor = calculateArmorValue(player);
         //draw armor amount
         int index = (int) Math.min(Math.ceil(armor / 20), ConfigCache.armor.size()) - 1;
-        int c = getPrimaryBarColor(index).colorToText();
+        int c = getBarColor(index).colorToText();
         textHelper(graphics, xStart, yStart, armor, c);
     }
 

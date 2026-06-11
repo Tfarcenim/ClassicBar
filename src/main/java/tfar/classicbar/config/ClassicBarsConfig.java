@@ -32,8 +32,6 @@ public class ClassicBarsConfig {
   static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionColors;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionPoisonColors;
   static ForgeConfigSpec.ConfigValue<List<? extends String>> absorptionWitherColors;
-  public static ForgeConfigSpec.ConfigValue<String> lavaBarColor;
-  public static ForgeConfigSpec.ConfigValue<String> flightBarColor;
 
   public static ForgeConfigSpec.ConfigValue<List<? extends String>> priority;
 
@@ -51,8 +49,6 @@ public class ClassicBarsConfig {
     saturationBarDebuffColor = builder.define("saturation_bar_debuff_color","#87BC00",String.class::isInstance);
     hydrationBarColor = builder.define("hydration_bar_color","#00A3E2",String.class::isInstance);
     hydrationBarDebuffColor = builder.define("hydration_bar_debuff_color","#85CF25",String.class::isInstance);
-    lavaBarColor = builder.define("lava_bar_color","#FF8000",String.class::isInstance);
-    flightBarColor = builder.define("flight_bar_color","#FFFFFF",String.class::isInstance);
 
     armorColors = builder.defineList("armor_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"),String.class::isInstance);
     armorToughnessColors = builder.defineList("armor_toughness_color_values", Lists.newArrayList("#AAAAAA", "#FF5500", "#FFC747", "#27FFE3", "#00FF00", "#7F00FF"),String.class::isInstance);

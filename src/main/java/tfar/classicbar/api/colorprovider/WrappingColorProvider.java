@@ -16,14 +16,7 @@ public record WrappingColorProvider(List<Color> colors) implements ColorProvider
 
     @Override
     public Color getColor(Player player, float ratio, int layer) {
-        int primaryIndex = (int) Mth.clamp(Math.ceil(ratio) - 1,0,colors.size()-1);//0 - 20 = 0, 21 - 40 = 1 etc
-        int secondaryIndex = primaryIndex - 1;
-
-        return switch (layer) {
-            case 1 ->  colors.get(primaryIndex);
-            case 0 -> colors.get(secondaryIndex);
-            default -> throw new IllegalArgumentException("Invalid layer " + layer);
-        };
+        return colors.get(Math.min(layer, colors.size() - 1));
     }
 
     @Override
