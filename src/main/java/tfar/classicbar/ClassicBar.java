@@ -47,7 +47,6 @@ public class ClassicBar {
     }
     MinecraftForge.EVENT_BUS.addListener(SyncHandler::onLivingUpdateEvent);
     MinecraftForge.EVENT_BUS.addListener(SyncHandler::onPlayerLoggedOut);
-    BarRegistry.init();
     ColorProviderSerializers.init();
   }
 

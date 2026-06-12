@@ -7,7 +7,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.impl.BarInfo;
-import tfar.classicbar.impl.overlays.StackingBarOverlay;
+import tfar.classicbar.impl.overlays.templates.StackingBarOverlay;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 

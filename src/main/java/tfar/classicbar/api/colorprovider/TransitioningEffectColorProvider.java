@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.Color;
-import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 import tfar.classicbar.util.HealthEffect;
 
 import java.util.LinkedHashMap;

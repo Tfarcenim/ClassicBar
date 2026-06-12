@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarInfo;
-import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 
 public class ParcoolStaminaB extends BarOverlayImpl {
 

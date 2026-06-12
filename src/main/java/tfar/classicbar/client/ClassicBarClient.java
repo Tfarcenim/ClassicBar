@@ -1,6 +1,9 @@
 package tfar.classicbar.client;
 
+import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.client.Minecraft;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.network.Connection;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
@@ -8,6 +11,7 @@ import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
 import tfar.classicbar.network.PacketHandler;
 
@@ -25,7 +29,15 @@ public class ClassicBarClient {
     }
 
     static void commands(RegisterClientCommandsEvent event) {
-
+        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
+        dispatcher.register(Commands.literal(ClassicBar.MODID)
+                .then(Commands.literal("reload")
+                        .executes(c -> {
+                            EventHandler.cacheConfigs();
+                            return 1;
+                        })
+                )
+        );
     }
 
     public static void onClientPlayerLoggedIn(ClientPlayerNetworkEvent.LoggingIn event) {

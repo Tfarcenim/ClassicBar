@@ -1,4 +1,4 @@
-package tfar.classicbar.impl.overlays;
+package tfar.classicbar.impl.overlays.templates;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.client.gui.GuiGraphics;
@@ -7,7 +7,6 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.api.Color;
 import tfar.classicbar.impl.BarInfo;
-import tfar.classicbar.impl.BarOverlayImpl;
 
 public class StackingBarOverlay extends BarOverlayImpl {
 

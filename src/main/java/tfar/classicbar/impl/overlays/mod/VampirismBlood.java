@@ -6,16 +6,14 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.joml.Vector2i;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarInfo;
-import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 import tfar.classicbar.impl.IconData;
-import tfar.classicbar.util.ModUtils;
 
 import java.util.List;
 

@@ -73,6 +73,7 @@ public class EventHandler implements IGuiOverlay {
   }
 
   public static void cacheConfigs() {
+    BarRegistry.init();
     loadBarFiles();
     ConfigCache.bake();
     registry.sort(Comparator.comparingInt(o -> ClassicBarsConfig.priority.get().indexOf(o.name())));

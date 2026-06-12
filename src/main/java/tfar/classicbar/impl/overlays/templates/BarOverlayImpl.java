@@ -1,4 +1,4 @@
-package tfar.classicbar.impl;
+package tfar.classicbar.impl.overlays.templates;
 
 import com.mojang.datafixers.Products;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,6 +11,7 @@ import net.minecraftforge.client.gui.overlay.ForgeGui;
 import org.joml.Vector2i;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.api.*;
+import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 
@@ -254,6 +255,11 @@ public abstract class BarOverlayImpl implements BarOverlay {
     @FunctionalInterface
     public interface Denominator {
         float getValue(Player player);
+    }
+
+    @Override
+    public boolean dependenciesMet() {
+        return dependenciesMet;
     }
 
     protected static Denominator fixed(float value) {

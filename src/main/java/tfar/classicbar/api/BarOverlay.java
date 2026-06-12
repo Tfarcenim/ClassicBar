@@ -11,6 +11,7 @@ public interface BarOverlay {
 
   boolean render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
 
+  boolean dependenciesMet();
   void setErrored();
 
   String name();

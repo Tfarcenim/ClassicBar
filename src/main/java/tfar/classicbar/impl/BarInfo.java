@@ -3,6 +3,7 @@ package tfar.classicbar.impl;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.ModList;
+import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 
 import java.util.*;
 import java.util.function.Predicate;

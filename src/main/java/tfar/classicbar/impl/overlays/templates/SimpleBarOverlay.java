@@ -1,4 +1,4 @@
-package tfar.classicbar.impl.overlays;
+package tfar.classicbar.impl.overlays.templates;
 
 import com.elenai.feathers.api.FeathersHelper;
 import com.mojang.serialization.Codec;
@@ -9,7 +9,6 @@ import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.impl.BarInfo;
-import tfar.classicbar.impl.BarOverlayImpl;
 import tfar.classicbar.impl.IconData;
 
 import java.util.List;

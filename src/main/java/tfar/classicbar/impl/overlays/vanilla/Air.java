@@ -2,15 +2,12 @@ package tfar.classicbar.impl.overlays.vanilla;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import org.joml.Vector2i;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.impl.BarInfo;
-import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 import tfar.classicbar.impl.IconData;
-import tfar.classicbar.util.ModUtils;
 
 import java.util.List;
 

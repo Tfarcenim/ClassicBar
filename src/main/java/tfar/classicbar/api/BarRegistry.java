@@ -1,8 +1,8 @@
 package tfar.classicbar.api;
 
 import tfar.classicbar.api.colorprovider.*;
-import tfar.classicbar.impl.BarOverlayImpl;
-import tfar.classicbar.impl.overlays.SimpleBarOverlay;
+import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
+import tfar.classicbar.impl.overlays.templates.SimpleBarOverlay;
 import tfar.classicbar.impl.overlays.mod.VampirismBlood;
 import tfar.classicbar.impl.overlays.mod.ParcoolStaminaB;
 import tfar.classicbar.impl.overlays.mod.ToughAsNailsThirst;
@@ -14,7 +14,9 @@ public class BarRegistry {
     public static final LinkedHashMap<String, BarOverlay> REGISTRY = new LinkedHashMap<>();
 
     public static <B extends BarOverlay> void registerBar(B defaults) {
-        REGISTRY.put(defaults.name(),defaults);
+        if (defaults.dependenciesMet()) {//do not register bars that have missing dependencies
+            REGISTRY.put(defaults.name(), defaults);
+        }
     }
 
     public static void init() {
@@ -28,7 +30,7 @@ public class BarRegistry {
                 .setColorProvider(DualEffectColorProvider.FOOD)
                 .build(),true,true,true));
         registerBar(new ToughAsNailsThirst(BarSettings.getBuilder().setSide(BarSide.RIGHT)
-                .setColorProvider(DualEffectColorProvider.THIRST)
+                .setColorProvider(DualEffectColorProvider.thirst())
                 .setIcon(ToughAsNailsThirst.OVERLAY).build(),true,true,true));
         registerBar(new Air(BarSettings.getBuilder().setSide(BarSide.RIGHT)
                 .setColorProvider(new SingleColorProvider(Color.hex2Color("#00E6E6")))

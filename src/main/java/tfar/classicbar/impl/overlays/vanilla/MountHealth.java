@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import org.joml.Vector2i;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.impl.BarInfo;
-import tfar.classicbar.impl.BarOverlayImpl;
+import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 import tfar.classicbar.impl.IconData;
 
 import java.util.List;

@@ -7,7 +7,7 @@ import org.joml.Vector2i;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.impl.IconData;
-import tfar.classicbar.impl.overlays.StackingBarOverlay;
+import tfar.classicbar.impl.overlays.templates.StackingBarOverlay;
 
 import java.util.List;
 
