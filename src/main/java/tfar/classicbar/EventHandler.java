@@ -25,7 +25,6 @@ import tfar.classicbar.api.BarRegistry;
 import tfar.classicbar.api.BarSide;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.config.ClassicBarsConfig;
-import tfar.classicbar.config.ConfigCache;
 import tfar.classicbar.impl.overlays.mod.ParcoolStaminaB;
 import tfar.classicbar.impl.overlays.mod.ToughAsNailsThirst;
 
@@ -75,7 +74,6 @@ public class EventHandler implements IGuiOverlay {
   public static void cacheConfigs() {
     BarRegistry.init();
     loadBarFiles();
-    ConfigCache.bake();
     registry.sort(Comparator.comparingInt(o -> ClassicBarsConfig.priority.get().indexOf(o.name())));
   }
 

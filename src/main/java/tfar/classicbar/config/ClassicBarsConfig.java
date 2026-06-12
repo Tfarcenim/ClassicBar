@@ -1,6 +1,5 @@
 package tfar.classicbar.config;
 
-import com.google.common.collect.Lists;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,22 +17,12 @@ public class ClassicBarsConfig {
 
   public static ForgeConfigSpec.DoubleValue transitionSpeed;
 
-  static ForgeConfigSpec.ConfigValue<String> thirstBarColor;
-  static ForgeConfigSpec.ConfigValue<String> thirstBarDebuffColor;
-  static ForgeConfigSpec.ConfigValue<String> hydrationBarColor;
-  static ForgeConfigSpec.ConfigValue<String> hydrationBarDebuffColor;
-
   public static ForgeConfigSpec.ConfigValue<List<? extends String>> priority;
 
   public ClassicBarsConfig(ForgeConfigSpec.Builder builder) {
     builder.push("general");
 
     transitionSpeed = builder.defineInRange("transition_speed", 3, 0, Double.MAX_VALUE);
-
-    thirstBarColor = builder.define("thirstr_bar_color","#1C5EE4",String.class::isInstance);
-    thirstBarDebuffColor = builder.define("thirst_bar_debuff_color","#5A891C",String.class::isInstance);
-    hydrationBarColor = builder.define("hydration_bar_color","#00A3E2",String.class::isInstance);
-    hydrationBarDebuffColor = builder.define("hydration_bar_debuff_color","#85CF25",String.class::isInstance);
 
     priority = builder.defineList("priority",() -> new ArrayList<>(BarRegistry.REGISTRY.keySet()),String.class::isInstance);
   }
