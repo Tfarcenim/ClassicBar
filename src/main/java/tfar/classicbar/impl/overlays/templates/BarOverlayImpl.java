@@ -15,6 +15,8 @@ import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.util.HealthEffect;
 import tfar.classicbar.util.ModUtils;
 
+import java.util.Optional;
+
 public abstract class BarOverlayImpl implements BarOverlay {
 
     //maximum width the bar can be
@@ -219,21 +221,6 @@ public abstract class BarOverlayImpl implements BarOverlay {
         renderPartialBar(color,graphics,xStart+2,yStart+2,barWidth);
     }
 
-    protected void renderDoubleBar(Color color, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        renderSimpleBar(color,graphics,player,screenWidth,screenHeight,vOffset,false);
-    }
-
-    protected void renderDoubleBar(Color color, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset,boolean highlight) {
-        int barWidth = getBarWidth(player);
-        int xStart = getXStartBar(screenWidth,barWidth);
-        int yStart = screenHeight - vOffset;
-
-        //Bar background
-        renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset,highlight);
-        //draw portion of bar based on feathers amount
-        renderPartialBar(color,graphics,xStart+2,yStart+2,barWidth);
-    }
-
     public void renderPartialBar(Color color,GuiGraphics matrices, double xStart, int yStart,double barWidth) {
         color.color2Gl();
         ModUtils.drawTexturedModalRect(BAR,matrices, xStart, yStart, BAR_U, BAR_V, barWidth, HEIGHT);
@@ -280,5 +267,10 @@ public abstract class BarOverlayImpl implements BarOverlay {
 
     public void setErrored() {
         this.errored = true;
+    }
+
+    @Override
+    public final Optional<ResourceLocation> disablesOverlay() {
+        return barSettings.disablesOverlay();
     }
 }

@@ -25,6 +25,8 @@ public class SimpleBarOverlay extends BarOverlayImpl {
 
     public static final ResourceLocation FEATHERS_ICONS = new ResourceLocation("feathers", "textures/gui/icons.png");
 
+    public static final ResourceLocation FEATHERS_OVERLAY_ID = new ResourceLocation("feathers", "feathers");
+
     public static SimpleBarOverlay createFeathers(BarSettings barSettings) {
         BarInfo info = BarInfo.getBuilder("feathers_feathers")
                 .requireDependency(ModCompat.feathers.name())

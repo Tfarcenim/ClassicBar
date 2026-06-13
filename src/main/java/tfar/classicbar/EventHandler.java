@@ -88,6 +88,7 @@ public class EventHandler implements IGuiOverlay {
 
   public static void loadBarFiles() {
     registry.clear();
+    overlaysToDisable.clear();
     FMLPaths.CONFIGDIR.get().resolve(ClassicBar.MODID).toFile().mkdirs();
     Gson gson = new Gson();
     for (Map.Entry<String, BarOverlay> entry : BarRegistry.REGISTRY.entrySet()) {
@@ -132,15 +133,17 @@ public class EventHandler implements IGuiOverlay {
       JsonObject json = gson.fromJson(reader, JsonObject.class);
       BarOverlay barOverlay = BarRegistry.REGISTRY.get(name).codec().parse(new Dynamic<>(JsonOps.INSTANCE, json)).get().orThrow();
       registry.add(barOverlay);
+      barOverlay.disablesOverlay().ifPresent(overlaysToDisable::add);
     }
   }
 
-  private static final List<ResourceLocation> vanilla_overlays = List.of(VanillaGuiOverlay.AIR_LEVEL.id(),VanillaGuiOverlay.ARMOR_LEVEL.id(),
-          VanillaGuiOverlay.PLAYER_HEALTH.id(),VanillaGuiOverlay.MOUNT_HEALTH.id(),VanillaGuiOverlay.FOOD_LEVEL.id());
+  private static final Set<ResourceLocation> overlaysToDisable = new HashSet<>();
+
   public static void disableOtherOverlays(RenderGuiOverlayEvent.Pre e) {
     NamedGuiOverlay overlay = e.getOverlay();
-    if (vanilla_overlays.contains(overlay.id())) e.setCanceled(true);
-    else if (overlay.id().getNamespace().equals(ModCompat.parcool.name()) && ParcoolStaminaB.checkConfigs()) e.setCanceled(true);
-    else if (ModCompat.toughasnails.loaded && ToughAsNailsThirst.isEnabled() && ToughAsNailsThirst.OVERLAY_ID.equals(overlay.id())) e.setCanceled(true);
+
+    if (overlaysToDisable.contains(overlay.id())) {
+      e.setCanceled(true);
+    }
   }
 }

@@ -26,7 +26,7 @@ public class VampirismBlood extends BarOverlayImpl {
             .setShouldRender(player -> VampirismAPI.factionRegistry().getFaction(player) == VReference.VAMPIRE_FACTION)
             .setNumerator(VampirismBlood::getNumerator)
             .setDenominator(VampirismBlood::getDenominator)
-            .setIconData(new IconData(List.of(new Vector2i(0,0),new Vector2i(0,9))))
+            .setIconData(new IconData(List.of(new Vector2i(0,0),new Vector2i(9,0))))
             .build();
 
     public VampirismBlood(BarSettings settings) {

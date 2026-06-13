@@ -8,13 +8,16 @@ import tfar.classicbar.api.colorprovider.ColorProvider;
 import tfar.classicbar.api.colorprovider.SingleColorProvider;
 import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 
+import java.util.Optional;
+
 //these are common settings that the player can adjust
-public record BarSettings(boolean enabled, BarSide side, boolean fitted, ColorProvider colorProvider, boolean show_text,
+public record BarSettings(boolean enabled, Optional<ResourceLocation> disablesOverlay, BarSide side, boolean fitted, ColorProvider colorProvider, boolean show_text,
                           boolean show_icon, ResourceLocation icon) {
 
     public static final MapCodec<BarSettings> CODEC = RecordCodecBuilder.mapCodec(
             objectInstance -> objectInstance.group(
                     Codec.BOOL.fieldOf("enabled").forGetter(BarSettings::enabled),
+                    ResourceLocation.CODEC.optionalFieldOf("disables_overlay").forGetter(BarSettings::disablesOverlay),
                     BarSide.CODEC.fieldOf("side").forGetter(BarSettings::side),
                     Codec.BOOL.fieldOf("fitted").forGetter(BarSettings::fitted),
                     ColorProvider.CODEC.fieldOf("color_provider").forGetter(BarSettings::colorProvider),
@@ -30,6 +33,7 @@ public record BarSettings(boolean enabled, BarSide side, boolean fitted, ColorPr
 
     public static class Builder {
         private boolean enabled = true;
+        private ResourceLocation disablesOverlay;
         private BarSide side = BarSide.LEFT;
         private ColorProvider colorProvider = new SingleColorProvider(Color.WHITE);
         private boolean fitted = false;
@@ -39,6 +43,11 @@ public record BarSettings(boolean enabled, BarSide side, boolean fitted, ColorPr
 
         public Builder setEnabled(boolean enabled) {
             this.enabled = enabled;
+            return this;
+        }
+
+        public Builder setDisablesOverlay(ResourceLocation disablesOverlay) {
+            this.disablesOverlay = disablesOverlay;
             return this;
         }
 
@@ -73,7 +82,7 @@ public record BarSettings(boolean enabled, BarSide side, boolean fitted, ColorPr
         }
 
         public BarSettings build() {
-            return new BarSettings(enabled,side,fitted,colorProvider,show_text,show_icon,icon);
+            return new BarSettings(enabled,Optional.ofNullable(disablesOverlay),side,fitted,colorProvider,show_text,show_icon,icon);
         }
     }
 }

@@ -8,6 +8,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.compat.ModCompat;
@@ -18,9 +19,11 @@ public class ParcoolStaminaB extends BarOverlayImpl {
 
     public static final ResourceLocation ICONS = new ResourceLocation("parcool:textures/gui/stamina_bar.png");
 
+    public static final ResourceLocation OVERLAY_ID = new ResourceLocation("parcool","hud.stamina.host");
+
     public static final BarInfo INFO = BarInfo.getBuilder("parcool_stamina")
             .requireDependency(ModCompat.parcool.name())
-            .setShouldRender(player -> !checkConfigs() && getRatio(player) < 1)
+            .setShouldRender(player -> checkConfigs() && getRatio(player) < 1)
             .setNumerator(player -> IStamina.get(player).get())
             .setDenominator(player -> IStamina.get(player).getMaxStamina()).build();
 
