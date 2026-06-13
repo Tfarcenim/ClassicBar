@@ -2,6 +2,7 @@ package tfar.classicbar.api;
 
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import tfar.classicbar.api.colorprovider.*;
+import tfar.classicbar.impl.overlays.mod.ThirstWasTakenThirst;
 import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.templates.SimpleBarOverlay;
 import tfar.classicbar.impl.overlays.mod.VampirismBlood;
@@ -35,11 +36,19 @@ public class BarRegistry {
                 .setColorProvider(DualEffectColorProvider.FOOD)
                 .setDisablesOverlay(VanillaGuiOverlay.FOOD_LEVEL.id())
                 .build(),true,true,true));
+
         registerBar(new ToughAsNailsThirst(BarSettings.getBuilder()
                 .setDisablesOverlay(ToughAsNailsThirst.OVERLAY_ID)
                 .setSide(BarSide.RIGHT)
                 .setColorProvider(DualEffectColorProvider.thirst())
                 .setIcon(ToughAsNailsThirst.OVERLAY).build(),true,true,true));
+
+        registerBar(new ThirstWasTakenThirst(BarSettings.getBuilder()
+                .setDisablesOverlay(ThirstWasTakenThirst.OVERLAY_ID)
+                .setSide(BarSide.RIGHT)
+                .setColorProvider(DualColorProvider.THIRST_WAS_TAKEN)
+                .setIcon(ThirstWasTakenThirst.THIRST_ICONS).build(),true,true,true));
+
         registerBar(new Air(BarSettings.getBuilder()
                 .setDisablesOverlay(VanillaGuiOverlay.AIR_LEVEL.id())
                 .setSide(BarSide.RIGHT)

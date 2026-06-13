@@ -97,13 +97,15 @@ public class ToughAsNailsThirst extends FoodLikeBarOverlay {
             .setShouldRender(player -> isEnabled())
             .setNumerator(player -> (float)ThirstHelper.getThirst(player).getThirst()).build();
 
+    public static final Codec<ToughAsNailsThirst> CODEC = RecordCodecBuilder.create(
+            o -> codecStartFoodLike(o).apply(o, ToughAsNailsThirst::new));
+
     public ToughAsNailsThirst(BarSettings settings, boolean showHydration, boolean showExhaustion,boolean showHeldDrink) {
         super(INFO, CODEC, () -> ModConfig.thirst.thirstExhaustionThreshold, p ->
                 ThirstHelper.getThirst(p).getExhaustion(),settings, showHydration,showExhaustion,showHeldDrink);
     }
 
-    public static final Codec<ToughAsNailsThirst> CODEC = RecordCodecBuilder.create(
-            o -> codecStartFoodLike(o).apply(o, ToughAsNailsThirst::new));
+
 
     @Override
     public float getSaturationValue(Player player) {
