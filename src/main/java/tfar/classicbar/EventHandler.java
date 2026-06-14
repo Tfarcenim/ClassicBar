@@ -48,7 +48,7 @@ public class EventHandler implements IGuiOverlay {
         if (overlay.render(gui, matrices, player, screenWidth, screenHeight, getOffset(gui, side))) {
           increment(gui, side, 10);
         }
-      } catch (Error e) {
+      } catch (Throwable e) {
           ClassicBar.logger.error("disabling broken overlay {}", overlay.name());
         e.printStackTrace();
         overlay.setErrored();

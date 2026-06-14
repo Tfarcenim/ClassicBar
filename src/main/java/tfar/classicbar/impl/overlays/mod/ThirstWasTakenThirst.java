@@ -24,8 +24,9 @@ import java.util.List;
  * @see dev.ghen.thirst.foundation.gui.ThirstBarRenderer
  */
 public class ThirstWasTakenThirst extends FoodLikeBarOverlay {
-    public static final ResourceLocation OVERLAY_ID = new ResourceLocation("thirst", "thirst_level");
-    public static final ResourceLocation THIRST_ICONS = new ResourceLocation("thirst","textures/gui/thirst_icons.png");
+
+    public static final ResourceLocation OVERLAY_ID = ModCompat.thirst.id("thirst_level");
+    public static final ResourceLocation THIRST_ICONS = ModCompat.thirst.id("textures/gui/thirst_icons.png");
 
     public static final BarInfo INFO = BarInfo.getBuilder("thirst_thirst")
             .requireDependency(ModCompat.thirst.name())

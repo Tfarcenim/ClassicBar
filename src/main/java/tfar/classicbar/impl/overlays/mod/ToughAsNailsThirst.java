@@ -18,9 +18,8 @@ import toughasnails.init.ModTags;
 
 public class ToughAsNailsThirst extends FoodLikeBarOverlay {
 
-    public static final ResourceLocation OVERLAY_ID = new ResourceLocation("toughasnails", "thirst_level");
-
-    public static final ResourceLocation OVERLAY = new ResourceLocation("toughasnails:textures/gui/icons.png");
+    public static final ResourceLocation OVERLAY_ID = ModCompat.toughasnails.id("thirst_level");
+    public static final ResourceLocation ICONS = ModCompat.toughasnails.id("textures/gui/icons.png");
 
     /**
      * Whether {@code drink} is tagged as {@link ModTags.Items#DRINKS} should be ensured via the context.

@@ -11,9 +11,15 @@ import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.loading.FMLPaths;
+import org.apache.commons.io.FileUtils;
 import tfar.classicbar.ClassicBar;
 import tfar.classicbar.EventHandler;
 import tfar.classicbar.network.PacketHandler;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class ClassicBarClient {
 
@@ -33,6 +39,17 @@ public class ClassicBarClient {
         dispatcher.register(Commands.literal(ClassicBar.MODID)
                 .then(Commands.literal("reload")
                         .executes(c -> {
+                            EventHandler.cacheConfigs();
+                            return 1;
+                        })
+                ).then(Commands.literal("reset")
+                        .executes(c -> {
+                            Path folder = FMLPaths.CONFIGDIR.get().resolve(ClassicBar.MODID);
+                            try {
+                                FileUtils.cleanDirectory(folder.toFile());
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                             EventHandler.cacheConfigs();
                             return 1;
                         })

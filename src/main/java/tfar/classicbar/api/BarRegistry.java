@@ -2,12 +2,9 @@ package tfar.classicbar.api;
 
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import tfar.classicbar.api.colorprovider.*;
-import tfar.classicbar.impl.overlays.mod.ThirstWasTakenThirst;
+import tfar.classicbar.impl.overlays.mod.*;
 import tfar.classicbar.impl.overlays.templates.BarOverlayImpl;
 import tfar.classicbar.impl.overlays.templates.SimpleBarOverlay;
-import tfar.classicbar.impl.overlays.mod.VampirismBlood;
-import tfar.classicbar.impl.overlays.mod.ParcoolStaminaB;
-import tfar.classicbar.impl.overlays.mod.ToughAsNailsThirst;
 import tfar.classicbar.impl.overlays.vanilla.*;
 
 import java.util.LinkedHashMap;
@@ -41,13 +38,19 @@ public class BarRegistry {
                 .setDisablesOverlay(ToughAsNailsThirst.OVERLAY_ID)
                 .setSide(BarSide.RIGHT)
                 .setColorProvider(DualEffectColorProvider.thirst())
-                .setIcon(ToughAsNailsThirst.OVERLAY).build(),true,true,true));
+                .setIcon(ToughAsNailsThirst.ICONS).build(),true,true,true));
 
         registerBar(new ThirstWasTakenThirst(BarSettings.getBuilder()
                 .setDisablesOverlay(ThirstWasTakenThirst.OVERLAY_ID)
                 .setSide(BarSide.RIGHT)
                 .setColorProvider(DualColorProvider.THIRST_WAS_TAKEN)
                 .setIcon(ThirstWasTakenThirst.THIRST_ICONS).build(),true,true,true));
+
+        registerBar(new LegendarySurvivalOverhaulThirst(BarSettings.getBuilder()
+                .setDisablesOverlay(LegendarySurvivalOverhaulThirst.OVERLAY_ID)
+                .setSide(BarSide.RIGHT)
+                .setColorProvider(DualColorProvider.THIRST_WAS_TAKEN)
+                .setIcon(LegendarySurvivalOverhaulThirst.ICONS).build(),true,true,true));
 
         registerBar(new Air(BarSettings.getBuilder()
                 .setDisablesOverlay(VanillaGuiOverlay.AIR_LEVEL.id())
