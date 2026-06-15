@@ -28,7 +28,7 @@ public record DualEffectColorProvider(MobEffect effect,
 
     //use a method as otherwise it would be null
     public static DualEffectColorProvider thirst() {
-        MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(ModCompat.toughasnails.name(), "thirst"));
+        MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(ModCompat.toughasnails.id("thirst"));
         return new DualEffectColorProvider(effect,//don't use TANEffects.THIRST here, it crashes
                 Color.hex2Color("#1C5EE4"),Color.hex2Color("#00A3E2"),Color.hex2Color("#5A891C"),Color.hex2Color("#85CF25"));
     }

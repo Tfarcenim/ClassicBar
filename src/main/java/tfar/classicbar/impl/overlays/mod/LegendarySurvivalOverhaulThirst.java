@@ -1,15 +1,11 @@
 package tfar.classicbar.impl.overlays.mod;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.joml.Vector2i;
-import sfiomn.legendarysurvivaloverhaul.api.data.json.JsonThirstConsumable;
 import sfiomn.legendarysurvivaloverhaul.api.data.manager.ThirstDataManager;
 import sfiomn.legendarysurvivaloverhaul.api.thirst.ThirstUtil;
 import sfiomn.legendarysurvivaloverhaul.client.render.RenderThirstGui;
@@ -19,10 +15,7 @@ import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.compat.VampirismHelper;
 import tfar.classicbar.impl.BarInfo;
-import tfar.classicbar.impl.IconData;
 import tfar.classicbar.impl.overlays.templates.FoodLikeBarOverlay;
-
-import java.util.List;
 
 /**
  * @see sfiomn.legendarysurvivaloverhaul.client.render.RenderThirstGui

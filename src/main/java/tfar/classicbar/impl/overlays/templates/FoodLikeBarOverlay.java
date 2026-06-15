@@ -16,7 +16,6 @@ import tfar.classicbar.config.ClassicBarsConfig;
 import tfar.classicbar.impl.BarInfo;
 import tfar.classicbar.network.PacketHandler;
 import tfar.classicbar.util.ModUtils;
-import toughasnails.api.thirst.ThirstHelper;
 import toughasnails.thirst.ThirstData;
 
 import java.util.function.DoubleSupplier;

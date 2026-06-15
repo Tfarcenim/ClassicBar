@@ -49,7 +49,7 @@ public class BarRegistry {
         registerBar(new LegendarySurvivalOverhaulThirst(BarSettings.getBuilder()
                 .setDisablesOverlay(LegendarySurvivalOverhaulThirst.OVERLAY_ID)
                 .setSide(BarSide.RIGHT)
-                .setColorProvider(DualColorProvider.THIRST_WAS_TAKEN)
+                .setColorProvider(DualEffectMapColorProvider.survivalOverHaulThirst())
                 .setIcon(LegendarySurvivalOverhaulThirst.ICONS).build(),true,true,true));
 
         registerBar(new Air(BarSettings.getBuilder()

@@ -104,6 +104,8 @@ public class EventHandler implements IGuiOverlay {
         try {
           tryRead(gson,entry.getKey(),file);
         } catch (Exception e) {
+          ClassicBar.logger.error("Failed to load bar file {}", entry.getKey(), e);
+          e.printStackTrace();
           //write a new file
           try  {
             tryWrite(gson,entry.getKey(),file);

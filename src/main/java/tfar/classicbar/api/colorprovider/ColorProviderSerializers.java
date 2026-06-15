@@ -32,6 +32,9 @@ public class ColorProviderSerializers {
     public static final ColorProviderSerializer<DualEffectColorProvider> DUAL_EFFECT = register(new ColorProviderSerializer<>
             ("dual_effect", DualEffectColorProvider.CODEC));
 
+    public static final ColorProviderSerializer<DualEffectMapColorProvider> DUAL_EFFECT_MAP = register(new ColorProviderSerializer<>
+            ("dual_effect_map", DualEffectMapColorProvider.CODEC));
+
     public static <C extends ColorProvider> ColorProviderSerializer<C> register(ColorProviderSerializer<C> serializer) {
         MAP.put(serializer.name(), serializer);
         return serializer;
