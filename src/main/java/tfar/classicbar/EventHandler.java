@@ -23,10 +23,7 @@ import net.minecraftforge.fml.loading.FMLPaths;
 import tfar.classicbar.api.BarOverlay;
 import tfar.classicbar.api.BarRegistry;
 import tfar.classicbar.api.BarSide;
-import tfar.classicbar.compat.ModCompat;
 import tfar.classicbar.config.ClassicBarsConfig;
-import tfar.classicbar.impl.overlays.mod.ParcoolStaminaB;
-import tfar.classicbar.impl.overlays.mod.ToughAsNailsThirst;
 
 import java.io.*;
 import java.util.*;
@@ -45,7 +42,7 @@ public class EventHandler implements IGuiOverlay {
     for (BarOverlay overlay : registry) {
       BarSide side = overlay.getSide();
       try {
-        if (overlay.render(gui, matrices, player, screenWidth, screenHeight, getOffset(gui, side))) {
+        if (overlay.render(gui, matrices, player, getOffset(gui, side))) {
           increment(gui, side, 10);
         }
       } catch (Throwable e) {

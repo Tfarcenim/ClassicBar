@@ -25,9 +25,9 @@ public class Absorption extends StackingBarOverlay {
             o -> codecStart(o).apply(o,Absorption::new));
 
     @Override
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        int xStart = width / 2 + getIconOffset();
-        int yStart = height - vOffset;
+    public void renderIcon(GuiGraphics graphics, Player player, int vOffset) {
+        int xStart = graphics.guiWidth() / 2 + getIconOffset();
+        int yStart = graphics.guiHeight() - vOffset;
 
         HealthEffect effect = getHealthEffect(player);
         int i5 = (player.level().getLevelData().isHardcore()) ? 5 : 0;

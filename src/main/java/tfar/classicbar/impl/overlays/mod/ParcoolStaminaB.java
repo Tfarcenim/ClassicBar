@@ -9,7 +9,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.entity.player.Player;
 import tfar.classicbar.api.BarSettings;
 import tfar.classicbar.compat.ModCompat;
@@ -51,9 +50,9 @@ public class ParcoolStaminaB extends BarOverlayImpl {
     }
 
     @Override
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        int xStart = width / 2 + getIconOffset();
-        int yStart = height - vOffset;
+    public void renderIcon(GuiGraphics graphics, Player player, int vOffset) {
+        int xStart = graphics.guiWidth() / 2 + getIconOffset();
+        int yStart = graphics.guiHeight() - vOffset;
         //Draw stamina icon
         IStamina stamina = IStamina.get(player);
         int textureX = stamina == null || stamina.isExhausted() ? 16 : 0;

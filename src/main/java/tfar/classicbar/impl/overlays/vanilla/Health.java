@@ -39,7 +39,7 @@ public class Health extends BarOverlayImpl {
   }
 
   @Override
-  public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+  public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
     int updateCounter = gui.getGuiTicks();
 
     double health = player.getHealth();
@@ -57,8 +57,8 @@ public class Health extends BarOverlayImpl {
     playerHealth = health;
     double displayHealth = health + (lastPlayerHealth - health) * ((double) player.invulnerableTime / player.invulnerableDuration);
 
-    int xStart = screenWidth / 2 + getHOffset();
-    int yStart = screenHeight - vOffset;
+    int xStart = graphics.guiWidth() / 2 + getHOffset();
+    int yStart = graphics.guiHeight() - vOffset;
     double maxHealth = player.getMaxHealth();
 
 
@@ -87,7 +87,7 @@ public class Health extends BarOverlayImpl {
     //draw portion of bar based on health remaining
    // Color primary = getBarSettings().colorProvider().getColor(player, ,0);
 
-    renderSimpleBar(getBarSettings().colorProvider().getColor(player,barInfo.getRatio(player),0), graphics, player, screenWidth, screenHeight, vOffset,highlight);
+    renderSimpleBar(getBarSettings().colorProvider().getColor(player,barInfo.getRatio(player),0), graphics, player, vOffset,highlight);
 
     HealthEffect effect = getHealthEffect(player);
 
@@ -100,11 +100,11 @@ public class Health extends BarOverlayImpl {
   }
 
   @Override
-  public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+  public void renderIcon(GuiGraphics graphics, Player player, int vOffset) {
     HealthEffect effect = getHealthEffect(player);
 
-    int xStart = width / 2 + getIconOffset();
-    int yStart = height - vOffset;
+    int xStart = graphics.guiWidth() / 2 + getIconOffset();
+    int yStart = graphics.guiHeight() - vOffset;
     int i5 = (player.level().getLevelData().isHardcore()) ? 5 : 0;
     //Draw health icon
     //heart background

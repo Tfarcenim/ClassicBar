@@ -79,9 +79,9 @@ public class ThirstWasTakenThirst extends FoodLikeBarOverlay {
     }
 
     @Override//uses custom sized texture
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        int x = width / 2 + getIconOffset();
-        int y = height - vOffset;
+    public void renderIcon(GuiGraphics graphics, Player player, int vOffset) {
+        int x = graphics.guiWidth() / 2 + getIconOffset();
+        int y = graphics.guiHeight() - vOffset;
         graphics.blit(getIconRL(), x, y, 16.0F, 0.0F, 9, 9, 25, 9);
 
     }

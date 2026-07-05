@@ -71,44 +71,44 @@ public abstract class BarOverlayImpl implements BarOverlay {
     }
 
     @Override
-    public boolean render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public boolean render(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
         if (shouldRender(player)) {
             gui.setupOverlayRenderState(true, false);
-            renderBar(gui, graphics, player, screenWidth, screenHeight, vOffset);
-            renderBarDecorations(gui, graphics, player, screenWidth, screenHeight, vOffset);
+            renderBar(gui, graphics, player, vOffset);
+            renderBarDecorations(gui, graphics, player, vOffset);
             Color.reset();//don't leak colors
             if (barSettings.show_text()) {
-                renderText(graphics, player, screenWidth, screenHeight, vOffset);
+                renderText(graphics, player, vOffset);
             }
             if (barSettings.show_icon()) {
-                renderIcon(graphics, player, screenWidth, screenHeight, vOffset);
+                renderIcon(graphics, player, vOffset);
             }
             return true;
         } return false;
     }
 
-    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        renderSimpleBar(barSettings.colorProvider().getColor(player,barInfo.getRatio(player),0),graphics, player, screenWidth, screenHeight, vOffset);
+    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
+        renderSimpleBar(barSettings.colorProvider().getColor(player,barInfo.getRatio(player),0),graphics, player, vOffset);
     }
 
-    public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
 
     }
 
-    public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    public void renderText(GuiGraphics graphics, Player player, int vOffset) {
         int text = (int)barInfo.numerator().getValue(player);
-        int xStart = width / 2 + getIconOffset();
-        int yStart = height - vOffset;
+        int xStart = graphics.guiWidth() / 2 + getIconOffset();
+        int yStart = graphics.guiHeight() - vOffset;
         textHelper(graphics,xStart,yStart,text,barSettings.colorProvider().getColor(player,barInfo.getRatio(player) , 0).colorToText());
     }
 
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        renderSimpleIcon(graphics, width, height, vOffset);
+    public void renderIcon(GuiGraphics graphics, Player player, int vOffset) {
+        renderSimpleIcon(graphics, vOffset);
     }
 
-    public void renderSimpleIcon(GuiGraphics graphics, int width, int height, int vOffset) {
-        int xStart = width / 2 + getIconOffset();
-        int yStart = height - vOffset;
+    public void renderSimpleIcon(GuiGraphics graphics, int vOffset) {
+        int xStart = graphics.guiWidth() / 2 + getIconOffset();
+        int yStart = graphics.guiHeight() - vOffset;
 
         for (int i = 0; i < barInfo.icon_data().uvs().size(); i++) {
             Vector2i uv = barInfo.icon_data().uvs().get(i);
@@ -139,21 +139,21 @@ public abstract class BarOverlayImpl implements BarOverlay {
         return effects;
     }
 
-    protected void renderBarBackground(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset,false);
+    protected void renderBarBackground(GuiGraphics graphics, Player player, int vOffset) {
+        renderBarBackground(graphics, player, vOffset,false);
     }
 
-    public void renderFlashBarBackground(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset,true);
+    public void renderFlashBarBackground(GuiGraphics graphics, Player player, int vOffset) {
+        renderBarBackground(graphics, player, vOffset,true);
     }
 
-    protected void renderBarBackground(GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset,boolean flash) {
+    protected void renderBarBackground(GuiGraphics graphics, Player player,  int vOffset,boolean flash) {
         double barWidth = getBarWidth(player);
-        int xStart = screenWidth / 2 + getHOffset();
+        int xStart = graphics.guiWidth() / 2 + getHOffset();
         if (isFitted() && getSide() == BarSide.RIGHT) {
             xStart += WIDTH - barWidth;
         }
-        int yStart = screenHeight - vOffset;
+        int yStart = graphics.guiHeight() - vOffset;
 
         if (isFitted()) {
             drawScaledBarBackground(graphics, barWidth, xStart, yStart + 1,flash);
@@ -206,17 +206,17 @@ public abstract class BarOverlayImpl implements BarOverlay {
         renderPartialBar(color,matrices,xStart,yStart,WIDTH);
     }
 
-    protected void renderSimpleBar(Color color, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
-        renderSimpleBar(color,graphics,player,screenWidth,screenHeight,vOffset,false);
+    protected void renderSimpleBar(Color color, GuiGraphics graphics, Player player, int vOffset) {
+        renderSimpleBar(color,graphics,player,vOffset,false);
     }
 
-    protected void renderSimpleBar(Color color, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset,boolean highlight) {
+    protected void renderSimpleBar(Color color, GuiGraphics graphics, Player player, int vOffset,boolean highlight) {
         int barWidth = getBarWidth(player);
-        int xStart = getXStartBar(screenWidth,barWidth);
-        int yStart = screenHeight - vOffset;
+        int xStart = getXStartBar(graphics.guiWidth(),barWidth);
+        int yStart = graphics.guiHeight() - vOffset;
 
         //Bar background
-        renderBarBackground(graphics,player,screenWidth,screenHeight,vOffset,highlight);
+        renderBarBackground(graphics,player, vOffset,highlight);
         //draw portion of bar based on feathers amount
         renderPartialBar(color,graphics,xStart+2,yStart+2,barWidth);
     }

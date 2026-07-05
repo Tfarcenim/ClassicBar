@@ -53,15 +53,15 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
 
         float thirstLevel = barInfo.numerator().getValue(player);
         double hydrationLevel = getSaturationValue(player);
 
-        int xStart = screenWidth / 2 + getHOffset();
-        int yStart = screenHeight - vOffset;
+        int xStart = graphics.guiWidth() / 2 + getHOffset();
+        int yStart = graphics.guiHeight() - vOffset;
 
-        renderBarBackground(graphics, player,screenWidth,screenHeight,vOffset);
+        renderBarBackground(graphics, player,vOffset);
 
         drawThirst(graphics, player, xStart, yStart, thirstLevel, barInfo.denominator().getValue(player));
 
@@ -71,12 +71,12 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBarDecorations(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
         double maxExhaustionLevel = maxExhaustionGetter.getAsDouble();
 
         double exhaustionLevel = Math.min(exhaustionGetter.applyAsDouble(player), maxExhaustionLevel);
-        int xStart = screenWidth / 2 + getHOffset();
-        int yStart = screenHeight - vOffset;
+        int xStart = graphics.guiWidth() / 2 + getHOffset();
+        int yStart = graphics.guiHeight() - vOffset;
 
         if (showPredictedHealing) {
             drawOverlayPrediction(graphics, player, xStart, yStart, ThirstData.DEFAULT_THIRST, 20);
@@ -163,9 +163,9 @@ public abstract class FoodLikeBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        int xStart = width / 2 + getIconOffset();
-        int yStart = height - vOffset;
+    public void renderText(GuiGraphics graphics, Player player, int vOffset) {
+        int xStart = graphics.guiWidth() / 2 + getIconOffset();
+        int yStart = graphics.guiHeight() - vOffset;
         //draw hunger amount
         double hunger = barInfo.numerator().getValue(player);
         int c = getPrimaryBarColor(player).colorToText();

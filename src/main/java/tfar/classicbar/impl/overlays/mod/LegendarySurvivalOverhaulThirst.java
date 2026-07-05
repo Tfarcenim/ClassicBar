@@ -65,7 +65,7 @@ public class LegendarySurvivalOverhaulThirst extends FoodLikeBarOverlay {
     }
 
     @Override
-    public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+    public void renderIcon(GuiGraphics graphics, Player player, int vOffset) {
         boolean hasThirstEffect = player.hasEffect(MobEffectRegistry.THIRST.get());
         boolean hasHeatThirstEffect = player.hasEffect(MobEffectRegistry.HEAT_THIRST.get());
        // JsonThirstConsumable jsonThirstConsumable =  ThirstDataManager.getConsumable(player.getMainHandItem());
@@ -74,8 +74,8 @@ public class LegendarySurvivalOverhaulThirst extends FoodLikeBarOverlay {
         RenderThirstGui.ThirstEffect thirstEffect = RenderThirstGui.ThirstEffect.getEffect(hasThirstEffect, hasHeatThirstEffect);
         //RenderThirstGui.ThirstEffect targetThirstEffect = RenderThirstGui.ThirstEffect.getEffect(hasThirstEffect || heldItemThirst, hasHeatThirstEffect);
 
-        int xStart = width / 2 + getIconOffset();
-        int yStart = height - vOffset;
+        int xStart = graphics.guiWidth() / 2 + getIconOffset();
+        int yStart = graphics.guiHeight() - vOffset;
         graphics.blit(ICONS, xStart, yStart, thirstEffect.getXTextureOffset(false, false), thirstEffect.getYTextureOffset(), 9, 9);
 
     }

@@ -57,10 +57,10 @@ public class Food extends FoodLikeBarOverlay {
   }
 
   @Override
-  public void renderIcon(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
+  public void renderIcon(GuiGraphics graphics, Player player, int vOffset) {
 
-    int xStart = width / 2 + getIconOffset();
-    int yStart = height - vOffset;
+    int xStart = graphics.guiWidth() / 2 + getIconOffset();
+    int yStart = graphics.guiHeight() - vOffset;
     boolean hungerActive = player.hasEffect(MobEffects.HUNGER);
 
     int k5 = 52;

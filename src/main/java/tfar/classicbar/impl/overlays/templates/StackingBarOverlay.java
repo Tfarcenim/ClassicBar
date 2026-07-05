@@ -24,16 +24,16 @@ public class StackingBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset) {
+    public void renderBar(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset) {
         //armor toughness stuff
         double value = barInfo.numerator().getValue(player);
         int barWidth = getBarWidth(player);
-        int xStart = getXStartBar(screenWidth,barWidth);
-        int yStart = screenHeight - vOffset;
+        int xStart = getXStartBar(graphics.guiWidth(),barWidth);
+        int yStart = graphics.guiHeight() - vOffset;
         int index = getStackCount(player);
         Color primary = getBarColor(player,index);
         //draw bar background portion
-        renderBarBackground(graphics, player, screenWidth, screenHeight, vOffset);
+        renderBarBackground(graphics, player, vOffset);
         if (index == 0) {
             //draw portion of bar based on armor toughness amount
             renderPartialBar(primary,graphics, xStart + 2, yStart + 2, barWidth);
@@ -47,7 +47,7 @@ public class StackingBarOverlay extends BarOverlayImpl {
                 //draw partial second bar
 
                 int w = BarOverlayImpl.getWidth(value % 20, 20);
-                 xStart = getXStartBar(screenWidth,w);
+                 xStart = getXStartBar(graphics.guiWidth(),w);
                 renderPartialBar(primary,graphics, xStart + 2, yStart + 2, w);
             } else { //case 2, bar is a multiple of 20, or it is capped
                 //draw complete second bar
@@ -66,9 +66,9 @@ public class StackingBarOverlay extends BarOverlayImpl {
     }
 
     @Override
-    public void renderText(GuiGraphics graphics, Player player, int width, int height, int vOffset) {
-        int xStart = width / 2 + getIconOffset();
-        int yStart = height - vOffset;
+    public void renderText(GuiGraphics graphics, Player player, int vOffset) {
+        int xStart = graphics.guiWidth() / 2 + getIconOffset();
+        int yStart = graphics.guiHeight() - vOffset;
         double value = barInfo.numerator().getValue(player);
         int index = getStackCount(player);
         int c = getBarColor(player,index).colorToText();

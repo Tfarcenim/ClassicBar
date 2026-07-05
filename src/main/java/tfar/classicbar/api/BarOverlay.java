@@ -12,7 +12,7 @@ public interface BarOverlay {
 
   BarSide getSide();
 
-  boolean render(ForgeGui gui, GuiGraphics graphics, Player player, int screenWidth, int screenHeight, int vOffset);
+  boolean render(ForgeGui gui, GuiGraphics graphics, Player player, int vOffset);
 
   boolean dependenciesMet();
   Optional<ResourceLocation> disablesOverlay();
